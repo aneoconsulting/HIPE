@@ -16,46 +16,49 @@
 using namespace cv;
 using namespace std;
 
+/*** Detect if we're too close to the border by counting pure black pixels **/
 bool isBorderdetection(const IPDesc& desc, const Mat& mat)
 {
-	bool hasblack = false;
 	double nbBlack = 0;
 	for (int i = 0; i < desc.height; i++)
-	{
 		for (int j = 0; j < desc.width; j++)
 		{
-			if (mat.at<char>(j  + desc.corner.y, i + desc.corner.x) == 0)
-			{
+			if (mat.at<char>(j + desc.corner.y, i + desc.corner.x) == 0)
 				nbBlack++;
-			}
 		}
-	}
-	double area = desc.height * desc.width;
+
+	double area = desc.height*desc.width;
 	if (nbBlack / area > 0.3)
-	{
 		return true;
-	}
-	return false;
+	else
+		return false;
 }
 
-vector<IPDesc> drawShape(cv::Mat img, cv::Mat & mask, vector<vector<Point> > & contours)
+/*** Return areas of interests (opt : draw circle around each of them) ***/
+vector<IPDesc> drawShape(cv::Mat img, cv::Mat & mask, vector<vector<Point>> & contours)
 {
-
+	// Declarations outside of loop
+	int i,j;
 	typedef vector<vector<Point>>::iterator itContour_t;
-	//iterating through each contour
 	vector<IPDesc> interestObject;
 	Mat img_gray;
 	convertGray(img, img_gray);
 
-	for (itContour_t points = contours.begin(); points != contours.end(); ++points)
-	{
-		
-		vector<Point> pts;
+	// Radius and area thresholds (VS :: arbitrary values ?)
+	int minRadius = 5;
+	int maxRadius = 12;
+	int areaThreshold = 4;
+	int k = 8; // radius scaling factor
 
-		//obtain a sequence of points of contour, pointed by the variable 'contour'
+	// Iterate through each contour in contours
+	for (itContour_t points = contours.begin(); points != contours.end(); ++points)
+	{	
+		// Obtain a sequence of points of contour, pointed by the variable 'contour'
+		vector<Point> pts; // output
 		approxPolyDP((*points), pts, arcLength(Mat((*points)), false) * 0.015, false);
-		
-		
+
+		// Bunch of commented code about basic shape vertices
+		/*
 		//if there are 3  vertices  in the contour(It should be a triangle)
 		//if (pts.size() == 3)
 		//{
@@ -84,15 +87,15 @@ vector<IPDesc> drawShape(cv::Mat img, cv::Mat & mask, vector<vector<Point> > & c
 		//{
 
 
-		//	//drawing lines around the heptagon
+		//	//drawing lines around the hexagon
 		//	line(img, pts[0], pts[1], cvScalar(0, 255, 0), 4);
-		/*	line(img, pts[1], pts[2], cvScalar(0, 255, 0), 4);
+			line(img, pts[1], pts[2], cvScalar(0, 255, 0), 4);
 			line(img, pts[2], pts[3], cvScalar(0, 255, 0), 4);
 			line(img, pts[3], pts[4], cvScalar(0, 255, 0), 4);
 			line(img, pts[4], pts[5], cvScalar(0, 255, 0), 4);
 			line(img, pts[5], pts[0], cvScalar(0, 255, 0), 4);
 			
-		}*/
+		}
 		////if there are 7  vertices  in the contour(It should be a heptagon)
 		//else if (pts.size() == 7)
 		//{
@@ -107,82 +110,60 @@ vector<IPDesc> drawShape(cv::Mat img, cv::Mat & mask, vector<vector<Point> > & c
 		//	line(img, pts[5], pts[6], cvScalar(0, 0, 255), 4);
 		//	line(img, pts[6], pts[0], cvScalar(0, 0, 255), 4);
 		//}
+
+		*/
+
 		if (pts.size() >=6)
 		{
+			// Find min enclosing circle to contour polygon and compute its area
 			Point2f detectedCenter;
-			float detectedRadius;
-			minEnclosingCircle(Mat(pts), detectedCenter, detectedRadius);
+			float detectedRadius_f;
+			minEnclosingCircle(Mat(pts), detectedCenter, detectedRadius_f);
 
-			
-
-			int minRadius =5;
-
-			if (minRadius != 0 && detectedRadius < minRadius) {
+			// Check thresholds for radius and area
+			if (minRadius != 0 && detectedRadius_f < minRadius)
 				continue;
-			}
-			int maxRadiuss = 12;
-			if (maxRadiuss != 0 && detectedRadius > maxRadiuss) {
+			if (maxRadius != 0 && detectedRadius_f > maxRadius)
 				continue;
-			}
 			double realArea = contourArea(pts);
-			
-			if (realArea < 4)
+			if (realArea < areaThreshold)
 				continue;
+
 
 			Point circleCenter = detectedCenter;
-			
-			//ShowImage(img);
-			int k = 8;
-
-			Size sz(k * detectedRadius, k * detectedRadius);
+			int detectedRadius = (int) detectedRadius_f;
+			int kRadius = k*detectedRadius;
+			Size sz(kRadius,kRadius);
 			Mat object = Mat::zeros(sz, CV_8UC1);
-			Point leftPoint;
-			leftPoint.x = (circleCenter.x - (k / 2) * detectedRadius) < 0 ? 0 : (circleCenter.x - (k / 2) * detectedRadius);
-			leftPoint.y = (circleCenter.y - (k / 2) * detectedRadius) < 0 ? 0 : (circleCenter.y - (k / 2) * detectedRadius);
-			bool complete = false;
-			int i = leftPoint.x;
-			int j = leftPoint.y;
 
-			for (i = leftPoint.x; i < ((int)(leftPoint.x + k * detectedRadius)) && i < img_gray.size().width; i++)
-				for (j = leftPoint.y; j < ((int)(leftPoint.y + k * detectedRadius)) && j < img_gray.size().height; j++)
-			{
-				int i0 = (i - leftPoint.x) < 0 ? 0 : i - leftPoint.x;
-				int j0 = (j - leftPoint.y) < 0 ? 0 : j - leftPoint.y;
-				
-				char value = img_gray.at<char>(j, i);
-				object.at<char>(j0, i0) = value;
-				char res = object.at<char>(j0, i0);
-				//ShowImage(object);
-				res = res;
-			}
+			Point leftPoint;
+			leftPoint.x = max(0, circleCenter.x - kRadius/2);
+			leftPoint.y = max(0, circleCenter.y - kRadius/2);
+
+			for (i = leftPoint.x; i < ((int)(leftPoint.x + kRadius)) && i < img_gray.size().width; i++)
+				for (j = leftPoint.y; j < ((int)(leftPoint.y + kRadius)) && j < img_gray.size().height; j++)
+				{
+					int i0 = i - leftPoint.x;
+					int j0 = j - leftPoint.y;			
+					object.at<char>(j0, i0) = img_gray.at<char>(j, i);
+					//ShowImage(object);
+				}
+
 			if (j < img_gray.size().height && i < img_gray.size().width)
 			{
 				char res = object.at<char>(1, 0);
-				//ShowImage(object);
-				//ShowImage(img_gray);
-
-				//ShowImage(object.clone())
-				IPDesc desc(object.clone(), leftPoint.x, leftPoint.y, k * detectedRadius, k * detectedRadius);
+				IPDesc desc(object.clone(), leftPoint.x, leftPoint.y, kRadius, kRadius);
 
 				if (!isBorderdetection(desc, mask))
 				{
 					interestObject.push_back(desc);
-					circle(img, circleCenter, detectedRadius, cvScalar(0, 0, 255), 2);
-					//ShowImage(img);
+					circle(img, circleCenter, detectedRadius, cvScalar(0,0,255), 2);
 				}
-
-				
 			}
-			
-			
-			//ShowImage(object);
 		}
-	
-		
 	}
 
-	//show the image in which identified shapes are marked   
-
+	// Show the image in which identified shapes are marked   
 	imshow("Result window", img);
 	waitKey(0);
 
