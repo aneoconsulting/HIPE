@@ -16,67 +16,83 @@ using namespace cv;
 
 class filter
 {
+	friend class blur_filter;
+	friend class threshold_filter;
+	friend class gray_filter;
+
 	virtual void apply_self() = 0;
+	virtual Mat& output() = 0;
 
 protected:
-
-	filter* parent;
-	int value;
+	filter* _parent;
+	vector<Mat> _outputs;
+	bool _isRoot = false;
 
 public:
-
-	int nchild = 0;
-	vector<filter*> children;
+	int _nchild = 0;
+	vector<filter*> _children;
 
 	// Constructor
-	filter(int _val, filter* _parent = NULL);
-
+	filter(filter* parent = NULL);
 	// Destructor
-	~filter() {}
+	~filter();
 
 	// Methods
-	void set(int _val);
-	void print();
-	void declare_as_child(filter* _parent);
+	void declare_as_child(filter* parent);
 	void apply();
+};
+
+class root_filter : public filter
+{
+public:
+	root_filter(Mat & input);
+
+	inline Mat & output() { return _outputs[0]; }
+	inline void apply_self() {};
 };
 
 class blur_filter : public filter
 {
-	Mat& input;
-	Mat& output;
-	Size2i ksize;
-	double sigmaX, sigmaY;
-	int borderType;
-
 	void apply_self();
 
+	// Parameters of the grey filter operation
+	Size2i _ksize;
+	double _sigmaX, _sigmaY;
+	int _borderType;
+
 public:
-	blur_filter(int _val, filter* _parent, Mat& _input, Mat& _output, int _size, double _sigmaX, double _sigmaY = 0, int _borderType = BORDER_DEFAULT);
+	blur_filter(filter* parent, int size, double sigmaX, double sigmaY = 0, int borderType = BORDER_DEFAULT);
+	blur_filter(Mat& input, int size, double sigmaX, double sigmaY = 0, int borderType = BORDER_DEFAULT);
+
+	inline Mat & output() { return _outputs[_outputs.size() -1]; }
 };
 
 class gray_filter : public filter
 {
-	Mat& input;
-	Mat& output;
-	int mode;
-
 	void apply_self();
-public:
-	gray_filter(int _val, filter* _parent, Mat& _input, Mat& _output, int mode = COLOR_BGR2GRAY);
-};
 
+	// Parameters of the grey filter operation
+	int _mode;
+
+public:
+	gray_filter(filter* parent, int mode = COLOR_BGR2GRAY);
+	gray_filter(Mat& input, int mode = COLOR_BGR2GRAY);
+
+	inline Mat & output() { return _outputs[_outputs.size() - 1]; }
+};
 
 class threshold_filter : public filter
 {
 	void apply_self();
-public:
-	threshold_filter(int _val, filter* _parent = NULL);
-};
 
-class detourrage_filter : public filter
-{
-	void apply_self();
+	// Parameters of the threshold filter operation
+	double _thresh;
+	double _maxval;
+	int _type;
+
 public:
-	detourrage_filter(int _val, filter* _parent = NULL);
+	threshold_filter(filter* parent, double thresh = 0, double maxval = 255, int type = THRESH_OTSU);
+	threshold_filter(Mat& input, double thresh = 0, double maxval = 255, int type = THRESH_OTSU);
+
+	inline Mat & output() { return _outputs[_outputs.size() - 1]; }
 };

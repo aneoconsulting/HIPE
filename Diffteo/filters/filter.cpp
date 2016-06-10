@@ -15,66 +15,141 @@
 using namespace std;
 using namespace cv;
 
-
-/*** Implementation of filter base-class methods ***/
-
-filter::filter(int _val, filter* _parent)
+/************* BASE ABSTRACT filter *****************/
+filter::filter(filter* parent)
 {
-	parent = _parent;
-	value = _val;
+	_parent = parent;
 	if (_parent != NULL)
 		declare_as_child(_parent);
 }
+filter::~filter(){ if (_isRoot) delete _parent; }
 
-void filter::set(int _val) { value = _val; }
-void filter::print() { cout << "Value is " << value << endl; }
-void filter::declare_as_child(filter* _parent)
+void filter::declare_as_child(filter* parent)
 {
-	_parent->nchild++;
-	_parent->children.push_back(this);
+	parent->_nchild++;
+	parent->_children.push_back(this);
 }
 void filter::apply()
 {
-	for (int i = 0; i < nchild; i++)
-		(*children[i]).apply();
 	apply_self();
+	for (int i = 0; i < _nchild; i++)
+		(*_children[i]).apply();
 }
 
-
-/*** Dervied class : blur filter ***/
-
-blur_filter::blur_filter(int _val, filter* _parent, Mat& _input, Mat& _output, int _size, double _sigmaX, double _sigmaY, int _borderType)
-	: input(_input), output(_output), filter(_val, _parent)
+/************* ROOT filter **************************/
+root_filter::root_filter(Mat& input) : filter(NULL)
 {
-	ksize.height = ksize.width = _size;
-	sigmaX = _sigmaX;
-	sigmaY = _sigmaY;
-	borderType = _borderType;
+	_isRoot = true;
+	_outputs.push_back(input);
 }
-void blur_filter::apply_self()
+
+/************* GRAY filter **************************/
+gray_filter::gray_filter(filter* parent, int mode)
+	: filter(parent)
 {
-	GaussianBlur(input, output, ksize, sigmaX, sigmaY, borderType); ShowImage(output);
+	_mode = mode;
 }
 
-
-/*** Dervied class : grey filter ***/
-
-gray_filter::gray_filter(int _val, filter* _parent, Mat& _input, Mat& _output, int _mode)
-	: input(_input), output(_output), filter(_val, _parent)
+gray_filter::gray_filter(Mat& input, int mode)
+	: filter(NULL)
 {
-	mode = _mode;
+	_mode = mode;
+
+	_parent = new root_filter(input);
 }
+
 void gray_filter::apply_self()
 {
-	cvtColor(input, output, COLOR_BGR2GRAY); ShowImage(output);
+	Mat l_input;
+	if (_parent)
+		l_input = _parent->output();
+	else
+		THROW_EXCEPTION(-1, "Cannot take parent filter output as input");
+
+	Mat l_output(l_input.size(), l_input.type());
+	cvtColor(l_input, l_output, _mode); 
+	ShowImage(l_output);
+	
+	if (_nchild != 0)
+		_outputs.push_back(l_output);
+	else
+		_parent->_outputs.push_back(l_output);
 }
 
+/************* BLUR filter **************************/
 
+blur_filter::blur_filter(filter* parent, int size, double sigmaX, double sigmaY, int borderType)
+	: filter(parent)
+{
+	_ksize.height = _ksize.width = size;
+	_sigmaX = sigmaX;
+	_sigmaY = sigmaY;
+	_borderType = borderType;
+}
 
-/*** Dervied class : other (dummy) filters ***/
+blur_filter::blur_filter(Mat& input, int size, double sigmaX, double sigmaY, int borderType)
+	: filter(NULL)
+{
+	_ksize.height = _ksize.width = size;
+	_sigmaX = sigmaX;
+	_sigmaY = sigmaY;
+	_borderType = borderType;
 
-void threshold_filter::apply_self() { cout << "I'm a threshold filter !  (adress) " << this << "\t value = " << value << endl; }
-threshold_filter::threshold_filter(int _val, filter* _parent) : filter(_val, _parent) {}
+	_parent = new root_filter(input);
+}
 
-void detourrage_filter::apply_self() { cout << "I'm a detourrage filter !  (adress)" << this << "\t value = " << value << endl; }
-detourrage_filter::detourrage_filter(int _val, filter* _parent) : filter(_val, _parent) {}
+void blur_filter::apply_self()
+{
+	Mat l_input;
+	if (_parent)
+		l_input = _parent->output();
+	else
+		THROW_EXCEPTION(-1, "Cannot take parent filter output as input");
+
+	Mat l_output(l_input.size(), l_input.type());
+	GaussianBlur(l_input, l_output, _ksize, _sigmaX, _sigmaY, _borderType);
+	ShowImage(l_output);
+	
+	if (_nchild != 0)
+		_outputs.push_back(l_output);
+	else
+		_parent->_outputs.push_back(l_output);
+}
+
+/************* THRESHOLD filter **************************/
+
+threshold_filter::threshold_filter(filter* parent, double thresh, double maxval, int type)
+	: filter(parent) 
+{
+	_thresh = thresh;
+	_maxval = maxval;
+	_type = type;
+}
+
+threshold_filter::threshold_filter(Mat& input, double thresh, double maxval, int type)
+	: filter(NULL)
+{
+	_thresh = thresh;
+	_maxval = maxval;
+	_type = type;
+
+	_parent = new root_filter(input);
+}
+
+void threshold_filter::apply_self()
+{
+	Mat l_input;
+	if (_parent)
+		l_input = _parent->output();
+	else
+		THROW_EXCEPTION(-1, "Cannot take parent filter output as input");
+
+	Mat l_output(l_input.size(), l_input.type());
+	threshold(l_input, l_output, _thresh, _maxval, _type);
+	ShowImage(l_output);
+
+	if (_nchild != 0)
+		_outputs.push_back(l_output);
+	else
+		_parent->_outputs.push_back(l_output);
+}

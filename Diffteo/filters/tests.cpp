@@ -14,20 +14,20 @@ int test1()
 			dummy filters + scheduler run ***** \n\n";
 
 	// Create filters (and children filters)
-	detourrage_filter detourf1(0);
-	threshold_filter threshf1(10, (filter*)&detourf1);
-	threshold_filter threshf2(20, (filter*)&detourf1);
-	threshold_filter threshf11(110, (filter*)&threshf1);
+	//detourrage_filter detourf1(0);
+	//threshold_filter threshf1(10, (filter*)&detourf1);
+	//threshold_filter threshf2(20, (filter*)&detourf1);
+	//threshold_filter threshf11(110, (filter*)&threshf1);
 
-	detourrage_filter detourf2(1);
-	threshold_filter threshf3(11, (filter*)&detourf2);
+	//detourrage_filter detourf2(1);
+	//threshold_filter threshf3(11, (filter*)&detourf2);
 
-	// Enqueue tasks and run the scheduler
-	// Only need to enqueue "root" filters to run all children recursively
-	scheduler<filter> sched;
-	sched.enqueue(&detourf2);
-	sched.enqueue(&detourf1);
-	sched.run();
+	//// Enqueue tasks and run the scheduler
+	//// Only need to enqueue "root" filters to run all children recursively
+	//scheduler<filter> sched;
+	//sched.enqueue(&detourf2);
+	//sched.enqueue(&detourf1);
+	//sched.run();
 
 	return 0;
 }
@@ -56,12 +56,13 @@ int test2(int argc, char** argv)
 
 	Mat mask;
 
-	gray_filter gray(0, NULL, ref_raw, mask);
-	blur_filter blur(1, NULL, mask, mask, 9, 3.5);
-
+	gray_filter gray(ref_raw);
+	blur_filter blur0(&gray, 9, 3.5);
+	threshold_filter thresh(&blur0,0,255, THRESH_OTSU);
+	blur_filter blur1(&blur0, 9, 3.5);
+	
 	scheduler<filter> sched;
 	sched.enqueue(&gray);
-	sched.enqueue(&blur);
 	sched.run();
 
 	return 0;

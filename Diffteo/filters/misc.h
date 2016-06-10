@@ -15,5 +15,9 @@ using namespace cv;
 /*** Show image and wait for user input to proceed ***/
 #define ShowImage(img) imshow(#img, img); waitKey(0);
 
+/*** Exception / debug support ***/
+#define THROW_EXCEPTION(ERR, MSG) \
+        throw new ::Exception(ERR, MSG, __FUNCTION__, __FILE__, __LINE__)
+
 /*** Read image file and resize it toer resolution ***/
 Mat getImg(char *filename);
