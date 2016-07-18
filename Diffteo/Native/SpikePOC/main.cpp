@@ -18,8 +18,6 @@ using namespace std;
 // Global variables
 Ptr<BackgroundSubtractor> pMOG2; //MOG2 Background subtractor
 
-
-
 /*** Read image file and resize it toer resolution ***/
 Mat getImage(char *filename) 
 {
@@ -31,14 +29,15 @@ Mat getImage(char *filename)
 		return Mat();
 	if (src_raw.empty())
 	{
-		cerr << "No image supplied ..." << filename << endl;
+		cerr << "Image not found : " << filename << endl;
 		return src_raw;
 	}
 
 	// Resize image to acceptable dimensions
 	int width = src_raw.cols;
 	int height = src_raw.rows;
-	Size size(width /5, height /5);
+	float resize_factor = 5; // To set
+	Size size(width /resize_factor, height /resize_factor);
 
 	Mat img_ret;
 	resize(src_raw, img_ret, size, 0.0, 0.0, INTER_CUBIC);
@@ -56,7 +55,7 @@ Mat processBackgroundFilter(Mat & img, Mat & background, Mat & mask)
 
 	// Create Background Subtractor objects (MOG2 approach)
 	if (pMOG2.empty())
-		pMOG2 = createBackgroundSubtractorMOG2(1, 900, false);
+		pMOG2 = createBackgroundSubtractorMOG2(2, 800, false); //(1, 900, false);
 	pMOG2->apply(background, mask);
 	pMOG2->apply(img, mask);
 
@@ -90,7 +89,6 @@ Mat processBackgroundFilter(Mat & img, Mat & background, Mat & mask)
 	fillConvexPoly(mask, contours[index], color);
 
 	ShowImage(mask);
-
 	return mask;
 }
 
@@ -124,14 +122,12 @@ vector<vector<Point>> getContours(Mat src_gray)
 	return contours;
 }
 
-/*** Convert an image to grey ***/
+/*** Convert an image to gray ***/
 void convertGray(Mat src, Mat & src_gray)
 {
 	cvtColor(src, src_gray, COLOR_BGR2GRAY);
 	blur(src_gray, src_gray, Size(3, 3));
 }
-
-
 
 int main(int argc, char** argv)
 {
@@ -147,7 +143,9 @@ int main(int argc, char** argv)
 			 << "\t Setting query to reference image (default)." << endl;
 		query_raw = ref_raw;
 	}
-	ShowImage(query_raw);
+
+	// Set window size
+	ShowImage(query_raw); waitKey(0);
 
 	Mat mask;
 
@@ -156,7 +154,6 @@ int main(int argc, char** argv)
 	//TODO Missing trasformation and scaling
 	// VS : Mask has been computed using a smaller resized version of original image
 	// We must map the mask back to original image and crop around
-
 
 	Mat extractedObject = ref_raw.clone();
 	Mat extractedQueryObject = query_raw.clone();

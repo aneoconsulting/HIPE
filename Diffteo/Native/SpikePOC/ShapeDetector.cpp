@@ -129,7 +129,6 @@ vector<IPDesc> drawShape(cv::Mat img, cv::Mat & mask, vector<vector<Point>> & co
 			if (realArea < areaThreshold)
 				continue;
 
-
 			Point circleCenter = detectedCenter;
 			int detectedRadius = (int) detectedRadius_f;
 			int kRadius = k*detectedRadius;

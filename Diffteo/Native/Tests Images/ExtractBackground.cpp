@@ -101,11 +101,23 @@ Mat processBackgroundFilter(Mat & img, Mat & background, Mat & mask)
 	drawContours(mask, contours, (int)index, color, 2, 8, hierarchy, 0, Point());
 	fillConvexPoly(mask, contours[index], color);
 
+	// Blur edges of mask to remove uninteresting
+	// keypoints detected with Harris Corners
+	// GaussianBlur(mask, mask, Size(15, 15), 7.0, 7.0);
+	// ShowImage(mask); waitKey(0);
+
 	// Apply mask to detour img
 	MatIterator_<char> it_mask = mask.begin<char>();
 	for (auto it = img.begin<Vec3b>(); it != img.end<Vec3b>(); it++, it_mask++)
 		(*it) *= ((*it_mask) != (char)0);
 
-	ShowImage(img);
-	return img;
+	//ShowImage(img);
+	// Set window size
+	const string window = "window";
+	namedWindow(window, 0);
+	resizeWindow(window, int(400 * img.cols / img.rows), 400);
+	moveWindow(window, 400, 100);
+	imshow(window, img); waitKey(0);
+
+	return mask;
 }

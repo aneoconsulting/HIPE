@@ -2,6 +2,9 @@
 #include <opencv2/core/types.hpp>
 #include "IPDesc.h"
 
+#define ShowImage(name, img)\
+	imshow(name, img);\
+	waitKey(0);\
 
 #define ShowImage(img)\
 	imshow(#img, img);\

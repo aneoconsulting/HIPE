@@ -1,17 +1,6 @@
-#include "opencv2/core/core.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/video.hpp"
 #include "misc.h"
 
 #include <iostream>
-
-using namespace std;
-using namespace cv;
 
 /*** Read image file and resize it toer resolution ***/
 Mat getImg(char *filename)
@@ -31,11 +20,13 @@ Mat getImg(char *filename)
 	// Resize image to acceptable dimensions
 	int width = src_raw.cols;
 	int height = src_raw.rows;
-	Size size(width / 5, height / 5);
+	double resize_factor = 1;
+	Size size(width / resize_factor, height / resize_factor);
 
 	Mat img_ret;
 	resize(src_raw, img_ret, size, 0.0, 0.0, INTER_CUBIC);
-	return img_ret;
+	//return img_ret;
+	return src_raw;
 }
 
 /*** Convert an image to grey ***/
