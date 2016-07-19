@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{ED206BD1-FDE5-4F83-9FEB-646D029E71D3}</ProjectGuid>
+    <ProjectGuid>{F7C0B51C-A2A7-47F3-976F-049A3B58B3C0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TestsImages</RootNamespace>
-    <ProjectName>MatrixMaker</ProjectName>
+    <ProjectName>keyPoints</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -67,6 +67,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(OPENCV_DIR)/include;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(OPENCV_DIR)/x64/vc12/lib</LibraryPath>
     <LinkIncremental>Yes</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -117,16 +118,23 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(OPENCV_DIR)/lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_video310d.lib; opencv_videoio310d.lib; opencv_flann310d.lib;opencv_video310d.lib;opencv_imgcodecs310d.lib;opencv_highgui310d.lib;opencv_imgproc310d.lib;opencv_features2d310d.lib;opencv_core310d.lib;opencv_calib3d310d.lib;opencv_contrib_world310d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_flann310d.lib;opencv_video310d.lib;opencv_imgcodecs310d.lib;opencv_highgui310d.lib;opencv_imgproc310d.lib;opencv_features2d310d.lib;opencv_core310d.lib;opencv_calib3d310d.lib;opencv_contrib_world310d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>Yes</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="extractFrames.cpp" />
-    <ClCompile Include="misc.cpp" />
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ExtractBackground.cpp" />
+    <ClCompile Include="keypoints.cpp" />
+    <ClCompile Include="misc.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ExtractBackground.h" />
+    <ClInclude Include="keypoints.h" />
     <ClInclude Include="misc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -4,8 +4,6 @@
 
 int main(int argc, char** argv)
 {
-	cout << "Tests images : BEGIN" << endl;
-
 	// Load images (reference, background and query)
 	Mat raw = getImg(argv[1]);
 	//Mat back = getImg(argv[2]);
