@@ -7,11 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpikePOC", "SpikePOC\SpikeP
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "filters", "filters\filters.vcxproj", "{9231FB20-1EF5-40B2-BCE6-A0B445533619}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "keypoints", "keypoints\keypoints.vcxproj", "{F7C0B51C-A2A7-47F3-976F-049A3B58B3C0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "keyPoints", "keypoints\keypoints.vcxproj", "{F7C0B51C-A2A7-47F3-976F-049A3B58B3C0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OCR_plaques", "OCR_plaques\OCR_plaques.vcxproj", "{34BDD397-12CD-429F-8DDC-B96704E64419}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "colorMatch", "colorMatch\colorMatch.vcxproj", "{055F94D6-B91E-4B89-BE0B-58A33DE60C1D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OK_NOK", "OK_NOK\OK_NOK.vcxproj", "{EABC5DC3-09FA-4A11-952C-CD881A419957}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +105,21 @@ Global
 		{055F94D6-B91E-4B89-BE0B-58A33DE60C1D}.Release|Win32.ActiveCfg = Release|Win32
 		{055F94D6-B91E-4B89-BE0B-58A33DE60C1D}.Release|Win32.Build.0 = Release|Win32
 		{055F94D6-B91E-4B89-BE0B-58A33DE60C1D}.Release|x64.ActiveCfg = Release|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Debug|ARM.ActiveCfg = Debug|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Debug|Win32.Build.0 = Debug|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Debug|x64.ActiveCfg = Debug|x64
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Debug|x64.Build.0 = Debug|x64
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Release|Any CPU.ActiveCfg = Release|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Release|ARM.ActiveCfg = Release|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Release|Win32.ActiveCfg = Release|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Release|Win32.Build.0 = Release|Win32
+		{EABC5DC3-09FA-4A11-952C-CD881A419957}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
