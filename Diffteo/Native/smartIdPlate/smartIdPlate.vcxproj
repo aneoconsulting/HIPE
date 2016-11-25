@@ -106,7 +106,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opencv_flann310d.lib;opencv_video310d.lib;opencv_imgcodecs310d.lib;opencv_highgui310d.lib;opencv_imgproc310d.lib;opencv_features2d310d.lib;opencv_core310d.lib;opencv_calib3d310d.lib;opencv_contrib_world310d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_flann310d.lib;opencv_video310d.lib;opencv_imgcodecs310d.lib;opencv_highgui310d.lib;opencv_imgproc310d.lib;opencv_features2d310d.lib;opencv_core310d.lib;opencv_calib3d310d.lib;opencv_contrib_world310d.lib;opencv_cudaimgproc310d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -145,22 +145,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="detectGridShape.cpp" />
     <ClCompile Include="DetextTextArea.cpp" />
     <ClCompile Include="drawRect.cpp" />
     <ClCompile Include="ImageProcessing.cpp" />
     <ClCompile Include="labelOCR.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="perspective.cpp" />
+    <ClCompile Include="PerspectiveProcessing.cpp" />
     <ClCompile Include="tools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capture.h" />
+    <ClInclude Include="DetectGridShape.h" />
     <ClInclude Include="DetectTextArea.h" />
     <ClInclude Include="diffteo.h" />
     <ClInclude Include="drawRect.h" />
+    <ClInclude Include="Exceptions.h" />
     <ClInclude Include="ImageProcessing.h" />
     <ClInclude Include="labelOCR.h" />
     <ClInclude Include="perspective.h" />
+    <ClInclude Include="PerspectiveProcessing.h" />
     <ClInclude Include="tools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

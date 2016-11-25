@@ -10,6 +10,70 @@
 
 using namespace cv;
 
+Mat FilterLine(Mat & inputGray)
+{
+	// Specify size on horizontal axis
+	int horizontalsize = inputGray.cols / 30;
+	// Create structure element for extracting horizontal lines through morphology operations
+	Mat horizontalStructure = getStructuringElement(MORPH_RECT, Size(horizontalsize, 1));
+	// Apply morphology operations
+	Mat horizontal;
+	erode(inputGray, horizontal, horizontalStructure, Point(-1, -1));
+	dilate(horizontal, horizontal, horizontalStructure, Point(-1, -1));
+	dilate(horizontal, horizontal, horizontalStructure, Point(-1, -1));
+	
+	//dilate(horizontal, horizontal, horizontalStructure, Point(-1, -1));
+
+	
+	Mat vertical;
+	// Specify size on vertical axis
+	int verticalsize = inputGray.rows / 30;
+	// Create structure element for extracting vertical lines through morphology operations
+	Mat verticalStructure = getStructuringElement(MORPH_RECT, Size(1, verticalsize));
+	// Apply morphology operations
+	erode(inputGray, vertical, verticalStructure, Point(-1, -1));
+	dilate(vertical, vertical, verticalStructure, Point(-1, -1));
+	dilate(vertical, vertical, verticalStructure, Point(-1, -1));
+	
+	
+
+	
+	return Mat(horizontal + vertical);
+}
+
+void sortCorners(std::vector<cv::Point2f>& corners)
+{
+	cv::Point2f center;
+	// Get mass center
+	for (int i = 0; i < corners.size(); i++)
+		center += corners[i];
+	center *= (1. / corners.size());
+
+	std::vector<cv::Point2f> top, bot;
+
+	for (int i = 0; i < corners.size(); i++)
+	{
+		if (corners[i].y < center.y)
+			top.push_back(corners[i]);
+		else
+			bot.push_back(corners[i]);
+	}
+	corners.clear();
+
+	if (top.size() == 2 && bot.size() == 2){
+		cv::Point2f tl = top[0].x > top[1].x ? top[1] : top[0];
+		cv::Point2f tr = top[0].x > top[1].x ? top[0] : top[1];
+		cv::Point2f bl = bot[0].x > bot[1].x ? bot[1] : bot[0];
+		cv::Point2f br = bot[0].x > bot[1].x ? bot[0] : bot[1];
+
+
+		corners.push_back(tl);
+		corners.push_back(tr);
+		corners.push_back(br);
+		corners.push_back(bl);
+	}
+}
+
 /**
 *  \brief Automatic brightness and contrast optimization with optional histogram clipping
 *  \param [in]src Input image GRAY or BGR or BGRA

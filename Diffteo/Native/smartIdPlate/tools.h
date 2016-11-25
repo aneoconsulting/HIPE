@@ -71,7 +71,12 @@ public:
 
 };
 
+
+void sortCorners(std::vector<cv::Point2f>& corners);
+
 cv::Mat getImage(cv::String filename, int ratio = 5);
 FileInfo getFileName(const std::string& s);
 
 void BrightnessAndContrastAuto(const cv::Mat &src, cv::Mat &dst, float clipHistPercent = 0);
+
+cv::Mat FilterLine(cv::Mat & inputGray);

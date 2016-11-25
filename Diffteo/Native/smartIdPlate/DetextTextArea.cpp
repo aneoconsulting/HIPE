@@ -2,6 +2,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include "diffteo.h"
 #include <iostream>
+#include "tools.h"
 using namespace cv;
 using namespace std;
 
@@ -27,16 +28,21 @@ vector<Rect> filterTextArea(const Mat& rgb, vector<Rect>& textAreas)
 	for (int i = 0; i < textAreas.size(); i++)
 	{
 		//Filter out
-		if ((double)(textAreas[i].height / (double)rgb.rows) > 0.25) continue;
+		if ((double)(textAreas[i].height / (double)rgb.rows) > 0.35) continue;
 		if ((double)(textAreas[i].height / (double)rgb.rows) < 0.06) continue; // area is a line ?? or something else ?
 
 		//Dilate width the right of the rectangle to check if there is more rect 
 		//textAreas[i].width += 0.50 * textAreas[i].width;
 		filteredTextAreas.push_back(textAreas[i]);
 	}
-	textAreas.clear();
+	return filteredTextAreas;
+}
 
+vector<Rect> blobsRectangle(const Mat& rgb, vector<Rect>& textAreas)
+{
+	vector<Rect> filteredTextAreas;
 
+	std::sort(textAreas.begin(), textAreas.end(), compareByPos);
 	for (int i = 0; i < filteredTextAreas.size(); i++)
 		textAreas.push_back(filteredTextAreas[i]);
 	filteredTextAreas.clear();
@@ -104,7 +110,7 @@ vector<Rect> filterTextArea(const Mat& rgb, vector<Rect>& textAreas)
 	return filteredTextAreas;
 }
 
-vector<Mat> detectTextArea(const cv::Mat& planSrcRaw)
+Mat preprocessImage(const cv::Mat & planSrcRaw)
 {
 	Mat large = planSrcRaw;
 	Mat rgb;
@@ -123,16 +129,25 @@ vector<Mat> detectTextArea(const cv::Mat& planSrcRaw)
 	//GaussianBlur(small, small, Size(3, 3), 0);
 	bitwise_not(small, small);
 	//ShowImageWait(small);
+	return small;
+}
 
+vector<Rect> boundingLetters(const cv::Mat& small, cv::Mat & binary, float xmin, float xmax)
+{
 	// morphological gradient
 	Mat grad;
+	Mat edges;
+	Mat debugBoundary;// = small.clone();
+	if (small.type() == CV_8UC1)
+		cvtColor(small, debugBoundary, CV_GRAY2RGB);
+
 	Mat morphKernel = getStructuringElement(MORPH_ELLIPSE, Size(3, 3));
 	morphologyEx(small, grad, MORPH_GRADIENT, morphKernel);
 	//ShowImageWait(grad);
 
 	// binarize
 	Mat bw;
-	threshold(grad, bw, 0.0, 255.0, THRESH_BINARY | THRESH_OTSU);
+	threshold(grad, bw, 64, 255.0, THRESH_BINARY | THRESH_OTSU);
 	//ShowImageNoWait(bw);
 	// connect horizontally oriented regions
 	Mat connected;
@@ -148,7 +163,7 @@ vector<Mat> detectTextArea(const cv::Mat& planSrcRaw)
 
 	/*Mat debug = Mat::zeros(rgb.size(), CV_8UC1);
 	for (int i = 0; i < contours.size(); i++)
-		drawContours(debug, contours, i, Scalar(255, 255, 255));*/
+	drawContours(debug, contours, i, Scalar(255, 255, 255));*/
 	//ShowImageWait(debug);
 
 	vector<Rect> textAreas;
@@ -165,27 +180,62 @@ vector<Mat> detectTextArea(const cv::Mat& planSrcRaw)
 		//ShowImageNoWait(mask);
 		// ratio of non-zero pixels in the filled region
 		double r = (double)countNonZero(maskROI) / (rect.width * rect.height);
-
-		if (r > .20 /* assume at least 45% of the area is filled if it contains text */
+		rectangle(debugBoundary, rect, Scalar(255, 0, 0), 2);
+		ShowImageWait(debugBoundary);
+		if (r > .20 && r < 0.80/* assume at least 45% of the area is filled if it contains text */
 			&&
-			(rect.height > 10 && rect.width > 8) /* constraints on region size */
+			(rect.height > 20 && rect.width > 8) /* constraints on region size */
 			/* these two conditions alone are not very robust. better to use something
 			like the number of significant peaks in a horizontal projection as a third condition */
-		)
+			&& 
+			rect.width <= 0.1 * small.cols
+			&&
+			rect.x >= xmin * small.cols  // Bug when the image are already croped
+			&&
+			rect.x <= xmax * small.cols
+			)
 		{
 			textAreas.push_back(rect);
-			//rectangle(rgb, rect, Scalar(0, 255, 0), 2);
+			rectangle(debugBoundary, rect, Scalar(0, 255, 0), 2);
 		}
 		else
 		{
-			std::cout << "Rejected rectangle : " << rect << endl;
+			//std::cout << "Rejected rectangle : " << rect << endl;
 
-			//rectangle(rgb, rect, Scalar(0, 0, 255), 2);
+			rectangle(debugBoundary, rect, Scalar(0, 0, 255), 2);
 		}
+		ShowImageNoWait(debugBoundary);
 	}
+	std::sort(textAreas.begin(), textAreas.end(), compareByPos);
+	binary = connected;
+	return textAreas;
+}
 
+vector<Mat> detectTextArea(const cv::Mat& planSrcRaw)
+{
+	Mat rgb = planSrcRaw;
+	Mat small = preprocessImage(planSrcRaw);
+	Mat binary;
+	Mat FilteredBoundaries = rgb.clone();
+	Mat DefaultBoundaries = rgb.clone();
+
+	vector<Rect> textAreas = boundingLetters(small, binary, 0.0f, 1.0f);
+	for (int i = 0; i < textAreas.size(); i++)
+	{
+		rectangle(DefaultBoundaries, textAreas[i], Scalar(0, 0, 255), 2);
+	}
+	ShowImageWait(DefaultBoundaries);
 
 	vector<Rect> textAreasfiltered = filterTextArea(rgb, textAreas);
+	
+
+	for (int i = 0; i < textAreasfiltered.size(); i++)
+	{
+		rectangle(FilteredBoundaries, textAreasfiltered[i], Scalar(0, 0, 255), 2);
+	}
+	ShowImageWait(FilteredBoundaries);
+
+	textAreasfiltered = blobsRectangle(small, textAreasfiltered);
 	vector<Mat> textAreasImg;
 
 	for (int i = 0; i < textAreasfiltered.size(); i++)

@@ -18,6 +18,7 @@
 #include "diffteo.h"
 #include "DetectTextArea.h"
 #include "labelOCR.h"
+#include "PerspectiveProcessing.h"
 
 using namespace std;
 using namespace cv;
@@ -36,12 +37,12 @@ int main(int argc, char **argv)
 	cv::glob(dir, filenames);
 	UserData userData;
 	LabelOCR lblOCR;
-
+	//6,8
 	for (size_t i = 0; i<filenames.size(); i++)
 	{
 		clearUserData(userData);
 
-		Mat srcRaw = getImage(filenames[i], 1);
+		Mat srcRaw = getImage(filenames[i], 5);
 		Mat planSrcRaw;
 
 		//TODO this an equivalent of the function to find a rectangle in a perspective
@@ -50,16 +51,18 @@ int main(int argc, char **argv)
 
 		//Disable get plate directly cleaned
 		//findperspective(srcRaw, planSrcRaw, userData);
-		planSrcRaw = srcRaw;
-		ShowImageNoWait(planSrcRaw);
+		planSrcRaw = extractPlate(srcRaw);
+		//planSrcRaw = srcRaw;
+
+		//ShowImageNoWait(planSrcRaw);
 		FileInfo fInfo = getFileName(filenames[i]);
 		//imwrite(fInfo.addPrefix("plan_"), planSrcRaw);
 
 
-		//vector<Mat> textAreaImgs = detectTextArea(planSrcRaw);
-		vector<Mat> textAreaImgs;
+		vector<Mat> textAreaImgs = detectTextArea(planSrcRaw);
+		//vector<Mat> textAreaImgs;
 
-		textAreaImgs.push_back(planSrcRaw);
+		//textAreaImgs.push_back(planSrcRaw);
 
 		/*for (int i = 0; i < textAreaImgs.size(); i++)
 		{
@@ -82,7 +85,18 @@ int main(int argc, char **argv)
 			}
 			
 		}*/
-		lblOCR.runRecognition(textAreaImgs, 2);
+		/*for (int j = 0; j < textAreaImgs.size(); j++)
+		{
+			Mat textImage;
+			String nb = "label_" + std::to_string(j);
+
+			lblOCR.preProcess(textAreaImgs[j], textImage);
+			std::string path = fInfo.addPrefix("charset/" +  nb + "_letters");
+			imwrite(path, textImage);
+
+		}*/
+
+		//lblOCR.runRecognition(textAreaImgs, 2);
 
 	
 	}

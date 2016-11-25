@@ -35,9 +35,10 @@ public:
 	vector<string> runRecognition(const vector<cv::Mat> &labelImage, int labelType);
 	Ptr<OCRTesseract> tesseOCR_;
 	bool showImages;
+	void preProcess(const cv::Mat &InputImage, cv::Mat &binImage);
 
 private:
-	void preProcess(const cv::Mat &InputImage, cv::Mat &binImage);
+	
 	string runPrediction1(const cv::Mat &labelImage, int i);
 	string runPrediction2(const cv::Mat &labelImage, int i);
 	void skeletonize(cv::Mat& im);
