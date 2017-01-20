@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "NOT YET IMPLEMENTED HEADER REFERENCES"
+
+exit 1

@@ -1,0 +1,5 @@
+namespace http {
+	class HttpParams
+	{
+	};
+}
