@@ -37,6 +37,7 @@ endforeach()
 
 message(STATUS "references header is : ${_includes}")
 set(header_ref ${CMAKE_SOURCE_DIR}/header/filter/References.h)
+FILE(WRITE ${CMAKE_SOURCE_DIR}/header/filter/References.h "#pragma once\n #error \"TO GENERATE IS THE BUILD\"")
 message(STATUS "WRITE header into : ${header_ref}")
 
 SET(script_path "${CMAKE_SOURCE_DIR}/scripts/headerList.bat")

@@ -32,7 +32,7 @@ namespace http {
 
 
 
-
+					//TESTER
 					dataResponse += child.get<std::string>("type");
 					dataResponse += " ";
 					dataResponse += child.get<std::string>("name");
