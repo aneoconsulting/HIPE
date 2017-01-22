@@ -12,7 +12,7 @@ namespace filter {
 		std::string _name;
 		int _level;
 	public:
-		IFilter()
+		IFilter() : _level(0)
 		{
 			
 		}
@@ -32,9 +32,21 @@ namespace filter {
 
 		void setLevel(int level) { _level = level; }
 		int getLevel() { return _level; }
+		void setname(std::string name) { _name = name; }
+		std::string & getname() { return _name; }
 
-		virtual void addDependencies(IFilter *filer);
-		virtual void addChildDependencies(IFilter *filer);
+		virtual void addDependencies(IFilter *filter);
+		virtual void addChildDependencies(IFilter *filter);
 
+		virtual void addDependenciesName(std::string filter);
+		virtual void addChildDependenciesName(std::string filter);
+
+		std::map<std::string, IFilter *>  getParents() const
+		{ return _parentFilters; }
+
+		std::map<std::string, IFilter *> getChildrens() const
+		{ return _childFilters; }
+
+		
 	};
 }

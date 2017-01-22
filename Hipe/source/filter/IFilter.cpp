@@ -34,28 +34,60 @@ void filter::IFilter::getNextChildren()
 	throw "Not yet implemented Need Iteraror as state and I don't like it";
 }
 
-void filter::IFilter::addDependencies(IFilter* child)
+void filter::IFilter::addDependencies(IFilter* parent)
 {
-	if (child->_parentFilters.find(this->_name) != child->_parentFilters.end())
+	if (parent->_childFilters.find(this->_name) != parent->_childFilters.end() && (parent->_childFilters[this->_name] != nullptr))
 	{
 		std::string errorMessage = std::string("Filter named ");
 		errorMessage += this->_name;
-		errorMessage += " doesn't exist";
+		errorMessage += " already exists ";
+
+		throw std::exception(errorMessage.c_str());
+	}
+	parent->_childFilters[this->_name] = this;
+
+	if (this->_parentFilters.find(parent->_name) != this->_parentFilters.end() && (this->_parentFilters[parent->_name] != nullptr))
+	{
+		std::string errorMessage = std::string("Filter named ");
+		errorMessage += parent->_name;
+		errorMessage += " already exists ";
+
+		throw std::exception(errorMessage.c_str());
+	}
+	this->_parentFilters[parent->getname()] = parent;
+
+}
+
+void filter::IFilter::addChildDependencies(IFilter* child)
+{
+	if (_childFilters.find(child->_name) != _childFilters.end() && (_childFilters[child->_name] != nullptr))
+	{
+		std::string errorMessage = std::string("Filter named ");
+		errorMessage += child->_name;
+		errorMessage += " already exist";
+
+		throw std::exception(errorMessage.c_str());
+	}
+	this->_childFilters[child->_name] = (child);
+
+	if (child->_parentFilters.find(this->_name) != child->_parentFilters.end() && (child->_parentFilters[this->_name] != nullptr))
+	{
+		std::string errorMessage = std::string("Filter named ");
+		errorMessage += this->_name;
+		errorMessage += " already exist";
 
 		throw std::exception(errorMessage.c_str());
 	}
 	child->_parentFilters[this->_name] = this;
 }
 
-void filter::IFilter::addChildDependencies(IFilter* child)
-{
-	if (_childFilters.find(this->_name) != _childFilters.end())
-	{
-		std::string errorMessage = std::string("Filter named ");
-		errorMessage += child->_name;
-		errorMessage += " doesn't exist";
 
-		throw std::exception(errorMessage.c_str());
-	}
-	this->_childFilters[child->_name] = (child);
+void filter::IFilter::addDependenciesName(std::string filterName)
+{
+	_parentFilters[filterName] = nullptr;
+}
+
+void filter::IFilter::addChildDependenciesName(std::string filterName)
+{
+	_childFilters[filterName] = nullptr;
 }

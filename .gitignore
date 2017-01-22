@@ -16,3 +16,5 @@ Diffteo/Native/smartIdPlate/Debug/*
 *.idb
 *.sdf
 *.zip
+Hipe/header/filter/References.h
+Simple-Web-Server-master/*
