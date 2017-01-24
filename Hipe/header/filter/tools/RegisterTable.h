@@ -8,6 +8,7 @@
 namespace filter {
 	class IFilter;
 }
+class RegisterTable;
 
 class RegisterTable
 {

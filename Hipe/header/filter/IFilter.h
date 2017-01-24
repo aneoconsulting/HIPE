@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <exception/HipeException.h>
 
 namespace filter {
 	class IFilter
@@ -22,7 +23,7 @@ namespace filter {
 
 		virtual void getPreviousFilter();
 
-		virtual IFilter * IFilter::getRootFilter();
+		virtual IFilter * getRootFilter();
 
 		virtual void getParent();
 

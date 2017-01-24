@@ -40,13 +40,21 @@ set(header_ref ${CMAKE_SOURCE_DIR}/header/filter/References.h)
 FILE(WRITE ${CMAKE_SOURCE_DIR}/header/filter/References.h "#pragma once\n #error \"TO GENERATE IS THE BUILD\"")
 message(STATUS "WRITE header into : ${header_ref}")
 
-SET(script_path "${CMAKE_SOURCE_DIR}/scripts/headerList.bat")
+if (UNIX)
+  SET(script_path "${CMAKE_SOURCE_DIR}/scripts/headerList.sh")
+endif (UNIX)
+if (WIN32)
+  SET(script_path "${CMAKE_SOURCE_DIR}/scripts/headerList.bat")
+endif (WIN32)
+
 FILE(TO_NATIVE_PATH "${script_path}" os_path)
 SET(script_path ${os_path})
 
 FILE(TO_NATIVE_PATH "${header_ref}" os_ref_header_path)
 
+message( "Path found is : ${os_ref_header_path}")
 
+if (WIN32)
 ADD_CUSTOM_TARGET(reference 
 	ALL
 	COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}"
@@ -55,6 +63,22 @@ ADD_CUSTOM_TARGET(reference
 	COMMENT "Generate reference file"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
 )
+endif (WIN32)
+
+#TODO REMOVE BONJOURS
+if (UNIX)
+ADD_CUSTOM_TARGET(reference 
+	ALL
+	COMMAND echo "BONJOUR1" > /home/osboxes/bonsoir
+	COMMAND echo "BONJOUR" >> /home/osboxes/bonsoir
+	COMMAND echo "BONJOUR3" >> /home/osboxes/bonsoir
+	COMMAND echo "#pragma once" > "${os_ref_header_path}"
+	COMMAND echo "// Algorithm header to reference"  >> "${os_ref_header_path}"
+    COMMAND echo "${script_path}" >> "${os_ref_header_path}"
+	COMMENT "Generate reference file"
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
+)
+endif (UNIX)
 
 ##filter LIBRARY
 

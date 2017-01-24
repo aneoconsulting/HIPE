@@ -42,7 +42,7 @@ void filter::IFilter::addDependencies(IFilter* parent)
 		errorMessage += this->_name;
 		errorMessage += " already exists ";
 
-		throw std::exception(errorMessage.c_str());
+		throw HipeException(errorMessage.c_str());
 	}
 	parent->_childFilters[this->_name] = this;
 
@@ -52,7 +52,7 @@ void filter::IFilter::addDependencies(IFilter* parent)
 		errorMessage += parent->_name;
 		errorMessage += " already exists ";
 
-		throw std::exception(errorMessage.c_str());
+		throw HipeException(errorMessage.c_str());
 	}
 	this->_parentFilters[parent->getname()] = parent;
 
@@ -66,7 +66,7 @@ void filter::IFilter::addChildDependencies(IFilter* child)
 		errorMessage += child->_name;
 		errorMessage += " already exist";
 
-		throw std::exception(errorMessage.c_str());
+		throw HipeException(errorMessage.c_str());
 	}
 	this->_childFilters[child->_name] = (child);
 
@@ -76,7 +76,7 @@ void filter::IFilter::addChildDependencies(IFilter* child)
 		errorMessage += this->_name;
 		errorMessage += " already exist";
 
-		throw std::exception(errorMessage.c_str());
+		throw HipeException(errorMessage.c_str());
 	}
 	child->_parentFilters[this->_name] = this;
 }
