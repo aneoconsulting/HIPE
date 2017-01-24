@@ -2,7 +2,7 @@
 #include <istream>
 #include "Server.h"
 
-namespace
+namespace http
 {
 
 	class Content : public std::istream

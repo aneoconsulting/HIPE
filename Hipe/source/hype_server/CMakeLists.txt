@@ -59,6 +59,7 @@ endif()
 
 
 
+target_link_libraries(hype_server core)
 target_link_libraries(hype_server filter)
 target_link_libraries(hype_server http)
 

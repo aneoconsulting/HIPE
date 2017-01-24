@@ -2,8 +2,8 @@
 #include <string>
 #include <map>
 #include <filter/IFilter.h>
-#include "JsonFilterNode.h/JsonFilterNode.h"
-
+#include "json/JsonFilterNode/JsonFilterNode.h"
+#include <core/HipeException.h>
 
 namespace http
 {
@@ -51,7 +51,7 @@ namespace http
 					errorMessage += name;
 					errorMessage += " doesn't exist";
 
-					throw std::exception(errorMessage.c_str());
+					throw HipeException(errorMessage.c_str());
 				}
 				_filterMap[name] = filter;
 
@@ -66,7 +66,7 @@ namespace http
 			//Link every filters between them
 			void computeLinkDependencies()
 			{
-				if (isFreezed == false) throw std::exception("Cannot compute dependencies of tree if the tree is not freezed");
+				if (isFreezed == false) throw HipeException("Cannot compute dependencies of tree if the tree is not freezed");
 
 				for (auto &it : _filterMap)
 				{
@@ -85,7 +85,7 @@ namespace http
 			//Compute the layer inder of the node when it will be executed
 			void computeLevelNode()
 			{
-				if (isFreezed == false) throw std::exception("Cannot compute layer level of tree if the tree is not freezed");
+				if (isFreezed == false) throw HipeException("Cannot compute layer level of tree if the tree is not freezed");
 
 				for (auto &it : _filterMap)
 				{

@@ -52,8 +52,6 @@ SET(script_path ${os_path})
 
 FILE(TO_NATIVE_PATH "${header_ref}" os_ref_header_path)
 
-message( "Path found is : ${os_ref_header_path}")
-
 if (WIN32)
 ADD_CUSTOM_TARGET(reference 
 	ALL
@@ -65,18 +63,16 @@ ADD_CUSTOM_TARGET(reference
 )
 endif (WIN32)
 
-#TODO REMOVE BONJOURS
 if (UNIX)
 ADD_CUSTOM_TARGET(reference 
 	ALL
-	COMMAND echo "BONJOUR1" > /home/osboxes/bonsoir
-	COMMAND echo "BONJOUR" >> /home/osboxes/bonsoir
-	COMMAND echo "BONJOUR3" >> /home/osboxes/bonsoir
-	COMMAND echo "#pragma once" > "${os_ref_header_path}"
+#	COMMAND echo "#pragma once"  > "${os_ref_header_path}" doesnt work because of the #
+	COMMAND echo "\\\#pragma once" > "${os_ref_header_path}"
 	COMMAND echo "// Algorithm header to reference"  >> "${os_ref_header_path}"
-    COMMAND echo "${script_path}" >> "${os_ref_header_path}"
+    COMMAND bash "${script_path}" >> "${os_ref_header_path}"
 	COMMENT "Generate reference file"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
+#	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/
 )
 endif (UNIX)
 
@@ -110,11 +106,17 @@ endforeach()
 
 include_directories(filter ${_src_filter_inc_path})
 
+target_link_libraries(filter core)
+
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
 	message(STATUS "Test if it works with windows") 
     target_link_libraries(filter ws2_32 wsock32)
 	target_link_libraries(binary ws2_32 wsock32)
    
 endif()
+
+#TODO ^ is there something like that to do on Linux ?
+
+
 
 install(TARGETS filter DESTINATION ../../target/)

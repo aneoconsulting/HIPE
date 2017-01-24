@@ -1,4 +1,4 @@
-#include "..\..\header\http\HttpServer.h"
+#include <HttpServer.h>
 #include <HttpTask.h>
 
 namespace http
@@ -29,7 +29,7 @@ namespace http
 		server.config.num_threads = 1;
 		server.config.port = port;
 
-		server.resource["^/json$"]["POST"] = [](std::shared_ptr<Response<http::HTTP>> & response, std::shared_ptr<http::Request<http::HTTP>> & request) {
+		server.resource["^/json$"]["POST"] = [](std::shared_ptr<Response<http::HTTP>> response, std::shared_ptr<http::Request<http::HTTP>> request) {
 			http::HttpTask task(response, request);
 			/*	thread work_thread([&response, &request] {
 

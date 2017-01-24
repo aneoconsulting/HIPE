@@ -1,11 +1,13 @@
+#pragma once
 #include <filter/IFilter.h>
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <filter/tools/RegisterTable.h>
 #include <Response.h>
 #include <HttpServer.h>
-#include <JsonFilterNode.h/JsonFilterNode.h>
-#include <JsonFilterTree.h>
+#include <json/JsonFilterNode/JsonFilterNode.h>
+#include <json/JsonFilterNode/JsonFilterTree.h>
+#include <core/HipeException.h>
 
 namespace http {
 	namespace json {
@@ -29,7 +31,7 @@ namespace http {
 				for (auto & filter : filters)
 				{
 					if (filter.second.count("filter") == 0)
-						throw std::exception("Cannot find filter");
+						throw HipeException("Cannot find filter");
 					boost::property_tree::ptree child = filter.second.get_child("filter");
 
 

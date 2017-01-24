@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "NOT YET IMPLEMENTED HEADER REFERENCES"
+find \( -name '*.h' -o -name '*.hpp' \) -type f -exec sh -c 'echo "#include <"{}">" | sed "s/\.\///g"' \;
 
-exit 1
+exit 0

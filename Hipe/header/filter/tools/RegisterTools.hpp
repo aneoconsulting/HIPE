@@ -68,12 +68,13 @@ public:
 #define REGISTER(Constructor, params)\
 	public:\
 	const std::string _constructor; \
-	typedef ProxyFunctor<Constructor> _proxyFunctor;\
-	##Constructor##params : _constructor(#Constructor)
+	typedef ProxyFunctor<Constructor> _proxyFunctor; \
+	Constructor params : _constructor(#Constructor)
 
 #define EXPAND_VAR(elem) elem
 #define CONCAT2(a, b) a ## b
-#define CONCAT3(a, b, c) CONCAT2(a, b) ## c
+//#define CONCAT3(a, b, c) CONCAT2(a, b) ## c // does not work with gcc : error: pasting ")" and "[une variable du code C]" does not give a valid preprocessing token 
+#define CONCAT3(a, b, c) a ## b ## c
 #define CONCAT2_STR(a, b) TO_STR(a ## b)
 
 //#define ADD_ARGS(r, classname, elem)\

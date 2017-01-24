@@ -8,7 +8,6 @@
 namespace filter {
 	class IFilter;
 }
-class RegisterTable;
 
 class RegisterTable
 {
@@ -33,7 +32,7 @@ private:
 		
 	}
 
-	static RegisterTable *RegisterTable::instance;
+	static RegisterTable *instance;
 
 
 public:
@@ -48,7 +47,7 @@ public:
 	}
 
 public:
-	const std::string addClass(std::string& className, std::function<filter::IFilter*()> constructor)
+	const std::string addClass(std::string className, std::function<filter::IFilter*()> constructor)
 	{
 		if (functionTable[className] == nullptr) 
 			functionTable[className] = constructor;

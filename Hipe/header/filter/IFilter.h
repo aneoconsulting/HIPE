@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <exception/HipeException.h>
+#include <core/HipeException.h>
 
 namespace filter {
 	class IFilter
