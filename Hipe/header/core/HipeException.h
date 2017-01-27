@@ -2,6 +2,7 @@
 
 #include <exception>
 #include <string>
+#include <core/osdependant.h>
 
 class HipeException : public std::exception {
 
@@ -13,6 +14,6 @@ class HipeException : public std::exception {
 		HipeException(std::string message);
 
 	public:
-		const char* what() const noexcept override;
+		const char* what() const NO_EXCEPT override;
 
 };

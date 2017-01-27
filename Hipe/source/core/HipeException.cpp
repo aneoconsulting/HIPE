@@ -9,7 +9,7 @@ HipeException::HipeException(std::string m) : message(m)
 }
 
 
-const char* HipeException::what() const noexcept
+const char* HipeException::what() const NO_EXCEPT
 {
 	return this->message.c_str();
 }
