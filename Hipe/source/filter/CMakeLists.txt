@@ -118,5 +118,5 @@ endif()
 #TODO ^ is there something like that to do on Linux ?
 
 
-
 install(TARGETS filter DESTINATION ../../target/)
+#install(TARGETS filter DESTINATION /usr/local/lib/) 

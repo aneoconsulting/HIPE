@@ -68,3 +68,4 @@ enable_testing()
 #add_subdirectory(tests)
 
 install(TARGETS hype_server DESTINATION ../../target/)
+#install(TARGETS hype_server DESTINATION /usr/local/bin/)

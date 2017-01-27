@@ -61,3 +61,4 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
 endif()
 
 install(TARGETS http DESTINATION ../../target/)
+#install(TARGETS http DESTINATION /usr/local/lib/)

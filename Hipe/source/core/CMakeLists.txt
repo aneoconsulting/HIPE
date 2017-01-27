@@ -58,4 +58,6 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
    
 endif()
 
+
 install(TARGETS core DESTINATION ../../target/)
+#install(TARGETS core DESTINATION /usr/local/lib/)
