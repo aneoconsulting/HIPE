@@ -69,6 +69,33 @@ public:
 		return std::string(classname + "::" + functionName);
 	}
 
+	const std::vector<std::string> getMethodNames(const std::string& classname)
+	{
+		std::vector<std::string> methodsNames;
+
+		for (auto & pairs : setterTable[classname])
+		{
+			methodsNames.push_back(pairs.first);
+		}
+
+		return methodsNames;
+	}
+
+	const std::vector<std::string> getVarNames(const std::string& classname)
+	{
+		std::vector<std::string> varNames;
+
+		for (auto & pairs : setterTable[classname])
+		{
+			if (pairs.first.find("_from_json") == std::string::npos)
+				if (pairs.first.find("set_") == 0)
+					varNames.push_back(std::string(pairs.first).erase(0, 4)); // remove prefix "set_"
+
+		}
+		
+		return varNames;
+	}
+
 	template<typename...Args>
 	void invoke(filter::IFilter * instance, std::string functionName, Args...args)
 	{
@@ -90,4 +117,6 @@ public:
 #define newFilter(className) RegisterTable::getInstance().newObjectInstance(className)
 
 #define __invoke(instance, function,...) RegisterTable::getInstance().invoke(instance, function,  __VA_ARGS__)
+#define getTypes(className) RegisterTable::getInstance().getMethodNames(className)
+#define getParameterNames(className) RegisterTable::getInstance().getVarNames(className)
 

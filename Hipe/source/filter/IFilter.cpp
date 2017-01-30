@@ -54,7 +54,7 @@ void filter::IFilter::addDependencies(IFilter* parent)
 
 		throw HipeException(errorMessage.c_str());
 	}
-	this->_parentFilters[parent->getname()] = parent;
+	this->_parentFilters[parent->getName()] = parent;
 
 }
 

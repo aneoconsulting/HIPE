@@ -43,7 +43,7 @@ namespace http
 			void add(JsonFilterNode& filterNode)
 			{
 				filter::IFilter * filter = filterNode.getFilter();
-				std::string name = filter->getname();
+				std::string name = filter->getName();
 
 				if (_filterMap.find(name) != _filterMap.end())
 				{

@@ -37,7 +37,16 @@ namespace http
 
 			void applyClassParameter()
 			{
+				for (auto &field : getParameterNames(_filter->getConstructorName()))
+				{
+					std::string copyField(field);
 
+					if (_params.count(field) != 0)
+					{
+						__invoke(_filter, "set_" + copyField + "_from_json", _params);
+
+					}
+				}
 			}
 
 			filter::IFilter * getFilter() { return _filter; }

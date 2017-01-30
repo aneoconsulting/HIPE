@@ -42,10 +42,12 @@ namespace http {
 
 					
 					res = newFilter(type);
-					res->setname(name);
+					res->setName(name);
 
 
 					JsonFilterNode json_filter_node = JsonFilterNode(res, child);
+					json_filter_node.applyClassParameter();
+
 					tree.add(json_filter_node);
 
 					

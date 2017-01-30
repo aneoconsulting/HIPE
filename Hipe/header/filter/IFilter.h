@@ -8,6 +8,8 @@
 namespace filter {
 	class IFilter
 	{
+	protected:
+		std::string _constructor; 
 		std::map<std::string, IFilter *> _parentFilters;
 		std::map<std::string, IFilter *> _childFilters;
 		std::string _name;
@@ -16,6 +18,10 @@ namespace filter {
 		IFilter() : _level(0)
 		{
 			
+		}
+		IFilter(std::string & contructorName) : _constructor(contructorName), _level(0)
+		{
+
 		}
 		
 	public:
@@ -33,8 +39,10 @@ namespace filter {
 
 		void setLevel(int level) { _level = level; }
 		int getLevel() { return _level; }
-		void setname(std::string name) { _name = name; }
-		std::string & getname() { return _name; }
+		void setName(std::string name) { _name = name; }
+		const std::string & getName() const { return _name; }
+		
+		const std::string & getConstructorName() const { return _constructor; }
 
 		virtual void addDependencies(IFilter *filter);
 		virtual void addChildDependencies(IFilter *filter);
