@@ -19,7 +19,7 @@ namespace filter {
 		{
 			
 		}
-		IFilter(std::string & contructorName) : _constructor(contructorName), _level(0)
+		IFilter(std::string contructorName) : _constructor(contructorName), _level(0)
 		{
 
 		}

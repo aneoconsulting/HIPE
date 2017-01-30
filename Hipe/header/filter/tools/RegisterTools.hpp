@@ -45,15 +45,15 @@ public:
 		typef get_##params() { return this-> params; }\
 		static int getsetter_ ## params (dtFunctor & dtFunc_ ## params)\
 		{\
-			return _proxyFunctor::getMethodSetter<typef>(dtFunc_##params, &set_##params);\
+		  return _proxyFunctor::getMethodSetter<typef>(dtFunc_##params, &mytype::set_##params); \
 		}\
 		static int getsetter_##params##_from_json(dtFunctor & dtFunc_)\
 		{\
-			return _proxyFunctor::getMethodSetter<boost::property_tree::ptree>(dtFunc_, &set_##params##_from_json);\
+			return _proxyFunctor::getMethodSetter<boost::property_tree::ptree &>(dtFunc_, &mytype::set_##params##_from_json);\
 		}\
 		static int getgetter_##params(dtFunctor & dtFunc_##params)\
 		{\
-			return _proxyFunctor::getMethodGetter<typef>(dtFunc_##params, &get_##params);\
+			return _proxyFunctor::getMethodGetter<typef>(dtFunc_##params, &mytype::get_##params);\
 		}
 
 #define TO_STR(A) #A
@@ -61,7 +61,8 @@ public:
 #define REGISTER(Constructor, params)\
 	public:\
 	typedef ProxyFunctor<Constructor> _proxyFunctor; \
-	Constructor params : IFilter(std::string(#Constructor))
+	typedef Constructor mytype;\
+	Constructor params : IFilter(#Constructor)
 
 #define EXPAND_VAR(elem) elem
 #define CONCAT2(a, b) a ## b
