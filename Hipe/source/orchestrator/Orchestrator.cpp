@@ -1,8 +1,6 @@
 #include <orchestrator/Orchestrator.h>
 #include <image/DefaultScheduler.h>
 
-template <class T> T* Singleton<T>::_instance = nullptr; 
-template <class T> std::mutex Singleton<T>::_mutex; 
 
 
 
@@ -18,4 +16,9 @@ namespace orchestrator
 
 		orchestrator_factory->addOrchestrator("DefaultScheduler", default_scheduler);
 	}
+
 }
+
+
+template <class T> T* Singleton<T>::_instance = nullptr; 
+template <class T> std::mutex Singleton<T>::_mutex; 

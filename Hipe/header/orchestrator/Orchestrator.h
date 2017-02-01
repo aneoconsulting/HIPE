@@ -37,7 +37,7 @@ namespace orchestrator
 
 	};
 
-
+	
 	class OrchestratorFactory : public Singleton < OrchestratorFactory >
 	{
 		friend class Singleton<OrchestratorFactory>;
@@ -70,7 +70,7 @@ namespace orchestrator
 		}
 
 		void addModel(KeyNameModel key_name_model, filter::Model * model, 
-			KeyNameOrchestrator key_name_orchesta, OrchestratorBase * orchestrator)
+					  KeyNameOrchestrator key_name_orchesta, OrchestratorBase * orchestrator)
 		{
 			
 
@@ -81,7 +81,7 @@ namespace orchestrator
 		}
 
 		void addModel(KeyNameModel key_name_model, filter::Model * model,
-			KeyNameOrchestrator key_name_orchesta)
+					  KeyNameOrchestrator key_name_orchesta)
 		{
 
 
@@ -95,7 +95,11 @@ namespace orchestrator
 			_modelStore[key_name_model] = key_name_orchesta;
 		}
 
-		
+		void addOrchestrator(KeyNameModel key_name, OrchestratorBase * orchestrator)
+		{
+			throw HipeException("Not yet implemented");
+		}
+
 
 		template <class Conductor>
 		void addOrchestrator(KeyNameModel key_name, Conductor * conductor)
@@ -110,12 +114,7 @@ namespace orchestrator
 			}
 		}
 
-		template<>
-		void addOrchestrator(KeyNameModel key_name, OrchestratorBase * orchestrator)
-		{
-			throw HipeException("Not yet implemented");
-		}
-
+		
 		filter::Model* getModel(const std::string& model_name)
 		{
 			if (_models.find(model_name) != _models.end())
@@ -149,4 +148,5 @@ namespace orchestrator
 		static void start_orchestrator();
 
 	};
+
 }
