@@ -1,5 +1,7 @@
+#pragma once
+
 namespace filter {
-	namespace Algos {
+	namespace data {
 		class OutputFilter
 		{
 		};

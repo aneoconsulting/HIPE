@@ -11,6 +11,7 @@
 #include <http/Server.h>
 #include <http/HttpServer.h>
 #include <http/ClientTest.hpp>
+#include <orchestrator/Orchestrator.h>
 
 using namespace std;
 //Added for the json-example:
@@ -29,6 +30,8 @@ int main() {
 	//1 thread is usually faster than several threads
 	//HttpServer server(8080, 1);
 	http::HttpServer server(8080, 1);
+
+	orchestrator::OrchestratorFactory::start_orchestrator();
 
 	std::thread thread;
 	int port = http::start_http_server(8080, server, thread);

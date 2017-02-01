@@ -4,9 +4,10 @@
 #include <vector>
 #include <map>
 #include <core/HipeException.h>
+#include <filter/Model.h>
 
 namespace filter {
-	class IFilter
+	class IFilter : filter::Model
 	{
 	protected:
 		std::string _constructor; 

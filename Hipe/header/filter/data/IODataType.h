@@ -1,3 +1,5 @@
+#pragma once
+
 namespace filter {
 	namespace Algos {
 		enum IODataType

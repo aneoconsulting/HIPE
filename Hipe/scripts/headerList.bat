@@ -1,11 +1,12 @@
 @echo off
+set prefix=%1
 set mypath=
 call :treeProcess
 goto :eof
 echo test
 :treeProcess
 setlocal
-for %%f in (*.h*) do echo #include ^<filter\Algos\%mypath%%%f^>
+for %%f in (*.h*) do echo #include ^<%prefix%/%mypath%%%f^>
 for /D %%d in (*) do (
     set mypath=%mypath%%%d\
     cd %%d

@@ -53,27 +53,28 @@ SET(script_path ${os_path})
 FILE(TO_NATIVE_PATH "${header_ref}" os_ref_header_path)
 
 if (WIN32)
-ADD_CUSTOM_TARGET(reference 
+ADD_CUSTOM_TARGET(reference_1
 	ALL
 	COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}"
 	COMMAND cmd /c echo ^// Algorithm header to reference  >> "${os_ref_header_path}"
-    COMMAND cmd /c "${script_path}" >> "${os_ref_header_path}"
+    COMMAND cmd /c "${script_path}" "filter/Algos" >> "${os_ref_header_path}"
 	COMMENT "Generate reference file"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
 )
+
+
 endif (WIN32)
 
 if (UNIX)
-ADD_CUSTOM_TARGET(reference 
+ADD_CUSTOM_TARGET(reference_1
 	ALL
-#	COMMAND echo "#pragma once"  > "${os_ref_header_path}" doesnt work because of the #
 	COMMAND echo "\\\#pragma once" > "${os_ref_header_path}"
 	COMMAND echo "// Algorithm header to reference"  >> "${os_ref_header_path}"
-    COMMAND bash "${script_path}" >> "${os_ref_header_path}"
+    COMMAND bash "${script_path}" "filter/Algos" >> "${os_ref_header_path}"
 	COMMENT "Generate reference file"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
-#	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/
 )
+
 endif (UNIX)
 
 ##filter LIBRARY
@@ -85,7 +86,7 @@ include_directories(filter ${Hype_INCLUDEDIR})
 target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 
-add_dependencies(filter reference)
+add_dependencies(filter reference_1)
 
 
 foreach(_source IN ITEMS ${_source_list})

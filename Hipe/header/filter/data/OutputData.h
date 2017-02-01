@@ -1,6 +1,10 @@
+#pragma once
+
+#include <filter/data/IOData.h>
+
 namespace filter {
-	namespace Algos {
-		class OutputData : filter::Algos::IOData
+	namespace data {
+		class OutputData : filter::data::IOData
 		{
 		};
 	}

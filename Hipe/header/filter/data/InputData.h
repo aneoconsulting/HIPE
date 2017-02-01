@@ -1,10 +1,10 @@
 #pragma once
 
-#include <filter/Algos/IOData.h>
+#include <filter/data/IOData.h>
 
 namespace filter {
-	namespace Algos {
-		class InputData : filter::Algos::IOData
+	namespace data {
+		class InputData : filter::data::IOData
 		{
 		};
 	}

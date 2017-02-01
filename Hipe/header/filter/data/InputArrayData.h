@@ -1,10 +1,10 @@
 #pragma once
 
-#include "InputData.h"
+#include <filter/data/InputData.h>
 
 namespace filter {
 	namespace Algos {
-		class InputArrayData : filter::Algos::InputData
+		class InputArrayData : filter::data::InputData
 		{
 		};
 	}
