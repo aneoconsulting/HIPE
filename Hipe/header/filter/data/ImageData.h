@@ -1,5 +1,5 @@
 namespace filter {
-	namespace Algos {
+	namespace data {
 		class ImageData
 		{
 		};

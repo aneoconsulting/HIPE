@@ -54,7 +54,6 @@ FILE(TO_NATIVE_PATH "${header_ref}" os_ref_header_path)
 
 if (WIN32)
 ADD_CUSTOM_TARGET(reference_1
-	ALL
 	COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}"
 	COMMAND cmd /c echo ^// Algorithm header to reference  >> "${os_ref_header_path}"
     COMMAND cmd /c "${script_path}" "filter/Algos" >> "${os_ref_header_path}"
@@ -67,7 +66,6 @@ endif (WIN32)
 
 if (UNIX)
 ADD_CUSTOM_TARGET(reference_1
-	ALL
 	COMMAND echo "\\\#pragma once" > "${os_ref_header_path}"
 	COMMAND echo "// Algorithm header to reference"  >> "${os_ref_header_path}"
     COMMAND bash "${script_path}" "filter/Algos" >> "${os_ref_header_path}"
@@ -77,6 +75,10 @@ ADD_CUSTOM_TARGET(reference_1
 
 endif (UNIX)
 
+##Include OpenCV 
+find_package( OpenCV REQUIRED )
+include_directories(filter ${OpenCV_INCLUDE_DIRS} )
+
 ##filter LIBRARY
 
 add_library(filter STATIC ${_source_list} ${_header_list} ${header_ref})
@@ -85,6 +87,7 @@ target_compile_definitions(filter PUBLIC "-DUSE_BOOST_REGEX")
 include_directories(filter ${Hype_INCLUDEDIR})
 target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries( filter ${OpenCV_LIBS} )
 
 add_dependencies(filter reference_1)
 

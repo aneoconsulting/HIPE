@@ -3,6 +3,8 @@
 
 namespace http
 {
+	core::Logger HttpServer::logger = core::setClassNameAttribute("HttpServer");
+
 	void Server<HTTP>::accept() {
 		//Create new socket for this connection
 		//Shared_ptr is used to pass temporary objects to the asynchronous functions
@@ -28,7 +30,7 @@ namespace http
 	{
 		server.config.num_threads = 1;
 		server.config.port = port;
-
+		server.logger << "New request received";
 		server.resource["^/json$"]["POST"] = [](std::shared_ptr<Response<http::HTTP>> response, std::shared_ptr<http::Request<http::HTTP>> request) {
 			http::HttpTask task(response, request);
 			/*	thread work_thread([&response, &request] {
@@ -37,6 +39,8 @@ namespace http
 			});
 			work_thread.detach();
 			*/
+			
+
 			task.runTask();
 		};
 		thread = server.run();

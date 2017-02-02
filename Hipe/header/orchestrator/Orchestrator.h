@@ -72,8 +72,6 @@ namespace orchestrator
 		void addModel(KeyNameModel key_name_model, filter::Model * model, 
 					  KeyNameOrchestrator key_name_orchesta, OrchestratorBase * orchestrator)
 		{
-			
-
 			addModel(key_name_model, model);
 			addOrchestrator(key_name_orchesta, orchestrator);
 

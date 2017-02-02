@@ -1,5 +1,4 @@
-#ifndef SERVER_HTTP_HPP
-#define	SERVER_HTTP_HPP
+#pragma once
 
 #include <boost/asio.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -12,6 +11,7 @@
 #include <functional>
 #include <iostream>
 #include <sstream>
+#include <core/Logger.h>
 
 namespace http {
 	typedef boost::asio::ip::tcp::socket HTTP;
@@ -22,10 +22,14 @@ namespace http {
 
 	public:
 		std::thread * server_thread;
+		static core::Logger logger;
 
 	public:
 		Server(unsigned short port, size_t num_threads = 1, long timeout_request = 5, long timeout_content = 300) :
-			ServerBase<HTTP>::ServerBase(port, num_threads, timeout_request, timeout_content) {}
+			ServerBase<HTTP>::ServerBase(port, num_threads, timeout_request, timeout_content)
+		{
+			logger << "Start Http Server on port";
+		}
 		
 
 	protected:
@@ -36,8 +40,8 @@ namespace http {
 	};
 
 	typedef Server<HTTP> HttpServer;
-
+	
 
 	int start_http_server(int port, http::HttpServer & server, std::thread & thread);
 }
-#endif	/* SERVER_HTTP_HPP */
+

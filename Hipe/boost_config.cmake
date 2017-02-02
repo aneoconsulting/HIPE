@@ -7,7 +7,7 @@ include_directories(.)
 
 find_package(Threads REQUIRED)
 
-set(BOOST_COMPONENTS system thread filesystem date_time regex)
+set(BOOST_COMPONENTS system thread filesystem date_time regex log)
 
 set(BOOST_LIBRARYDIR "BOOST-LIBRARY-NOTFOUND" CACHE STRING "Path to the static Boost Library")
 
@@ -19,10 +19,17 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     endif()
 endif()
 
-set(Boost_USE_STATIC_LIBS        ON) # only find static libs
+#add_definitions(-DBOOST_ALL_NO_LIB)
+#ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
+if (WIN32)
+	ADD_DEFINITIONS(-DBOOST_USE_WINAPI_VERSION=0x601)
+endif()
+
+set(Boost_USE_STATIC_LIBS       ON) # only find static libs
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
-find_package(Boost 1.62.0 COMPONENTS ${BOOST_COMPONENTS} REQUIRED)
+
+find_package(Boost 1.62.0 REQUIRED COMPONENTS ${BOOST_COMPONENTS} )
 if(${Boost_FOUND})
 	include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 endif()	

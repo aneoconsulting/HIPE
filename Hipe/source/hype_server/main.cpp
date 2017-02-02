@@ -12,19 +12,26 @@
 #include <http/HttpServer.h>
 #include <http/ClientTest.hpp>
 #include <orchestrator/Orchestrator.h>
+#include <core/Logger.h>
 
 using namespace std;
 //Added for the json-example:
 using namespace boost::property_tree;
 
-typedef http::Server<http::HTTP> HttpServer;
 typedef http::test::Client<http::HTTP> HttpClient;
 
 //Added for the default_resource example
-void default_resource_send(const HttpServer &server, const shared_ptr<http::Response<http::HTTP>> &response,
+void default_resource_send(const http::HttpServer &server, const shared_ptr<http::Response<http::HTTP>> &response,
 	const shared_ptr<ifstream> &ifs);
 
 int main() {
+	core::Logger::init();
+
+	core::Logger llogger;
+	
+	llogger << core::Logger::Level::info << "Hello Hipe";
+
+
 	//HTTP-server at port 8080 using 1 thread
 	//Unless you do more heavy non-threaded processing in the resources,
 	//1 thread is usually faster than several threads
@@ -176,7 +183,7 @@ int main() {
 	return 0;
 }
 
-void default_resource_send(const HttpServer &server, const shared_ptr<http::Response<http::HTTP>> &response,
+void default_resource_send(const http::HttpServer &server, const shared_ptr<http::Response<http::HTTP>> &response,
 	const shared_ptr<ifstream> &ifs) {
 	//read and send 128 KB at a time
 	static vector<char> buffer(131072); // Safe when server is running on one thread
