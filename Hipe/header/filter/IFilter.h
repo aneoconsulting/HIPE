@@ -5,7 +5,7 @@
 #include <map>
 #include <core/HipeException.h>
 #include <filter/Model.h>
-#include <Core/HipeStatus.h>
+#include <core/HipeStatus.h>
 
 namespace filter {
 	class IFilter : public filter::Model
