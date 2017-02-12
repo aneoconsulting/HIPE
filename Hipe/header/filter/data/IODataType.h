@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <filter/tools/StringTools.h>
-#include <opencv2/core/traits.hpp>
 #include <core/HipeException.h>
 
 
