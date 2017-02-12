@@ -3,7 +3,7 @@
 #include <filter/data/ImageData.h>
 #include <filter/data/IODataType.h>
 #include <string>
-#include <opencv/cv.hpp>
+#include <opencv2/opencv.hpp>
 #include <boost/filesystem/path.hpp>
 
 namespace filter
