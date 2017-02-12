@@ -4,16 +4,23 @@
 #include <string>
 #include <core/osdependant.h>
 
-class HipeException : public std::exception {
-
-		std::string message;
+class HipeException : public std::runtime_error
+{	
 
 	public:
+		HipeException() : std::runtime_error("Unexpected execution")
+		{
+		
+		}
+
 		HipeException(const char * message);
 
 		HipeException(std::string message);
 
-	public:
-		const char* what() const NO_EXCEPT override;
+		HipeException(HipeException & ex);
+		
+		
+
+	
 
 };

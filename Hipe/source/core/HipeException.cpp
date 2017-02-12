@@ -1,15 +1,18 @@
 #include "HipeException.h"
 
-HipeException::HipeException(const char * m) : message(m)
+HipeException::HipeException(const char * m) : std::runtime_error(m)
 {
-}
-
-HipeException::HipeException(std::string m) : message(m)
-{
+	
 }
 
 
-const char* HipeException::what() const NO_EXCEPT
+HipeException::HipeException(HipeException & ex) : std::runtime_error(ex.what())
 {
-	return this->message.c_str();
+	
 }
+
+HipeException::HipeException(std::string m) : std::runtime_error(m)
+{
+
+}
+

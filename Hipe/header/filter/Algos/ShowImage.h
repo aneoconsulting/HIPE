@@ -1,19 +1,17 @@
 #pragma once
 #include <filter/tools/RegisterTools.hpp>
 #include <core/HipeException.h>
-
-namespace filter {namespace Algos {
-	class InputData;
-}
-}
+#include <filter/data/InputData.h>
+#include <Core/HipeStatus.h>
+#include <opencv2/highgui/highgui.hpp>
 
 namespace filter
 {
 	namespace algos
 	{
-		class Gaussian : public filter::IFilter
+		class ShowImage : public filter::IFilter
 		{
-			REGISTER(Gaussian, ())
+			REGISTER(ShowImage, ())
 			{
 
 			}
@@ -30,11 +28,22 @@ namespace filter
 
 			HipeStatus process(data::IOData & InputData, data::IOData outputData)
 			{
-				throw HipeException("Gaussian is an example. There is no implementetion");
+				
+				::cv::imshow(_name, InputData.getInputData(0));
+				char c;
+				std::cout << "Waiting to finish" << std::endl;
+				cv::waitKey(0);
+
+				
+
+				::cv::destroyWindow(_name);
+
+
+				return OK;
 			}
 
 		};
 
-		ADD_CLASS(Gaussian, sigma);
+		ADD_CLASS(ShowImage, sigma);
 	}
 }

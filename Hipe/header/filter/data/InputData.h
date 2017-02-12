@@ -10,22 +10,7 @@ namespace filter {
 			
 
 		public:
-			InputData() 
-			{
-				
-			}
-
-			InputData(cv::Mat & input)
-			{
-				
-			}
-
-			InputData(filter::data::IOData & input)
-			{
-
-				_mat = input;
-			}
-
+			
 
 		};
 	}

@@ -31,10 +31,11 @@ namespace core
 
 	class Logger
 	{
+	public:
 		typedef boost::log::sinks::asynchronous_sink<boost::log::sinks::text_ostream_backend> text_sink;
 		typedef logging::trivial::severity_level Level;
 
-	public:
+
 		BoostLogger boostLogger;
 		Level level;
 

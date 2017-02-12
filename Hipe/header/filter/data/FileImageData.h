@@ -4,21 +4,29 @@
 #include <filter/data/IODataType.h>
 #include <string>
 #include <opencv/cv.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace filter
 {
 	namespace data
 	{
-		class FileImageData : ImageData
+		class FileImageData : public ImageData
 		{
-			std::string _filePath;
-			IODataType _type = IODataType::IMG;
+			boost::filesystem::path _filePath;
 
 
-			cv::Mat mat;
+			cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
 
-			cv::Mat asOutput() { return }
+		public:
 
+			FileImageData(const std::string & filePath) : ImageData(IODataType::IMGF)
+			{
+				_filePath = filePath; 
+
+				cv::Mat mat = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
+
+				addInputData(mat);
+			}
 
 		};
 	}

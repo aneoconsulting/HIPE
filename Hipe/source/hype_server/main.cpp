@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <http/Server.h>
 #include <http/HttpServer.h>
-#include <http/ClientTest.hpp>
+#include <http/HttpClient.h>
 #include <orchestrator/Orchestrator.h>
 #include <core/Logger.h>
 
@@ -18,7 +18,7 @@ using namespace std;
 //Added for the json-example:
 using namespace boost::property_tree;
 
-typedef http::test::Client<http::HTTP> HttpClient;
+typedef http::Client<http::HTTP> HttpClient;
 
 //Added for the default_resource example
 void default_resource_send(const http::HttpServer &server, const shared_ptr<http::Response<http::HTTP>> &response,
@@ -27,7 +27,7 @@ void default_resource_send(const http::HttpServer &server, const shared_ptr<http
 int main() {
 	core::Logger::init();
 
-	core::Logger llogger;
+	core::Logger llogger = core::setClassNameAttribute("Main");
 	
 	llogger << core::Logger::Level::info << "Hello Hipe";
 

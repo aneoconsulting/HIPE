@@ -2,10 +2,6 @@
 #include <image/DefaultScheduler.h>
 
 
-
-
-
-
 namespace orchestrator
 {
 	void OrchestratorFactory::start_orchestrator()

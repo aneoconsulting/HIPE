@@ -8,3 +8,4 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/libs)
 
 
 add_subdirectory(source)
+add_subdirectory(tests)

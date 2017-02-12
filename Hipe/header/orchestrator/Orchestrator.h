@@ -1,40 +1,57 @@
 #pragma once
-#include <core/Singleton.h>
+
 #include <map>
+#include <iostream>
+#include <type_traits>
+#include <core/Singleton.h>
 #include <filter/Model.h>
 #include <core/HipeException.h>
 #include <json/JsonFilterNode/JsonFilterTree.h>
+#include <filter/data/IOData.h>
 
 namespace orchestrator
 {
-	class OrchestratorBase
+	class Conductor
 	{
 
 	};
 
-	template<class Conductor>
+	class OrchestratorBase
+	{
+	public:
+		virtual void process(filter::Model* root, filter::data::IOData& data) = 0;
+	};
+
+	template<class Conduct>
 	class Orchestrator : public OrchestratorBase
 						 
 	{
-		Conductor * _conductor;
+		BOOST_STATIC_ASSERT((std::is_base_of<orchestrator::Conductor, Conduct>::value));
+
+		Conduct * _conductor;
 
 	public:
-		Conductor getConductor() const
+		Conduct getConductor() const
 		{
 			return _conductor;
 		}
 
-		void setConductor(const Conductor * conductor)
+		void setConductor(const Conduct * conductor)
 		{
 			_conductor = conductor;
 		}
 
 	public:
-		Orchestrator(Conductor * conductor) : _conductor(conductor)
+		Orchestrator(Conduct * conductor) : _conductor(conductor)
 		{
 			
 		}
 
+		void process(filter::Model* root, filter::data::IOData& data)
+		{
+			
+			_conductor->process(root, data);
+		}
 	};
 
 	
@@ -65,7 +82,7 @@ namespace orchestrator
 			}
 			else
 			{
-				throw HipeException(key_name + " Model already exist");
+				//throw HipeException(key_name + " Model already exist");
 			}
 		}
 
@@ -143,8 +160,28 @@ namespace orchestrator
 			_modelStore[modelName] = orchestratorName;
 		}
 
+		void process(const std::string& model_name, filter::data::IOData& data)
+		{
+			filter::Model * root;
+
+			::json::JsonFilterTree * treeFilter;
+			treeFilter = dynamic_cast<::json::JsonFilterTree *>(_models[model_name]);
+			if (treeFilter != nullptr)
+			{
+				root = treeFilter->getRootNode();
+
+			}
+			else
+				throw HipeException("Other Tree model not yet implemented");
+
+			auto orchestrator_base = getOrchestrator(model_name);
+
+			orchestrator_base->process(root, data);
+		}
+
 		static void start_orchestrator();
 
 	};
+
 
 }

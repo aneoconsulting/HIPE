@@ -1,5 +1,4 @@
-#ifndef CLIENT_HTTP_HPP
-#define	CLIENT_HTTP_HPP
+#pragma once
 
 #include <boost/asio.hpp>
 #include <boost/utility/string_ref.hpp>
@@ -416,6 +415,4 @@ namespace http {
 			}
 		};
 	}
-
-#endif	/* CLIENT_HTTP_HPP */
 }

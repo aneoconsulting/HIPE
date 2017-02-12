@@ -2,6 +2,7 @@
 #include <filter/tools/RegisterTools.hpp>
 #include <filter/IFilter.h>
 #include <filter/tools/RegisterTable.h>
+#include <core/HipeException.h>
 
 
 
@@ -12,7 +13,17 @@ namespace filter {
 			REGISTER(RootFilter, ()) {}
 			REGISTER_P(int, a);
 
-			virtual std::string resultAsString() { return std::string("TODO");  };
+		public:
+			HipeStatus process()
+			{
+				throw HipeException(_constructor + " process isn't yet implmented");
+			}
+
+			HipeStatus process(data::IOData & InputData, data::IOData outputData)
+			{
+			
+				return HipeStatus::OK;
+			}
 		};
 
 		ADD_CLASS(RootFilter, a);

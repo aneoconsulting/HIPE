@@ -4,7 +4,7 @@
 #include <filter/IFilter.h>
 #include "json/JsonFilterNode/JsonFilterNode.h"
 #include <core/HipeException.h>
-#include <orchestrator/Orchestrator.h>
+
 
 namespace json
 {
@@ -77,6 +77,9 @@ namespace json
 				for (auto& parent : filterNode->getParents())
 				{
 					//_filterMap[parent.first]->addChildDependencies(filterNode);
+					if (_filterMap[parent.first] == nullptr)
+						throw HipeException("No node found with name " + parent.first);
+
 					filterNode->addDependencies(_filterMap[parent.first]);
 				}
 			}
@@ -103,6 +106,21 @@ namespace json
 				}
 			}
 		}
+
+		//Find the 
+		filter::IFilter * getRootNode()
+		{
+			if (isFreezed == false) throw HipeException("Cannot get RootNode without dependencies computation of tree");
+
+			for (auto& it : _filterMap)
+			{
+				if (it.second->getLevel() == 0)
+					return it.second;
+			}
+
+			throw HipeException("Unkown error. This code shouldn't happen");
+		}
+
 	};
 }
 

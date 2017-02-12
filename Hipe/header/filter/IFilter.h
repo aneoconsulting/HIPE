@@ -5,9 +5,10 @@
 #include <map>
 #include <core/HipeException.h>
 #include <filter/Model.h>
+#include <Core/HipeStatus.h>
 
 namespace filter {
-	class IFilter : filter::Model
+	class IFilter : public filter::Model
 	{
 	protected:
 		std::string _constructor; 
@@ -36,7 +37,7 @@ namespace filter {
 
 		virtual void getNextChildren();
 
-		virtual std::string resultAsString() = 0;
+		virtual std::string resultAsString() { return std::string("TODO"); };
 
 		void setLevel(int level) { _level = level; }
 		int getLevel() { return _level; }
@@ -56,6 +57,15 @@ namespace filter {
 
 		std::map<std::string, IFilter *> getChildrens() const
 		{ return _childFilters; }
+
+		
+
+	public:
+		virtual HipeStatus process(data::IOData & InputData, data::IOData outputData) = 0;
+
+		
+
+
 
 		
 	};
