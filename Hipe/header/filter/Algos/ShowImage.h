@@ -3,14 +3,14 @@
 #include <core/HipeException.h>
 #include <filter/IFilter.h>
 #include <filter/data/InputData.h>
-#include <Core/HipeStatus.h>
+#include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
 
 namespace filter
 {
 	namespace algos
 	{
-		class ShowImage : public filter::IFilter
+		class ShowImage : public IFilter
 		{
 			REGISTER(ShowImage, ())
 			{

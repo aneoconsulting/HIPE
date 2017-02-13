@@ -18,9 +18,7 @@ class HipeException : public std::runtime_error
 
 		HipeException(std::string message);
 
-		HipeException(HipeException & ex);
-		
-		
+
 
 	
 
