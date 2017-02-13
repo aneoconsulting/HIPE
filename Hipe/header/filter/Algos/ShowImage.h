@@ -1,6 +1,7 @@
 #pragma once
 #include <filter/tools/RegisterTools.hpp>
 #include <core/HipeException.h>
+#include <filter/IFilter.h>
 #include <filter/data/InputData.h>
 #include <Core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
@@ -21,15 +22,10 @@ namespace filter
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
 		public:
-			HipeStatus process()
-			{
-				throw HipeException(_constructor + " process isn't yet implmented");
-			}
-
-			HipeStatus process(data::IOData & InputData, data::IOData outputData)
+			HipeStatus process(data::IOData & outputData)
 			{
 				
-				::cv::imshow(_name, InputData.getInputData(0));
+				::cv::imshow(_name, _data.getInputData(0));
 				char c;
 				std::cout << "Waiting to finish" << std::endl;
 				cv::waitKey(0);

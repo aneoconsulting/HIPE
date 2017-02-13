@@ -4,6 +4,7 @@
 #include <boost/preprocessor.hpp>
 #include <filter/tools/functor.hpp>
 #include <filter/tools/RegisterTable.h>
+#include <boost/property_tree/ptree.hpp>
 
 template <class _myC>
 class ProxyFunctor

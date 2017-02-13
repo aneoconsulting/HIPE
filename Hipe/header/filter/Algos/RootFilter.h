@@ -19,9 +19,10 @@ namespace filter {
 				throw HipeException(_constructor + " process isn't yet implmented");
 			}
 
-			HipeStatus process(data::IOData & InputData, data::IOData outputData)
+			HipeStatus process(data::IOData & outputData)
 			{
-			
+				outputData = _data;
+
 				return HipeStatus::OK;
 			}
 		};

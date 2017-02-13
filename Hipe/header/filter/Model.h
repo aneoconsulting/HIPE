@@ -25,6 +25,11 @@ namespace filter
 			_protect = data_access;
 		}
 
+		void cleanUp()
+		{
+			_data = data::IOData();
+		}
+
 		void setInputData(const data::IOData & inputData)
 		{
 			if (_data.empty())

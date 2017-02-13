@@ -8,6 +8,7 @@ namespace filter
 	{
 		class IOData
 		{
+		protected:
 			std::vector<cv::Mat> _data;
 
 			IODataType _type;
@@ -111,6 +112,14 @@ namespace filter
 			{
 				return _data.empty();
 			}
+
+			template<typename type>
+			inline static type & downCast(data::IOData & outputData)
+			{
+				return static_cast<type &>(outputData);
+			}
+
+
 		};
 	}
 }

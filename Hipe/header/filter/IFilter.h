@@ -61,12 +61,8 @@ namespace filter {
 		
 
 	public:
-		virtual HipeStatus process(data::IOData & InputData, data::IOData outputData) = 0;
 
-		
-
-
-
+		virtual HipeStatus process(data::IOData & outputData) = 0;
 		
 	};
 }

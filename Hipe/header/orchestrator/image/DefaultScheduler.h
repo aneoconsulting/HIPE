@@ -44,6 +44,17 @@ namespace orchestrator
 				return 0;
 			}
 
+			void cleanDataChild(filter::IFilter* filter)
+			{
+				filter->cleanUp();
+
+				for (auto& childFilter : filter->getChildrens())
+				{
+					childFilter.second->cleanUp();
+					cleanDataChild(childFilter.second);
+				}
+			}
+
 			void pushOutputToChild(filter::IFilter* filter, filter::data::IOData& io_data)
 			{
 				for (auto& childFilter : filter->getChildrens())
@@ -60,34 +71,44 @@ namespace orchestrator
 				}
 			}
 
-			void process(filter::Model* root, filter::data::IOData& inputData, bool debug = false)
+			
+
+			void process(filter::Model* root, filter::data::IOData& inputData, filter::data::OutputData &outputData, bool debug = false)
 			{
 				filter::IFilter* filterRoot = reinterpret_cast<filter::IFilter *>(root);
+				cleanDataChild(filterRoot);
+
 				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
 
 
 				MatrixLayerNode matrixLayer(maxLevel + 1);
 
+				//TODO insert debug layers into the matrix
 				setMatrixLayer(filterRoot, matrixLayer);
 
-				//Sort split layer when 2 nodes are trying to execute on GPU or OMP
+				//Special case for rootNode dispatching to any children.
+				for (auto& filter : matrixLayer[0])
+				{
+					pushOutputToChild(filter, inputData);
+				}
 
-				for (int layer = 0; layer < matrixLayer.size() - 1; layer++)
+				//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
+
+				for (int layer = 1; layer < matrixLayer.size() - 1; layer++)
 				{
 					for (auto& filter : matrixLayer[layer])
 					{
-						filter::data::IOData outputData;
-						filter->process(inputData, outputData);
-						pushOutputToChild(filter, outputData);
+						filter::data::IOData inter_output;
+						filter->process(inter_output);
+						pushOutputToChild(filter, inter_output);
 					}
 				}
 
 				//Special case for final result
-				filter::data::IOData outputData;
-				matrixLayer[matrixLayer.size() - 1][0]->process(inputData, outputData);
+				matrixLayer[matrixLayer.size() - 1][0]->process(outputData);
 
 
-				inputData = outputData;
+				
 			}
 		};
 	}

@@ -30,7 +30,7 @@ namespace http
 	{
 		server.config.num_threads = 1;
 		server.config.port = port;
-		server.logger << "New request received";
+		server.logger << "Waiting for Json request ...";
 		server.resource["^/json$"]["POST"] = [](std::shared_ptr<Response<http::HTTP>> response, std::shared_ptr<http::Request<http::HTTP>> request) {
 			http::HttpTask task(response, request);
 			/*	thread work_thread([&response, &request] {

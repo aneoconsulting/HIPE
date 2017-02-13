@@ -8,6 +8,7 @@
 #include <core/HipeException.h>
 #include <json/JsonFilterNode/JsonFilterTree.h>
 #include <filter/data/IOData.h>
+#include <filter/data/OutputData.h>
 
 namespace orchestrator
 {
@@ -19,7 +20,7 @@ namespace orchestrator
 	class OrchestratorBase
 	{
 	public:
-		virtual void process(filter::Model* root, filter::data::IOData& data) = 0;
+		virtual void process(filter::Model* root, filter::data::IOData& data, filter::data::OutputData& outPutData) = 0;
 	};
 
 	template<class Conduct>
@@ -47,10 +48,10 @@ namespace orchestrator
 			
 		}
 
-		void process(filter::Model* root, filter::data::IOData& data)
+		void process(filter::Model* root, filter::data::IOData& data, filter::data::OutputData& outPutData)
 		{
 			
-			_conductor->process(root, data);
+			_conductor->process(root, data, outPutData);
 		}
 	};
 
@@ -83,6 +84,8 @@ namespace orchestrator
 			else
 			{
 				//throw HipeException(key_name + " Model already exist");
+				//TODO Check if Algo need to be overriden
+				_models[key_name] = model;
 			}
 		}
 
@@ -160,7 +163,7 @@ namespace orchestrator
 			_modelStore[modelName] = orchestratorName;
 		}
 
-		void process(const std::string& model_name, filter::data::IOData& data)
+		void process(const std::string& model_name, filter::data::IOData& data, filter::data::OutputData& outputData)
 		{
 			filter::Model * root;
 
@@ -176,7 +179,7 @@ namespace orchestrator
 
 			auto orchestrator_base = getOrchestrator(model_name);
 
-			orchestrator_base->process(root, data);
+			orchestrator_base->process(root, data, outputData);
 		}
 
 		static void start_orchestrator();
