@@ -1,8 +1,6 @@
 #pragma once
 #include <filter/tools/RegisterTools.hpp>
-#include <core/HipeException.h>
 #include <filter/IFilter.h>
-#include <filter/data/InputData.h>
 #include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
 

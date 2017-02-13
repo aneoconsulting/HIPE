@@ -2,7 +2,7 @@
 #include <filter/tools/RegisterTools.hpp>
 #include <core/HipeException.h>
 #include <filter/IFilter.h>
-#include <Core/HipeStatus.h>
+#include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
 
 #include <istream>
