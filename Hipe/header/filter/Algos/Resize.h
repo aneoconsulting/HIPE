@@ -4,8 +4,8 @@
 #include <filter/data/InputData.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc.hpp>
+
+
 
 namespace filter
 {
