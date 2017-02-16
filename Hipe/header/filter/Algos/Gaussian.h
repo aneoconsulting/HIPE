@@ -28,7 +28,7 @@ namespace filter
 				throw HipeException(_constructor + " process isn't yet implmented");
 			}
 
-			HipeStatus process(data::IOData & outputData)
+			HipeStatus process(std::shared_ptr<data::IOData> & outputData)
 			{
 				throw HipeException("Gaussian is an example. There is no implementetion");
 			}

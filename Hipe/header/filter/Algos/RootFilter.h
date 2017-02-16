@@ -19,9 +19,9 @@ namespace filter {
 				throw HipeException(_constructor + " process isn't yet implmented");
 			}
 
-			HipeStatus process(data::IOData & outputData)
+			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
 			{
-				outputData = _data;
+				outputData.reset(&_data, [](filter::data::IOData*){});
 
 				return HipeStatus::OK;
 			}

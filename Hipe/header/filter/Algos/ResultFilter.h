@@ -29,13 +29,11 @@ namespace filter
 		public:
 			
 
-			HipeStatus process(data::IOData & outputData)
+			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
 			{
-				data::OutputData output(_data);
-				
 				//Copy result data
-				data::IOData::downCast<data::OutputData>(outputData) = output;
-
+				outputData.reset(new data::OutputData(_data));
+				
 				return OK;
 			}
 

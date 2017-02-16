@@ -30,6 +30,8 @@ namespace filter
 			_data = data::IOData();
 		}
 
+		virtual void dispose() {}
+
 		void setInputData(const data::IOData & inputData)
 		{
 			if (_data.empty())

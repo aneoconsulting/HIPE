@@ -20,9 +20,9 @@ namespace orchestrator
 	class OrchestratorBase
 	{
 	public:
-		virtual void process(filter::Model* root, filter::data::IOData& data, filter::data::OutputData& outPutData) = 0;
+		virtual void process(filter::Model* root, std::shared_ptr<filter::data::IOData>& data, std::shared_ptr<filter::data::IOData>& outPutData) = 0;
 	};
-
+	
 	template<class Conduct>
 	class Orchestrator : public OrchestratorBase
 						 
@@ -48,7 +48,7 @@ namespace orchestrator
 			
 		}
 
-		void process(filter::Model* root, filter::data::IOData& data, filter::data::OutputData& outPutData)
+		void process(filter::Model* root, std::shared_ptr<filter::data::IOData>& data, std::shared_ptr<filter::data::IOData>& outPutData)
 		{
 			
 			_conductor->process(root, data, outPutData);
@@ -163,7 +163,7 @@ namespace orchestrator
 			_modelStore[modelName] = orchestratorName;
 		}
 
-		void process(const std::string& model_name, filter::data::IOData& data, filter::data::OutputData& outputData)
+		void process(const std::string& model_name, std::shared_ptr<filter::data::IOData> & data, std::shared_ptr<filter::data::IOData>& outputData)
 		{
 			filter::Model * root;
 

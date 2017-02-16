@@ -5,16 +5,16 @@
 
 namespace filter {
 	namespace data {
-		class ImageData : public IOData
+		class VideoData : public IOData
 		{
 		protected:
-			ImageData(ImageData &data) : IOData(data)
+			VideoData(VideoData &data) : IOData(data)
 			{
-				
+
 			}
 		public:
-			
-			ImageData(IODataType type) : IOData(type) {}
+
+			VideoData(IODataType type) : IOData(type) {}
 		};
 	}
 }

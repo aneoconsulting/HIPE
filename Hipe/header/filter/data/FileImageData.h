@@ -24,7 +24,13 @@ namespace filter
 				_filePath = filePath; 
 
 				cv::Mat mat = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
+				if (mat.empty())
+				{
+					std::stringstream strbuild;
+					strbuild  << "Cannot open file : " << filePath;
 
+					throw HipeException(strbuild.str());
+				}
 				addInputData(mat);
 			}
 

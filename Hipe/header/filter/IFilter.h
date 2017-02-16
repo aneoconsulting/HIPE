@@ -6,6 +6,8 @@
 #include <core/HipeException.h>
 #include <filter/Model.h>
 #include <core/HipeStatus.h>
+#include <memory>
+#include "data/OutputData.h"
 
 namespace filter {
 	class IFilter : public filter::Model
@@ -62,7 +64,7 @@ namespace filter {
 
 	public:
 
-		virtual HipeStatus process(data::IOData & outputData) = 0;
+		virtual HipeStatus process(std::shared_ptr<data::IOData> & outputData) = 0;
 		
 	};
 }

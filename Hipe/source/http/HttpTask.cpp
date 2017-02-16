@@ -15,6 +15,7 @@ using namespace std;
 
 core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
 
+
 void http::HttpTask::runTask()
 {
 	try {
@@ -45,22 +46,23 @@ void http::HttpTask::runTask()
 
 		std::stringstream status;
 		write_json(status, treeResponseInfo);
-		HttpTask::logger << "Response info :\r\n" << status.str();
+		HttpTask::logger << "Response info :\n" << status.str();
 
 		//Check if data is present
 		if (treeRequest.count("data") != 0)
 		{
-			filter::data::IOData data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
+			shared_ptr<filter::data::IOData> data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
 
 			//Start processing Algorithm with data
-			filter::data::OutputData outputData;
+			shared_ptr<filter::data::IOData> outputData;
 
 			orchestrator::OrchestratorFactory::getInstance()->process(json_filter_tree->getName(), data, outputData);
 
-			//after the process execution Data should be OutputData type
+			//after the process execution Data should be an OutputData type
+			filter::data::OutputData * output_data = static_cast<filter::data::OutputData *>(outputData.get());
 			
-			
-			treeResponse.add_child("dataResponse", outputData.resultAsJson());
+			if (outputData.get() != nullptr)
+				treeResponse.add_child("dataResponse", output_data->resultAsJson());
 		}
 		write_json(dataResponse, treeResponse);
 		

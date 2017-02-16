@@ -23,11 +23,11 @@ namespace filter
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
 		public:
-			HipeStatus process(data::IOData & outputData)
+			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
 			{
 				auto &arrayInputMat = _data.getInputData();
-				outputData = _data;
-				auto &arrayOutputMat = outputData.getInputData();
+				outputData.reset(&_data, [](filter::data::IOData*){});
+				auto &arrayOutputMat = outputData.get()->getInputData();
 
 				for (int i = 0; i < arrayInputMat.size(); i++)
 				{

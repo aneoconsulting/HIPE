@@ -12,17 +12,23 @@ namespace filter
 		{
 			REGISTER(ShowImage, ())
 			{
-
+				
+				
 			}
 
-			REGISTER_P(int, sigma);
+			~ShowImage()
+			{
+				cv::destroyWindow(_name);
+			}
+
+			REGISTER_P(int, waitkey);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
 		public:
-			HipeStatus process(data::IOData & outputData)
+			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
 			{
-				
+				cv::namedWindow(_name);
 				::cv::imshow(_name, _data.getInputData(0));
 				char c;
 				std::cout << "Waiting to finish" << std::endl;
@@ -30,14 +36,20 @@ namespace filter
 
 				
 
-				::cv::destroyWindow(_name);
+				
 
 
 				return OK;
 			}
 
+			void dispose()
+			{
+				Model::dispose();
+				cv::destroyWindow(_name);
+			}
+
 		};
 
-		ADD_CLASS(ShowImage, sigma);
+		ADD_CLASS(ShowImage, waitkey);
 	}
 }

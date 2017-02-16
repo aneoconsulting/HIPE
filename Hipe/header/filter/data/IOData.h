@@ -15,10 +15,20 @@ namespace filter
 			IODataType _type;
 
 		public:
+			IODataType getType() const
+			{
+				return _type;
+			}
+
+			void setType(const IODataType io_data_type)
+			{
+				_type = io_data_type;
+			}
+
 			IOData() : _type(IODataType::NONE)
 			{
 			}
-
+		protected:
 			IOData(IODataType type) : _type(type)
 			{
 			}
