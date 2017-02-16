@@ -4,6 +4,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 
+#define LOG_CONCAT2(a, b) a ## b
 
 #ifdef WIN32
 #define LOG_DIR "c:\\temp\\"
@@ -11,8 +12,8 @@
 #define LOG_DIR "/tmp/"
 #endif
 
-#define LOG_PATH() LOG_DIR ## "Hipe.log"
-#define LOG_PATH_ROUND() LOG_DIR ## "Hipe_3%N.log"
+#define LOG_PATH() LOG_CONCAT2(LOG_DIR, "Hipe.log")
+#define LOG_PATH_ROUND() LOG_CONCAT2(LOG_DIR, "Hipe_3%N.log")
 
 
 
