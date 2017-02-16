@@ -4,7 +4,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 
-#define LOG_CONCAT2(a, b) a ## b
+#define LOG_CONCAT2(a, b) a b
 
 #ifdef WIN32
 #define LOG_DIR "c:\\temp\\"
