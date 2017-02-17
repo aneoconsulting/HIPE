@@ -38,7 +38,9 @@ if(APPLE)
     set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl")
 endif()
 
-link_directories(${Boost_LIBRARY_DIR})
+#if (WIN32)
+#   link_directories(${Boost_LIBRARY_DIR})
+#endif()
 
 get_directory_property(_my_link_dirs LINK_DIRECTORIES)
 message(STATUS "_my_link_dirs = ${_my_link_dirs}") 

@@ -5,7 +5,6 @@
 
 //Added for the default_resource example
 #include <fstream>
-#include <boost/filesystem.hpp>
 #include <vector>
 #include <algorithm>
 #include <http/Server.h>

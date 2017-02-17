@@ -28,9 +28,6 @@ add_executable(hype_server ${_source_list} ${_header_list})
 
 target_compile_definitions(hype_server PUBLIC "-DUSE_BOOST_REGEX")
 include_directories(hype_server ${Hype_INCLUDEDIR})
-target_link_libraries(hype_server ${Boost_LIBRARIES})
-target_link_libraries(hype_server ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries( hype_server ${OpenCV_LIBS} )
 
 
 foreach(_source IN ITEMS ${_source_list})
@@ -67,6 +64,8 @@ target_link_libraries(hype_server http)
 target_link_libraries(hype_server json)
 target_link_libraries(hype_server orchestrator)
 target_link_libraries(hype_server ${OpenCV_LIBS})
+target_link_libraries(hype_server ${Boost_LIBRARIES})
+target_link_libraries(hype_server ${CMAKE_THREAD_LIBS_INIT})
 
 
 enable_testing()
