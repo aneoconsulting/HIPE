@@ -69,6 +69,9 @@ namespace orchestrator
 
 			void pushOutputToChild(filter::IFilter* filter, filter::data::IOData& io_data)
 			{
+				if (io_data.empty())
+					return;
+
 				for (auto& childFilter : filter->getChildrens())
 				{
 					if (childFilter.second->get_protect() == DataAccess::COPY)
@@ -166,6 +169,8 @@ namespace orchestrator
 					{
 						
 						filter->process(inter_output);
+						if (inter_output.get() == nullptr)
+							continue;
 						pushOutputToChild(filter, *(inter_output.get()));
 					}
 				}
