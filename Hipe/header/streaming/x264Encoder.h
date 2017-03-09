@@ -2,11 +2,8 @@
 #define __STDINT_MACROS
 #define __STDC_CONSTANT_MACROS
 #endif
-#include <iostream>
-#include <concurrent_queue.h>
 
 #include <queue>
-#include <stdint.h>
 
 #include <opencv2/opencv.hpp>
 

@@ -14,7 +14,7 @@
 #include <FramedSource.hh>
 #include <UsageEnvironment.hh>
 #include <Groupsock.hh>
-#include "FFmpegH264Encoder.h"
+#include <FFmpegH264Encoder.h>
 
 namespace MESAI
 {

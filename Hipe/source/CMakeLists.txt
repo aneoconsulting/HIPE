@@ -12,7 +12,7 @@ add_subdirectory(http)
 add_subdirectory(hype_server)
 add_subdirectory(orchestrator)
 add_subdirectory(json)
-add_subdirectory(FFmpegRTSPServer)
+
 
 add_dependencies(filter core)
 add_dependencies(filter streaming)

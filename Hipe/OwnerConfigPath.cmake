@@ -31,7 +31,11 @@ SET(x264_DIR "${Hipe_external}/${HIPE_PLATFORM}/x264-devel-${HIPE_PLATFORM}/" CA
 SET(LIVE_DIR "${Hipe_external}/${HIPE_PLATFORM}/live555/install"  CACHE PATH "Live_DIR" FORCE )
 
 SET(FFMPEG_DIR "${Hipe_external}/${HIPE_PLATFORM}/ffmpeg"  CACHE PATH "FFMPEG_LIBRARYDIR" FORCE )
+
+
 else()
+
+
 SET(Boost_DIR "${Hipe_external}/${HIPE_PLATFORM}"   CACHE PATH "Boost_DIR" FORCE )
 SET(Boost_INCLUDE_DIR "${Boost_DIR}/include"  CACHE PATH "Boost_INCLUDE_DIR" FORCE )
 SET(BOOST_LIBRARYDIR "${Boost_DIR}/lib/"  CACHE PATH "BOOST_LIBRARYDIR" FORCE )
