@@ -5,13 +5,12 @@
 
 namespace filter {
 	namespace data {
-		class InputData : filter::data::IOData
+		class InputData : public filter::data::IOData
 		{
-			
-
 		public:
-			
-
+			InputData(IODataType type) : IOData(type)
+			{
+			}
 		};
 	}
 }

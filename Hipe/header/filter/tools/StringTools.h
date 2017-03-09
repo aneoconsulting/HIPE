@@ -3,7 +3,8 @@
 #include <iostream> 
 #include <sstream>   
 #include <iomanip>
+#include <core/HipeNativeTypes.h>
 
-long ToHex(const std::string& s, bool upper_case = true);
+hUInt64 ToHex(const std::string& s, bool upper_case = true);
 
-std::string ToString(long n);
+std::string ToString(hUInt64 n);

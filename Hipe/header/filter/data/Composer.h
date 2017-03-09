@@ -6,6 +6,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include "FileImageData.h"
 #include <filter/tools/data/FileVideoInput.h>
+#include "DirectoryImgData.h"
 
 
 namespace filter
@@ -28,7 +29,11 @@ namespace filter
 
 				return std::shared_ptr<IOData>(new FileImageData(strPath));
 			}
+			static std::shared_ptr<IOData> loadImagesFromDirectory(std::string strPath)
+			{
 
+				return std::shared_ptr<IOData>(new  Algos::DirectoryImgData(strPath));
+			}
 			static std::shared_ptr<FileVideoInput> loadVideoFromFile(const std::string& path)
 			{
 
@@ -53,6 +58,10 @@ namespace filter
 					filter::data::Composer::checkJsonFieldExist(dataNode, "type");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
 					return loadVideoFromFile(dataNode.get<std::string>("path"));
+				case IODataType::SEQIMGD:
+					filter::data::Composer::checkJsonFieldExist(dataNode, "type");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
+					return loadImagesFromDirectory(dataNode.get<std::string>("path"));
 				case IODataType::NONE:
 				default:
 					throw HipeException("Cannot found the data type requested");

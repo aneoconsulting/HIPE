@@ -29,14 +29,14 @@ namespace filter
 			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
 			{
 				cv::namedWindow(_name);
-				::cv::imshow(_name, _data.getInputData(0));
-				char c;
-				std::cout << "Waiting to finish" << std::endl;
-				cv::waitKey(0);
 
-				
-
-				
+				for (auto & mat : _data.getInputData())
+				{
+					::cv::imshow(_name, mat);
+					char c;
+					std::cout << "Waiting for key..." << std::endl;
+					cv::waitKey(0);
+				}
 
 
 				return OK;

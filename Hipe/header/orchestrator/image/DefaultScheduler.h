@@ -138,9 +138,17 @@ namespace orchestrator
 			}
 
 
-			void processSequence(filter::Model* root, filter::data::IOData& inputData, filter::data::OutputData &outputData, bool debug)
+			void processSequence(filter::Model* root, filter::data::IOData& inputData, std::shared_ptr<filter::data::IOData> &outputData, bool debug)
 			{
-				throw HipeException("processSequence of Data isn't yet implemented");
+				if (filter::data::DataTypeMapper::isImage(inputData.getType()))
+				{
+					processImages(root, inputData, outputData, debug);
+				}
+				else if (filter::data::DataTypeMapper::isVideo(inputData.getType()))
+				{
+					throw HipeException("processSequence of Video isn't yet implemented");
+				}
+				
 			}
 
 			void processImages(filter::Model* root, filter::data::IOData & inputData, std::shared_ptr<filter::data::IOData> &outputData, bool debug)
@@ -189,7 +197,7 @@ namespace orchestrator
 
 				if (filter::data::DataTypeMapper::isSequence(inputData.getType()))
 				{
-					throw HipeException("Sequence of Data isn't yet implemented");
+					processSequence(root, inputData, outputData, debug);
 				}
 				else if (filter::data::DataTypeMapper::isImage(inputData.getType()))
 				{

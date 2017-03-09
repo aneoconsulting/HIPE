@@ -4,8 +4,12 @@
 
 namespace filter {
 	namespace Algos {
-		class InputArrayData : filter::data::InputData
+		class InputArrayData : public filter::data::InputData
 		{
+		public:
+			InputArrayData(data::IODataType type) : InputData(type)
+			{
+			}
 		};
 	}
 }

@@ -10,7 +10,7 @@ namespace filter
 	{
 		// only IF(Image from file) has been implmented for now !!
 		//The hexavalue is a string representation for serialization
-		enum IODataType : long
+		enum IODataType : hUInt64
 		{
 			ACK = 0x41434b, // this is an acknowledge packet
 			SIMG = 0x53494d47, //Simple Image from base64 data
@@ -31,7 +31,7 @@ namespace filter
 			static IODataType getTypeFromString(const std::string dataTypeString)
 			{
 				//convert string to hexa long value;
-				long value = ToHex(dataTypeString);
+				hUInt64 value = ToHex(dataTypeString);
 				IODataType dataType = static_cast<IODataType>(value);
 				if (value < 0L || dataType < 0L)
 				{

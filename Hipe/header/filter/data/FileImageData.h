@@ -14,7 +14,6 @@ namespace filter
 		{
 			boost::filesystem::path _filePath;
 
-
 			cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
 
 		public:
