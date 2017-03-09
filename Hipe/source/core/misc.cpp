@@ -42,6 +42,7 @@ int hipe_gettimeofday(struct timeval* p, void* tz)
 }
 #else
 #include <sys/time.h>
+#include <unistd.h>
 
 int hipe_gettimeofday(struct timeval* p, void* tz) {
 	return gettimeofday(p, (timezone *)tz);
