@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-
+include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
+include("${CMAKE_SOURCE_DIR}/live_config.cmake")
+include("${CMAKE_SOURCE_DIR}/ffmpeg_config.cmake")
+include("${CMAKE_SOURCE_DIR}/x264_config.cmake")
 include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
 set(Hype_INCLUDEDIR "../../header/")
 
@@ -66,7 +69,13 @@ target_link_libraries(unit_test filter)
 target_link_libraries(unit_test http)
 target_link_libraries(unit_test json)
 target_link_libraries(unit_test orchestrator)
+target_link_libraries(unit_test streaming)
+target_link_libraries(unit_test ${FFmepg_LIBRARIES})
+target_link_libraries(unit_test ${x264_LIBRARIES})
+target_link_libraries(unit_test ${Live_LIBRARIES})
 target_link_libraries(unit_test ${OpenCV_LIBS})
+target_link_libraries(unit_test ${Boost_LIBRARIES})
+target_link_libraries(unit_test ${CMAKE_THREAD_LIBS_INIT})
 
 
 enable_testing()

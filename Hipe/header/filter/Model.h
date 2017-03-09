@@ -25,7 +25,7 @@ namespace filter
 			_protect = data_access;
 		}
 
-		void cleanUp()
+		virtual void cleanUp()
 		{
 			_data = data::IOData();
 		}

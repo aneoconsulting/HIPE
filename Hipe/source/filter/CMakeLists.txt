@@ -1,7 +1,8 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-
+include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
+include("${CMAKE_SOURCE_DIR}/Live_config.cmake")
 set(Hype_INCLUDEDIR "../../header/")
 
 set(_src_filter_path ${CMAKE_CURRENT_SOURCE_DIR})
@@ -76,18 +77,23 @@ ADD_CUSTOM_TARGET(reference_1
 endif (UNIX)
 
 ##Include OpenCV 
+#SET(OpenCV_DIR "C:\\workspace\\ANEO\\Project\\HipeExternal\\win64\\opencv\\install_64bits")
 find_package( OpenCV REQUIRED )
+
+include_directories(filter ${Hype_INCLUDEDIR})
 include_directories(filter ${OpenCV_INCLUDE_DIRS} )
+include_directories(filter ${Live_INCLUDEDIR} )
 
 ##filter LIBRARY
 
 add_library(filter STATIC ${_source_list} ${_header_list} ${header_ref})
 
 target_compile_definitions(filter PUBLIC "-DUSE_BOOST_REGEX")
-include_directories(filter ${Hype_INCLUDEDIR})
+
 target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries( filter ${OpenCV_LIBS} )
+target_link_libraries( filter ${Lives_LIBS} )
 
 add_dependencies(filter reference_1)
 

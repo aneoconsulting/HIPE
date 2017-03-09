@@ -12,14 +12,14 @@ namespace filter
 		{
 			REGISTER(ShowVideo, ())
 			{
-				
+
 				waitkey = 10;
 			}
 
 			REGISTER_P(int, waitkey);
 			~ShowVideo()
 			{
-				
+
 			}
 
 			virtual std::string resultAsString()
@@ -34,10 +34,10 @@ namespace filter
 				if (input_data.rows <= 0 || input_data.cols <= 0)
 					throw HipeException("Image to show doesn't data");
 				::cv::imshow(_name, input_data);
-				
+
 				if (waitkey >= 0)
-					cvWaitKey(waitkey);		
-				
+					cvWaitKey(waitkey);
+
 				return OK;
 			}
 

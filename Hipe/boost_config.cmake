@@ -9,7 +9,7 @@ find_package(Threads REQUIRED)
 
 set(BOOST_COMPONENTS system thread filesystem date_time regex log)
 
-set(BOOST_LIBRARYDIR "BOOST-LIBRARY-NOTFOUND" CACHE STRING "Path to the static Boost Library")
+set(BOOST_LIBRARYDIR "BOOST-LIBRARY-NOTFOUND" CACHE PATH "Path to the static Boost Library" PARENT_SCOPE)
 
 # Late 2017 TODO: remove the following checks and always use std::regex
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -23,6 +23,7 @@ endif()
 #ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 if (WIN32)
 	ADD_DEFINITIONS(-DBOOST_USE_WINAPI_VERSION=0x601)
+	
 endif()
 
 set(Boost_USE_STATIC_LIBS       ON) # only find static libs
