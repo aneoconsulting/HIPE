@@ -22,7 +22,12 @@ namespace filter {
 				this->result = result;
 			}
 
+			
 			OutputData() : IOData(IODataType::IMGF)
+			{
+			}
+
+			OutputData(IODataType dataType) : IOData(dataType)
 			{
 			}
 
