@@ -40,7 +40,7 @@ SET(Boost_DIR "${Hipe_external}/${HIPE_PLATFORM}"   CACHE PATH "Boost_DIR" FORCE
 SET(Boost_INCLUDE_DIR "${Boost_DIR}/include"  CACHE PATH "Boost_INCLUDE_DIR" FORCE )
 SET(BOOST_LIBRARYDIR "${Boost_DIR}/lib/"  CACHE PATH "BOOST_LIBRARYDIR" FORCE )
 
-SET(OpenCV_DIR "${Hipe_external}/${HIPE_PLATFORM}/"  CACHE PATH "OpenCV Directory" FORCE )
+SET(OpenCV_DIR "${Hipe_external}/${HIPE_PLATFORM}/share/OpenCV")
 
 SET(x264_DIR "${Hipe_external}/${HIPE_PLATFORM}/" CACHE PATH "x264" FORCE )
 

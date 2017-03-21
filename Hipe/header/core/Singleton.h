@@ -1,11 +1,18 @@
 #pragma once
 #include <mutex>
 
-template<class T>
-class Singleton
+class BaseSingleton
 {
 protected:
 	static std::mutex _mutex;
+	
+};
+
+
+template<class T>
+class Singleton : public BaseSingleton
+{
+protected:
 	static T * _instance;
 
 public:

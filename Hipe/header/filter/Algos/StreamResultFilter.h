@@ -5,7 +5,7 @@
 #include <core/queue/ConcurrentQueue.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <filter/data/InputData.h>
-#include <streaming/Streaming.h/Streaming.h>
+#include <streaming/Streaming.h>
 
 namespace filter
 {
@@ -39,20 +39,7 @@ namespace filter
 			}
 
 		public:
-			HipeStatus process(std::shared_ptr<filter::data::IOData>& outputData)
-			{
-				core::queue::ConcurrentQueue<data::IOData>* concurrent_queue = Streaming::getInstance()->getStreaming(port);
-
-				
-				if (concurrent_queue->hasListener())
-				{
-					filter::data::IOData copy(_data, true);
-					concurrent_queue->push(copy);
-				}
-
-
-				return OK;
-			}
+			HipeStatus process(std::shared_ptr<filter::data::IOData>& outputData);
 
 			/*virtual void cleanUp()
 			{
@@ -65,7 +52,10 @@ namespace filter
 			
 			}
 		};
-
+#ifdef STREAMRESULTFILTER
+#define STREAMRESULTFILTER
+		
 		ADD_CLASS(StreamResultFilter, port);
+#endif
 	}
 }

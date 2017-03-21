@@ -27,7 +27,7 @@ set(Live_INCLUDEDIR "${LIVE_DIR}/include" CACHE PATH "include path for live" FOR
 
 set(Live_LIBRARDIR "${LIVE_DIR}/lib" CACHE PATH "include path for live" FORCE)
 
-set(COMPONENTS BasicUsageEnvironment groupsock liveMedia UsageEnvironment )
+set(COMPONENTS liveMedia groupsock  BasicUsageEnvironment UsageEnvironment )
 
 set(lib_path ${Live_LIBRARDIR})
 set(_lib_list "")
@@ -54,8 +54,17 @@ foreach( COMPONENT  ${COMPONENTS} )
 	string( TOUPPER ${COMPONENT} UPPERCOMPONENT )
 		message(STATUS "Set LIBRARY : ${COMPONENT}")
 		set(Live_${UPPERCOMPONENT}_LIBRARY "")
+
+		if(WIN32)
 		set(Live_${UPPERCOMPONENT}_LIBRARY_RELEASE "${lib_path}/release/${COMPONENT}${EXTENSION}")
 		set(Live_${UPPERCOMPONENT}_LIBRARY_DEBUG   "${lib_path}/debug/${COMPONENT}${EXTENSION}")
+	  endif()
+
+	  if (UNIX)
+		set(Live_${UPPERCOMPONENT}_LIBRARY_RELEASE "${lib_path}/lib${COMPONENT}${EXTENSION}")
+		set(Live_${UPPERCOMPONENT}_LIBRARY_DEBUG   "${lib_path}/lib${COMPONENT}${EXTENSION}")
+	  endif()
+	  
 		_Live_ADJUST_LIB_VARS(${UPPERCOMPONENT})
 		add_library(live::${COMPONENT} STATIC IMPORTED)
 		message(STATUS "Select LIBRARY : ${Live_${UPPERCOMPONENT}_LIBRARY}")

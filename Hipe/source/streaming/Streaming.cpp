@@ -7,7 +7,7 @@
 #include <future>
 #include <thread>
 #include <chrono>
-#include <Streaming.h/Streaming.h>
+#include <Streaming.h>
 
 core::Logger Streaming::logger = core::setClassNameAttribute("Streaming");
 
@@ -89,5 +89,5 @@ core::queue::ConcurrentQueue<filter::data::IOData>* Streaming::createStreaming(i
 
 template <>
 Streaming* Singleton<Streaming>::_instance = nullptr;
-template <>
-std::mutex Singleton<Streaming>::_mutex;
+
+std::mutex BaseSingleton::_mutex;

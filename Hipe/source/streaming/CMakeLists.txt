@@ -30,6 +30,7 @@ find_package( OpenCV REQUIRED )
 ##streaming LIBRARY
 
 add_library(streaming STATIC ${_source_list} ${_header_list})
+target_compile_options(streaming PRIVATE -fPIC)
 
 target_compile_definitions(streaming PUBLIC "-DUSE_BOOST_REGEX")
 

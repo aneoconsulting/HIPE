@@ -69,6 +69,19 @@ public:
 		return std::string(classname + "::" + functionName);
 	}
 
+	const std::vector<std::string> getTypeNames()
+	{
+		std::vector<std::string> typeNames;
+
+		for (auto & pairs : setterTable)
+		{
+			typeNames.push_back(pairs.first);
+		}
+
+		return typeNames;
+	}
+
+	
 	const std::vector<std::string> getMethodNames(const std::string& classname)
 	{
 		std::vector<std::string> methodsNames;

@@ -17,4 +17,4 @@ namespace orchestrator
 
 
 template <class T> T* Singleton<T>::_instance = nullptr; 
-template <class T> std::mutex Singleton<T>::_mutex; 
+std::mutex BaseSingleton::_mutex;

@@ -1,7 +1,7 @@
 #pragma once
 #include <queue>
 #include <x264Encoder.h>
-#include <opencv2\opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <FramedSource.hh>
 #include <core/queue/ConcurrentQueue.h>
  

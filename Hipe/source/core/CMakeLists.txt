@@ -24,6 +24,7 @@ file(
 ##core LIBRARY
 
 add_library(core STATIC ${_source_list} ${_header_list})
+target_compile_options(core PRIVATE -fPIC)
 
 target_compile_definitions(core PUBLIC "-DUSE_BOOST_REGEX")
 include_directories(core ${Hype_INCLUDEDIR})

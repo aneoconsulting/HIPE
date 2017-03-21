@@ -20,13 +20,13 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 #add_definitions(-DBOOST_ALL_NO_LIB)
-#ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
+ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 if (WIN32)
 	ADD_DEFINITIONS(-DBOOST_USE_WINAPI_VERSION=0x601)
 	
 endif()
 
-set(Boost_USE_STATIC_LIBS       ON) # only find static libs
+set(Boost_USE_STATIC_LIBS       OFF) # only find static libs
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 
@@ -34,14 +34,6 @@ find_package(Boost 1.62.0 REQUIRED COMPONENTS ${BOOST_COMPONENTS} )
 if(${Boost_FOUND})
 	include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 endif()	
-
-if(APPLE)
-    set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl")
-endif()
-
-#if (WIN32)
-#   link_directories(${Boost_LIBRARY_DIR})
-#endif()
 
 get_directory_property(_my_link_dirs LINK_DIRECTORIES)
 message(STATUS "_my_link_dirs = ${_my_link_dirs}") 

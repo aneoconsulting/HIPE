@@ -23,11 +23,20 @@ file(
     "${lib_path}/*.lib"
 )
 else()
-file(
-    GLOB_RECURSE _lib_list 
-    LIST_DIRECTORIES false
-    "${lib_path}/*.a"
-)
+#file(
+#    GLOB_RECURSE _lib_list 
+#    LIST_DIRECTORIES false
+#    "${lib_path}/*.a"
+#)
+set(_lib_list
+		${lib_path}/libswscale.so
+		${lib_path}/libavcodec.so
+		${lib_path}/libavdevice.so
+		${lib_path}/libavfilter.so
+		${lib_path}/libavformat.so
+		${lib_path}/libavutil.so
+		${lib_path}/libboost_wave.so
+		)
 endif()
 
 set(FFmpeg_LIBRARIES "${_lib_list}" CACHE STRING "libraries" FORCE)

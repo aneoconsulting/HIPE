@@ -26,7 +26,13 @@ endif()
 
 set(x264_INCLUDEDIR "${x264_DIR}/include" CACHE PATH "include path for x264" FORCE)
 
-set(x264_LIBRARYDIR "${x264_DIR}/lib/x64" CACHE PATH "include path for x264" FORCE)
+if (WIN32)
+  set(x264_LIBRARYDIR "${x264_DIR}/lib/x64" CACHE PATH "include path for x264" FORCE)
+endif()
+
+if(UNIX)
+  set(x264_LIBRARYDIR "${x264_DIR}/lib" CACHE PATH "include path for x264" FORCE)
+endif()
 
 
 
@@ -37,7 +43,7 @@ set(_lib_list "")
 if (WIN32)
 set(EXTENSION .lib)
 else()
-set(EXTENSION .a)
+set(EXTENSION .so)
 endif()
 
 foreach( COMPONENT  ${COMPONENTS} )
@@ -55,10 +61,18 @@ foreach( COMPONENT  ${COMPONENTS} )
 	string( TOUPPER ${COMPONENT} UPPERCOMPONENT )
 		message(STATUS "Set LIBRARY : ${COMPONENT}")
 		set(x264_${UPPERCOMPONENT}_LIBRARY "")
-		set(x264_${UPPERCOMPONENT}_LIBRARY_RELEASE "${lib_path}/lib${COMPONENT}${EXTENSION}")
-		set(x264_${UPPERCOMPONENT}_LIBRARY_DEBUG   "${lib_path}/lib${COMPONENT}d${EXTENSION}")
+		if (WIN32)
+		  set(x264_${UPPERCOMPONENT}_LIBRARY_RELEASE "${lib_path}/lib${COMPONENT}${EXTENSION}")
+		  set(x264_${UPPERCOMPONENT}_LIBRARY_DEBUG   "${lib_path}/lib${COMPONENT}d${EXTENSION}")
+		endif()
+
+		if(UNIX)
+		  set(x264_${UPPERCOMPONENT}_LIBRARY_RELEASE "${lib_path}/lib${COMPONENT}${EXTENSION}")
+		  set(x264_${UPPERCOMPONENT}_LIBRARY_DEBUG   "${lib_path}/lib${COMPONENT}${EXTENSION}")
+		endif()
+		
 		_x264_ADJUST_LIB_VARS(${UPPERCOMPONENT})
-		add_library(x264::${COMPONENT} STATIC IMPORTED)
+		add_library(x264::${COMPONENT} SHARED IMPORTED)
 		message(STATUS "Select LIBRARY : ${x264_${UPPERCOMPONENT}_LIBRARY}")
 		
 		if(EXISTS "${x264_${UPPERCOMPONENT}_LIBRARY}")

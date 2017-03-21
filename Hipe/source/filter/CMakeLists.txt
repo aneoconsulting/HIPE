@@ -78,6 +78,8 @@ endif (UNIX)
 
 ##Include OpenCV 
 #SET(OpenCV_DIR "C:\\workspace\\ANEO\\Project\\HipeExternal\\win64\\opencv\\install_64bits")
+message(STATUS "Variable path for OpenCV [${OpenCV_DIR}]")
+
 find_package( OpenCV REQUIRED )
 
 include_directories(filter ${Hype_INCLUDEDIR})
@@ -86,7 +88,12 @@ include_directories(filter ${Live_INCLUDEDIR} )
 
 ##filter LIBRARY
 
-add_library(filter STATIC ${_source_list} ${_header_list} ${header_ref})
+add_library(filter SHARED
+  ${_source_list} ${_header_list} ${header_ref})
+
+target_compile_options(filter PRIVATE -fPIC)
+
+set_property(TARGET filter PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_compile_definitions(filter PUBLIC "-DUSE_BOOST_REGEX")
 
@@ -115,8 +122,9 @@ foreach(_source IN ITEMS ${_header_list})
 endforeach()
 
 include_directories(filter ${_src_filter_inc_path})
+SET (MYLIBS -Wl,--whole-archive streaming core -Wl,--no-whole-archive)
 
-target_link_libraries(filter core)
+target_link_libraries(filter ${MYLIBS} )
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
 	message(STATUS "Test if it works with windows") 
