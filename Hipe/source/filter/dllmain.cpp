@@ -4,9 +4,9 @@
 
 #ifndef WIN32
 #define ENTRYPOINT __attribute__((constructor))
+#else
+#define ENTRYPOINT
 #endif
-
-
 
 
 ENTRYPOINT void load()

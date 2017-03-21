@@ -52,10 +52,8 @@ namespace filter
 			
 			}
 		};
-#ifdef STREAMRESULTFILTER
-#define STREAMRESULTFILTER
 		
 		ADD_CLASS(StreamResultFilter, port);
-#endif
+
 	}
 }

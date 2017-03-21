@@ -3,13 +3,13 @@
 #include <vector>
 #include <functional>
 #include "functor.hpp"
-
+#include <core/misc.h>
 
 namespace filter {
 	class IFilter;
 }
 
-class RegisterTable
+class DLL_PUBLIC RegisterTable
 {
 	// Here is the core of the solution: this map of lambdas does all the "magic"
 	std::map<std::string, std::function<filter::IFilter*()> > functionTable;
@@ -127,9 +127,12 @@ public:
 
 };
 
-#define newFilter(className) RegisterTable::getInstance().newObjectInstance(className)
 
-#define __invoke(instance, function,...) RegisterTable::getInstance().invoke(instance, function,  __VA_ARGS__)
-#define getTypes(className) RegisterTable::getInstance().getMethodNames(className)
-#define getParameterNames(className) RegisterTable::getInstance().getVarNames(className)
 
+DLL_PUBLIC void * newFilter(std::string className);
+
+#define __invoke(instance, function, ...) 	RegisterTable::getInstance().invoke(instance, function, __VA_ARGS__)
+
+DLL_PUBLIC const std::vector<std::string> getTypes(std::string className);
+
+DLL_PUBLIC const std::vector<std::string> getParameterNames(std::string className);

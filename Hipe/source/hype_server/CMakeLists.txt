@@ -69,7 +69,7 @@ include_directories(hype_server ${_src_hype_server_inc_path})
 message(STATUS "Live LIBRARIES : ${Live_LIBRARIES}")
 
 target_link_libraries(hype_server core)
-target_link_libraries(hype_server filter)
+
 target_link_libraries(hype_server http)
 target_link_libraries(hype_server json)
 target_link_libraries(hype_server orchestrator)

@@ -4,7 +4,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <opencv2/opencv.hpp>
-#include <filter/tools/base64.h>
+#include <core/base64.h>
 
 namespace filter {
 	namespace data {
