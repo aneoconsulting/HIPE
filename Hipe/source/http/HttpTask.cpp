@@ -2,8 +2,6 @@
 #include <HttpServer.h>
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include <filter/tools/RegisterTable.h>
-#include <filter/References.h>
 #include <json/JsonBuilder.h>
 #include <orchestrator/Orchestrator.h>
 #include <filter/data/Composer.h>

@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-
+include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
 set(Hype_INCLUDEDIR "../../header/")
 
@@ -24,6 +24,10 @@ file(
 ##core LIBRARY
 
 add_library(core STATIC ${_source_list} ${_header_list})
+
+if (UNIX)
+target_compile_options(core PRIVATE -fPIC)
+endif()
 
 target_compile_definitions(core PUBLIC "-DUSE_BOOST_REGEX")
 include_directories(core ${Hype_INCLUDEDIR})

@@ -1,7 +1,39 @@
 cmake_minimum_required (VERSION 3.7.1)
 
 
+
+# Helper function to add preprocesor definition of FILE_BASENAME
+# to pass the filename without directory path for debugging use.
+#
+# Example:
+#
+#   define_file_basename_for_sources(my_target)
+#
+# Will add -DFILE_BASENAME="filename" for each source file depended on
+# by my_target, where filename is the name of the file.
+#
+function(define_file_basename_for_sources targetname)
+    get_target_property(source_files "${targetname}" SOURCES)
+    foreach(sourcefile ${source_files})
+        # Get source file's current list of compile definitions.
+        get_property(defs SOURCE "${sourcefile}"
+            PROPERTY COMPILE_DEFINITIONS)
+        # Add the FILE_BASENAME=filename compile definition to the list.
+        get_filename_component(basename "${sourcefile}" NAME)
+		string(REGEX MATCH "^(.*)\\.[^.]*$" dummy ${basename})
+		set(MYFILE_WITHOUT_EXT ${CMAKE_MATCH_1})
+        list(APPEND defs "FILE_BASENAME=${MYFILE_WITHOUT_EXT}")
+        # Set the updated compile definitions on the source file.
+        set_property(
+            SOURCE "${sourcefile}"
+            PROPERTY COMPILE_DEFINITIONS ${defs})
+    endforeach()
+endfunction()
+
+
+include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
+include("${CMAKE_SOURCE_DIR}/live_config.cmake")
 set(Hype_INCLUDEDIR "../../header/")
 
 set(_src_filter_path ${CMAKE_CURRENT_SOURCE_DIR})
@@ -76,18 +108,36 @@ ADD_CUSTOM_TARGET(reference_1
 endif (UNIX)
 
 ##Include OpenCV 
+#SET(OpenCV_DIR "C:\\workspace\\ANEO\\Project\\HipeExternal\\win64\\opencv\\install_64bits")
+message(STATUS "Variable path for OpenCV [${OpenCV_DIR}]")
+
 find_package( OpenCV REQUIRED )
+
+include_directories(filter ${Hype_INCLUDEDIR})
 include_directories(filter ${OpenCV_INCLUDE_DIRS} )
+include_directories(filter ${Live_INCLUDEDIR} )
 
 ##filter LIBRARY
 
-add_library(filter STATIC ${_source_list} ${_header_list} ${header_ref})
+add_library(filter SHARED
+  ${_source_list} ${_header_list} ${header_ref})
 
-target_compile_definitions(filter PUBLIC "-DUSE_BOOST_REGEX")
-include_directories(filter ${Hype_INCLUDEDIR})
+define_file_basename_for_sources(filter)
+  
+if (UNIX)
+	target_compile_options(filter PRIVATE -fPIC)
+endif()
+
+set_property(TARGET filter PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DBUILDING_DLL")
+
+
+
 target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries( filter ${OpenCV_LIBS} )
+target_link_libraries( filter ${Lives_LIBS} )
 
 add_dependencies(filter reference_1)
 
@@ -109,13 +159,19 @@ foreach(_source IN ITEMS ${_header_list})
 endforeach()
 
 include_directories(filter ${_src_filter_inc_path})
+if (UNIX)
+	SET (MYLIBS -Wl,--whole-archive streaming core -Wl,--no-whole-archive)
+endif()
 
-target_link_libraries(filter core)
+if(WIN32)
+	SET (MYLIBS streaming core)
+endif()
 
-if(MSYS) #TODO: Is MSYS true when MSVC is true?
+target_link_libraries(filter ${MYLIBS} )
+
+if(WIN32) #TODO: Is MSYS true when MSVC is true?
 	message(STATUS "Test if it works with windows") 
     target_link_libraries(filter ws2_32 wsock32)
-	target_link_libraries(binary ws2_32 wsock32)
    
 endif()
 

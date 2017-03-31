@@ -1,4 +1,4 @@
-#include <filter/tools/StringTools.h>
+#include <core/StringTools.h>
 #include <algorithm>
 
 

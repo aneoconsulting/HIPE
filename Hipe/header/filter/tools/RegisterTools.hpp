@@ -66,25 +66,25 @@ public:
 	Constructor params : IFilter(#Constructor)
 
 #define EXPAND_VAR(elem) elem
-#define CONCAT2(a, b) a ## b
+#define CONCAT(a,b) a ## b
+#define CONCAT2(a, b) CONCAT( a , b )
 //#define CONCAT3(a, b, c) CONCAT2(a, b) ## c // does not work with gcc : error: pasting ")" and "[une variable du code C]" does not give a valid preprocessing token 
-#define CONCAT3(a, b, c) a ## b ## c
-#define CONCAT4(a, b, c, d) a ## b ## c ## d
+#define CONCAT3(a, b, c) CONCAT2(CONCAT2(a,b), c)
+#define CONCAT4(a, b, c, d) CONCAT2(CONCAT3(a,b, c), d)
+#define CONCAT5(a, b, c, d, e) CONCAT2(CONCAT4(a,b, c, d), e)
 #define CONCAT2_STR(a, b) TO_STR(a ## b)
 #define CONCAT3_STR(a, b, c) TO_STR(a ## b ## c)
 
-//#define ADD_ARGS(r, classname, elem)\
-//	CONCAT3(classname::func_set_,elem, _t) CONCAT2(classname::func_set_, elem) = CONCAT3(classname::func_set_, elem , _t) (std::mem_fn(& CONCAT2(classname::set_, elem)));\
-//	CONCAT2(dtFunctor dtFunc_set_ , elem) = CONCAT2(classname::func_set_ , elem);\
-//	CONCAT2(std::string str_ , elem) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT2_STR(set_ , elem)), CONCAT2(dtFunc_set_ , elem));\
+#define STRINGIZE(x) x
+#define STRINGIZE_VALUE_OF(x) STRINGIZE(x)
 
 #define ADD_ARGS(r, classname, elem)\
-	dtFunctor CONCAT3(dtFunc_set_ , classname, elem);\
-	int CONCAT3(err_ , classname , elem) = CONCAT2(classname::getsetter_ , elem) (CONCAT3(dtFunc_set_ , classname, elem));\
-	dtFunctor CONCAT4(dtFunc_set_ , classname, elem, _from_json);\
-	int CONCAT4(err_ , classname , elem, _from_json) = CONCAT3(classname::getsetter_ , elem, _from_json) (CONCAT4(dtFunc_set_ , classname, elem, _from_json));\
-	CONCAT3(std::string str_ , classname ## _ , elem) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT2_STR(set_ , elem)), CONCAT3(dtFunc_set_ , classname, elem));\
-	CONCAT4(std::string str_ , classname ## _ , elem, _from_json) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT3_STR(set_ , elem , _from_json)), CONCAT4(dtFunc_set_ , classname, elem, _from_json));\
+	dtFunctor CONCAT4(dtFunc_set_ , classname, elem, EXPAND_VAR(FILE_BASENAME))  ;\
+	int CONCAT4(err_ , classname , elem, EXPAND_VAR(FILE_BASENAME) ) = CONCAT2(classname::getsetter_ , elem) (CONCAT4(dtFunc_set_ , classname, elem, EXPAND_VAR(FILE_BASENAME)));\
+	dtFunctor CONCAT5(dtFunc_set_ , classname, elem, _from_json, EXPAND_VAR(FILE_BASENAME) );\
+	int CONCAT5(err_ , classname , elem, _from_json, EXPAND_VAR(FILE_BASENAME)) = CONCAT3(classname::getsetter_ , elem, _from_json) (CONCAT5(dtFunc_set_ , classname, elem, _from_json, EXPAND_VAR(FILE_BASENAME)));\
+	CONCAT4(std::string str_ , classname ## _ , elem, EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT2_STR(set_ , elem)), CONCAT4(dtFunc_set_ , classname, elem, EXPAND_VAR(FILE_BASENAME)));\
+	CONCAT5(std::string str_ , classname ## _ , elem, _from_json, EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT3_STR(set_ , elem , _from_json)), CONCAT5(dtFunc_set_ , classname, elem, _from_json, EXPAND_VAR(FILE_BASENAME)));\
 
 
 //#define ADD_CLASS(classname, ...)\
@@ -92,6 +92,6 @@ public:
 //	BOOST_PP_SEQ_FOR_EACH(ADD_ARGS, classname, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__))\
 
 #define ADD_CLASS(classname, ...)\
-	std::string str_constructor_##classname = RegisterTable::getInstance().addClass(std::string(#classname), [](){ return static_cast<classname *>(new classname()); }); \
+	std::string CONCAT3(str_constructor_, classname , EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addClass(std::string(#classname), [](){ return static_cast<classname *>(new classname()); }); \
 	BOOST_PP_SEQ_FOR_EACH(ADD_ARGS, classname, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__))
 

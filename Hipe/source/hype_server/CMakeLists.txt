@@ -1,7 +1,11 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-
+include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
+include("${CMAKE_SOURCE_DIR}/live_config.cmake")
+include("${CMAKE_SOURCE_DIR}/ffmpeg_config.cmake")
+include("${CMAKE_SOURCE_DIR}/x264_config.cmake")
+
 set(Hype_INCLUDEDIR "../../header/")
 
 set(_src_hype_server_path ${CMAKE_CURRENT_SOURCE_DIR})
@@ -20,14 +24,14 @@ file(
 
 ##Include OpenCV 
 find_package( OpenCV REQUIRED )
-include_directories(hype_server ${OpenCV_INCLUDE_DIRS} )
+
 
 
 ##hype_server LIBRARY
 add_executable(hype_server ${_source_list} ${_header_list})
 
 target_compile_definitions(hype_server PUBLIC "-DUSE_BOOST_REGEX")
-include_directories(hype_server ${Hype_INCLUDEDIR})
+
 
 
 foreach(_source IN ITEMS ${_source_list})
@@ -46,7 +50,7 @@ foreach(_source IN ITEMS ${_header_list})
     source_group("header\\${_group_path}" FILES "${_source}")
 endforeach()
 
-include_directories(hype_server ${_src_hype_server_inc_path})
+
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
 	message(STATUS "Test if it works with windows") 
@@ -57,15 +61,31 @@ endif()
 
 
 
+include_directories(hype_server ${Hype_INCLUDEDIR})
+include_directories(hype_server ${Live_INCLUDEDIR})
+include_directories(hype_server ${OpenCV_INCLUDE_DIRS} )
+include_directories(hype_server ${_src_hype_server_inc_path})
+
+message(STATUS "Live LIBRARIES : ${Live_LIBRARIES}")
 
 target_link_libraries(hype_server core)
-target_link_libraries(hype_server filter)
+
 target_link_libraries(hype_server http)
 target_link_libraries(hype_server json)
 target_link_libraries(hype_server orchestrator)
+target_link_libraries(hype_server streaming)
+message(STATUS "Library ffmpeg to include ${FFmpeg_LIBRARIES}") 
+message(STATUS "Library x264 to include ${x264_LIBRARIES}") 
+message(STATUS "Library Live to include ${Live_LIBRARIES}") 
+message(STATUS "Library OpenCV to include ${OpenCV_LIBS}") 
+message(STATUS "Library Boost to include ${Boost_LIBRARIES}") 
+target_link_libraries(hype_server ${FFmpeg_LIBRARIES})
+target_link_libraries(hype_server ${x264_LIBRARIES})
+target_link_libraries(hype_server ${Live_LIBRARIES})
 target_link_libraries(hype_server ${OpenCV_LIBS})
 target_link_libraries(hype_server ${Boost_LIBRARIES})
 target_link_libraries(hype_server ${CMAKE_THREAD_LIBS_INIT})
+
 
 
 enable_testing()

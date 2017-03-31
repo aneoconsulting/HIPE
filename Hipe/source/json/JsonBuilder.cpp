@@ -36,7 +36,7 @@ namespace json
 			std::string name = child.get<std::string>("name");
 
 
-			filter::IFilter * res = newFilter(type);
+			filter::IFilter * res = (filter::IFilter *)newFilter(type);
 			res->setName(name);
 
 

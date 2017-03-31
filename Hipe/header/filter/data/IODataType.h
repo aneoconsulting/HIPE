@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <filter/tools/StringTools.h>
+#include <core/StringTools.h>
 #include <core/HipeException.h>
 
 
