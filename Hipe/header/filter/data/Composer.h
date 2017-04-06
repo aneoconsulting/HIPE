@@ -5,7 +5,7 @@
 #include <core/HipeException.h>
 #include <boost/property_tree/ptree.hpp>
 #include "FileImageData.h"
-#include <filter/tools/data/FileVideoInput.h>
+#include <filter/data/FileVideoInput.h>
 #include "DirectoryImgData.h"
 
 

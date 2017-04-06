@@ -67,6 +67,7 @@ namespace filter
 		inline cv::Mat objectAreaDrawer(const Mat & imageRef, UserData & userData)
 		{
 			const char * winName = "AreaDrawer";
+			cv::Mat crop;
 			cv::namedWindow(winName, cv::WINDOW_NORMAL);
 
 
@@ -115,10 +116,9 @@ namespace filter
 				std::cout << "img.cols " << userData.img.cols << std::endl;
 				std::cout << "img.rows " << userData.img.rows << std::endl;
 
-				cv::Mat crop = imageRef(roi);
-				return crop;
+				crop = imageRef(roi);
 			}
-			return;
+			return  crop;
 		}
 
 
@@ -147,6 +147,7 @@ namespace filter
 				UserData userData;
 				cv::Mat res;
 				res = objectAreaDrawer(img1, userData);
+				
 				if (!res.empty()){
 					cv::imwrite("resCrop.png", res);
 					outputData.get()->addInputData(res);
