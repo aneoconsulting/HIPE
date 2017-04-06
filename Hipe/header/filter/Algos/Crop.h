@@ -121,7 +121,6 @@ namespace filter
 			return  crop;
 		}
 
-
 		class Crop : public filter::IFilter
 		{
 			REGISTER(Crop, ())
@@ -129,7 +128,7 @@ namespace filter
 
 			}
 
-			REGISTER_P(float, i);
+			REGISTER_P(float, unused_parameter);
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
 
@@ -154,9 +153,9 @@ namespace filter
 					outputData.get()->addInputData(img1);
 					return OK;
 				}
-				return UNKOWN_ERROR;
+				return EMPTY_RESULT;
 			}
 		};
-		ADD_CLASS(Crop, i);
+		ADD_CLASS(Crop, unused_parameter);
 	}
 }

@@ -3,5 +3,7 @@
 enum HipeStatus
 {
 	OK,
-	UNKOWN_ERROR
+	UNKOWN_ERROR,
+	EMPTY_RESULT
+
 };
