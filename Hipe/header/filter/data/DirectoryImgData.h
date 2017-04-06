@@ -2,7 +2,7 @@
 #include <boost/log/utility/setup/file.hpp>
 
 namespace filter {
-	namespace Algos {
+	namespace data {
 		class DirectoryImgData : public filter::Algos::InputArrayData
 		{
 			std::string _directoryPath;

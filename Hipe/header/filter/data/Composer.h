@@ -30,7 +30,7 @@ namespace filter
 			}
 			static std::shared_ptr<IOData> loadImagesFromDirectory(std::string strPath)
 			{
-				return std::shared_ptr<IOData>(new  Algos::DirectoryImgData(strPath));
+				return std::shared_ptr<IOData>(new DirectoryImgData(strPath));
 			}
 			static std::shared_ptr<FileVideoInput> loadVideoFromFile(const std::string& path)
 			{
