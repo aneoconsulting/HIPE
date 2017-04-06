@@ -2,12 +2,12 @@
 
 #include <filter/data/IODataType.h>
 #include <opencv2/opencv.hpp>
-#include <boost/filesystem/path.hpp>
-#include "data/VideoData.h"
+#include <filter/data/VideoData.h>
 
-namespace boost {namespace asio {
-	class io_service;
-}
+namespace boost {
+	namespace asio {
+		class io_service;
+	}
 }
 
 namespace filter
