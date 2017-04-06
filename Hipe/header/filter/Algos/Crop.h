@@ -16,41 +16,21 @@ namespace filter
 {
 	namespace Algos
 	{
-
 		struct UserData {
 			bool clicked;
 			cv::String windowName;
 			cv::Mat img;
 			std::vector<cv::Point> areaInfos;
-
-
 		};
-		bool leftDown = false, leftup = false;
-		cv::Mat img;
-		cv::Point cor1, cor2;
-		cv::Rect box;
 
-		Mat src, ROI;
-		Rect cropRect(0, 0, 0, 0);
-		Point P1(0, 0);
-		Point P2(0, 0);
-
-
-		void mouse_call(int event, int x, int y, int f, void* _userData){
-
-			UserData &userData = *((UserData *)_userData);
-
-
+		inline void mouse_call(int event, int x, int y, int f, void* _userData){
+			auto& userData = *static_cast<UserData *>(_userData);
 
 			switch (event){
 
 			case  CV_EVENT_LBUTTONDOWN:
 				if (!userData.clicked){
-
 					userData.clicked = true;
-					int nbPoint = userData.areaInfos.size();
-
-
 				}
 				break;
 
@@ -75,20 +55,16 @@ namespace filter
 						userData.areaInfos.push_back(cv::Point(x, y));
 						line(userData.img, userData.areaInfos[nbPoint - 1], userData.areaInfos[nbPoint], Scalar(255, 0, 0), 4);
 					}
-
-					
 					userData.clicked = false;
 				}
 				break;
 
 			default:
 				break;
-
-
 			}
 		}
 
-		cv::Mat objectAreaDrawer(const Mat & imageRef, UserData & userData)
+		inline cv::Mat objectAreaDrawer(const Mat & imageRef, UserData & userData)
 		{
 			const char * winName = "AreaDrawer";
 			cv::namedWindow(winName, cv::WINDOW_NORMAL);
@@ -101,17 +77,17 @@ namespace filter
 
 			while (1) {
 				imshow(winName, userData.img);
-				int ret = waitKey(30);
+				auto ret = waitKey(30);
 
 				if (ret == 27) {
 					break;
 				}
-				else if (ret == 13) // Return pressed
+				if (ret == 13) // Return pressed
 				{
 					std::cout << "Keyboard has been pressed : " << ret << std::endl;
 					break;
 				}
-				else if (ret > 0)
+				if (ret > 0)
 				{
 					std::cout << "unkonwn Keyboard has been pressed : " << ret << std::endl;
 				}
@@ -125,7 +101,7 @@ namespace filter
 			else
 			{
 				std::cout << "Corners are : ";
-				for (int i = 0; i < userData.areaInfos.size(); i++)
+				for (auto i = 0; i < userData.areaInfos.size(); i++)
 				{
 					std::cout << "Point : " << userData.areaInfos[i] << std::endl;
 				}
@@ -138,13 +114,11 @@ namespace filter
 				std::cout << "height " << roi.height << std::endl;
 				std::cout << "img.cols " << userData.img.cols << std::endl;
 				std::cout << "img.rows " << userData.img.rows << std::endl;
-				
 
 				cv::Mat crop = imageRef(roi);
 				return crop;
 			}
-			//system("pause");
-
+			return;
 		}
 
 
@@ -161,23 +135,25 @@ namespace filter
 
 		public:
 
-
 			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
 			{
-			    outputData.reset(new data::OutputData());
+				outputData.reset(new data::OutputData());
 				using namespace cv;
 				using namespace std;
 
 				cv::Mat img1 = _data.getInputData(0);
-				
+
 				//cv::setMouseCallback("Original", mouse_call, NULL); //setting the mouse callback for selecting the region with mouse
 				UserData userData;
 				cv::Mat res;
-				 res = objectAreaDrawer(img1, userData);
-				cv::imwrite("resCrop.png", res);
-				outputData.get()->addInputData(res);
-				outputData.get()->addInputData(img1);
-				return OK;
+				res = objectAreaDrawer(img1, userData);
+				if (!res.empty()){
+					cv::imwrite("resCrop.png", res);
+					outputData.get()->addInputData(res);
+					outputData.get()->addInputData(img1);
+					return OK;
+				}
+				return UNKOWN_ERROR;
 			}
 		};
 		ADD_CLASS(Crop, i);
