@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.7.1)
-project (Hype)
+project (Hipe)
 
 include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
 #controls where to build the executables after "make"

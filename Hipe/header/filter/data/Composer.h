@@ -5,10 +5,9 @@
 #include <boost/property_tree/ptree.hpp>
 #include "FileImageData.h"
 #include <filter/data/FileVideoInput.h>
-#include "DirectoryImgData.h"
-#include "../../../filter/header/data/StreamVideoInput.h"
+#include <filter/data/DirectoryImgData.h>
 #include "../../../filter/header/data/ListIOData.h"
-
+#include "../../../filter/header/data/StreamVideoInput.h"
 
 namespace filter
 {
@@ -41,16 +40,28 @@ namespace filter
 			{
 				return std::shared_ptr<StreamVideoInput>(new StreamVideoInput(streamUrl));
 			}
-			//TOTO: SZ 
-			static std::shared_ptr<ListIOData> loadListIoData(std::vector<IOData> listeIoData)
+			//TODO: SZ 
+			static std::shared_ptr<ListIOData> loadListIoData(boost::property_tree::ptree& dataNode)
 			{
-				return std::shared_ptr<ListIOData>(new ListIOData(listeIoData));
+				std::vector<IOData> listIoData = dataNode.get<std::vector<IOData>>("array");
+				std::vector<IOData> res;
+				for (auto it = listIoData.begin(); it< listIoData.end();it++)
+				{
+					std::string path = DataTypeMapper::getStringFromType(it->getType());
+					auto child = dataNode.get_child(path);
+					if (!child.empty())
+					{
+						auto iodata = getDataFromComposer(child);
+						res.push_back(*iodata);
+					}
+				}
+				return std::shared_ptr<ListIOData>(new ListIOData(res));			
 			}
-
+		
 			static std::shared_ptr<IOData> getDataFromComposer(boost::property_tree::ptree& dataNode)
 			{
 				std::string datatype = dataNode.get<std::string>("type");
-
+			
 				IODataType ioDataType = DataTypeMapper::getTypeFromString(datatype);
 				switch (ioDataType)
 				{
@@ -73,7 +84,7 @@ namespace filter
 				case IODataType::LISTIO:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "type");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "array");
-					return loadListIoData(dataNode.get<std::vector<IOData>>("array"));
+					return loadListIoData(dataNode);
 				case IODataType::NONE:
 				default:
 					throw HipeException("Cannot found the data type requested");

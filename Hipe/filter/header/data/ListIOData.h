@@ -17,8 +17,6 @@ namespace filter
 			{
 				_listIoData = listIoData;
 			}
-			
-		public:
 			std::vector<cv::Mat>& getInputData()
 			{
 				throw HipeException("getInputData is not implemented (ListioData)");
@@ -39,16 +37,28 @@ namespace filter
 				throw HipeException("addInputData is not implemented (ListioData)");
 			}
 
-			void copyTo(IOData& left)
+			ListIOData(const ListIOData& left, bool copy)
 			{
-				IOData res(*this, true);
+				_type = left._type;
+				_data.clear();
+				for (IOData& iodata : left._listIoData)
+				{
+					IOData cur_iodata;
+					if (copy) iodata.copyTo(cur_iodata);
+					else cur_iodata = iodata;
+					_listIoData.push_back(cur_iodata);
+				}
+			}
+			void copyTo(ListIOData& left)
+			{
+				ListIOData res(*this, true);
 
 				left = res;
 			}
 
-			void copyRefTo(IOData& left)
+			void copyRefTo(ListIOData& left)
 			{
-				IOData res(*this, false);
+				ListIOData res(*this, false);
 
 				left = res;
 			}
