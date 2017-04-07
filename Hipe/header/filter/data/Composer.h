@@ -7,6 +7,7 @@
 #include <filter/data/FileVideoInput.h>
 #include "DirectoryImgData.h"
 #include "../../../filter/header/data/StreamVideoInput.h"
+#include "../../../filter/header/data/ListIOData.h"
 
 
 namespace filter
@@ -37,8 +38,13 @@ namespace filter
 				return std::shared_ptr<FileVideoInput>(new FileVideoInput(path));
 			}
 			static std::shared_ptr<StreamVideoInput> loadStreamVideoFromUrl(const std::string& streamUrl)
-			{					
+			{
 				return std::shared_ptr<StreamVideoInput>(new StreamVideoInput(streamUrl));
+			}
+			//TOTO: SZ 
+			static std::shared_ptr<ListIOData> loadListIoData(std::vector<IOData> listeIoData)
+			{
+				return std::shared_ptr<ListIOData>(new ListIOData(listeIoData));
 			}
 
 			static std::shared_ptr<IOData> getDataFromComposer(boost::property_tree::ptree& dataNode)
@@ -64,6 +70,10 @@ namespace filter
 					filter::data::Composer::checkJsonFieldExist(dataNode, "type");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
 					return loadStreamVideoFromUrl(dataNode.get<std::string>("path"));
+				case IODataType::LISTIO:
+					filter::data::Composer::checkJsonFieldExist(dataNode, "type");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "array");
+					return loadListIoData(dataNode.get<std::vector<IOData>>("array"));
 				case IODataType::NONE:
 				default:
 					throw HipeException("Cannot found the data type requested");
