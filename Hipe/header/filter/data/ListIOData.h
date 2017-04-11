@@ -41,7 +41,7 @@ namespace filter
 			{
 				_type = left._type;
 				_data.clear();
-				for (IOData& iodata : left._listIoData)
+				for (IOData iodata : left._listIoData)
 				{
 					IOData cur_iodata;
 					if (copy) iodata.copyTo(cur_iodata);
