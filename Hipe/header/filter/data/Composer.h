@@ -6,8 +6,8 @@
 #include "FileImageData.h"
 #include <filter/data/FileVideoInput.h>
 #include <filter/data/DirectoryImgData.h>
-#include "../../../filter/header/data/ListIOData.h"
-#include "../../../filter/header/data/StreamVideoInput.h"
+#include <filter/data/ListIOData.h>
+#include <filter/data/StreamVideoInput.h>
 
 namespace filter
 {
@@ -16,7 +16,7 @@ namespace filter
 		class Composer
 		{
 		public:
-			static inline void checkJsonFieldExist(boost::property_tree::ptree& jsonNode, std::string key)
+			static inline void checkJsonFieldExist(const boost::property_tree::ptree& jsonNode, std::string key)
 			{
 				if (jsonNode.count(key) == 0)
 				{
@@ -41,26 +41,21 @@ namespace filter
 				return std::shared_ptr<StreamVideoInput>(new StreamVideoInput(streamUrl));
 			}
 			//TODO: SZ 
-			static std::shared_ptr<ListIOData> loadListIoData(boost::property_tree::ptree& dataNode)
+			static std::shared_ptr<ListIOData> loadListIoData(const boost::property_tree::ptree& dataNode)
 			{
-				std::vector<IOData> listIoData = dataNode.get<std::vector<IOData>>("array");
 				std::vector<IOData> res;
-				for (auto it = listIoData.begin(); it< listIoData.end();it++)
+				
+				for (auto it = dataNode.begin(); it != dataNode.end(); ++it)
 				{
-					std::string path = DataTypeMapper::getStringFromType(it->getType());
-					auto child = dataNode.get_child(path);
-					if (!child.empty())
-					{
-						auto iodata = getDataFromComposer(child);
-						res.push_back(*iodata);
-					}
+					auto iodata = getDataFromComposer(it->second);
+					res.push_back(*iodata);
 				}
-				return std::shared_ptr<ListIOData>(new ListIOData(res));			
+				return std::make_shared<ListIOData>(res);			
 			}
 		
-			static std::shared_ptr<IOData> getDataFromComposer(boost::property_tree::ptree& dataNode)
+			static std::shared_ptr<IOData> getDataFromComposer(const boost::property_tree::ptree& dataNode)
 			{
-				std::string datatype = dataNode.get<std::string>("type");
+				auto datatype = dataNode.get<std::string>("type");
 			
 				IODataType ioDataType = DataTypeMapper::getTypeFromString(datatype);
 				switch (ioDataType)

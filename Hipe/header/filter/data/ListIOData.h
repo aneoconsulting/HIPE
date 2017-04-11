@@ -52,14 +52,12 @@ namespace filter
 			void copyTo(ListIOData& left)
 			{
 				ListIOData res(*this, true);
-
 				left = res;
 			}
 
 			void copyRefTo(ListIOData& left)
 			{
 				ListIOData res(*this, false);
-
 				left = res;
 			}
 
