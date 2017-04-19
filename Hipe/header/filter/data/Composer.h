@@ -13,6 +13,8 @@ namespace filter
 {
 	namespace data
 	{
+		std::shared_ptr<ListIOData> ret;
+
 		class Composer
 		{
 		public:
@@ -38,19 +40,25 @@ namespace filter
 			}
 			static std::shared_ptr<StreamVideoInput> loadStreamVideoFromUrl(const std::string& streamUrl)
 			{
-				return std::shared_ptr<StreamVideoInput>(new StreamVideoInput(streamUrl));
+				return std::make_shared<StreamVideoInput>(streamUrl);
 			}
 			//TODO: SZ 
 			static std::shared_ptr<ListIOData> loadListIoData(const boost::property_tree::ptree& dataNode)
 			{
 				std::vector<IOData> res;
 				
-				for (auto it = dataNode.begin(); it != dataNode.end(); ++it)
+				auto it = dataNode.begin();
+				++it;
+				auto arrayList=	it->second;
+				for (auto itarray = arrayList.begin(); itarray != arrayList.end(); ++itarray)
 				{
-					auto iodata = getDataFromComposer(it->second);
+					std::cout << it->first << "," << it->second.data() << std::endl;
+					auto iodata = getDataFromComposer(itarray->second);
 					res.push_back(*iodata);
 				}
-				return std::make_shared<ListIOData>(res);			
+							
+				auto ret= std::make_shared<ListIOData>(res);
+				return ret;
 			}
 		
 			static std::shared_ptr<IOData> getDataFromComposer(const boost::property_tree::ptree& dataNode)
@@ -79,7 +87,8 @@ namespace filter
 				case IODataType::LISTIO:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "type");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "array");
-					return loadListIoData(dataNode);
+					ret =  loadListIoData(dataNode);
+					return ret;
 				case IODataType::NONE:
 				default:
 					throw HipeException("Cannot found the data type requested");

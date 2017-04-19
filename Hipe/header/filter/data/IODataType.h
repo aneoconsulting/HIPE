@@ -62,6 +62,8 @@ namespace filter
 
 			static bool isImage(const IODataType & dataType)
 			{
+				if (dataType == IODataType::LISTIO)
+					return true;
 				std::string typeStr = getStringFromType(dataType);
 
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
@@ -86,11 +88,24 @@ namespace filter
 
 			static bool isSequence(const IODataType & dataType)
 			{
+				/*if (dataType == IODataType::LISTIO)
+					return true;*/
 				std::string typeStr = getStringFromType(dataType);
 
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
 				if (typeStr.find("seq") != std::string::npos)
+					return true;
+
+				return false;
+			}
+			static bool isListIo(const IODataType & dataType)
+			{
+				std::string typeStr = getStringFromType(dataType);
+
+				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+
+				if (typeStr.find("lis") != std::string::npos)
 					return true;
 
 				return false;

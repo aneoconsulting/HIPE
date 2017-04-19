@@ -17,6 +17,8 @@ namespace filter
 			{
 				_listIoData = listIoData;
 			}
+
+			std::vector<IOData> getListIoData(){ return _listIoData; }
 			std::vector<cv::Mat>& getInputData()
 			{
 				throw HipeException("getInputData is not implemented (ListioData)");
