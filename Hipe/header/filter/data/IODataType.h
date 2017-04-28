@@ -15,6 +15,7 @@ namespace filter
 			ACK = 0x41434b, // this is an acknowledge packet
 			SIMG = 0x53494d47, //Simple Image from base64 data
 			IMGF = 0x494d4746, // Image from File
+			LISTIO = 0x4c495354494f,
 			SEQIMG = 0x534551494d47, // Sequence of Image from base64 data source
 			SEQIMGD = 0x534551494d4744, // Sequence of image from directory
 			VIDF = 0x56494446,
@@ -61,6 +62,8 @@ namespace filter
 
 			static bool isImage(const IODataType & dataType)
 			{
+				if (dataType == IODataType::LISTIO)
+					return true;
 				std::string typeStr = getStringFromType(dataType);
 
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
@@ -85,11 +88,24 @@ namespace filter
 
 			static bool isSequence(const IODataType & dataType)
 			{
+				/*if (dataType == IODataType::LISTIO)
+					return true;*/
 				std::string typeStr = getStringFromType(dataType);
 
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
 				if (typeStr.find("seq") != std::string::npos)
+					return true;
+
+				return false;
+			}
+			static bool isListIo(const IODataType & dataType)
+			{
+				std::string typeStr = getStringFromType(dataType);
+
+				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+
+				if (typeStr.find("lis") != std::string::npos)
 					return true;
 
 				return false;

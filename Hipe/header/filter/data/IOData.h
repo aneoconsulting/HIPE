@@ -11,7 +11,6 @@ namespace filter
 		{
 		protected:
 			std::vector<cv::Mat> _data;
-
 			IODataType _type;
 
 		public:

@@ -1,0 +1,57 @@
+{
+"name"    : "Crop",
+"filters" : 
+[
+  {"filter" :
+    { 
+      "type" : "RootFilter",
+      "name" : "root" 
+    } 
+  },
+  {"filter" : 
+    {
+      "type" : "Akaze",
+      "inlier_threshold" :4000,
+        "nn_match_ratio" : 0.8, 
+         "name" : "akaze",
+      "need" : ["crop"]
+    }
+  },
+  {"filter" : 
+    { 
+      "type" : "Resize",
+      "name" : "resize",
+      "ratio":4,
+      "need" : ["akaze"]
+    } 
+      
+  },
+  {"filter" : 
+    { 
+      "type" : "ShowImage",
+      "name" : "result",
+      "need" : ["resize"]
+    } 
+      
+  },
+  {"filter":
+	{
+  		"type":"Crop",
+		"name":"crop",
+  		"need":["root"]
+	}
+  }],
+  
+  "orchestrator" : "DefaultScheduler",
+  "data" : {
+  	"type": "LISTIO",
+  	"array" : 
+		[ 
+			{ "type" : "IMGF", 
+			  "path" :"C:\\workspace\\hipe\\Data\\Images\\desk.jpg"
+			}
+		]
+  }
+  
+    
+}

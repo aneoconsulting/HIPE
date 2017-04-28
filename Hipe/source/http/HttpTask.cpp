@@ -50,6 +50,11 @@ void http::HttpTask::runTask()
 		if (treeRequest.count("data") != 0)
 		{
 			shared_ptr<filter::data::IOData> data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
+			
+			if (data.get()->getType() == filter::data::IODataType::LISTIO)
+			{
+				filter::data::ListIOData & list_io_data = static_cast<filter::data::ListIOData&>(*data.get());
+			}
 
 			//Start processing Algorithm with data
 			shared_ptr<filter::data::IOData> outputData;

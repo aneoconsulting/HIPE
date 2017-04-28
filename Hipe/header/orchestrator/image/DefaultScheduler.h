@@ -1,5 +1,6 @@
 #pragma once
 #include <filter/data/FileVideoInput.h>
+#include "filter/data/ListIOData.h"
 
 namespace orchestrator
 {
@@ -148,7 +149,26 @@ namespace orchestrator
 				{
 					throw HipeException("processSequence of Video isn't yet implemented");
 				}
-				
+			}
+
+			void processListIoData(filter::Model* root, filter::data::ListIOData inputData, std::shared_ptr<filter::data::IOData>& outputData, bool debug)
+			{
+				if (inputData.getType() != filter::data::IODataType::LISTIO)
+				{
+					throw HipeException("cannot accept iodata type other than List");
+				}
+				auto vecIoData = inputData.getListIoData();
+				for (auto it = vecIoData.begin(); it != vecIoData.end(); ++it)
+				{
+					if (filter::data::DataTypeMapper::isImage(it->getType()))
+					{
+						processImages(root, *it, outputData, debug);
+					}
+					else if (filter::data::DataTypeMapper::isVideo(it->getType()))
+					{
+						throw HipeException("processSequence of Video isn't yet implemented");
+					}
+				}
 			}
 
 			void processImages(filter::Model* root, filter::data::IOData & inputData, std::shared_ptr<filter::data::IOData> &outputData, bool debug)
@@ -192,12 +212,17 @@ namespace orchestrator
 
 
 			void process(filter::Model* root, std::shared_ptr<filter::data::IOData>& inputDataPtr, std::shared_ptr<filter::data::IOData> &outputData, bool debug = false)
-			{
+			{	
 				filter::data::IOData & inputData = *inputDataPtr.get();
 
-				if (filter::data::DataTypeMapper::isSequence(inputData.getType()))
+			    if (filter::data::DataTypeMapper::isSequence(inputData.getType()))
 				{
 					processSequence(root, inputData, outputData, debug);
+				}
+				if (filter::data::DataTypeMapper::isListIo(inputData.getType()))
+				{
+					filter::data::ListIOData &list_io_data = static_cast<filter::data::ListIOData&>(inputData);
+					processListIoData(root, list_io_data, outputData, debug);
 				}
 				else if (filter::data::DataTypeMapper::isImage(inputData.getType()))
 				{
