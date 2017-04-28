@@ -42,7 +42,7 @@ namespace filter
 			{
 				return std::make_shared<StreamVideoInput>(streamUrl);
 			}
-			//TODO: SZ 
+			 
 			static std::shared_ptr<ListIOData> loadListIoData(const boost::property_tree::ptree& dataNode)
 			{
 				std::vector<IOData> res;
