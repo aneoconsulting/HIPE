@@ -48,11 +48,16 @@ namespace filter
 				std::vector<IOData> res;
 				
 				auto it = dataNode.begin();
-				++it;
-				auto arrayList=	it->second;
-				for (auto itarray = arrayList.begin(); itarray != arrayList.end(); ++itarray)
+				auto itType = it->second.data();
+				if (DataTypeMapper::getTypeFromString(itType) != IODataType::LISTIO)
 				{
-					std::cout << it->first << "," << it->second.data() << std::endl;
+					throw HipeException("It must be a listio type");
+				}
+				++it; // get array
+				auto array=	it->second;
+				for (auto itarray = array.begin(); itarray != array.end(); ++itarray)
+				{
+					std::cout << itarray->first << "," << itarray->second.data() << std::endl;
 					auto iodata = getDataFromComposer(itarray->second);
 					res.push_back(*iodata);
 				}
