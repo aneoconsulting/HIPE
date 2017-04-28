@@ -47,15 +47,8 @@ namespace filter
 			{
 				std::vector<IOData> res;
 				
-				auto it = dataNode.begin();
-				auto itType = it->second.data();
-				if (DataTypeMapper::getTypeFromString(itType) != IODataType::LISTIO)
-				{
-					throw HipeException("It must be a listio type");
-				}
-				++it; // get array
-				auto array=	it->second;
-				for (auto itarray = array.begin(); itarray != array.end(); ++itarray)
+				auto child = dataNode.get_child("array");
+				for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 				{
 					auto iodata = getDataFromComposer(itarray->second);
 					res.push_back(*iodata);
