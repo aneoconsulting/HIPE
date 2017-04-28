@@ -139,7 +139,7 @@ target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries( filter ${OpenCV_LIBS} )
 target_link_libraries( filter ${Lives_LIBS} )
 
-add_dependencies(filter reference_1)
+#add_dependencies(filter reference_1)
 
 
 foreach(_source IN ITEMS ${_source_list})
