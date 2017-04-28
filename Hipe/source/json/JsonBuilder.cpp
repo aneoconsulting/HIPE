@@ -25,21 +25,14 @@ namespace json
 		json::JsonFilterTree * tree = new JsonFilterTree();;
 		tree->setName(algoName);
 
-		for (auto& filter : filters)
+		for (auto filter = filters.begin(); filter != filters.end(); ++filter)
 		{
-			if (filter.second.count("filter") == 0)
-				throw HipeException("Cannot find filter");
-			boost::property_tree::ptree child = filter.second.get_child("filter");
-
-
-			std::string type = child.get<std::string>("type");
+			auto element = filter->second.begin(); //first and unique element of filter
+			boost::property_tree::ptree child = element->second;
+			std::string type = element->first;
 			std::string name = child.get<std::string>("name");
-
-
 			filter::IFilter * res = (filter::IFilter *)newFilter(type);
 			res->setName(name);
-
-
 			JsonFilterNode json_filter_node = JsonFilterNode(res, child);
 			json_filter_node.applyClassParameter();
 
@@ -47,7 +40,7 @@ namespace json
 
 
 			//TESTER
-			dataResponse << child.get<std::string>("type");
+			dataResponse << type;
 			dataResponse << " ";
 			dataResponse << child.get<std::string>("name");
 
