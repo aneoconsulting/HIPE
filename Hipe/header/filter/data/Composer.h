@@ -92,8 +92,7 @@ namespace filter
 				case IODataType::LISTIO:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "type");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "array");
-					ret =  loadListIoData(dataNode);
-					return ret;
+					return loadListIoData(dataNode);
 				case IODataType::NONE:
 				default:
 					throw HipeException("Cannot found the data type requested");
