@@ -57,7 +57,6 @@ namespace filter
 				auto array=	it->second;
 				for (auto itarray = array.begin(); itarray != array.end(); ++itarray)
 				{
-					std::cout << itarray->first << "," << itarray->second.data() << std::endl;
 					auto iodata = getDataFromComposer(itarray->second);
 					res.push_back(*iodata);
 				}
