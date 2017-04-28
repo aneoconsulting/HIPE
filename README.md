@@ -16,7 +16,7 @@ in tree) running on all operating system
 News :
     - A Continuous build and tests has been deployed for the project.
 
-        Jenkins link : http://192.168.3.167:8080
+        Jenkins link : http://192.168.3.173:8080
 
 Requierement :
     -  Boost 1.62.0
