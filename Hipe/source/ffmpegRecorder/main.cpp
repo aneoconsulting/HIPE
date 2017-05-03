@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 	}
 
 
-	if (avformat_find_stream_info(pFormatCtx, nullptr) < 0) {
+	if (avformat_find_stream_info(pFormatCtx, NULL) < 0) {
 		std::cout << "Get Stream Information Error 13" << std::endl;
 		avformat_close_input(&pFormatCtx);
 		pFormatCtx = NULL;

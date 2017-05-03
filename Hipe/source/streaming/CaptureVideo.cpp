@@ -2,8 +2,8 @@
 #include <RTSPCapture.h>
 #include <core/misc.h>
 
-DLL_PUBLIC CaptureVideoFactory * Singleton<CaptureVideoFactory>::_instance = nullptr;
-DLL_PUBLIC std::mutex Singleton<CaptureVideoFactory>::_mutex;
+template<> DLL_PUBLIC CaptureVideoFactory * Singleton<CaptureVideoFactory>::_instance = nullptr;
+//template<> DLL_PUBLIC std::mutex Singleton<CaptureVideoFactory>::_mutex;
 
 CaptureVideo* CaptureVideoFactory::getCaptureVideo(std::string& captureVideoName, const std::string &path)
 {

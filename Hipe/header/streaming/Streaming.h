@@ -88,8 +88,8 @@ public:
 		return false;
 	}
 
-	std::shared_ptr<TaskContainer> & Streaming::getStreaming(int port, int height, int width, int fps);
+	std::shared_ptr<TaskContainer> & getStreaming(int port, int height, int width, int fps);
 
 
-	std::shared_ptr<TaskContainer>& Streaming::createStreaming(int port, int height, int width, int fps);
+	std::shared_ptr<TaskContainer>& createStreaming(int port, int height, int width, int fps);
 };

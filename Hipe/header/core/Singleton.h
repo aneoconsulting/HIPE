@@ -14,12 +14,13 @@ class Singleton : public BaseSingleton
 {
 protected:
 	static T * _instance;
-	static std::mutex _mutex;
 
 public:
 	template <typename... Args>
 	static T *getInstance(Args...args)
 	{
+		static std::mutex _mutex;
+
 		_mutex.lock();
 		if (_instance == nullptr)
 		{

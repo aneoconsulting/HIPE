@@ -183,7 +183,7 @@ std::shared_ptr<TaskContainer>& Streaming::createStreaming(int port, int height,
 	return streamReverseTasks[port];
 }
 
-template <>
+template <> DLL_PUBLIC
 Streaming* Singleton<Streaming>::_instance = nullptr;
 
-std::mutex Singleton<Streaming>::_mutex;
+//template<> DLL_PUBLIC std::mutex Singleton<Streaming>::_mutex;

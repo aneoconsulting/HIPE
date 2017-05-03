@@ -130,14 +130,21 @@ if (WIN32)
 endif (WIN32)
 
 if (UNIX)
-add_custom_command(TARGET filter
+  add_custom_target(reference
+	COMMAND echo "Start generation of references"
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos)
+  
+  add_custom_command(TARGET reference
+	POST_BUILD
 	COMMAND echo "\\\#pragma once" > "${os_ref_header_path}.cmp"
 	COMMAND echo "// Algorithm header to reference"  >> "${os_ref_header_path}.cmp"
     COMMAND bash "${script_path}" "filter/Algos" >> "${os_ref_header_path}.cmp"
 	COMMAND rsync -cr "${os_ref_header_path}.cmp" "${os_ref_header_path}"
 	COMMENT "Generate reference file"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
-)
+	
+	)
+  add_dependencies(filter reference)
 
 endif (UNIX) 
 

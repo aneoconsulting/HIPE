@@ -30,6 +30,11 @@ find_package( OpenCV REQUIRED )
 
 add_library(streaming_rtsp STATIC ${_source_list} ${_header_list})
 
+if (UNIX)
+	target_compile_options(streaming_rtsp PRIVATE -fPIC)
+endif()
+
+
 target_compile_definitions(streaming_rtsp PUBLIC "-DUSE_BOOST_REGEX")
 
 
