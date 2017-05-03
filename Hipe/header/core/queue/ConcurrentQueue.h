@@ -61,12 +61,28 @@ namespace core
 				while (the_queue.empty())
 				{
 					the_condition_variable.wait(lock);
+					
 				}
 
 				popped_value = the_queue.front();
 				the_queue.pop();
 			}
 
+			bool waituntil_and_pop(Data& popped_value)
+			{
+				boost::mutex::scoped_lock lock(the_mutex);
+				while (the_queue.empty())
+				{
+					the_condition_variable.timed_wait(lock, boost::posix_time::milliseconds(1000));
+					if (!hasListener()) 
+						return false;
+				}
+
+				popped_value = the_queue.front();
+				the_queue.pop();
+				return true;
+			}
+			
 			void readyToListen() { _listerners = true; }
 
 			bool hasListener() { return _listerners; }

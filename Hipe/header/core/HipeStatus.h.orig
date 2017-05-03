@@ -1,0 +1,16 @@
+#pragma once
+
+enum HipeStatus
+{
+	OK,
+<<<<<<< Updated upstream
+	UNKOWN_ERROR,
+	EMPTY_RESULT
+
+=======
+	END_OF_STREAM,
+	UNKOWN_ERROR,
+	WAIT_FPS,
+	VECTOR_EMPTY
+>>>>>>> Stashed changes
+};

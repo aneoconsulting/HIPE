@@ -2,31 +2,41 @@
 #include <map>
 #include <vector>
 #include <functional>
-#include "functor.hpp"
+
 #include <core/misc.h>
+#include <core/HipeStatus.h>
+#include <core/Invoker.h>
+#include <core/HipeException.h>
+#include <algorithm>
+#include <sstream>
+#include "RegisterTools.hpp"
+#include "filterMacros.h"
 
 namespace filter {
 	class IFilter;
 }
 
+
+/**
+ * \brief This class register every class and setter functions coming from class inheriting of Model and IFfilter
+ */
 class DLL_PUBLIC RegisterTable
 {
 	// Here is the core of the solution: this map of lambdas does all the "magic"
 	std::map<std::string, std::function<filter::IFilter*()> > functionTable;
 
-	std::map<std::string, std::map<std::string, dtFunctor >> setterTable;
+	std::map<std::string, std::map<std::string, core::InvokerBase >> setterTable;
 
 	std::map<filter::IFilter *, std::string> reverse;
 
 
 public:
-	//template <typename... Args>
-	//wrapped<Args...> & getWrapper(std::function<void(Args...args)>)
-	//{
-	//	wrapped<Args...>
-	//}
-
+	
 private:
+
+	/**
+	 * \brief Private contructor for all reflection
+	 */
 	RegisterTable()
 	{
 		
@@ -37,6 +47,10 @@ private:
 
 public:
 
+	/**
+	 * \brief Get only a instance of RegisterTable
+	 * \return the single instance of RegisterTable
+	 */
 	static RegisterTable& getInstance()
 	{
 		if (instance == nullptr)
@@ -47,6 +61,13 @@ public:
 	}
 
 public:
+
+	/**
+	 * \brief Add class to reflection mapping Key = classname ; value = Contructor method
+	 * \param className the class name of the class to register
+	 * \param constructor the method to delegate a new operator
+	 * \return the class name to be called outside function
+	 */
 	const std::string addClass(std::string className, std::function<filter::IFilter*()> constructor)
 	{
 		if (functionTable[className] == nullptr) 
@@ -55,21 +76,24 @@ public:
 		return className;
 	}
 
-	const std::string addSetter(const std::string& classname, const std::string& functionName,
-		dtFunctor & method)
+
+	/**
+	 * \brief Add setter to set field by reflection from any other language
+	 * \param classname 
+	 * \param functionName 
+	 * \param method 
+	 * \return 
+	 */
+	std::string addSetter(const std::string& classname, const std::string& functionName,
+	                            core::InvokerBase method)
 	{
-		
-		//if (setterTable[classname + "::" + functionName] == 0)
 
-
-		//method((functionTable[classname]()), 5);
 		setterTable[std::string(classname)][functionName] = method;
-		//setterTable.
 
 		return std::string(classname + "::" + functionName);
 	}
 
-	const std::vector<std::string> getTypeNames()
+	std::vector<std::string> getTypeNames()
 	{
 		std::vector<std::string> typeNames;
 
@@ -81,8 +105,8 @@ public:
 		return typeNames;
 	}
 
-	
-	const std::vector<std::string> getMethodNames(const std::string& classname)
+
+	std::vector<std::string> getMethodNames(const std::string& classname)
 	{
 		std::vector<std::string> methodsNames;
 
@@ -112,15 +136,35 @@ public:
 	template<typename...Args>
 	void invoke(filter::IFilter * instance, std::string functionName, Args...args)
 	{
+		std::string typeStr = functionName;
 
-		(setterTable[reverse[instance]])[functionName](instance, args...);
+		std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+
+		if (typeStr.find("set") != std::string::npos || typeStr.find("copy") != std::string::npos)
+		{
+			core::InvokerBase d = setterTable[reverse[instance]][functionName];
+			d.operator() < void, Args... > (instance, args...);
+		}
+		else
+			throw HipeException("TODO : Don't know how to manage getter method");
 	}
 
-	filter::IFilter *newObjectInstance(std::string className)
+	filter::IFilter *newObjectInstance(std::string className, bool managed = true)
 	{
+		std::function<filter::IFilter*()> function = functionTable[className];
+
+		if (!function)
+		{
+			std::stringstream build_string;
+			build_string << "the constructor of class " << className << " doesn't exist (" << TO_STR(FILE_BASENAME) << ":" << __LINE__ << ")";
+
+			throw HipeException(build_string.str());
+		}
+			
 		filter::IFilter *ret = functionTable[className]();
 
-		reverse[ret] = className;
+		//if (managed)
+			reverse[ret] = className;
 
 		return ret;
 	}
@@ -131,8 +175,12 @@ public:
 
 DLL_PUBLIC void * newFilter(std::string className);
 
-#define __invoke(instance, function, ...) 	RegisterTable::getInstance().invoke(instance, function, __VA_ARGS__)
-
 DLL_PUBLIC const std::vector<std::string> getTypes(std::string className);
 
 DLL_PUBLIC const std::vector<std::string> getParameterNames(std::string className);
+
+DLL_PUBLIC filter::IFilter* copyFilter(filter::IFilter* filter);
+
+DLL_PUBLIC filter::IFilter* copyAlgorithms(filter::IFilter* root);
+
+DLL_PUBLIC HipeStatus freeAlgorithms(filter::IFilter* root);

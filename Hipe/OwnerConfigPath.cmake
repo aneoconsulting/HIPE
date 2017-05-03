@@ -22,9 +22,9 @@ endif()
 if (WIN32)
 SET(Boost_DIR "${Hipe_external}/${HIPE_PLATFORM}/boost_1_62_0/"   CACHE PATH "Boost_DIR" FORCE )
 SET(Boost_INCLUDE_DIR "${Boost_DIR}"  CACHE PATH "Boost_INCLUDE_DIR" FORCE )
-SET(BOOST_LIBRARYDIR "${Boost_DIR}/lib64-msvc-12.0"  CACHE PATH "BOOST_LIBRARYDIR" FORCE )
+SET(BOOST_LIBRARYDIR "${Boost_DIR}/lib64-msvc-14.0"  CACHE PATH "BOOST_LIBRARYDIR" FORCE )
 
-SET(OpenCV_DIR "${Hipe_external}/${HIPE_PLATFORM}/opencv/install_64bits"  CACHE PATH "OpenCV Directory" FORCE )
+SET(OpenCV_DIR "${Hipe_external}/${HIPE_PLATFORM}/opencv/debug"  CACHE PATH "OpenCV Directory" FORCE )
 
 SET(x264_DIR "${Hipe_external}/${HIPE_PLATFORM}/x264-devel-${HIPE_PLATFORM}/" CACHE PATH "x264" FORCE )
 
@@ -32,6 +32,11 @@ SET(LIVE_DIR "${Hipe_external}/${HIPE_PLATFORM}/live555/install"  CACHE PATH "Li
 
 SET(FFMPEG_DIR "${Hipe_external}/${HIPE_PLATFORM}/ffmpeg"  CACHE PATH "FFMPEG_LIBRARYDIR" FORCE )
 
+SET(SOURCEY_DIR "${Hipe_external}/${HIPE_PLATFORM}/libsourcey"  CACHE PATH "SOURCEY_LIBRARYDIR" FORCE )
+
+SET(WEBRTC_DIR "${Hipe_external}/${HIPE_PLATFORM}/webrtc"  CACHE PATH "SOURCEY_LIBRARYDIR" FORCE )
+
+SET(UV_DIR "${Hipe_external}/${HIPE_PLATFORM}/libuv"  CACHE PATH "LIBUV_LIBRARYDIR" FORCE )
 
 else()
 

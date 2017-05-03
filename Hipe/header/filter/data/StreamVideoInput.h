@@ -1,74 +1,44 @@
 #pragma once
 
-#include <filter/data/IODataType.h>
-#include <opencv2/opencv.hpp>
-#include <filter/data/VideoData.h>
 
-namespace boost {
-	namespace asio {
-		class io_service;
-	}
-}
+#pragma once
+
+#include <opencv2/opencv.hpp>
+#include <boost/filesystem/path.hpp>
+#include <filter/data/VideoData.h>
+#include <streaming/CaptureVideo.h>
+
 
 namespace filter
 {
 	namespace data
 	{
-		class StreamVideoInput : public VideoData
+		class DLL_PUBLIC StreamVideoInput : public VideoData
 		{
-			std::string _streamUrl;
-			cv::VideoCapture _capture;
-			cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
+			boost::filesystem::path _filePath;
+			std::shared_ptr<CaptureVideo> _capture;
+
+			cv::Mat asOutput() const;
 
 		public:
 
-			StreamVideoInput(const std::string & streamUrl) : VideoData(IODataType::STRMVID)
-			{
-				_streamUrl = streamUrl;
-			}
+			StreamVideoInput(const std::string & url);
+			StreamVideoInput(StreamVideoInput &data);
 
-			StreamVideoInput(StreamVideoInput &data) : VideoData(data)
+			~StreamVideoInput()
 			{
-				_streamUrl = data._streamUrl;
+				
 			}
 
 			bool newFrame()
 			{
-				if (!_capture.isOpened())
-				{
-					_capture.open(_streamUrl);
-
-					if (!_capture.isOpened())
-					{
-						std::stringstream str;
-						str << "Cannot open video : " << _streamUrl;
-						throw HipeException(str.str());
-					}
-				}
-
-				bool OK = _capture.grab();
-				if (!OK)
-				{
+				cv::Mat data;
+				HipeStatus hipe_status = _capture.get()->read(data);
+				if (hipe_status == UNKOWN_ERROR)
+					throw HipeException("Error grabbing frame");
+				if (hipe_status == END_OF_STREAM)
 					return false;
-				}
-				_data.clear();
-				cv::Mat frame;
-
-				_capture.read(frame);
-
-				while (frame.rows <= 0 && frame.cols <= 0)
-				{
-
-					if (!_capture.isOpened() || !_capture.grab())
-					{
-						return false;
-					}
-					_capture.read(frame);
-				}
-
-
-				_data.push_back(frame);
-
+				_data.push_back(data);
 				return true;
 			}
 

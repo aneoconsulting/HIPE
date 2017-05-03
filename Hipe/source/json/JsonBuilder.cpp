@@ -9,7 +9,7 @@ namespace json
 		std::string OK = "Request OK";
 
 		if (treeRequest.count("name") == 0)
-			return nullptr;
+			throw HipeException("The algorithm name is not found in the Json. Please inform the field \"name\" : \"name of algorithm\"");
 
 		std::string algoName = treeRequest.get<std::string>("name");
 
@@ -49,7 +49,8 @@ namespace json
 		}
 		tree->freeze();
 		orchestrator::OrchestratorFactory::getInstance()->addModel(algoName, tree);
-
+		if (tree == nullptr)
+			throw HipeException("fail to build algorithm");
 		return tree;
 	}
 }

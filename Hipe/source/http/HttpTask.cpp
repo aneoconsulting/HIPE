@@ -36,7 +36,11 @@ void http::HttpTask::runTask()
 		treeResponseInfo.add("Orchestrator", dataResponse.str());
 		dataResponse.str(std::string());
 
-		HttpTask::logger << "Bind algorithm " << json_filter_tree->getName() << " to orchestrator " << orchestrator;
+		stringstream strlog;
+		strlog << "Bind algorithm ";
+		strlog << json_filter_tree->getName() << " to orchestrator " << orchestrator;
+
+		HttpTask::logger << strlog.str();
 
 		orchestrator::OrchestratorFactory::getInstance()->bindModel(json_filter_tree->getName(), orchestrator);
 		treeResponseInfo.add("Binding", "OK");

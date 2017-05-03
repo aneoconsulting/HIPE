@@ -30,4 +30,7 @@ private:
 	cv::Mat rawImage;
 	// Remember the x264 encoder wrapper we wrote in the start
 	x264Encoder *encoder;
+	unsigned int fPlayTimePerFrame;
+	unsigned int fPreferredFrameSize;
+	unsigned int fLastPlayTime;
 };

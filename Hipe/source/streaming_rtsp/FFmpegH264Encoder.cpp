@@ -7,10 +7,12 @@
 //
 
 #include "FFmpegH264Encoder.h"
+#include <opencv2/core/mat.hpp>
+#include <filter/data/FileImageData.h>
 
 namespace MESAI
 {
-	FFmpegH264Encoder::FFmpegH264Encoder()
+	FFmpegH264Encoder::FFmpegH264Encoder() : quit(false)
 	{
 		
 
@@ -21,11 +23,28 @@ namespace MESAI
 		onFrame = func;
 	}
 
+#define FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
 
-	void FFmpegH264Encoder::SendNewFrame(uint8_t * RGBFrame) {
+	void FFmpegH264Encoder::convertImageMult2(cv::Mat & image)
+	{
+		int rows = FFALIGN(image.rows, 2);
+
+		int cols = FFALIGN(image.cols, 2);
+
+		if (image.rows != rows || image.cols != cols)
+		{
+			cv::Mat newImage = cv::Mat::zeros(rows, cols, CV_8UC3);
+
+			image.copyTo(newImage(cv::Rect(0, 0, image.cols, image.rows)));
+			image = newImage;
+		}
+	}
+
+	void FFmpegH264Encoder::SendNewFrame(cv::Mat RGBFrame) {
 		inqueue_mutex.lock();
 		if(inqueue.size()<30)
 		{
+			convertImageMult2(RGBFrame);
 			inqueue.push(RGBFrame);
 		}
 		inqueue_mutex.unlock();
@@ -33,16 +52,16 @@ namespace MESAI
 
 	void FFmpegH264Encoder::run()
 	{
-		while(true)
+		while(!quit)
 		{
 			if(!inqueue.empty())
 			{
-				uint8_t * frame;
+				cv::Mat frame;
 				inqueue_mutex.lock();
 				frame = inqueue.front();
 				inqueue.pop();
 				inqueue_mutex.unlock();
-				if(frame != nullptr)
+				if(!frame.empty())
 				{
 					WriteFrame(frame);
 				}
@@ -53,7 +72,7 @@ namespace MESAI
 	void FFmpegH264Encoder::SetupCodec(const char *filename, int codec_id)
 	{
 		int ret;
-		m_sws_flags = SWS_BICUBIC;
+		m_sws_flags = SWS_FAST_BILINEAR;
 		m_frame_count=0;
 		
 		avcodec_register_all();
@@ -156,19 +175,35 @@ namespace MESAI
 
 		sws_ctx = sws_getContext(c->width, c->height, AV_PIX_FMT_BGR24,
 								 c->width, c->height, AV_PIX_FMT_YUV420P,
-								 SWS_BICUBIC, nullptr, nullptr, nullptr);
+								 SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
 		if (!sws_ctx) {
 			return;
 		}
 	}
 
-	void FFmpegH264Encoder::WriteFrame(uint8_t * RGBFrame )
-	{	
+	void fill_data(uint8_t* data, int buffer_size, int linesize, const cv::Mat& mat)
+	{
+		int endbuffer = linesize - mat.cols * 3;
+		for (int i = 0; i < mat.rows; i++)
+		{
+			const uint8_t *data_src = mat.ptr<uint8_t>(i);
+			memcpy(&(data[i * linesize]), data_src, mat.cols * 3);
+			
+			
+			memset(&(data[i * linesize + mat.cols * 3]), 0, endbuffer);
+		}
+	}
 
-		memcpy(m_src_picture->data[0], RGBFrame, bufferSize);
+
+	void FFmpegH264Encoder::WriteFrame(cv::Mat & RGBFrame )
+	{	
+		//fill_data(m_src_picture->data[0], bufferSize, m_src_picture->linesize[0], RGBFrame);
+
+		//memcpy(m_src_picture->data[0], RGBFrame.data, bufferSize);
+		int stride = RGBFrame.cols * 3;
 
 		sws_scale(sws_ctx,
-					m_src_picture->data, m_src_picture->linesize,
+			&(RGBFrame.data), &stride,
 					0, m_c->height, m_dst_picture->data, m_dst_picture->linesize);
 		
 
@@ -177,9 +212,14 @@ namespace MESAI
 		av_init_packet(&pkt);
 
 		int ret = 0;
-
+		timeval current_time, after;
+		hipe_gettimeofday(&current_time, nullptr);
 		ret = avcodec_encode_video2(m_c, &pkt, m_dst_picture, &got_packet);
-		
+		hipe_gettimeofday(&after, nullptr);
+		double elapse = ((after.tv_sec - current_time.tv_sec) * 1000000L + after.tv_usec) - current_time.tv_usec;
+		elapse /= 1000.;
+
+		std::cout << "Time spent : " << elapse << " ms" << std::endl;
 		if (ret < 0) {
 			return;
 		}

@@ -1,5 +1,5 @@
 #pragma once
-#include <filter/tools/RegisterTools.hpp>
+#include <filter/tools/RegisterClass.h>
 #include <core/HipeException.h>
 #include <filter/data/InputData.h>
 #include <filter/IFilter.h>
@@ -15,7 +15,7 @@ namespace filter
 		{
 			REGISTER(Resize, ())
 			{
-
+				
 			}
 
 			REGISTER_P(double, ratio);

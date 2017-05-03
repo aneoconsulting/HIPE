@@ -1,5 +1,5 @@
 #pragma once
-#include <filter/tools/RegisterTools.hpp>
+#include <filter/tools/RegisterClass.h>
 #include <core/HipeException.h>
 
 namespace filter {namespace Algos {

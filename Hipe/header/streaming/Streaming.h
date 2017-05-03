@@ -1,89 +1,85 @@
 #pragma once
 #include <core/Singleton.h>
 #include <map>
-#include <thread>
-#include <future>
-#include <chrono>
 #include <core/Logger.h>
 
 
 class TaskContainer
 {
-	std::shared_ptr<boost::packaged_task<int>> _task;
 	std::shared_ptr<boost::thread> _thread;
 	
-public:
-	boost::packaged_task<int> * getTask() const
-	{
-		return (_task.get());
-	}
 
-	void setTask(boost::packaged_task<int> * packaged_task)
-	{
-		_task.reset(packaged_task);
-	}
+public:
+	
+	int height;
+	int width;
+	int fps;
+	void* server;
+	void* encoder;
 
 	void setThread(boost::thread* thread)
 	{
 		_thread.reset(thread);
 	}
 
-	boost::thread* getThread()
+	boost::thread* getThread() const
 	{
 		return _thread.get();
 	}
-private:
-	std::shared_ptr<core::queue::ConcurrentQueue<filter::data::IOData>> _concurrent_queue;
 
-public:
-	core::queue::ConcurrentQueue<filter::data::IOData> * getQueue() const
+	void startStreaming()
 	{
-		return _concurrent_queue.get();
-	}
-
-	void setQueue(core::queue::ConcurrentQueue<filter::data::IOData> * concurrent_queue)
-	{
-		_concurrent_queue.reset(concurrent_queue);
+		active = true;
 	}
 
 private:
-	char watchVariable;
+	std::atomic<bool> active;
 
 public:
-	TaskContainer(boost::packaged_task<int> * task,
-		core::queue::ConcurrentQueue<filter::data::IOData> * concurrent_queue) : _task(task), _concurrent_queue(concurrent_queue)
+	TaskContainer() : height(0), width(0), fps(0), active(false)
 	{
-		watchVariable = 0;
+		
 	}
 
-	TaskContainer(const TaskContainer & copy) : _task(copy._task), _concurrent_queue(copy._concurrent_queue)
+	TaskContainer(const TaskContainer& copy) : height(0), width(0), fps(0), active(false)
 	{
-		watchVariable = 0;
+
+		throw HipeException("Not implemented : How can we manage the thread copy and control");
 	}
 
-	~TaskContainer() {}
+	~TaskContainer()
+	{
+		stopStreaming();
+	}
 
-	char *getWatchVariable() { return & watchVariable; }
+	std::atomic<bool>& isActive()
+	{
+		return active;
+	}
 
-	void stopStreaming() { watchVariable = 1; }
+	bool isRunning() const;
 
+	void stopStreaming();
+
+	bool taskIsJoinable() const;
+
+	void onFrameMethod(cv::Mat& mat);
 };
 
-int startStreaming(int port, TaskContainer * taskContainer);
 
 class Streaming : public Singleton<Streaming>
 {
-
 	friend class Singleton<Streaming>;
 
 	static core::Logger logger;
 
-	std::map<int, TaskContainer*> streamReverseTasks;
-	std::map<TaskContainer*, int> streamsTasks;
+	std::map<int, std::shared_ptr<TaskContainer>> streamReverseTasks;
+	std::map<std::shared_ptr<TaskContainer>, int> streamsTasks;
 
 public:
 	inline bool streamingAlreadyExist(int port)
 	{
+		//TODO : becarefull this is not yet thread safe
 		if (streamReverseTasks.find(port) != streamReverseTasks.end())
 		{
 			return true;
@@ -92,13 +88,8 @@ public:
 		return false;
 	}
 
-	inline bool taskIsReady(boost::packaged_task<int(int, TaskContainer*)>& task)
-	{
-		
-		return false;
-	}
+	std::shared_ptr<TaskContainer> & Streaming::getStreaming(int port, int height, int width, int fps);
 
-	core::queue::ConcurrentQueue<filter::data::IOData> * getStreaming(int port);
 
-	core::queue::ConcurrentQueue<filter::data::IOData> * createStreaming(int port);
+	std::shared_ptr<TaskContainer>& Streaming::createStreaming(int port, int height, int width, int fps);
 };

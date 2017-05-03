@@ -77,35 +77,17 @@ if (UNIX)
 endif (UNIX)
 if (WIN32)
   SET(script_path "${CMAKE_SOURCE_DIR}/scripts/headerList.bat")
+  SET(script_compy "${CMAKE_SOURCE_DIR}/scripts/compy.bat")
+  FILE(TO_NATIVE_PATH "${script_compy}" os_path)
+  SET(script_compy ${os_path})
 endif (WIN32)
 
 FILE(TO_NATIVE_PATH "${script_path}" os_path)
 SET(script_path ${os_path})
 
 FILE(TO_NATIVE_PATH "${header_ref}" os_ref_header_path)
+FILE(TO_NATIVE_PATH "${header_ref}_test" os_ref_header_path_test)
 
-if (WIN32)
-ADD_CUSTOM_TARGET(reference_1
-	COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}"
-	COMMAND cmd /c echo ^// Algorithm header to reference  >> "${os_ref_header_path}"
-    COMMAND cmd /c "${script_path}" "filter/Algos" >> "${os_ref_header_path}"
-	COMMENT "Generate reference file"
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
-)
-
-
-endif (WIN32)
-
-if (UNIX)
-ADD_CUSTOM_TARGET(reference_1
-	COMMAND echo "\\\#pragma once" > "${os_ref_header_path}"
-	COMMAND echo "// Algorithm header to reference"  >> "${os_ref_header_path}"
-    COMMAND bash "${script_path}" "filter/Algos" >> "${os_ref_header_path}"
-	COMMENT "Generate reference file"
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
-)
-
-endif (UNIX)
 
 ##Include OpenCV 
 #SET(OpenCV_DIR "C:\\workspace\\ANEO\\Project\\HipeExternal\\win64\\opencv\\install_64bits")
@@ -123,7 +105,42 @@ add_library(filter SHARED
   ${_source_list} ${_header_list} ${header_ref})
 
 define_file_basename_for_sources(filter)
-  
+ 
+
+if (WIN32)
+
+	add_custom_command(TARGET filter
+		PRE_BUILD
+		COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}.cmp"
+		COMMAND cmd /c echo ^// Algorithm header to reference  >> \"${os_ref_header_path}.cmp\"
+		COMMAND cmd /c "${script_path}" "filter/Algos" >> \"${os_ref_header_path}.cmp\"
+		COMMAND cmd /c "${script_compy}" \"${os_ref_header_path}.cmp\" \"${os_ref_header_path}\"
+		COMMENT "Generate reference file"
+		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
+	)
+	#ADD_CUSTOM_TARGET(reference
+	#	COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}"
+	#	COMMAND cmd /c echo ^// Algorithm header to reference  >> "${os_ref_header_path}"
+	#	COMMAND cmd /c "${script_path}" "filter/Algos" >> "${os_ref_header_path}"
+	#	COMMENT "Generate reference file"
+	#	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
+	#)
+
+
+endif (WIN32)
+
+if (UNIX)
+add_custom_command(TARGET filter
+	COMMAND echo "\\\#pragma once" > "${os_ref_header_path}.cmp"
+	COMMAND echo "// Algorithm header to reference"  >> "${os_ref_header_path}.cmp"
+    COMMAND bash "${script_path}" "filter/Algos" >> "${os_ref_header_path}.cmp"
+	COMMAND rsync -cr "${os_ref_header_path}.cmp" "${os_ref_header_path}"
+	COMMENT "Generate reference file"
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/Algos
+)
+
+endif (UNIX) 
+
 if (UNIX)
 	target_compile_options(filter PRIVATE -fPIC)
 endif()
@@ -139,7 +156,7 @@ target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries( filter ${OpenCV_LIBS} )
 target_link_libraries( filter ${Lives_LIBS} )
 
-add_dependencies(filter reference_1)
+#add_dependencies(filter reference)
 
 
 foreach(_source IN ITEMS ${_source_list})

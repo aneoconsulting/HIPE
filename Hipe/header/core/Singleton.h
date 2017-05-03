@@ -4,7 +4,7 @@
 class BaseSingleton
 {
 protected:
-	static std::mutex _mutex;
+	
 	
 };
 
@@ -14,6 +14,7 @@ class Singleton : public BaseSingleton
 {
 protected:
 	static T * _instance;
+	static std::mutex _mutex;
 
 public:
 	template <typename... Args>

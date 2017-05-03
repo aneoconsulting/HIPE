@@ -5,9 +5,9 @@
 #include <boost/property_tree/ptree.hpp>
 #include "FileImageData.h"
 #include <filter/data/FileVideoInput.h>
+#include <filter/data/StreamVideoInput.h>
 #include <filter/data/DirectoryImgData.h>
 #include <filter/data/ListIOData.h>
-#include <filter/data/StreamVideoInput.h>
 
 namespace filter
 {
@@ -18,6 +18,7 @@ namespace filter
 		class Composer
 		{
 		public:
+			
 			static inline void checkJsonFieldExist(const boost::property_tree::ptree& jsonNode, std::string key)
 			{
 				if (jsonNode.count(key) == 0)
@@ -36,11 +37,12 @@ namespace filter
 			}
 			static std::shared_ptr<FileVideoInput> loadVideoFromFile(const std::string& path)
 			{
-				return std::shared_ptr<FileVideoInput>(new FileVideoInput(path));
+				return std::make_shared<FileVideoInput>(path);
 			}
-			static std::shared_ptr<StreamVideoInput> loadStreamVideoFromUrl(const std::string& streamUrl)
+
+			static std::shared_ptr<IOData> loadVideoFromStream(const std::string & path)
 			{
-				return std::make_shared<StreamVideoInput>(streamUrl);
+				return std::make_shared<StreamVideoInput>(path);
 			}
 			 
 			static std::shared_ptr<ListIOData> loadListIoData(const boost::property_tree::ptree& dataNode)
@@ -80,7 +82,7 @@ namespace filter
 				case IODataType::STRMVID:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "type");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
-					return loadStreamVideoFromUrl(dataNode.get<std::string>("path"));
+					return loadVideoFromStream(dataNode.get<std::string>("path"));
 				case IODataType::LISTIO:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "type");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "array");

@@ -52,9 +52,24 @@ void x264Encoder::unInitilize()
 	x264_encoder_close(encoder);
 	sws_freeContext(convertContext);
 }
+void x264Encoder::convertImageMult2(cv::Mat & image)
+{
+	int rows = (image.rows >> 1) * 2;
+	int cols = (image.cols >> 1) * 2;
+
+	if (image.rows != rows || image.cols != cols)
+	{
+		cv::Mat newImage = cv::Mat::zeros(rows + 2, cols + 2, CV_8UC3);
+		
+		image.copyTo(newImage(cv::Rect(0, 0, image.cols, image.rows)));
+		image = newImage;
+	}
+}
 
 void x264Encoder::encodeFrame(cv::Mat& image)
 {
+	convertImageMult2(image);
+
 	initContext(image.size());
 
 	int srcStride = parameters.i_width * 3;

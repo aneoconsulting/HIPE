@@ -17,6 +17,10 @@ namespace MESAI
         this->path = path;
 	}
 
+	FFmpegDecoder::~FFmpegDecoder()
+	{
+		
+	}
 
 	void FFmpegDecoder::intialize()
 	{
@@ -103,7 +107,7 @@ namespace MESAI
 
     }
     
-    void FFmpegDecoder::setOnframeCallbackFunction(std::function<void(uint8_t *)> func)
+    void FFmpegDecoder::setOnframeCallbackFunction(std::function<void(cv::Mat &)> func)
     {
         onFrame = func;
     }
@@ -124,7 +128,8 @@ namespace MESAI
                 if(frameFinished)
                 {
                     sws_scale(img_convert_ctx, ((AVPicture*)pFrame)->data, ((AVPicture*)pFrame)->linesize, 0, pCodecCtx->height, ((AVPicture *)pFrameRGB)->data, ((AVPicture *)pFrameRGB)->linesize);
-                    onFrame(((AVPicture *)pFrameRGB)->data[0]);
+					auto img = cv::Mat(height, width, CV_8UC1, ((AVPicture *)pFrameRGB)->data[0]);
+                    onFrame(img);
                 }
                 av_frame_unref(pFrame);
                 av_free(pFrame);

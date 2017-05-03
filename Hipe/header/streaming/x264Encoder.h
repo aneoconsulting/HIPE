@@ -26,6 +26,7 @@ public:
 	void initContext(cv::Size size);
 
 	void unInitilize();
+	void convertImageMult2(cv::Mat& image);
 	void encodeFrame(cv::Mat& image);
 	bool isNalsAvailableInOutputQueue();
 	x264_nal_t getNalUnit();

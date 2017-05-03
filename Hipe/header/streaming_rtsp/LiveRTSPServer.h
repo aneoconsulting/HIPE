@@ -23,12 +23,12 @@ namespace MESAI {
 		LiveRTSPServer(FFmpegH264Encoder  * a_Encoder, int port, int httpPort );
 		~LiveRTSPServer();
 		void run();
-
+	char quit;
 	private:
 		int portNumber;
 		int httpTunnelingPort;
 		FFmpegH264Encoder * m_Encoder;
-		char quit;
+		
 
 	};
 }

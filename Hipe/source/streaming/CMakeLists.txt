@@ -5,7 +5,7 @@ include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/live_config.cmake")
 include("${CMAKE_SOURCE_DIR}/ffmpeg_config.cmake")
 include("${CMAKE_SOURCE_DIR}/x264_config.cmake")
-
+include("${CMAKE_SOURCE_DIR}/sourcey_config.cmake")
 set(Hype_INCLUDEDIR "../../header/")
 
 set(_src_streaming_path ${CMAKE_CURRENT_SOURCE_DIR})
@@ -30,14 +30,17 @@ find_package( OpenCV REQUIRED )
 ##streaming LIBRARY
 
 add_library(streaming STATIC ${_source_list} ${_header_list})
-target_compile_options(streaming PRIVATE -fPIC)
+if (UNIX)
+	target_compile_options(streaming PRIVATE -fPIC)
+endif()
 
-target_compile_definitions(streaming PUBLIC "-DUSE_BOOST_REGEX")
+target_compile_definitions(streaming PRIVATE "-DUSE_BOOST_REGEX" "-DBUILDING_DLL")
 
 
 target_link_libraries(streaming ${Boost_LIBRARIES})
 target_link_libraries(streaming ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(streaming core)
+target_link_libraries(streaming streaming_rtsp)
 target_link_libraries(streaming ${OpenCV_LIBS})
 target_link_libraries(streaming ${FFmpeg_LIBRARIES})
 target_link_libraries(streaming ${x264_LIBRARIES})
@@ -68,10 +71,9 @@ include_directories(streaming ${x264_INCLUDEDIR} )
 include_directories(streaming ${_src_streaming_inc_path})
 
 
-if(MSYS) #TODO: Is MSYS true when MSVC is true?
+if(WIN32) #TODO: Is MSYS true when MSVC is true?
 	message(STATUS "Test if it works with windows") 
-    target_link_libraries(streaming ws2_32 wsock32)
-	target_link_libraries(streaming ws2_32 wsock32)
+     target_link_libraries(streaming ws2_32 wsock32 ws2_32 wsock32 Winmm Secur32 Msdmo Dmoguids	wmcodecdspuuid strmiids	Psapi Userenv)
    
 endif()
 

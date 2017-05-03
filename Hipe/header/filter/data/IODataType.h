@@ -2,6 +2,7 @@
 #include <string>
 #include <core/StringTools.h>
 #include <core/HipeException.h>
+#include <algorithm>
 
 
 namespace filter
@@ -80,7 +81,7 @@ namespace filter
 
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
-				if (typeStr.find("vid") != std::string::npos)
+				if (typeStr.find("vid") != std::string::npos && typeStr.find("strm") == std::string::npos)
 					return true;
 
 				return false;

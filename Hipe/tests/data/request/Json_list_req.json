@@ -1,0 +1,72 @@
+{
+"name"    : "ShowImage",
+"filters" : 
+[
+	{"filter" :
+		{ 
+			"type" : "RootFilter",
+			"name" : "root" 
+		} 
+	},
+	{"filter" : 
+		{ 
+			"type" : "ShowVideo",
+			"waitkey" : 1,
+			"name" : "result",
+			"need" : ["rotate"]
+		} 
+			
+	},
+	{"filter" : 
+		{
+			"type" : "Resize",
+			"ratio" : 1.4,
+			"name" : "resizing",
+			"need" : ["root"]
+		}
+	},
+	{"filter" : 
+		{
+			"type" : "RotateImage",
+			"angle" : 90,
+			"name" : "rotate",
+			"need" : ["resizing"]
+		}
+	},
+	{"filter" :
+		{ 
+			"type" : "RootFilter",
+			"name" : "resultJson",
+			"need" : ["rotate"]
+		} 
+	}],
+	
+	"orchestrator" : "DefaultScheduler",
+	
+	"data" : {
+		"type" : "LIST",
+		"array" : 
+		[ 
+			{ "VIDF" : 
+				{ 
+					"path" : "c:\\Bla\\blla"
+				}
+			},
+			{ "PATTERN" : 
+				{ 
+					"cropList" :
+					{
+							"pointarray" : [1234, 1234, 1234, 1234,  
+											1234, 1234, 1234, 1234]
+					},
+					"STRMVID" : 
+					{
+							"url" : "rtsp://my_phone:8086/"
+					}
+				}
+			}
+		]
+	}
+	
+		
+}

@@ -3,12 +3,15 @@
 #include <iostream> 
 #include <sstream>   
 #include <iomanip>
-<<<<<<< HEAD:Hipe/header/filter/tools/StringTools.h
 #include <core/HipeNativeTypes.h>
-=======
 #include <core/misc.h>
->>>>>>> origin/master:Hipe/header/core/StringTools.h
 
+<<<<<<< Updated upstream
 hUInt64 ToHex(const std::string& s, bool upper_case = true);
 
 std::string ToString(hUInt64 n);
+=======
+unsigned long long ToHex(const std::string& s, bool upper_case = true);
+
+std::string ToString(unsigned long long n);
+>>>>>>> Stashed changes

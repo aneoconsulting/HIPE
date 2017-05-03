@@ -11,6 +11,7 @@
 #include "FFmpegDecoder.h"
 #include <cstdint>
 #include <thread>
+#include "FFmpegOpencvDecoder.h"
 
 MESAI::FFmpegH264Encoder * encoder;
 MESAI::LiveRTSPServer * server;
@@ -35,19 +36,22 @@ void * runEncoder(void * encoder)
 	return nullptr;
 }
 
-void onFrame(uint8_t * data)
+void onFrame(cv::Mat & data)
 {
     encoder->SendNewFrame(data);
 }
 
 int main(int argc, const char * argv[])
 {
-    if(argc==2)
-        decoder = new MESAI::FFmpegDecoder(argv[1]);
-    if(argc==3)
-        UDPPort = atoi(argv[2]);
-    if(argc==4)
-        HTTPTunnelPort = atoi(argv[3]);
+	FFmpegOpencvDecoder::config conf;
+	memset(&conf, 0, sizeof(FFmpegOpencvDecoder::config));
+
+    //if(argc==2)
+        decoder = new FFmpegOpencvDecoder(conf);
+	//if (argc == 3)
+		UDPPort = 8864; //UDPPort = atoi(argv[2]);
+	//if (argc == 4)
+		HTTPTunnelPort = 9090; //HTTPTunnelPort = atoi(argv[3]);
     decoder->intialize();
     decoder->setOnframeCallbackFunction(onFrame);
     encoder = new MESAI::FFmpegH264Encoder();

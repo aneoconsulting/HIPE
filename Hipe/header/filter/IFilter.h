@@ -1,12 +1,9 @@
 #pragma once
 
-#include <string>
-#include <vector>
 #include <map>
-#include <core/HipeException.h>
+#include <memory>
 #include <filter/Model.h>
 #include <core/HipeStatus.h>
-#include <memory>
 #include "data/OutputData.h"
 
 namespace filter {
@@ -16,7 +13,7 @@ namespace filter {
 		std::string _constructor; 
 		std::map<std::string, IFilter *> _parentFilters;
 		std::map<std::string, IFilter *> _childFilters;
-		std::string _name;
+		
 		int _level;
 	public:
 		IFilter() : _level(0)
@@ -43,8 +40,7 @@ namespace filter {
 
 		void setLevel(int level) { _level = level; }
 		int getLevel() { return _level; }
-		void setName(std::string name) { _name = name; }
-		const std::string & getName() const { return _name; }
+		
 		
 		const std::string & getConstructorName() const { return _constructor; }
 

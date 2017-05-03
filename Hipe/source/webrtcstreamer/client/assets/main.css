@@ -1,0 +1,11 @@
+body > .container {
+	padding-top: 30px;
+}
+
+#webrtc-video .video-player {
+    margin-bottom: 1rem;
+}
+
+#webrtc-video .symple-player {
+    min-height: 480px;
+}

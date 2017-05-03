@@ -2,6 +2,8 @@
 #include <core/misc.h>
 #include <core/queue/ConcurrentQueue.h>
 #include <filter/data/IOData.h>
+#include <UsageEnvironment.hh>
+#include <FramedSource.hh>
 
 
 LiveSourceWithx264* LiveSourceWithx264::createNew(UsageEnvironment& env, core::queue::ConcurrentQueue<filter::data::IOData> & concurrent_queue)
@@ -27,6 +29,8 @@ LiveSourceWithx264::LiveSourceWithx264(UsageEnvironment& env, core::queue::Concu
 	{
 		eventTriggerId = envir().taskScheduler().createEventTrigger(deliverFrame0);
 	}
+	fPlayTimePerFrame = 1;
+	fPreferredFrameSize = 1;
 }
 
 
@@ -64,6 +68,8 @@ void LiveSourceWithx264::encodeNewFrame()
 		x264_nal_t nal = encoder->getNalUnit();
 		nalQueue.push(nal);
 	}
+
+	envir().taskScheduler().triggerEvent(eventTriggerId, this);
 }
 
 void LiveSourceWithx264::deliverFrame0(void* clientData)
@@ -76,11 +82,12 @@ void LiveSourceWithx264::doGetNextFrame()
 	if (nalQueue.empty() == true)
 	{
 		encodeNewFrame();
-		hipe_gettimeofday(&currentTime, nullptr);
+		
 		deliverFrame();
 	}
 	else
 	{
+		
 		deliverFrame();
 	}
 }
@@ -115,7 +122,37 @@ void LiveSourceWithx264::deliverFrame()
 	{
 		fFrameSize = nal.i_payload - trancate;
 	}
-	fPresentationTime = currentTime;
+
+	if (fPlayTimePerFrame > 0 && fPreferredFrameSize > 0) {
+		if (fPresentationTime.tv_sec == 0 && fPresentationTime.tv_usec == 0) {
+			// This is the first frame, so use the current time:
+			hipe_gettimeofday(&currentTime, nullptr);
+			fPresentationTime = currentTime;
+			fLastPlayTime = 0;
+		}
+		else {
+			// Increment by the play time of the previous data:
+			struct timeval tvalAfter;
+			hipe_gettimeofday(&tvalAfter, nullptr);
+			fLastPlayTime = ((tvalAfter.tv_sec - currentTime.tv_sec) * 1000000L
+				+ tvalAfter.tv_usec) - currentTime.tv_usec;
+			unsigned int uSeconds = fPresentationTime.tv_usec + fLastPlayTime;
+			fPresentationTime.tv_sec += uSeconds / 1000000;
+			fPresentationTime.tv_usec = uSeconds % 1000000;
+			currentTime = tvalAfter;
+		}
+
+		// Remember the play time of this data:
+		//fLastPlayTime = (fPlayTimePerFrame*fFrameSize) / fPreferredFrameSize;
+		fDurationInMicroseconds = fLastPlayTime;
+	}
+	else {
+		// We don't know a specific play time duration for this data,
+		// so just record the current time as being the 'presentation time':
+		hipe_gettimeofday(&currentTime, nullptr);
+	}
+
+
 	memmove(fTo, nal.p_payload + trancate, fFrameSize);
 	FramedSource::afterGetting(this);
 }

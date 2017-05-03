@@ -1,6 +1,6 @@
 #pragma once
 #include "IFilter.h"
-#include <filter/tools/RegisterTools.hpp>
+#include <filter/tools/RegisterClass.h>
 #include <core/HipeStatus.h>"
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"

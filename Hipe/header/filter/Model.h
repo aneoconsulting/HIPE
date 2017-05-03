@@ -45,10 +45,7 @@ namespace filter
 			
 		}
 		
-		std::string getName() const
-		{
-			return _name;
-		}
+		const std::string & getName() const { return _name; }
 
 		void setName(const std::string& algoName)
 		{

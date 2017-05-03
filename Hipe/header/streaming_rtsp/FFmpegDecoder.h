@@ -13,6 +13,7 @@
 #include <string>
 
 #include <functional>
+#include <opencv2/opencv.hpp>
 
 
 extern "C" {
@@ -32,15 +33,15 @@ namespace MESAI
 		public:
             FFmpegDecoder(std::string);
 			
-			~FFmpegDecoder();
+			virtual ~FFmpegDecoder();
         
-			void intialize();
+			virtual void intialize();
 
-			void playMedia();
+			virtual void playMedia();
 
-			void finalize();
+			virtual void finalize();
         
-            void setOnframeCallbackFunction(std::function<void(uint8_t *)> func);
+            void setOnframeCallbackFunction(std::function<void(cv::Mat &)> func);
         
             int width;
         
@@ -52,9 +53,9 @@ namespace MESAI
         
             int bitrate;
         
-            std::function<void(uint8_t *)> onFrame;
+            std::function<void(cv::Mat &)> onFrame;
 
-		private:
+		protected:
         
             std::string path;
         

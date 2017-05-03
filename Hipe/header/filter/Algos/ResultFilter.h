@@ -1,12 +1,7 @@
 #pragma once
-#include <filter/tools/RegisterTools.hpp>
-#include <core/HipeException.h>
+#include <filter/tools/RegisterClass.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-#include <opencv2/highgui/highgui.hpp>
-
-#include <istream>
-#include <ostream>
 #include <filter/data/OutputData.h>
 
 namespace filter

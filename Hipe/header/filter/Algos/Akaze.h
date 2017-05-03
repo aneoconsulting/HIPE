@@ -1,5 +1,5 @@
 #pragma once
-#include <filter/tools/RegisterTools.hpp>
+#include <filter/tools/RegisterClass.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>"
 

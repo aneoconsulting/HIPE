@@ -37,7 +37,12 @@ namespace filter
 			{
 				if (!_capture.isOpened())
 				{
-					_capture.open(_filePath.string());
+					if (std::isdigit(_filePath.string().c_str()[0]))
+					{
+						_capture.open(atoi(_filePath.string().c_str()));
+					} 
+					else
+						_capture.open(_filePath.string());
 
 					if (!_capture.isOpened())
 					{
