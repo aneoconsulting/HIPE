@@ -4,9 +4,10 @@
 #include <filter/data/IOData.h>
 #include <UsageEnvironment.hh>
 #include <FramedSource.hh>
+#include "filter/data/ImageArrayData.h"
 
 
-LiveSourceWithx264* LiveSourceWithx264::createNew(UsageEnvironment& env, core::queue::ConcurrentQueue<filter::data::IOData> & concurrent_queue)
+LiveSourceWithx264* LiveSourceWithx264::createNew(UsageEnvironment& env, core::queue::ConcurrentQueue<filter::data::Data> & concurrent_queue)
 {
 	return new LiveSourceWithx264(env, concurrent_queue);
 }
@@ -15,7 +16,7 @@ EventTriggerId LiveSourceWithx264::eventTriggerId = 0;
 
 unsigned LiveSourceWithx264::referenceCount = 0;
 
-LiveSourceWithx264::LiveSourceWithx264(UsageEnvironment& env, core::queue::ConcurrentQueue<filter::data::IOData> & concurrent_queue) : FramedSource(env), _concurrent_queue(concurrent_queue)
+LiveSourceWithx264::LiveSourceWithx264(UsageEnvironment& env, core::queue::ConcurrentQueue<filter::data::Data> & concurrent_queue) : FramedSource(env), _concurrent_queue(concurrent_queue)
 {
 	if (referenceCount == 0)
 	{
@@ -47,11 +48,11 @@ LiveSourceWithx264::~LiveSourceWithx264(void)
 void LiveSourceWithx264::encodeNewFrame()
 {
 	rawImage.data = NULL;
-	filter::data::IOData data;
+	filter::data::Data data;
 	_concurrent_queue.readyToListen();
 
 	_concurrent_queue.wait_and_pop(data);
-	std::vector<cv::Mat> & mats = data.getInputData();
+	std::vector<cv::Mat> & mats = static_cast<filter::data::ImageArrayData&>(data).Array();
 
 	//if (mats.size() > 1 ) throw HipeException("Cannot yet stream block of matrix");
 	

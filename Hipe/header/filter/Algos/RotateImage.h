@@ -3,6 +3,8 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
+#include <filter/data/ConnexData.h>
+#include <filter/data/ImageData.h>
 
 namespace filter
 {
@@ -10,7 +12,10 @@ namespace filter
 	{
 		class RotateImage : public IFilter
 		{
-			REGISTER(RotateImage, ())
+			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
+			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
+
+			REGISTER(RotateImage, ()), _connexData(data::INOUT)
 			{
 				
 				angle = 10;
@@ -29,15 +34,23 @@ namespace filter
 			};
 
 		public:
-			HipeStatus process(std::shared_ptr<filter::data::IOData>& outputData)
+			HipeStatus process()
 			{
-				cv::Mat input_data = _data.getInputData(0);
-				cv::Point2f src_center(input_data.cols / 2.0F, input_data.rows / 2.0F);
-				cv::Mat rot_mat = getRotationMatrix2D(src_center, angle, 1.0);
-				
-				warpAffine(input_data, input_data, rot_mat, input_data.size());
+				while (!_connexData.empty()) // While i've parent data
+				{
+					data::ImageArrayData images = _connexData.pop();
 
-				outputData.reset(&_data, [](filter::data::IOData*){});
+
+					//Resize all images coming from the same parent
+					for (auto &myImage : images.Array())
+					{
+						cv::Point2f src_center(myImage.cols / 2.0F, myImage.rows / 2.0F);
+						cv::Mat rot_mat = getRotationMatrix2D(src_center, angle, 1.0);
+
+						warpAffine(myImage, myImage, rot_mat, myImage.size());
+					}
+					//No push it's an inout data
+				}
 
 				return OK;
 			}

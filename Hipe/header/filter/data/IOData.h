@@ -7,129 +7,133 @@ namespace filter
 {
 	namespace data
 	{
-		class IOData
+		class Data
 		{
-		protected:
-			std::vector<cv::Mat> _data;
-			IODataType _type;
-
 		public:
+		public:
+			typedef Data _classtype;
+		protected:
+			IODataType _type;
+			std::shared_ptr<Data> _This;
+
+		
+		public:
+			Data() : _type(NONE)//, This(std::make_shared<Data>(nullptr))
+			{
+				
+			}
+
+			Data(const Data& data) : _type(data._type), _This(data._This)
+			{
+
+			}
+
+
+			virtual ~Data()
+			{
+			}
+
+			inline void registerInstance(Data * childInstance)
+			{
+				_This.reset(childInstance);
+			}
+
+			inline void registerInstance(std::shared_ptr<Data> childInstance)
+			{
+				_This = childInstance;
+			}
+
+
 			IODataType getType() const
 			{
 				return _type;
 			}
 
+			void copyTypeTo(Data& left)
+			{
+				if (left._type != _type && left._type != NONE)
+					throw HipeException("Cannot copy type [ONE] to type [TWO]");
+
+				left._type = _type; // case where left._type == NONE
+			}
+
+			virtual void copyTo(Data& left)
+			{
+				
+				_This->copyTo(left);
+
+			}
+
+			Data& operator=(const Data& left)
+			{
+				_This = left._This;
+				_type = left._type;
+				return *this;
+			}
+
+		protected:
+			Data(IODataType datatype) : _type(datatype)
+			{
+				
+			}
+
+
 			void setType(const IODataType io_data_type)
 			{
 				_type = io_data_type;
 			}
+		};
 
-			IOData() : _type(IODataType::NONE)
-			{
-			}
+		template <typename Base, typename Derived>
+		class IOData : public Base
+		{
+		public:
+			using Base::Base;
+			
+
+
 		protected:
-			IOData(IODataType type) : _type(type)
+
+			class _Protection
 			{
-			}
+			public:
+				_Protection() {}
+			};
 
 		public:
-			IOData(IOData& left) : IOData(left, false)
+			virtual ~IOData()
 			{
 			}
 
-			IOData(const IOData& left, bool copy)
+			virtual void copyTo(IOData& left)
 			{
-				_type = left._type;
-				_data.clear();
-
-				for (auto& mat : left._data)
-				{
-					cv::Mat cur_mat;
-					if (copy) mat.copyTo(cur_mat);
-					else cur_mat = mat;
-
-					_data.push_back(cur_mat);
-				}
+				static_cast<Derived&>(*(Base::_This)).copyTo(static_cast<Derived&>(left));
 			}
 
+			
 
-			IOData(const IOData& left) : IOData(left, false)
+			IODataType getType() const
 			{
+				return Base::getType();
 			}
 
-
-		public:
-			std::vector<cv::Mat>& getInputData()
+			inline Derived &  This() const
 			{
-				return _data;
+				return static_cast<Derived &>(*((Base::_This).get()));
 			}
+			
 
-			void setInputData(const std::vector<cv::Mat>& mats)
+		/*	IOData& operator<<(const IOData& left)
 			{
-				_data = mats;
-			}
-
-			cv::Mat& getInputData(int index)
-			{
-				return _data[index];
-			}
-
-			void addInputData(cv::Mat& mat)
-			{
-				_data.push_back(mat);
-			}
-
-			void copyTo(IOData& left)
-			{
-				IOData res(*this, true);
-
-				left = res;
-			}
-
-			void copyRefTo(IOData& left)
-			{
-				IOData res(*this, false);
-
-				left = res;
-			}
-
-
-			IOData& operator=(const IOData& left)
-			{
-				_type = left._type;
-				_data.clear();
-
-				for (auto& mat : left._data)
-				{
-					_data.push_back(mat);
-				}
-				return *this;
-			}
-
-			IOData& operator<<(const IOData& left)
-			{
-				if (_type != left._type) 
+				if (_type != left._type)
 					throw HipeException("Cannot add data because types are different");
 
-				for (auto& mat : left._data)
-				{
-					_data.push_back(mat);
-				}
+				throw HipeException("Not yet impelmented check if the  pointer to return is this or left");
+
 				return *this;
-			}
+			}*/
 
-			inline bool empty()
-			{
-				return _data.empty();
-			}
-
-			template<typename type>
-			inline static type & downCast(data::IOData & outputData)
-			{
-				return static_cast<type &>(outputData);
-			}
-
-
+			
 		};
 	}
 }

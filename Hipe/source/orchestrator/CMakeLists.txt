@@ -25,7 +25,7 @@ file(
 
 add_library(orchestrator STATIC ${_source_list} ${_header_list})
 
-target_compile_definitions(orchestrator PRIVATE "-DUSE_BOOST_REGEX" "-DBUILDING_DLL")
+target_compile_definitions(orchestrator PRIVATE "-DUSE_BOOST_REGEX" "-DORCHESTRATOR_BUILD")
 include_directories(orchestrator ${Hype_INCLUDEDIR})
 target_link_libraries(orchestrator ${Boost_LIBRARIES})
 target_link_libraries(orchestrator ${CMAKE_THREAD_LIBS_INIT})

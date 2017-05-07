@@ -53,23 +53,23 @@ void http::HttpTask::runTask()
 		//Check if data is present
 		if (treeRequest.count("data") != 0)
 		{
-			shared_ptr<filter::data::IOData> data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
+			filter::data::Data data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
 			
-			if (data.get()->getType() == filter::data::IODataType::LISTIO)
+			if (data.getType() == filter::data::IODataType::LISTIO)
 			{
-				filter::data::ListIOData & list_io_data = static_cast<filter::data::ListIOData&>(*data.get());
+				filter::data::ListIOData & list_io_data = static_cast<filter::data::ListIOData&>(data);
 			}
 
 			//Start processing Algorithm with data
-			shared_ptr<filter::data::IOData> outputData;
+			filter::data::Data outputData;
 
 			orchestrator::OrchestratorFactory::getInstance()->process(json_filter_tree->getName(), data, outputData);
 
 			//after the process execution Data should be an OutputData type
-			filter::data::OutputData * output_data = static_cast<filter::data::OutputData *>(outputData.get());
+			filter::data::OutputData & output_data = static_cast<filter::data::OutputData &>(outputData);
 			
-			if (outputData.get() != nullptr)
-				treeResponse.add_child("dataResponse", output_data->resultAsJson());
+			
+			treeResponse.add_child("dataResponse", output_data.resultAsJson());
 		}
 		write_json(dataResponse, treeResponse);
 		

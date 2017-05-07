@@ -8,11 +8,11 @@
 class H264LiveServerMediaSession :public OnDemandServerMediaSubsession
 {
 public:
-	static H264LiveServerMediaSession* createNew(UsageEnvironment& env, bool reuseFirstSource, core::queue::ConcurrentQueue<filter::data::IOData> & concurrent_queue);
+	static H264LiveServerMediaSession* createNew(UsageEnvironment& env, bool reuseFirstSource, core::queue::ConcurrentQueue<filter::data::Data> & concurrent_queue);
 	void checkForAuxSDPLine1();
 	void afterPlayingDummy1();
 protected:
-	H264LiveServerMediaSession(UsageEnvironment& env, bool reuseFirstSource, core::queue::ConcurrentQueue<filter::data::IOData> & concurrent_queue);
+	H264LiveServerMediaSession(UsageEnvironment& env, bool reuseFirstSource, core::queue::ConcurrentQueue<filter::data::Data> & concurrent_queue);
 	virtual ~H264LiveServerMediaSession(void);
 	void setDoneFlag() { fDoneFlag = ~0; }
 protected:
@@ -23,5 +23,5 @@ private:
 	char* fAuxSDPLine;
 	char fDoneFlag;
 	RTPSink* fDummySink;
-	core::queue::ConcurrentQueue<filter::data::IOData> & _concurrent_queue;
+	core::queue::ConcurrentQueue<filter::data::Data> & _concurrent_queue;
 };

@@ -5,10 +5,9 @@
 #include <core/HipeStatus.h>
 #include <core/queue/ConcurrentQueue.h>
 #include <opencv2/highgui/highgui.hpp>
-#include <filter/data/InputData.h>
 #include <streaming/Streaming.h>
 #include <filter/tools/filterMacros.h>
-#include <filter/data/InputData.h>
+#include <filter/data/ImageData.h>
 
 
 namespace filter
@@ -17,7 +16,10 @@ namespace filter
 	{
 		class StreamResultFilter : public IFilter
 		{
-			core::queue::ConcurrentQueue<filter::data::InputData> queue;
+			//data::ConnexOutput<filter::data::ImageData> connData;
+			CONNECTOR_OUT(data::ImageData);
+
+			core::queue::ConcurrentQueue<filter::data::ImageData> queue;
 			struct timeval current_time;
 			int fps_avg;
 			int nb_frame;
@@ -53,7 +55,7 @@ namespace filter
 
 			cv::Size getImageDimension();
 
-			HipeStatus process(std::shared_ptr<filter::data::IOData>& outputData);
+			HipeStatus process();
 
 			/*virtual void cleanUp()
 			{

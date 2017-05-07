@@ -7,6 +7,7 @@
 #include "data/OutputData.h"
 
 namespace filter {
+	
 	class IFilter : public filter::Model
 	{
 	protected:
@@ -58,9 +59,38 @@ namespace filter {
 
 		
 
+		public:
+		virtual IFilter &operator<<(data::Data & element)
+		{
+
+			return *this;
+		}
+
+		virtual IFilter &operator<<(cv::Mat & element)
+		{
+
+			return *this;
+		}
+
+		virtual IFilter & getCast() { return *this; }
+
+		virtual IFilter &operator<<(IFilter & other)
+		{
+			this->getConnector() << other.getConnector();
+			return *this;
+		}
+
+		inline virtual data::ConnexDataBase & getConnector()
+		{
+			throw HipeException("Cannot get a connector on abstract class IFilter");
+		}
+		
+		
+		
+
 	public:
 
-		virtual HipeStatus process(std::shared_ptr<data::IOData> & outputData) = 0;
+		virtual HipeStatus process() = 0;
 		
 	};
 }

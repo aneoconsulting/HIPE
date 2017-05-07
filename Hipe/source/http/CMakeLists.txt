@@ -25,7 +25,7 @@ file(
 
 add_library(http STATIC ${_source_list} ${_header_list})
 
-target_compile_definitions(http PUBLIC "-DUSE_BOOST_REGEX")
+target_compile_definitions(http PRIVATE "-DUSE_BOOST_REGEX" "-DHTTP_BUILD")
 include_directories(http ${Hype_INCLUDEDIR})
 target_link_libraries(http ${Boost_LIBRARIES})
 target_link_libraries(http ${CMAKE_THREAD_LIBS_INIT})

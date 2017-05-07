@@ -10,17 +10,23 @@ namespace filter
 {
 	namespace data
 	{
-		class FileImageData : public ImageData
+		class FileImageData : public IOData<ImageData, FileImageData>
 		{
 			boost::filesystem::path _filePath;
 
 			cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
+		private:
+			FileImageData() : IOData(IODataType::IMGF)
+			{
+				
+			}
 
 		public:
 
-			FileImageData(const std::string & filePath) : ImageData(IODataType::IMGF)
+			FileImageData(const std::string & filePath) : IOData(IODataType::IMGF)
 			{
-				_filePath = filePath; 
+				Data::registerInstance(new FileImageData());
+				This()._filePath = filePath;
 
 				cv::Mat mat = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
 				if (mat.empty())
@@ -30,7 +36,8 @@ namespace filter
 
 					throw HipeException(strbuild.str());
 				}
-				addInputData(mat);
+				This()._array.push_back(mat);
+				
 			}
 
 		};

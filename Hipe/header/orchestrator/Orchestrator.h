@@ -9,6 +9,7 @@
 #include <json/JsonFilterNode/JsonFilterTree.h>
 #include <filter/data/IOData.h>
 #include <filter/data/OutputData.h>
+#include <orchestrator/orchestrator_export.h>
 
 namespace orchestrator
 {
@@ -20,7 +21,12 @@ namespace orchestrator
 	class OrchestratorBase
 	{
 	public:
-		virtual void process(filter::Model* root, std::shared_ptr<filter::data::IOData>& data, std::shared_ptr<filter::data::IOData>& outPutData) = 0;
+		virtual void process(filter::Model* root, filter::data::Data & data, filter::data::Data & outPutData) = 0;
+
+		virtual ~OrchestratorBase()
+		{
+			
+		}
 	};
 	
 	template<class Conduct>
@@ -48,7 +54,7 @@ namespace orchestrator
 			
 		}
 
-		void process(filter::Model* root, std::shared_ptr<filter::data::IOData>& data, std::shared_ptr<filter::data::IOData>& outPutData)
+		void process(filter::Model* root, filter::data::Data & data, filter::data::Data & outPutData)
 		{
 			
 			_conductor->process(root, data, outPutData);
@@ -56,7 +62,7 @@ namespace orchestrator
 	};
 
 	
-	class OrchestratorFactory : public Singleton < OrchestratorFactory >
+	class ORCHESTRATOR_EXPORT OrchestratorFactory : public Singleton < OrchestratorFactory >
 	{
 		friend class Singleton<OrchestratorFactory>;
 
@@ -163,7 +169,7 @@ namespace orchestrator
 			_modelStore[modelName] = orchestratorName;
 		}
 
-		void process(const std::string& model_name, std::shared_ptr<filter::data::IOData> & data, std::shared_ptr<filter::data::IOData>& outputData)
+		void process(const std::string& model_name, filter::data::Data & data, filter::data::Data & outputData)
 		{
 			filter::Model * root;
 

@@ -10,9 +10,14 @@
 #include <algorithm>
 #include <sstream>
 #include "RegisterTools.hpp"
-#include "filterMacros.h"
+#include <filter/tools/filterMacros.h>
+#include <filter/data/IOData.h>
+#include <filter/data/IODataType.h>
+#include <filter/filter_export.h>
 
-namespace filter {
+
+namespace filter
+{
 	class IFilter;
 }
 
@@ -20,18 +25,21 @@ namespace filter {
 /**
  * \brief This class register every class and setter functions coming from class inheriting of Model and IFfilter
  */
-class DLL_PUBLIC RegisterTable
+class FILTER_EXPORT RegisterTable
 {
 	// Here is the core of the solution: this map of lambdas does all the "magic"
-	std::map<std::string, std::function<filter::IFilter*()> > functionTable;
+	std::map<std::string, std::function<filter::IFilter*()>> functionTable;
 
-	std::map<std::string, std::map<std::string, core::InvokerBase >> setterTable;
+	std::map<std::string, std::map<std::string, core::InvokerBase>> setterTable;
+
+
+	std::map<filter::data::IODataType, std::map<std::string, core::InvokerBase>> _IODataTable;
 
 	std::map<filter::IFilter *, std::string> reverse;
 
 
 public:
-	
+
 private:
 
 	/**
@@ -42,7 +50,7 @@ private:
 		
 	}
 
-	static RegisterTable *instance;
+	static RegisterTable* instance;
 
 
 public:
@@ -70,7 +78,7 @@ public:
 	 */
 	const std::string addClass(std::string className, std::function<filter::IFilter*()> constructor)
 	{
-		if (functionTable[className] == nullptr) 
+		if (functionTable[className] == nullptr)
 			functionTable[className] = constructor;
 
 		return className;
@@ -85,9 +93,8 @@ public:
 	 * \return 
 	 */
 	std::string addSetter(const std::string& classname, const std::string& functionName,
-	                            core::InvokerBase method)
+	                      core::InvokerBase method)
 	{
-
 		setterTable[std::string(classname)][functionName] = method;
 
 		return std::string(classname + "::" + functionName);
@@ -97,7 +104,7 @@ public:
 	{
 		std::vector<std::string> typeNames;
 
-		for (auto & pairs : setterTable)
+		for (auto& pairs : setterTable)
 		{
 			typeNames.push_back(pairs.first);
 		}
@@ -110,7 +117,7 @@ public:
 	{
 		std::vector<std::string> methodsNames;
 
-		for (auto & pairs : setterTable[classname])
+		for (auto& pairs : setterTable[classname])
 		{
 			methodsNames.push_back(pairs.first);
 		}
@@ -122,19 +129,18 @@ public:
 	{
 		std::vector<std::string> varNames;
 
-		for (auto & pairs : setterTable[classname])
+		for (auto& pairs : setterTable[classname])
 		{
 			if (pairs.first.find("_from_json") == std::string::npos)
 				if (pairs.first.find("set_") == 0)
 					varNames.push_back(std::string(pairs.first).erase(0, 4)); // remove prefix "set_"
-
 		}
-		
+
 		return varNames;
 	}
 
-	template<typename...Args>
-	void invoke(filter::IFilter * instance, std::string functionName, Args...args)
+	template <typename...Args>
+	void invoke(filter::IFilter* instance, std::string functionName, Args ...args)
 	{
 		std::string typeStr = functionName;
 
@@ -143,13 +149,13 @@ public:
 		if (typeStr.find("set") != std::string::npos || typeStr.find("copy") != std::string::npos)
 		{
 			core::InvokerBase d = setterTable[reverse[instance]][functionName];
-			d.operator() < void, Args... > (instance, args...);
+			d.operator()<void, Args...>(instance, args...);
 		}
 		else
 			throw HipeException("TODO : Don't know how to manage getter method");
 	}
 
-	filter::IFilter *newObjectInstance(std::string className, bool managed = true)
+	filter::IFilter* newObjectInstance(std::string className, bool managed = true)
 	{
 		std::function<filter::IFilter*()> function = functionTable[className];
 
@@ -160,11 +166,11 @@ public:
 
 			throw HipeException(build_string.str());
 		}
-			
-		filter::IFilter *ret = functionTable[className]();
+
+		filter::IFilter* ret = functionTable[className]();
 
 		//if (managed)
-			reverse[ret] = className;
+		reverse[ret] = className;
 
 		return ret;
 	}
@@ -172,15 +178,14 @@ public:
 };
 
 
+FILTER_EXPORT void* newFilter(std::string className);
 
-DLL_PUBLIC void * newFilter(std::string className);
+FILTER_EXPORT const std::vector<std::string> getTypes(std::string className);
 
-DLL_PUBLIC const std::vector<std::string> getTypes(std::string className);
+FILTER_EXPORT const std::vector<std::string> getParameterNames(std::string className);
 
-DLL_PUBLIC const std::vector<std::string> getParameterNames(std::string className);
+FILTER_EXPORT filter::IFilter* copyFilter(filter::IFilter* filter);
 
-DLL_PUBLIC filter::IFilter* copyFilter(filter::IFilter* filter);
+FILTER_EXPORT filter::IFilter* copyAlgorithms(filter::IFilter* root);
 
-DLL_PUBLIC filter::IFilter* copyAlgorithms(filter::IFilter* root);
-
-DLL_PUBLIC HipeStatus freeAlgorithms(filter::IFilter* root);
+FILTER_EXPORT HipeStatus freeAlgorithms(filter::IFilter* root);

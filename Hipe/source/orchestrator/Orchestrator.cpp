@@ -1,10 +1,10 @@
 #include <orchestrator/Orchestrator.h>
 #include <image/DefaultScheduler.h>
 #include <core/misc.h>
+#include <orchestrator_export.h>
 
-template<> DLL_PUBLIC orchestrator::OrchestratorFactory* Singleton<orchestrator::OrchestratorFactory>::_instance = nullptr; 
-//template<> DLL_PUBLIC std::mutex Singleton<orchestrator::OrchestratorFactory>::_mutex;
 
+template<> orchestrator::OrchestratorFactory* Singleton<orchestrator::OrchestratorFactory>::_instance = nullptr;
 
 namespace orchestrator
 {

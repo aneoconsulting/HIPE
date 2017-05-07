@@ -9,6 +9,7 @@
 #include <chrono>
 #include <Streaming.h>
 #include <streaming_rtsp/LiveRTSPServer.h>
+#include "streaming_export.h"
 
 core::Logger Streaming::logger = core::setClassNameAttribute("Streaming");
 
@@ -124,7 +125,7 @@ bool TaskContainer::taskIsJoinable() const
 	return _thread->joinable();
 }
 
-void TaskContainer::onFrameMethod(cv::Mat& mat)
+void TaskContainer::onFrameMethod(cv::Mat mat)
 {
 	static_cast<MESAI::FFmpegH264Encoder*>(encoder)->SendNewFrame(mat);
 }
@@ -183,7 +184,5 @@ std::shared_ptr<TaskContainer>& Streaming::createStreaming(int port, int height,
 	return streamReverseTasks[port];
 }
 
-template <> DLL_PUBLIC
-Streaming* Singleton<Streaming>::_instance = nullptr;
+template <> Streaming* Singleton<Streaming>::_instance = nullptr;
 
-//template<> DLL_PUBLIC std::mutex Singleton<Streaming>::_mutex;

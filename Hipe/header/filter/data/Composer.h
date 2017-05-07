@@ -27,40 +27,41 @@ namespace filter
 				}
 			}
 
-			static std::shared_ptr<IOData> loadImageFromFile(std::string strPath)
+			static Data loadImageFromFile(std::string strPath)
 			{
-				return std::shared_ptr<IOData>(new FileImageData(strPath));
-			}
-			static std::shared_ptr<IOData> loadImagesFromDirectory(std::string strPath)
-			{
-				return std::shared_ptr<IOData>(new DirectoryImgData(strPath));
-			}
-			static std::shared_ptr<FileVideoInput> loadVideoFromFile(const std::string& path)
-			{
-				return std::make_shared<FileVideoInput>(path);
+				return static_cast<Data>(FileImageData(strPath));
 			}
 
-			static std::shared_ptr<IOData> loadVideoFromStream(const std::string & path)
+			static Data loadImagesFromDirectory(std::string strPath)
 			{
-				return std::make_shared<StreamVideoInput>(path);
+				return static_cast<Data>(DirectoryImgData(strPath));
+			}
+			static Data loadVideoFromFile(const std::string& path)
+			{
+				return static_cast<Data>(FileVideoInput(path));
+			}
+
+			static Data loadVideoFromStream(const std::string & path)
+			{
+				return static_cast<Data>(StreamVideoInput(path));
 			}
 			 
-			static std::shared_ptr<ListIOData> loadListIoData(const boost::property_tree::ptree& dataNode)
+			static Data loadListIoData(const boost::property_tree::ptree& dataNode)
 			{
-				std::vector<IOData> res;
+				std::vector<Data> res;
 				
 				auto child = dataNode.get_child("array");
 				for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 				{
 					auto iodata = getDataFromComposer(itarray->second);
-					res.push_back(*iodata);
+					res.push_back(iodata);
 				}
 							
-				auto ret= std::make_shared<ListIOData>(res);
-				return ret;
+				return static_cast<Data>(ListIOData(res));
+				
 			}
 		
-			static std::shared_ptr<IOData> getDataFromComposer(const boost::property_tree::ptree& dataNode)
+			static Data getDataFromComposer(const boost::property_tree::ptree& dataNode)
 			{
 				auto datatype = dataNode.get<std::string>("type");
 			

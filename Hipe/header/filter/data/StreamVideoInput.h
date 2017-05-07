@@ -7,41 +7,35 @@
 #include <boost/filesystem/path.hpp>
 #include <filter/data/VideoData.h>
 #include <streaming/CaptureVideo.h>
+#include <filter/filter_export.h>
 
 
 namespace filter
 {
 	namespace data
 	{
-		class DLL_PUBLIC StreamVideoInput : public VideoData
+		class FILTER_EXPORT StreamVideoInput : public IOData<VideoData, StreamVideoInput>
 		{
 			boost::filesystem::path _filePath;
 			std::shared_ptr<CaptureVideo> _capture;
-
+			
 			cv::Mat asOutput() const;
 
+		private:
+			StreamVideoInput();
+
 		public:
+			using IOData::IOData;
+
+
+			StreamVideoInput(const StreamVideoInput &data);
+
 
 			StreamVideoInput(const std::string & url);
-			StreamVideoInput(StreamVideoInput &data);
 
-			~StreamVideoInput()
-			{
-				
-			}
+			virtual ~StreamVideoInput();
 
-			bool newFrame()
-			{
-				cv::Mat data;
-				HipeStatus hipe_status = _capture.get()->read(data);
-				if (hipe_status == UNKOWN_ERROR)
-					throw HipeException("Error grabbing frame");
-				if (hipe_status == END_OF_STREAM)
-					return false;
-				_data.push_back(data);
-				return true;
-			}
-
+			cv::Mat newFrame() const;
 		};
 	}
 }

@@ -8,64 +8,39 @@ namespace filter
 {
 	namespace data
 	{
-		class ListIOData : public IOData
+		class ListIOData : public IOData<Data, ListIOData>
 		{
 		protected:
-			std::vector<IOData> _listIoData;
+			std::vector<Data> _listIoData;
 		public:
-			ListIOData(std::vector<IOData> listIoData) : IOData(IODataType::LISTIO)
+			ListIOData(std::vector<Data> listIoData) : IOData(IODataType::LISTIO)
 			{
 				_listIoData = listIoData;
 			}
 
-			std::vector<IOData> getListIoData(){ return _listIoData; }
-			std::vector<cv::Mat>& getInputData()
-			{
-				throw HipeException("getInputData is not implemented (ListioData)");
-			}
-
-			void setInputData(const std::vector<cv::Mat>& mats)
-			{
-				throw HipeException("setInputData is not implemented (ListioData)");
-			}
-
-			cv::Mat& getInputData(int index)
-			{
-				throw HipeException("getInputData(index) is not implemented (ListioData)");
-			}
-
-			void addInputData(cv::Mat& mat)
-			{
-				throw HipeException("addInputData is not implemented (ListioData)");
-			}
-
-			ListIOData(const ListIOData& left, bool copy)
+			std::vector<Data> getListIoData(){ return _listIoData; }
+			
+			ListIOData(const ListIOData& left)
 			{
 				_type = left._type;
-				_data.clear();
-				for (IOData iodata : left._listIoData)
-				{
-					IOData cur_iodata;
-					if (copy) iodata.copyTo(cur_iodata);
-					else cur_iodata = iodata;
-					_listIoData.push_back(cur_iodata);
-				}
+
+				
 			}
 			void copyTo(ListIOData& left)
 			{
-				ListIOData res(*this, true);
-				left = res;
-			}
+				for (Data data : left._listIoData)
+				{
+					Data cur_data;
+					data.copyTo(cur_data);
 
-			void copyRefTo(ListIOData& left)
-			{
-				ListIOData res(*this, false);
-				left = res;
+					_listIoData.push_back(cur_data);
+				}
 			}
-
 
 			IOData& operator=(const ListIOData& left)
 			{
+				if (this == &left) return *this;
+
 				_type = left._type;
 				_listIoData.clear();
 
@@ -81,10 +56,11 @@ namespace filter
 				if (_type != left._type)
 					throw HipeException("Cannot add data because types are different");
 
-				for (auto& mat : left._data)
+				for (auto& data : left._listIoData)
 				{
-					_data.push_back(mat);
+					_listIoData.push_back(data);
 				}
+
 				return *this;
 			}
 
@@ -93,10 +69,9 @@ namespace filter
 				return _listIoData.empty();
 			}
 
-			template<typename type>
-			inline static type & downCast(data::IOData & outputData)
+			std::vector<Data> & getListData()
 			{
-				throw HipeException("Not yet implemented");
+				return _listIoData;
 			}
 		};
 	}

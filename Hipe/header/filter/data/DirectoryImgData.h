@@ -1,19 +1,26 @@
-#include "InputArrayData.h"
+#include <filter/data/ImageArrayData.h>
 #include <boost/log/utility/setup/file.hpp>
 
 namespace filter {
 	namespace data {
-		class DirectoryImgData : public filter::Algos::InputArrayData
+		class DirectoryImgData : public IOData<ImageArrayData, DirectoryImgData>
 		{
 			std::string _directoryPath;
-		public:
-			DirectoryImgData(const std::string & directoryPath) : InputArrayData(data::IODataType::SEQIMGD)
+		
+			DirectoryImgData() : IOData(data::IODataType::SEQIMGD)
 			{
 				
-				_directoryPath = directoryPath;
+			}
+
+		public:
+			DirectoryImgData(const std::string & directoryPath) : IOData(data::IODataType::SEQIMGD)
+			{
+				Data::registerInstance(new DirectoryImgData());
+
+				This()._directoryPath = directoryPath;
 				std::vector<cv::String> filenames;
 
-				cv::glob(_directoryPath, filenames); 
+				cv::glob(This()._directoryPath, filenames);
 
 				for (size_t i = 0; i < filenames.size(); ++i)
 				{
@@ -25,15 +32,27 @@ namespace filter {
 						strbuild << "Cannot open file : " <<  filenames[i];
 						throw HipeException(strbuild.str());
 					}
-					addInputData(mat);
+					This()._array.push_back(mat);
 				}
-				if (_data.empty())
+				if (This()._array.empty())
 				{
 					std::stringstream iss;
 					iss << "No file loaded from directory : " << directoryPath;
 					throw HipeException(iss.str());
 				}
-			}			
+
+				
+			}	
+			
+			std::vector<cv::Mat> & images()
+			{
+				return This()._array;
+			}
+
+			cv::Mat image(int index)
+			{
+				return This()._array[index];
+			}
 		};
 	}
 }

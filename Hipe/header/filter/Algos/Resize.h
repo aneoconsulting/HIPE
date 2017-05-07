@@ -1,7 +1,6 @@
 #pragma once
 #include <filter/tools/RegisterClass.h>
 #include <core/HipeException.h>
-#include <filter/data/InputData.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 
@@ -13,7 +12,10 @@ namespace filter
 	{
 		class Resize : public filter::IFilter
 		{
-			REGISTER(Resize, ())
+			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
+			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
+
+			REGISTER(Resize, ()), _connexData(data::INOUT)
 			{
 				
 			}
@@ -23,20 +25,22 @@ namespace filter
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
 		public:
-			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
+			HipeStatus process()
 			{
-				auto &arrayInputMat = _data.getInputData();
-				outputData.reset(&_data, [](filter::data::IOData*){});
-				auto &arrayOutputMat = outputData.get()->getInputData();
-
-				for (int i = 0; i < arrayInputMat.size(); i++)
+				while (!_connexData.empty()) // While i've parent data
 				{
-					int width = arrayInputMat[i].cols;
-					int height = arrayInputMat[i].rows;
-					cv::Size size(width / ratio, height / ratio);
-					cv::resize(arrayInputMat[i], arrayOutputMat[i], size, 0.0, 0.0, cv::INTER_CUBIC);
+					data::ImageArrayData images = _connexData.pop();
+
+					
+					//Resize all images coming from the same parent
+					for (auto &myImage : images.Array()) 
+					{
+						int width = myImage.cols;
+						int height = myImage.rows;
+						cv::Size size(width / ratio, height / ratio);
+						cv::resize(myImage, myImage, size, 0.0, 0.0, cv::INTER_CUBIC);
+					}
 				}
-				
 				return OK;
 			}
 

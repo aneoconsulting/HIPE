@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.7.1)
 include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
 
 if (WIN32)
-add_compile_options(/wd4820 /wd4668 /wd4619 /wd4626)
+add_compile_options(/wd4820 /wd4668 /wd4619 /wd4626 /wd5031 /wd4365)
 endif()
 
 

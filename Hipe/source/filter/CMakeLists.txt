@@ -154,7 +154,7 @@ endif()
 
 set_property(TARGET filter PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DBUILDING_DLL")
+target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
 
 
 

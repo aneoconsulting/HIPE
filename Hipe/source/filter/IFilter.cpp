@@ -46,6 +46,8 @@ void filter::IFilter::addDependencies(IFilter* parent)
 	}
 	parent->_childFilters[this->_name] = this;
 
+	*(parent) << *(this);
+
 	if (this->_parentFilters.find(parent->_name) != this->_parentFilters.end() && (this->_parentFilters[parent->_name] != nullptr))
 	{
 		std::string errorMessage = std::string("Filter named ");
@@ -69,6 +71,8 @@ void filter::IFilter::addChildDependencies(IFilter* child)
 		throw HipeException(errorMessage.c_str());
 	}
 	this->_childFilters[child->_name] = (child);
+
+	*(this) << *(child);
 
 	if (child->_parentFilters.find(this->_name) != child->_parentFilters.end() && (child->_parentFilters[this->_name] != nullptr))
 	{

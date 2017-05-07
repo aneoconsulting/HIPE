@@ -1,5 +1,5 @@
 #pragma once
-#include "IFilter.h"
+#include <filter/IFilter.h>
 #include <filter/tools/RegisterClass.h>
 #include <core/HipeStatus.h>"
 #include "opencv2/core/core.hpp"
@@ -7,11 +7,6 @@
 using namespace cv;
 using namespace std;
 
-namespace filter {
-	namespace Algos {
-		class InputData;
-	}
-}
 namespace filter
 {
 	namespace Algos
@@ -123,9 +118,12 @@ namespace filter
 
 		class Crop : public filter::IFilter
 		{
-			REGISTER(Crop, ())
-			{
+			//data::ConnexData<data::ImageData, data::ImageArrayData> _connexData;
+			CONNECTOR(data::ImageData, data::ImageArrayData);
 
+			REGISTER(Crop, ()) , _connexData(data::WayData::INDATA)
+			{
+				//_connexData = data::ConnexData<data::ImageData, data::ImageArrayData>(data::WayData::INDATA);
 			}
 
 			REGISTER_P(float, unused_parameter);
@@ -134,13 +132,13 @@ namespace filter
 
 		public:
 
-			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
+			HipeStatus process()
 			{
-				outputData.reset(new data::OutputData());
+				
 				using namespace cv;
 				using namespace std;
 
-				cv::Mat img1 = _data.getInputData(0);
+				cv::Mat img1 = _connexData.pop().getMat();
 
 				//cv::setMouseCallback("Original", mouse_call, NULL); //setting the mouse callback for selecting the region with mouse
 				UserData userData;
@@ -149,8 +147,9 @@ namespace filter
 				
 				if (!res.empty()){
 					cv::imwrite("resCrop.png", res);
-					outputData.get()->addInputData(res);
-					outputData.get()->addInputData(img1);
+					data::ImageArrayData output;
+					output << res << img1;
+					
 					return OK;
 				}
 				return EMPTY_RESULT;

@@ -30,7 +30,7 @@ find_package( OpenCV REQUIRED )
 ##hype_server LIBRARY
 add_executable(hype_server ${_source_list} ${_header_list})
 
-target_compile_definitions(hype_server PUBLIC "-DUSE_BOOST_REGEX")
+target_compile_definitions(hype_server PRIVATE "-DUSE_BOOST_REGEX")
 
 
 

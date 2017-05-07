@@ -2,10 +2,6 @@
 #include <filter/tools/RegisterClass.h>
 #include <core/HipeException.h>
 
-namespace filter {namespace Algos {
-	class InputData;
-}
-}
 
 namespace filter
 {
@@ -28,10 +24,7 @@ namespace filter
 				throw HipeException(_constructor + " process isn't yet implmented");
 			}
 
-			HipeStatus process(std::shared_ptr<data::IOData> & outputData)
-			{
-				throw HipeException("Gaussian is an example. There is no implementetion");
-			}
+			
 
 		};
 

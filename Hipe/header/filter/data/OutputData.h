@@ -5,21 +5,22 @@
 #include <boost/property_tree/ptree.hpp>
 #include <opencv2/opencv.hpp>
 #include <core/base64.h>
+#include <filter/data/ImageArrayData.h>
 
 namespace filter {
 	namespace data {
-		class OutputData : public IOData
+		class OutputData : public IOData<ImageArrayData, OutputData>
 		{
 			std::string result;
 		public:
 			std::string getResult() const
 			{
-				return result;
+				return This().result;
 			}
 
 			void setResult(const std::string& result)
 			{
-				this->result = result;
+				This().result = result;
 			}
 
 			
@@ -31,30 +32,23 @@ namespace filter {
 			{
 			}
 
-			OutputData(const IOData & in) : IOData(in)
-			{
-			}
 
-			OutputData(const OutputData & in) : IOData(in)
-			{
-				result = in.result;
-			}
-
+			
 			OutputData& operator=(const OutputData& left)
 			{
 				IOData::operator=(left);
 
-				result = left.result;
+				This().result = left.This().result;
 
 				return *this;
 			}
 
-			std::string resultAsString()
+			std::string resultAsString() const
 			{
-				return result;
+				return This().result;
 			};
-			
-			std::string mat2str(const cv::Mat& m)
+
+			static std::string mat2str(const cv::Mat& m)
 			{
 				cv::Mat src;
 				if (!m.isContinuous()) {
@@ -68,10 +62,10 @@ namespace filter {
 				int type = m.type();
 				int channels = m.channels();
 				std::vector<uchar> data(4 * sizeof(int));
-				memcpy(&data[0 * sizeof(int)], (uchar*)&src.rows, sizeof(int));
-				memcpy(&data[1 * sizeof(int)], (uchar*)&src.cols, sizeof(int));
-				memcpy(&data[2 * sizeof(int)], (uchar*)&type, sizeof(int));
-				memcpy(&data[3 * sizeof(int)], (uchar*)&channels, sizeof(int));
+				memcpy(&data[0 * sizeof(int)], reinterpret_cast<uchar*>(&src.rows), sizeof(int));
+				memcpy(&data[1 * sizeof(int)], reinterpret_cast<uchar*>(&src.cols), sizeof(int));
+				memcpy(&data[2 * sizeof(int)], reinterpret_cast<uchar*>(&type), sizeof(int));
+				memcpy(&data[3 * sizeof(int)], reinterpret_cast<uchar*>(&channels), sizeof(int));
 
 				// Add image data
 				data.insert(data.end(), src.datastart, src.dataend);
@@ -82,13 +76,23 @@ namespace filter {
 
 			boost::property_tree::ptree resultAsJson()
 			{
-				result.clear();
+				
 
 				boost::property_tree::ptree resultTree;
 				boost::property_tree::ptree outputTree;
+				
+				if (!_This)
+				{
+					outputTree.add<std::string>("info", "NO Data as response");
+					resultTree.add_child("DataResult", outputTree);
+					return resultTree;
+				}
+
+				This().result.clear();
+
 				int data_index = 0;
 
-				for (auto &input : getInputData())
+				for (auto &input : Array())
 				{
 					std::stringstream key;
 					key << "data_" << data_index;

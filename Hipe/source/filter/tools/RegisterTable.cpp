@@ -3,9 +3,10 @@
 #include <stack>
 #include <core/Invoker.h>
 #include <filter/tools/filterMacros.h>
+#include <filter/data/FileImageData.h>
+#include <filter/filter_export.h>
 
-
-DLL_PUBLIC RegisterTable* RegisterTable::instance = nullptr;
+FILTER_EXPORT RegisterTable* RegisterTable::instance = nullptr;
 
 
 void* newFilter(std::string className)

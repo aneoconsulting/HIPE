@@ -1,4 +1,5 @@
 #include <filter/Algos/StreamResultFilter.h>
+#include <boost/proto/transform/arg.hpp>
 
 
 namespace filter
@@ -43,16 +44,16 @@ namespace filter
 
 		cv::Size StreamResultFilter::getImageDimension()
 		{
-			cv::Mat first = _data.getInputData()[0];
+			cv::Mat first = _connexData.get().getMat(); // this call doesn't pop the data from the queue
 
 			return first.size();
 		}
 
-		HipeStatus StreamResultFilter::process(std::shared_ptr<filter::data::IOData>& outputData)
+		HipeStatus StreamResultFilter::process()
 		{
 			if (computeFPS() == WAIT_FPS)	return OK;
 			
-			if (_data.getInputData().empty()) return VECTOR_EMPTY;
+			if (_connexData.empty()) return VECTOR_EMPTY;
 			
 			cv::Size size = getImageDimension();
 
@@ -61,11 +62,11 @@ namespace filter
 			//filter::data::IOData copy(_data, true);
 			if (task_container->isActive()) // next iteration the streamer will be ready and active
 			{
-				
-					task_container->onFrameMethod(_data.getInputData()[0]);
+				data::ImageData image_data = _connexData.pop();
+				task_container->onFrameMethod(image_data.getMat());
 				
 			}
-			_data.getInputData().clear();
+			
 
 			return OK;
 		}

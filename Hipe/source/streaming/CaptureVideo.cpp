@@ -1,11 +1,12 @@
 #include <CaptureVideo.h>
 #include <RTSPCapture.h>
-#include <core/misc.h>
+#include <core/Singleton.h>
+#include <streaming/streaming_export.h>
 
-template<> DLL_PUBLIC CaptureVideoFactory * Singleton<CaptureVideoFactory>::_instance = nullptr;
-//template<> DLL_PUBLIC std::mutex Singleton<CaptureVideoFactory>::_mutex;
+template<> CaptureVideoFactory * Singleton<CaptureVideoFactory>::_instance = nullptr;
 
-CaptureVideo* CaptureVideoFactory::getCaptureVideo(std::string& captureVideoName, const std::string &path)
+
+ CaptureVideo* CaptureVideoFactory::getCaptureVideo(std::string& captureVideoName, const std::string &path)
 {
 	CaptureVideoFactory *captureVideoFactory = CaptureVideoFactory::getInstance();
 

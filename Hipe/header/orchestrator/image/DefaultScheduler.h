@@ -1,14 +1,15 @@
 #pragma once
 #include <filter/data/FileVideoInput.h>
-#include "filter/data/ListIOData.h"
+#include <filter/data/ListIOData.h>
 #include <filter/data/StreamVideoInput.h>
 #include <boost/thread/thread.hpp>
+#include "filter/data/ListIOData.h"
 
 namespace orchestrator
 {
 	namespace image
 	{
-		class DefaultScheduler : public Conductor
+		class DefaultScheduler : public orchestrator::Conductor
 		{
 		public:
 			typedef std::vector<std::vector<filter::IFilter *>> MatrixLayerNode;
@@ -70,7 +71,7 @@ namespace orchestrator
 				}
 			}
 
-			static void pushOutputToChild(filter::IFilter* filter, filter::data::IOData& io_data)
+			/*static void pushOutputToChild(filter::IFilter* filter, filter::data::Data& io_data)
 			{
 				if (io_data.empty())
 					return;
@@ -79,7 +80,7 @@ namespace orchestrator
 				{
 					if (childFilter.second->get_protect() == DataAccess::COPY)
 					{
-						filter::data::IOData copy(io_data, true);
+						filter::data::Data copy(io_data, true);
 						childFilter.second->setInputData(copy);
 					}
 					else
@@ -87,66 +88,65 @@ namespace orchestrator
 						childFilter.second->setInputData(io_data);
 					}
 				}
-			}
+			}*/
 
-			void processStreaming(filter::Model* root, filter::data::IOData& inputData, std::shared_ptr<filter::data::IOData> & outputData, bool debug)
+			void processStreaming(filter::Model* root, filter::data::Data& inputData, filter::data::Data & outputData, bool debug)
 			{
-				filter::data::StreamVideoInput & video = filter::data::IOData::downCast<filter::data::StreamVideoInput>(inputData);
+				const filter::data::StreamVideoInput & video = static_cast<const filter::data::StreamVideoInput&>(inputData);
 				cv::Mat frame;
 				filter::IFilter* filterRoot = reinterpret_cast<filter::IFilter *>(root);
 				filter::IFilter* cpyFilterRoot = copyAlgorithms(filterRoot);
 				
-				filter::data::StreamVideoInput * cpyVideo = new filter::data::StreamVideoInput(video);
 				
+				std::shared_ptr<filter::data::StreamVideoInput> cpyVideo = std::make_shared<filter::data::StreamVideoInput>(video);
 				boost::thread task([cpyFilterRoot, cpyVideo]()
 				{
 					int maxLevel = getMaxLevelNode(cpyFilterRoot->getRootFilter());
-					std::shared_ptr<filter::data::IOData> outputData;
+					std::shared_ptr<filter::data::Data> outputData;
 
 					MatrixLayerNode matrixLayer(maxLevel + 1);
 
-					//TODO insert debug layers into the matrix
+					//TODO : insert debug layers into the matrix
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
-
+					cv::Mat frame = cpyVideo->newFrame();
 					//TODO manage a buffering every things is here to do it
 					//For now we just pick up one image
-					while (cpyVideo->newFrame())
+					while (!frame.empty())
 					{
 						cleanDataChild(cpyFilterRoot);
 						//Special case for rootNode dispatching to any children.
-						for (auto& filter : matrixLayer[0])
+						for (filter::IFilter * filter : matrixLayer[0])
 						{
-							pushOutputToChild(filter, *cpyVideo);
+							*(filter) << frame;
 						}
 
 						//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
-						std::shared_ptr<filter::data::IOData> inter_output;
-						for (int layer = 1; layer < matrixLayer.size() - 1; layer++)
+						for (int layer = 1; layer < matrixLayer.size(); layer++)
 						{
 							for (auto& filter : matrixLayer[layer])
 							{
-
-								filter->process(inter_output);
-								pushOutputToChild(filter, *inter_output.get());
+								filter->process();
 							}
 						}
 
-						//Special case for final result
-						matrixLayer[matrixLayer.size() - 1][0]->process(outputData);
+						frame = cpyVideo->newFrame();
 					}
+					
 					cleanDataChild(cpyFilterRoot);
+
 					disposeChild(cpyFilterRoot);
-					delete cpyFilterRoot;
-					delete cpyVideo;
+
+					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+						throw HipeException("Cannot free properly the Streaming videocapture");
 				});
 
 				//task.join();
 				
 			}
 
-			void processVideo(filter::Model* root, filter::data::IOData& inputData, std::shared_ptr<filter::data::IOData> & outputData, bool debug)
+			void processVideo(filter::Model* root, filter::data::Data& inputData, filter::data::Data & outputData, bool debug)
 			{
-				filter::data::FileVideoInput & video = filter::data::IOData::downCast<filter::data::FileVideoInput>(inputData);
+				filter::data::FileVideoInput & video = static_cast<filter::data::FileVideoInput&>(inputData);
 				cv::Mat frame;
 				filter::IFilter* filterRoot = reinterpret_cast<filter::IFilter *>(root);
 				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
@@ -156,52 +156,54 @@ namespace orchestrator
 				//TODO insert debug layers into the matrix
 				setMatrixLayer(filterRoot, matrixLayer);
 
-				filter::data::FileVideoInput * cpyVideo = new filter::data::FileVideoInput(video);
+				std::shared_ptr<filter::data::FileVideoInput> cpyVideo = std::make_shared<filter::data::FileVideoInput>(video);
 
 				boost::thread task([cpyFilterRoot, cpyVideo, maxLevel]()
 				{
 					//int maxLevel = getMaxLevelNode(cpyFilterRoot->getRootFilter());
-					std::shared_ptr<filter::data::IOData> thr_outputData;
+					std::shared_ptr<filter::data::Data> thr_outputData;
 
 					MatrixLayerNode matrixLayer(maxLevel + 1);
 
 					//TODO insert debug layers into the matrix
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
 
+					cv::Mat res = cpyVideo->newFrame();
 
 					//TODO manage a buffering every things is here to do it
 					//For now we just pick up one image
-					while (cpyVideo->newFrame())
+					while (!res.empty())
 					{
-						cleanDataChild(cpyFilterRoot);
-						//Special case for rootNode dispatching to any children.
-						for (auto& filter : matrixLayer[0])
+						for (filter::IFilter * filter : matrixLayer[0])
 						{
-							pushOutputToChild(filter, *cpyVideo);
+							
+							*(filter) << res;
+							
 						}
-
+						cleanDataChild(cpyFilterRoot);
+		
 						//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
-						std::shared_ptr<filter::data::IOData> inter_output;
 						for (int layer = 1; layer < matrixLayer.size() - 1; layer++)
 						{
 							for (auto& filter : matrixLayer[layer])
 							{
-
-								filter->process(inter_output);
-								pushOutputToChild(filter, *inter_output.get());
+								filter->process();
 							}
 						}
 
 						//Special case for final result
-						matrixLayer[matrixLayer.size() - 1][0]->process(thr_outputData);
+						matrixLayer[matrixLayer.size() - 1][0]->process();
+						res = cpyVideo->newFrame();
 					}
 					cleanDataChild(cpyFilterRoot);
 					disposeChild(cpyFilterRoot);
+					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+						throw HipeException("Cannot free properly the Streaming videocapture");
 				});
 			}
 
 
-			void processSequence(filter::Model* root, filter::data::IOData& inputData, std::shared_ptr<filter::data::IOData> &outputData, bool debug)
+			void processSequence(filter::Model* root, filter::data::Data& inputData, filter::data::Data &outputData, bool debug)
 			{
 				if (filter::data::DataTypeMapper::isImage(inputData.getType()))
 				{
@@ -213,14 +215,14 @@ namespace orchestrator
 				}
 			}
 
-			void processListIoData(filter::Model* root, filter::data::ListIOData inputData, std::shared_ptr<filter::data::IOData>& outputData, bool debug)
+			void processListData(filter::Model* root, filter::data::ListIOData & inputData, filter::data::Data& outputData, bool debug)
 			{
 				if (inputData.getType() != filter::data::IODataType::LISTIO)
 				{
-					throw HipeException("cannot accept iodata type other than List");
+					throw HipeException("cannot accept Data type other than List");
 				}
-				auto vecIoData = inputData.getListIoData();
-				for (auto it = vecIoData.begin(); it != vecIoData.end(); ++it)
+				auto vecData = inputData.getListData();
+				for (auto it = vecData.begin(); it != vecData.end(); ++it)
 				{
 					if (filter::data::DataTypeMapper::isImage(it->getType()))
 					{
@@ -233,7 +235,7 @@ namespace orchestrator
 				}
 			}
 
-			void processImages(filter::Model* root, filter::data::IOData & inputData, std::shared_ptr<filter::data::IOData> &outputData, bool debug)
+			void processImages(filter::Model* root, filter::data::Data & inputData, filter::data::Data &outputData, bool debug)
 			{
 				filter::IFilter* filterRoot = reinterpret_cast<filter::IFilter *>(root);
 				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
@@ -245,37 +247,49 @@ namespace orchestrator
 				//TODO insert debug layers into the matrix
 				setMatrixLayer(filterRoot, matrixLayer);
 
-				//Special case for rootNode dispatching to any children.
-				for (auto& filter : matrixLayer[0])
+				for (filter::IFilter * filter : matrixLayer[0])
 				{
-					pushOutputToChild(filter, inputData);
+					
+					*(filter) << inputData;
+					
 				}
 
 				//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
-				std::shared_ptr<filter::data::IOData> inter_output;
+				std::shared_ptr<filter::data::Data> inter_output;
 				for (int layer = 1; layer < matrixLayer.size() - 1; layer++)
 				{
 					for (auto& filter : matrixLayer[layer])
 					{
 						
-						filter->process(inter_output);
-						if (inter_output.get() == nullptr)
-							continue;
-						pushOutputToChild(filter, *(inter_output.get()));
+						filter->process();
+						
+						//pushOutputToChild(filter, *(inter_output.get()));
 					}
 				}
 				
 				//Special case for final result
 				//Bug : What's happenning when the last layer has OutputFiltert and another Node (i.e : ShowImage)
-				matrixLayer[matrixLayer.size() - 1][0]->process(outputData);
+				matrixLayer[matrixLayer.size() - 1][0]->process();
+				for (auto& filter : matrixLayer[matrixLayer.size() - 1])
+				{
+					if (filter == nullptr) continue;
+
+					if (filter->getConstructorName().find("ResultFilter") != std::string::npos)
+					{
+						filter::data::ConnexDataBase & outRes = filter->getConnector();
+						outputData = (static_cast<filter::data::DataPort<filter::data::Data> &>(outRes.getPort())).pop();
+						break;
+					}
+				}
+				
 				cleanDataChild(filterRoot);
 				disposeChild(filterRoot);
 			}
 
 
-			void process(filter::Model* root, std::shared_ptr<filter::data::IOData>& inputDataPtr, std::shared_ptr<filter::data::IOData> &outputData, bool debug = false)
+			void process(filter::Model* root, filter::data::Data& inputData, filter::data::Data &outputData, bool debug = false)
 			{	
-				filter::data::IOData & inputData = *inputDataPtr.get();
+				
 
 			    if (filter::data::DataTypeMapper::isSequence(inputData.getType()))
 				{
@@ -284,7 +298,7 @@ namespace orchestrator
 				if (filter::data::DataTypeMapper::isListIo(inputData.getType()))
 				{
 					filter::data::ListIOData &list_io_data = static_cast<filter::data::ListIOData&>(inputData);
-					processListIoData(root, list_io_data, outputData, debug);
+					processListData(root, list_io_data, outputData, debug);
 				}
 				else if (filter::data::DataTypeMapper::isImage(inputData.getType()))
 				{

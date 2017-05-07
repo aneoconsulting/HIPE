@@ -29,7 +29,8 @@ if (UNIX)
 target_compile_options(core PRIVATE -fPIC)
 endif()
 
-target_compile_definitions(core PUBLIC "-DUSE_BOOST_REGEX")
+target_compile_definitions(core PRIVATE "-DUSE_BOOST_REGEX" "-DCORE_BUILD")
+
 include_directories(core ${Hype_INCLUDEDIR})
 target_link_libraries(core ${Boost_LIBRARIES})
 target_link_libraries(core ${CMAKE_THREAD_LIBS_INIT})

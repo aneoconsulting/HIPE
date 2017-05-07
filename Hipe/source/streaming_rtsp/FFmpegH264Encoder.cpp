@@ -111,9 +111,9 @@ namespace MESAI
 		m_c = st->codec;
 		
 		m_c->codec_id = m_fmt->video_codec;
-		m_c->bit_rate = m_AVIMOV_BPS;			//Bits Per Second 
-		m_c->width    = m_AVIMOV_WIDTH;			//Note Resolution must be a multiple of 2!!
-		m_c->height   = m_AVIMOV_HEIGHT;		//Note Resolution must be a multiple of 2!!
+		m_c->bit_rate = 640 * 480 * 4 * 8 * m_AVIMOV_FPS;			//Bits Per Second 
+		m_c->width    = 640;			//Note Resolution must be a multiple of 2!!
+		m_c->height   = 480;		//Note Resolution must be a multiple of 2!!
 		m_c->time_base.den = m_AVIMOV_FPS;		//Frames per second
 		m_c->time_base.num = 1;
 		m_c->gop_size      = m_AVIMOV_GOB;		// Intra frames per x P frames
@@ -142,19 +142,19 @@ namespace MESAI
         m_dst_picture->width = m_c->width;
         m_dst_picture->height = m_c->height;
 
-		ret = av_image_alloc(m_dst_picture->data, m_dst_picture->linesize, c->width, c->height, (AVPixelFormat)m_dst_picture->format, 32);
+		ret = av_image_alloc(m_dst_picture->data, m_dst_picture->linesize, m_dst_picture->width, m_dst_picture->height, (AVPixelFormat)m_dst_picture->format, 32);
 		if (ret < 0) {
 			return;
 		}
 
 		//ret = avpicture_alloc(&m_src_picture, AV_PIX_FMT_BGR24, c->width, c->height);
-		m_src_picture = av_frame_alloc();
+		/*m_src_picture = av_frame_alloc();
 		m_src_picture->format = c->pix_fmt;
 		ret = av_image_alloc(m_src_picture->data, m_src_picture->linesize, c->width, c->height, AV_PIX_FMT_BGR24, 24);
 
 		if (ret < 0) {
 			return;
-		}
+		}*/
 
 		bufferSize = ret;
 		
@@ -173,7 +173,7 @@ namespace MESAI
 			return;
 		}
 
-		sws_ctx = sws_getContext(c->width, c->height, AV_PIX_FMT_BGR24,
+		sws_ctx = sws_getContext(m_AVIMOV_WIDTH, m_AVIMOV_HEIGHT, AV_PIX_FMT_BGR24,
 								 c->width, c->height, AV_PIX_FMT_YUV420P,
 								 SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
 		if (!sws_ctx) {
@@ -204,7 +204,7 @@ namespace MESAI
 
 		sws_scale(sws_ctx,
 			&(RGBFrame.data), &stride,
-					0, m_c->height, m_dst_picture->data, m_dst_picture->linesize);
+					0, m_AVIMOV_HEIGHT, m_dst_picture->data, m_dst_picture->linesize);
 		
 
         AVPacket pkt = { 0 };
@@ -213,13 +213,13 @@ namespace MESAI
 
 		int ret = 0;
 		timeval current_time, after;
-		hipe_gettimeofday(&current_time, nullptr);
+		//hipe_gettimeofday(&current_time, nullptr);
 		ret = avcodec_encode_video2(m_c, &pkt, m_dst_picture, &got_packet);
-		hipe_gettimeofday(&after, nullptr);
-		double elapse = ((after.tv_sec - current_time.tv_sec) * 1000000L + after.tv_usec) - current_time.tv_usec;
-		elapse /= 1000.;
+		//hipe_gettimeofday(&after, nullptr);
+		//double elapse = ((after.tv_sec - current_time.tv_sec) * 1000000L + after.tv_usec) - current_time.tv_usec;
+		//elapse /= 1000.;
 
-		std::cout << "Time spent : " << elapse << " ms" << std::endl;
+		//std::cout << "Time spent : " << elapse << " ms" << std::endl;
 		if (ret < 0) {
 			return;
 		}
@@ -278,9 +278,9 @@ namespace MESAI
 	    av_freep(&(m_dst_picture->data[0]));
         av_frame_unref(m_dst_picture);
         av_free(m_dst_picture);
-        av_freep(&(m_src_picture->data[0]));
+       /* av_freep(&(m_src_picture->data[0]));
         av_frame_unref(m_src_picture);
-        av_free(m_src_picture);
+        av_free(m_src_picture);*/
 
 	    if (!(m_fmt->flags & AVFMT_NOFILE))
 	        avio_close(m_oc->pb);

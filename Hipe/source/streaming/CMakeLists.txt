@@ -34,7 +34,7 @@ if (UNIX)
 	target_compile_options(streaming PRIVATE -fPIC)
 endif()
 
-target_compile_definitions(streaming PRIVATE "-DUSE_BOOST_REGEX" "-DBUILDING_DLL")
+target_compile_definitions(streaming PRIVATE "-DUSE_BOOST_REGEX" "-DSTREAMING_BUILD" "-DSINGLETON_EXPORT")
 
 
 target_link_libraries(streaming ${Boost_LIBRARIES})

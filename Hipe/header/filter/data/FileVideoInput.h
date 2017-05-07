@@ -14,68 +14,76 @@ namespace filter
 {
 	namespace data
 	{
-		class FileVideoInput : public VideoData
+		class FileVideoInput : public IOData<VideoData, FileVideoInput>
 		{
 			boost::filesystem::path _filePath;
 			cv::VideoCapture _capture;
 
 			cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
 
+		private:
+			FileVideoInput() : IOData(IODataType::VIDF)
+			{
+				
+			}
+
 		public:
 
-			FileVideoInput(const std::string & filePath) : VideoData(IODataType::VIDF)
+			FileVideoInput(const std::string & filePath) : IOData(IODataType::VIDF)
 			{
-				_filePath = filePath;
+				Data::registerInstance(new FileVideoInput());
+				This()._filePath = filePath;
 			}
 
-			FileVideoInput(FileVideoInput &data) : VideoData(data)
+			FileVideoInput(const FileVideoInput &data) : IOData(data._type)
 			{
-				_filePath = data._filePath;
+				Data::registerInstance(data._This);
+				This()._filePath = This()._filePath;
 			}
 
-			bool newFrame()
+			cv::Mat newFrame()
 			{
-				if (!_capture.isOpened())
+				if (!This()._capture.isOpened())
 				{
-					if (std::isdigit(_filePath.string().c_str()[0]))
+					if (std::isdigit(This()._filePath.string().c_str()[0]))
 					{
-						_capture.open(atoi(_filePath.string().c_str()));
+						This()._capture.open(atoi(This()._filePath.string().c_str()));
 					} 
 					else
-						_capture.open(_filePath.string());
+						This()._capture.open(This()._filePath.string());
 
-					if (!_capture.isOpened())
+					if (!This()._capture.isOpened())
 					{
 						std::stringstream str;
-						str << "Cannot open video : " << _filePath.string();
+						str << "Cannot open video : " << This()._filePath.string();
 						throw HipeException(str.str());
 					}
 				}
 
-				bool OK = _capture.grab();
+				bool OK = This()._capture.grab();
 				if (!OK)
 				{
-					return false;
+					return cv::Mat();
 				}
-				_data.clear();
+				
 				cv::Mat frame;
 				
-				_capture.read(frame);
+				This()._capture.read(frame);
 				
 				while (frame.rows <= 0 && frame.cols <= 0)
 				{
 					
-					if (!_capture.isOpened() || !_capture.grab())
+					if (!This()._capture.isOpened() || !This()._capture.grab())
 					{
-						return false;
+						return cv::Mat();
 					}
-					_capture.read(frame);
+					This()._capture.read(frame);
 				}
 					
 
-				_data.push_back(frame);
+				
 
-				return true;
+				return frame;
 			}
 
 		};

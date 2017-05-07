@@ -3,27 +3,40 @@
 #include <filter/IFilter.h>
 #include <filter/tools/RegisterTable.h>
 #include <core/HipeException.h>
-
+#include "data/ConnexData.h"
 
 
 namespace filter {
 	namespace Algos {
 		class RootFilter : public filter::IFilter
 		{
-			REGISTER(RootFilter, ()) {}
+			//data::ConnexInput<data::Data> _connexData;
+			CONNECTOR_IN(data::Data);
+
+			REGISTER(RootFilter, ())
+			{
+				
+			}
 			REGISTER_P(int, a);
 
 		public:
 			HipeStatus process()
 			{
-				throw HipeException(_constructor + " process isn't yet implmented");
+				
+				return HipeStatus::OK;
 			}
 
-			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
+			virtual RootFilter &operator<<(data::Data & element)
 			{
-				outputData.reset(&_data, [](filter::data::IOData*){});
+				_connexData.push(element);
+				return *this;
+			}
 
-				return HipeStatus::OK;
+			virtual RootFilter &operator<<(cv::Mat & element)
+			{
+				data::ImageData image(element);
+				_connexData.push(image);
+				return *this;
 			}
 		};
 

@@ -3,6 +3,7 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <filter/data/OutputData.h>
+#include "data/ConnexData.h"
 
 namespace filter
 {
@@ -10,7 +11,8 @@ namespace filter
 	{
 		class ResultFilter : public filter::IFilter
 		{
-			
+			//data::ConnexOutput<data::Data> _connexData;
+			CONNECTOR_OUT(data::Data);
 
 			REGISTER(ResultFilter, ())
 			{
@@ -24,11 +26,10 @@ namespace filter
 		public:
 			
 
-			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
+			HipeStatus process()
 			{
 				//Copy result data
-				outputData.reset(new data::OutputData(_data));
-				
+				//Nothing to do here get the result from scheduler for any other process			
 				return OK;
 			}
 

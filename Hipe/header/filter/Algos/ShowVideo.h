@@ -10,7 +10,10 @@ namespace filter
 	{
 		class ShowVideo : public IFilter
 		{
-			REGISTER(ShowVideo, ())
+			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
+			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
+
+			REGISTER(ShowVideo, ()), _connexData(data::INOUT)
 			{
 				
 				waitkey = 10;
@@ -28,15 +31,26 @@ namespace filter
 			};
 
 		public:
-			HipeStatus process(std::shared_ptr<filter::data::IOData>& outputData)
+			HipeStatus process()
 			{
-				cv::Mat input_data = _data.getInputData(0);
-				if (input_data.rows <= 0 || input_data.cols <= 0)
-					throw HipeException("Image to show doesn't data");
-				::cv::imshow(_name, input_data);
-				
-				if (waitkey >= 0)
-					cvWaitKey(waitkey);		
+				cv::namedWindow(_name);
+
+				if (_connexData.size() == 0)
+					throw HipeException("There is no data to display coming from the parent node [NAME]");
+			
+					data::ImageArrayData images = _connexData.pop();
+
+					
+					//Resize all images coming from the same parent
+					for (auto &myImage : images.Array())
+					{
+						if (myImage.rows <= 0 || myImage.cols <= 0)
+							throw HipeException("Image to show doesn't data");
+						::cv::imshow(_name, myImage);
+
+						if (waitkey >= 0)
+							cvWaitKey(waitkey);
+					}
 				
 				return OK;
 			}

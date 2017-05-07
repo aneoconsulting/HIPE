@@ -35,7 +35,7 @@ if (UNIX)
 endif()
 
 
-target_compile_definitions(streaming_rtsp PUBLIC "-DUSE_BOOST_REGEX")
+target_compile_definitions(streaming_rtsp PRIVATE "-DUSE_BOOST_REGEX" "-DSTREAMING_RTSP_BUILD")
 
 
 target_link_libraries(streaming_rtsp ${Boost_LIBRARIES})

@@ -2,12 +2,8 @@
 #include <filter/tools/RegisterClass.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>"
+#include "data/ImageData.h"
 
-namespace filter {
-	namespace Algos {
-		class InputData;
-	}
-}
 
 namespace filter
 {
@@ -15,7 +11,10 @@ namespace filter
 	{
 		class Akaze : public filter::IFilter
 		{
-			REGISTER(Akaze, ())
+
+			CONNECTOR(data::ImageArrayData, data::ImageData);
+
+			REGISTER(Akaze, ()) , _connexData(data::INDATA)
 			{
 
 			}
@@ -23,20 +22,23 @@ namespace filter
 			REGISTER_P(float, inlier_threshold);
 			REGISTER_P(float, nn_match_ratio);
 			
+			
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
 		public:
-			HipeStatus process(std::shared_ptr<filter::data::IOData> & outputData)
+			HipeStatus process()
 			{
-				outputData.reset(new data::OutputData());
+				//outputData.reset(new data::OutputData());
 
 				double homography_array[9] = { 7.6285898e-01, -2.9922929e-01, 2.2567123e+02,
 					3.3443473e-01, 1.0143901e+00, -7.6999973e+01,
 					3.4663091e-04, -1.4364524e-05, 1.0000000e+00 };
 				cv::Mat homography = cv::Mat(3, 3, CV_64F, homography_array);
-				
-				cv::Mat img1 = _data.getInputData(0);
-				cv::Mat img2 = _data.getInputData(1);
+
+				data::ImageArrayData images = _connexData.pop();
+
+				cv::Mat img1 = images.Array()[0];
+				cv::Mat img2 = images.Array()[1];
 
 				std::vector<cv::KeyPoint> kpts1, kpts2;
 				cv::Mat desc1, desc2;
@@ -93,8 +95,9 @@ namespace filter
 				std::cout << "# Inliers:                            \t" << inliers1.size() << std::endl;
 				std::cout << "# Inliers Ratio:                      \t" << inlier_ratio << std::endl;
 				std::cout << std::endl;*/
-				auto &arrayOutputMat = outputData.get()->getInputData();
-				outputData.get()->addInputData(res);
+
+
+				_connexData.push(res);
 				return OK;
 			}
 		};

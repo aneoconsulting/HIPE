@@ -25,7 +25,7 @@ file(
 
 add_library(json STATIC ${_source_list} ${_header_list})
 
-target_compile_definitions(json PUBLIC "-DUSE_BOOST_REGEX")
+target_compile_definitions(json PRIVATE "-DUSE_BOOST_REGEX" "-DJSON_BUILD")
 include_directories(json ${Hype_INCLUDEDIR})
 target_link_libraries(json ${Boost_LIBRARIES})
 target_link_libraries(json ${CMAKE_THREAD_LIBS_INIT})

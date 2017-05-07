@@ -7,11 +7,25 @@
 
 #define TO_STR(A) #A
 
+#define CONNECTOR(DataIn, DataOut)\
+	data::ConnexData<DataIn,DataOut> _connexData;\
+	inline virtual data::ConnexDataBase & getConnector() { return _connexData; }
+
+#define CONNECTOR_OUT(DataOut)\
+	data::ConnexOutput<DataOut> _connexData;\
+	inline virtual data::ConnexDataBase & getConnector() { return _connexData; }
+
+#define CONNECTOR_IN(DataIn)\
+	data::ConnexInput<DataIn> _connexData;\
+	inline virtual data::ConnexDataBase & getConnector() { return _connexData; }
+
 #define REGISTER(Constructor, params)\
 	public:\
+	\
 	typedef ProxyFunctor<Constructor> _proxyFunctor; \
 	typedef Constructor mytype;\
 	Constructor params : IFilter(#Constructor)
+
 
 #define EXPAND_VAR(elem) elem
 #define CONCAT(a,b) a ## b

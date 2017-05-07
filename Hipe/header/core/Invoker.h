@@ -38,6 +38,14 @@ namespace core
 			_wrap.reset(invoMethod._wrap.get());
 		}
 
+		template<typename return_type, typename... params>
+		InvokerBase & operator=(Invoker<return_type, params...> invoMethod)
+		{
+			_wrap.release();
+			_wrap.reset(invoMethod._wrap.get());
+			return *this;
+		}
+
 		~InvokerBase()
 		{
 			_wrap.release();

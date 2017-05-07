@@ -2,6 +2,7 @@
 #include <core/Singleton.h>
 #include <map>
 #include <core/Logger.h>
+#include <streaming/streaming_export.h>
 
 
 class TaskContainer
@@ -63,11 +64,11 @@ public:
 
 	bool taskIsJoinable() const;
 
-	void onFrameMethod(cv::Mat& mat);
+	void onFrameMethod(cv::Mat mat);
 };
 
 
-class Streaming : public Singleton<Streaming>
+class STREAMING_EXPORT Streaming : public Singleton<Streaming>
 {
 	friend class Singleton<Streaming>;
 
