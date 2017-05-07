@@ -1,5 +1,5 @@
 #pragma once
-#include <vcruntime.h>
+
 #include <queue>
 #include <map>
 #include <opencv2/core/mat.hpp>
@@ -110,16 +110,6 @@ namespace filter
 		};
 
 
-		/**
-		 * \brief The static class specialized to restrict the copy to native double array
-		 * this is not possible to copy native array without ar
-		 * \param left 
-		 * \return 
-		 */
-		template
-			double * CopyObject<double *>::copy(double *left);
-
-
 
 		/**
 		 * \brief The connector is here to connect all data by DataPort. 
@@ -171,7 +161,7 @@ namespace filter
 					return in;
 				}
 
-				throw std::runtime_error("No more data to pop");
+				throw HipeException("No more data to pop");
 			}
 
 			void broacast(Dout dataOutput)
@@ -200,7 +190,7 @@ namespace filter
 				
 				if (_way == INOUT)
 				{
-					throw std::runtime_error("An inout data can't push new data, relation is ONE input to ONE output");
+					throw HipeException("An inout data can't push new data, relation is ONE input to ONE output");
 				}
 
 				broacast(dataOutput);
@@ -278,7 +268,7 @@ namespace filter
 			void push(Din dataOutput)
 			{
 
-				broacast(dataOutput);
+				ConnexData<Din, Din>::broacast(dataOutput);
 
 			}
 
@@ -286,24 +276,24 @@ namespace filter
 			void push(indata matrix)
 			{
 				Din caps(matrix);
-				push(caps);
+				ConnexData<Din, Din>::push(caps);
 
 			}
 
 			//template <>
 			void connectInput(ConnexData<Din, Din> &connexIn)
 			{
-				throw std::runtime_error("Can't add a port there no parent uppper to this object");
+				throw HipeException("Can't add a port there no parent uppper to this object");
 			}
 
 			void forwardData()
 			{
-				if (!port.empty())
+				if (!ConnexData<Din, Din>::port.empty())
 				{
-					Din in = port.pop();
-					if (_way == INOUT)
+					Din in = ConnexData<Din, Din>::port.pop();
+					if (ConnexData<Din, Din>::_way == INOUT)
 					{
-						broacast(in);
+						ConnexData<Din, Din>::broacast(in);
 					}
 					else
 					{
@@ -311,7 +301,7 @@ namespace filter
 					}
 				}
 
-				throw std::runtime_error("No more data to pop");
+				throw HipeException("No more data to pop");
 			}
 
 
@@ -335,19 +325,19 @@ namespace filter
 
 			Dout pop()
 			{
-				if (!port.empty())
+				if (!ConnexData<Dout, Dout>::port.empty())
 				{
-					Dout in = port.pop();
+					Dout in = ConnexData<Dout, Dout>::port.pop();
 					return in;
 				}
 
-				throw std::runtime_error("No more data to pop");
+				throw HipeException("No more data to pop");
 			}
 
 			//template <>
 			void ConnectOutput(ConnexData<Dout, Dout> &connexIn)
 			{
-				throw std::runtime_error("Can't add a port there no children down to this object");
+				throw HipeException("Can't add a port there no children down to this object");
 			}
 
 			

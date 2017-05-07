@@ -2,11 +2,14 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/mat.hpp>
 #include "IODataType.h"
+#include <memory>
 
 namespace filter
 {
 	namespace data
 	{
+		class Data;
+		
 		class Data
 		{
 		public:
