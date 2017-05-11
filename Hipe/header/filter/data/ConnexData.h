@@ -177,7 +177,7 @@ namespace filter
 
 			void broacast(Dout dataOutput)
 			{
-				int ref;
+		
 				for (auto& childPair : portOutput)
 				{
 					ConnexDataBase* child = childPair.first;

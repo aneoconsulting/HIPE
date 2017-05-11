@@ -12,12 +12,12 @@ namespace filter {
 			using IOData<Data, Derived>::IOData;
 
 
-			VideoData(IODataType dataType) : IOData(dataType)
+			VideoData(IODataType dataType) : IOData<Data, Derived>::IOData(dataType)
 			{
 
 			}	
 			
-			VideoData(const VideoData &data) : IOData(data)
+			VideoData(const VideoData &data) : IOData<Data, Derived>::IOData(data)
 			{
 
 			}
