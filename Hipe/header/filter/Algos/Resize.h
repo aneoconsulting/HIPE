@@ -30,7 +30,10 @@ namespace filter
 				while (!_connexData.empty()) // While i've parent data
 				{
 					data::ImageArrayData images = _connexData.pop();
-
+					if (images.getType() == data::PATTERN)
+					{
+						throw HipeException("The resize object cant resize PatternData. Please Develop ResizePatterData");
+					}
 					
 					//Resize all images coming from the same parent
 					for (auto &myImage : images.Array()) 
@@ -38,6 +41,7 @@ namespace filter
 						int width = myImage.cols;
 						int height = myImage.rows;
 						cv::Size size(width / ratio, height / ratio);
+						
 						cv::resize(myImage, myImage, size, 0.0, 0.0, cv::INTER_CUBIC);
 					}
 				}

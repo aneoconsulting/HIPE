@@ -10,9 +10,9 @@ namespace json
 		filter::IFilter* _filter;
 
 		boost::property_tree::ptree& _params;
-	private:
+	public:
 		template <typename T>
-		std::vector<T> as_vector(boost::property_tree::ptree const& pt, boost::property_tree::ptree::key_type const& key)
+		static std::vector<T> as_vector(boost::property_tree::ptree const& pt, boost::property_tree::ptree::key_type const& key)
 		{
 			std::vector<T> r;
 			for (auto& item : pt.get_child(key))

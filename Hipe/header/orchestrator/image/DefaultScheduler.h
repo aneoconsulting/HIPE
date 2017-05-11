@@ -4,6 +4,7 @@
 #include <filter/data/StreamVideoInput.h>
 #include <boost/thread/thread.hpp>
 #include "filter/data/ListIOData.h"
+#include "filter/data/PatternData.h"
 
 namespace orchestrator
 {
@@ -108,7 +109,7 @@ namespace orchestrator
 
 					//TODO : insert debug layers into the matrix
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
-					cv::Mat frame = cpyVideo->newFrame();
+					filter::data::Data frame = cpyVideo->newFrame();
 					//TODO manage a buffering every things is here to do it
 					//For now we just pick up one image
 					while (!frame.empty())
@@ -144,9 +145,10 @@ namespace orchestrator
 				
 			}
 
-			void processVideo(filter::Model* root, filter::data::Data& inputData, filter::data::Data & outputData, bool debug)
+			template<class VideoClass>
+			void processVideo(filter::Model* root, VideoClass& inputData, filter::data::Data & outputData, bool debug)
 			{
-				filter::data::FileVideoInput & video = static_cast<filter::data::FileVideoInput&>(inputData);
+				VideoClass & video = static_cast<VideoClass&>(inputData);
 				cv::Mat frame;
 				filter::IFilter* filterRoot = reinterpret_cast<filter::IFilter *>(root);
 				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
@@ -156,7 +158,7 @@ namespace orchestrator
 				//TODO insert debug layers into the matrix
 				setMatrixLayer(filterRoot, matrixLayer);
 
-				std::shared_ptr<filter::data::FileVideoInput> cpyVideo = std::make_shared<filter::data::FileVideoInput>(video);
+				std::shared_ptr<VideoClass> cpyVideo = std::make_shared<VideoClass>(video);
 
 				boost::thread task([cpyFilterRoot, cpyVideo, maxLevel]()
 				{
@@ -168,7 +170,7 @@ namespace orchestrator
 					//TODO insert debug layers into the matrix
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
 
-					cv::Mat res = cpyVideo->newFrame();
+					filter::data::Data res = cpyVideo->newFrame();
 
 					//TODO manage a buffering every things is here to do it
 					//For now we just pick up one image
@@ -287,6 +289,9 @@ namespace orchestrator
 			}
 
 
+			void processPattern(filter::Model* root, filter::data::Data data, filter::data::Data& output_data, bool debug)
+			{}
+
 			void process(filter::Model* root, filter::data::Data& inputData, filter::data::Data &outputData, bool debug = false)
 			{	
 				
@@ -306,11 +311,21 @@ namespace orchestrator
 				}
 				else if (filter::data::DataTypeMapper::isVideo(inputData.getType()))
 				{
-					processVideo(root, inputData, outputData, debug);
+					using videoType = filter::data::FileVideoInput;
+
+					if (inputData.getType() == filter::data::STRMVID)
+						using videoType = filter::data::StreamVideoInput;
+
+					processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
 				}
 				else if (filter::data::DataTypeMapper::isStreaming(inputData.getType()))
 				{
 					processStreaming(root, inputData, outputData, debug);
+				}
+				else if (filter::data::DataTypeMapper::isPattern(inputData.getType()))
+				{
+					using videoType = filter::data::PatternData;
+					processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
 				}
 				else
 				{

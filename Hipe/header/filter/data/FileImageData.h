@@ -27,6 +27,7 @@ namespace filter
 			{
 				Data::registerInstance(new FileImageData());
 				This()._filePath = filePath;
+				This()._type = IMGF;
 
 				cv::Mat mat = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
 				if (mat.empty())
@@ -38,6 +39,12 @@ namespace filter
 				}
 				This()._array.push_back(mat);
 				
+			}
+
+			virtual void copyTo(const ImageData& left)
+			{
+				ImageData::copyTo(static_cast<const ImageData &>(left));
+
 			}
 
 		};

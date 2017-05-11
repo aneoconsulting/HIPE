@@ -52,7 +52,7 @@ void LiveSourceWithx264::encodeNewFrame()
 	_concurrent_queue.readyToListen();
 
 	_concurrent_queue.wait_and_pop(data);
-	std::vector<cv::Mat> & mats = static_cast<filter::data::ImageArrayData&>(data).Array();
+	const std::vector<cv::Mat> & mats = static_cast<filter::data::ImageArrayData&>(data).Array();
 
 	//if (mats.size() > 1 ) throw HipeException("Cannot yet stream block of matrix");
 	

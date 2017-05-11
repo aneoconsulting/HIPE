@@ -5,21 +5,39 @@
 
 namespace filter {
 	namespace data {
-		class FILTER_EXPORT VideoData : public IOData<Data, VideoData>
+		template <typename Derived>
+		class VideoData : public IOData<Data, Derived>
 		{
-		protected:
-			using IOData::IOData;
+		public:
+			using IOData<Data, Derived>::IOData;
 
-		protected:
-			VideoData(VideoData &data) : IOData(data)
+
+			VideoData(IODataType dataType) : IOData(dataType)
+			{
+
+			}	
+			
+			VideoData(const VideoData &data) : IOData(data)
 			{
 
 			}
-		public:
-
-			VideoData(IODataType type) : IOData(type) {}
 
 			virtual ~VideoData() {}
+
+			void copyTo(const VideoData& left)
+			{
+				static_cast<Derived&>(*this).copyTo(static_cast<const Derived&>(left));
+			}
+
+			Data newFrame()
+			{
+				return static_cast<Derived&>(*this).newFrame();
+			}
+
+			bool empty() const
+			{
+				return static_cast<const Derived&>(*this).empty();
+			}
 		};
 	}
 }

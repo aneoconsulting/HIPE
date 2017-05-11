@@ -1,7 +1,7 @@
 #pragma once 
+#include <core/HipeNativeTypes.h>
 
-
-enum DataAccess : long
+enum DataAccess : hUInt64
 {
 	COPY = 0x434f5059,
 	SHARE = 0x5348415245,
@@ -15,7 +15,7 @@ public:
 	static DataAccess getAccessFromString(const std::string dataAccessString)
 	{
 		//convert string to hexa long value;
-		long value = ToHex(dataAccessString);
+		hUInt64 value = ToHex(dataAccessString);
 		DataAccess data_access = static_cast<DataAccess>(value);
 		if (value < 0L || data_access < 0L)
 		{

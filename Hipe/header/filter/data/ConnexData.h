@@ -4,6 +4,7 @@
 #include <map>
 #include <opencv2/core/mat.hpp>
 #include "core/HipeException.h"
+#include "IOData.h"
 
 namespace filter
 {
@@ -53,7 +54,9 @@ namespace filter
 		enum WayData 
 		{
 			INDATA,
-			INOUT
+			INOUT,
+			OUTDATA,
+			NOWAY
 		};
 
 		
@@ -156,7 +159,7 @@ namespace filter
 					Din in = port.pop();
 					if (_way == INOUT)
 					{
-						broacast(static_cast<Dout&>(in));
+						broacast(in);
 					}
 					return in;
 				}
@@ -164,19 +167,26 @@ namespace filter
 				throw HipeException("No more data to pop");
 			}
 
+			
+
+			template <class DoutBroadCast>
+			void broacast(DoutBroadCast dataOutput)
+			{
+				
+			}
+
 			void broacast(Dout dataOutput)
 			{
 				int ref;
-				for (auto & childPair : portOutput)
+				for (auto& childPair : portOutput)
 				{
-					ConnexDataBase * child = childPair.first;
+					ConnexDataBase* child = childPair.first;
 					/**
 					* We need to copy the data to avoid to write on image when other children can use it
 					*/
 					if (portOutput.size() > 1 && child->getWay() == INOUT)
 					{
 						portOutput[child]->push(CopyObject<Dout>::copy(dataOutput));
-
 					}
 					else
 					{
@@ -243,6 +253,16 @@ namespace filter
 
 		};
 
+		
+		
+
+		/*template <class Din, class Dout>
+		template <class DoutBroadCast>
+		template <>
+		void ConnexData<Din, Dout>::broacast<WayData::NOWAY>(DoutBroadCast dataOutput)
+		{
+
+		}*/
 
 		/**
 		 * \brief A derived class of of ConnexData. It's a specialization to restrict the object to an input connector
@@ -342,6 +362,8 @@ namespace filter
 
 			
 		};
+
+		
 
 	}
 }

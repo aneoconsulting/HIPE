@@ -14,7 +14,7 @@ namespace filter
 {
 	namespace data
 	{
-		class FileVideoInput : public IOData<VideoData, FileVideoInput>
+		class FileVideoInput : public VideoData<FileVideoInput>
 		{
 			boost::filesystem::path _filePath;
 			cv::VideoCapture _capture;
@@ -22,26 +22,26 @@ namespace filter
 			cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
 
 		private:
-			FileVideoInput() : IOData(IODataType::VIDF)
+			FileVideoInput() : VideoData(IODataType::VIDF)
 			{
 				
 			}
 
 		public:
 
-			FileVideoInput(const std::string & filePath) : IOData(IODataType::VIDF)
+			FileVideoInput(const std::string & filePath) : VideoData(IODataType::VIDF)
 			{
 				Data::registerInstance(new FileVideoInput());
 				This()._filePath = filePath;
 			}
 
-			FileVideoInput(const FileVideoInput &data) : IOData(data._type)
+			FileVideoInput(const FileVideoInput &data) : VideoData(data._type)
 			{
 				Data::registerInstance(data._This);
 				This()._filePath = This()._filePath;
 			}
 
-			cv::Mat newFrame()
+			Data newFrame()
 			{
 				if (!This()._capture.isOpened())
 				{
@@ -63,7 +63,7 @@ namespace filter
 				bool OK = This()._capture.grab();
 				if (!OK)
 				{
-					return cv::Mat();
+					return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
 				}
 				
 				cv::Mat frame;
@@ -72,18 +72,19 @@ namespace filter
 				
 				while (frame.rows <= 0 && frame.cols <= 0)
 				{
-					
 					if (!This()._capture.isOpened() || !This()._capture.grab())
 					{
-						return cv::Mat();
+						return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
 					}
 					This()._capture.read(frame);
 				}
-					
+			
+				return static_cast<Data>(ImageData(frame));;
+			}
 
-				
-
-				return frame;
+			bool empty() const
+			{
+				return ! (This_const()._capture.isOpened());
 			}
 
 		};

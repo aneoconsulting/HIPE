@@ -8,13 +8,14 @@
 #include <filter/data/VideoData.h>
 #include <streaming/CaptureVideo.h>
 #include <filter/filter_export.h>
+#include "ImageData.h"
 
 
 namespace filter
 {
 	namespace data
 	{
-		class FILTER_EXPORT StreamVideoInput : public IOData<VideoData, StreamVideoInput>
+		class FILTER_EXPORT StreamVideoInput : public VideoData<StreamVideoInput>
 		{
 			boost::filesystem::path _filePath;
 			std::shared_ptr<CaptureVideo> _capture;
@@ -25,7 +26,7 @@ namespace filter
 			StreamVideoInput();
 
 		public:
-			using IOData::IOData;
+			using VideoData<StreamVideoInput>::VideoData;
 
 
 			StreamVideoInput(const StreamVideoInput &data);
@@ -35,7 +36,13 @@ namespace filter
 
 			virtual ~StreamVideoInput();
 
-			cv::Mat newFrame() const;
+			Data newFrame();
+
+			bool empty() const
+			{
+				cv::Mat data;
+				return This_const()._capture.get()->read(data) != OK;;
+			}
 		};
 	}
 }

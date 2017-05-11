@@ -23,7 +23,11 @@ namespace filter
 			SEQVID = 0x534551564944, //Sequence of video from source (Not sure to implement this solution later
 			SEQVIDD = 53455156494444, //Sequence of video from directory
 			STRMVID = 0x5354524d564944, //Streaming Video from capture device 
-			STRMVIDF = 0x5354524d56494446, // Streaming video from file 
+			STRMVIDF = 0x5354524d56494446, // Streaming video from file
+
+			PATTERN = 0x5041545445524e, // Pattern type with crop and data source
+			SQR_CROP = 0x5351525f43524f50, // Square crop
+
 			NONE
 		};
 
@@ -107,6 +111,18 @@ namespace filter
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
 				if (typeStr.find("lis") != std::string::npos)
+					return true;
+
+				return false;
+			}
+
+			static bool isPattern(const IODataType & dataType)
+			{
+				std::string typeStr = getStringFromType(dataType);
+
+				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+
+				if (typeStr.find("pattern") != std::string::npos)
 					return true;
 
 				return false;

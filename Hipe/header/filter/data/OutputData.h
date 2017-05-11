@@ -15,7 +15,7 @@ namespace filter {
 		public:
 			std::string getResult() const
 			{
-				return This().result;
+				return This_const().result;
 			}
 
 			void setResult(const std::string& result)
@@ -38,14 +38,14 @@ namespace filter {
 			{
 				IOData::operator=(left);
 
-				This().result = left.This().result;
+				This().result = left.This_const().result;
 
 				return *this;
 			}
 
 			std::string resultAsString() const
 			{
-				return This().result;
+				return This_const().result;
 			};
 
 			static std::string mat2str(const cv::Mat& m)
@@ -111,6 +111,17 @@ namespace filter {
 				return resultTree;
 
 			};
+
+			virtual void copyTo(const OutputData& left)
+			{
+				if (IOData::getType() != left.getType())
+					throw HipeException("Cannot left argument in a ImageData");
+				if (left.Array_const().size() > 1)
+					throw HipeException("Number of images inside the source doesn't correspond to a ImageData");
+
+				ImageArrayData::copyTo(static_cast<const ImageArrayData &>(left));
+
+			}
 			
 
 		};

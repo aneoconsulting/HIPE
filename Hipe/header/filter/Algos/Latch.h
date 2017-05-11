@@ -11,29 +11,31 @@ namespace filter
 {
 	namespace algos
 	{
-		class Akaze : public filter::IFilter
+		class Latch : public filter::IFilter
 		{
 
 			CONNECTOR(data::PatternData, data::ImageData);
 
-			REGISTER(Akaze, ()) , _connexData(data::INDATA)
+			REGISTER(Latch, ()), _connexData(data::INDATA)
 			{
-
+				hessianThreshold = 100;
 			}
 
 			REGISTER_P(float, inlier_threshold);
 			REGISTER_P(float, nn_match_ratio);
-			
-			
+
+			REGISTER_P(int, hessianThreshold);
+
+
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
 		public:
 			HipeStatus process()
 			{
 				//outputData.reset(new data::OutputData());
-				data::PatternData patternData =_connexData.pop();
-				
-				
+				data::PatternData patternData = _connexData.pop();
+
+
 
 
 				double homography_array[9] = { 7.6285898e-01, -2.9922929e-01, 2.2567123e+02,
@@ -44,7 +46,7 @@ namespace filter
 
 				std::vector<cv::Mat> patterns = patternData.patterns();
 				if (patterns.empty())
-					throw HipeException("There is no Pattern to find in Akaze Algorithm");
+					throw HipeException("There is no Pattern to find in Latch Algorithm");
 				//TODO : manage pultiple crop ....ATM only 1 crop is taken in account
 				cv::Mat patternImage = patterns[0];
 				cv::Mat requestImage = patternData.imageRequest().getMat();
@@ -52,10 +54,16 @@ namespace filter
 				std::vector<cv::KeyPoint> kpts1, kpts2;
 				cv::Mat desc1, desc2;
 
-				cv::Ptr<cv::AKAZE> akaze = cv::AKAZE::create(cv::AKAZE::DESCRIPTOR_MLDB, 0, 3,0.0001f);
-				akaze->detectAndCompute(patternImage, cv::noArray(), kpts1, desc1);
-				//cv::Ptr<cv::AKAZE> akaze2 = cv::AKAZE::create();
-				akaze->detectAndCompute(requestImage, cv::noArray(), kpts2, desc2);
+				cv::Mat mask;
+
+				cv::Ptr<cv::xfeatures2d::SURF> detector = cv::xfeatures2d::SURF::create(hessianThreshold);
+
+				detector->detect(patternImage, kpts1, mask);
+				detector->detect(requestImage, kpts2, mask);
+				cv::Ptr<cv::xfeatures2d::LATCH> latch = cv::xfeatures2d::LATCH::create();
+				latch->compute(patternImage, kpts1, desc1);
+				//cv::Ptr<cv::Latch> Latch2 = cv::Latch::create();
+				latch->compute(requestImage, kpts2, desc2);
 
 				cv::BFMatcher matcher(cv::NORM_HAMMING);
 				std::vector<std::vector<cv::DMatch> > nn_matches;
@@ -112,6 +120,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(Akaze, inlier_threshold, nn_match_ratio);
+		ADD_CLASS(Latch, inlier_threshold, nn_match_ratio, hessianThreshold);
 	}
 }

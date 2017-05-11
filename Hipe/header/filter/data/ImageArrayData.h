@@ -9,6 +9,11 @@ namespace filter
 		{
 		protected:
 			std::vector<cv::Mat> _array;
+			 
+			ImageArrayData(data::IODataType type) : IOData(type)
+			{
+				/*Data::registerInstance(new ImageArrayData());*/
+			}
 
 		public:
 			using IOData::IOData;
@@ -17,10 +22,7 @@ namespace filter
 			{
 			}
 
-			ImageArrayData(data::IODataType type) : IOData(type)
-			{
-				Data::registerInstance(new ImageArrayData());
-			}
+			
 
 			ImageArrayData(const data::ImageArrayData &right) : IOData(right._type)
 			{
@@ -29,7 +31,13 @@ namespace filter
 
 			std::vector<cv::Mat> & Array()
 			{
-				ImageArrayData &ret = This();
+				ImageArrayData &ret = This() ;
+				return ret._array;
+			}
+
+			const std::vector<cv::Mat> & Array_const() const
+			{
+				const ImageArrayData &ret = This_const();
 				return ret._array;
 			}
 
@@ -37,6 +45,22 @@ namespace filter
 			{
 				This()._array.push_back(dataMat);
 				return *this;
+			}
+
+			virtual void copyTo(const ImageArrayData& left)
+			{
+				for (const cv::Mat & image: left.Array_const())
+				{
+					cv::Mat res;
+					image.copyTo(res);
+
+					This()._array.push_back(res);
+				}
+			}
+
+			inline bool empty() const
+			{
+				return Array_const().empty();
 			}
 		};
 	}

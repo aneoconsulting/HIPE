@@ -8,20 +8,20 @@ namespace filter {
 	namespace data {
 		class ImageData : public IOData<ImageArrayData, ImageData>
 		{
-			
+		public:
+			using IOData::IOData;
+
 		protected:
-			ImageData(IOData::_Protection priv)
+			ImageData(IOData::_Protection priv) : IOData(IMGF)
 			{
 				
 			}
 
-		protected:
-			
-			using IOData::IOData;
-
 			ImageData(IODataType dataType) : IOData(dataType)
 			{
-				Array().resize(1);
+				/*Data::registerInstance(new ImageData(IOData::_Protection()));
+				This()._type = dataType;
+				This()._array.resize(1);*/
 			}
 
 		public:
@@ -29,30 +29,49 @@ namespace filter {
 			ImageData() : IOData(IMGF)
 			{
 				Data::registerInstance(new ImageData(IOData::_Protection()));
-
-				Array().resize(1);
+				This()._type = IMGF;
+				This()._array.resize(1);
 			}
 
 			ImageData(cv::Mat matrix) : IOData(IMGF)
 			{
 				Data::registerInstance(new ImageData(IOData::_Protection()));
-				Array().resize(1);
-				Array()[0] = matrix;
+				This()._type = IMGF;
+				This()._array.resize(1);
+				This()._array[0] = matrix;
 			}
 
-			virtual void copyTo(IOData& left)
+			ImageData(const ImageData & ref) : IOData(IMGF)
 			{
-				throw HipeException("Not yet implemented");
+				Data::registerInstance(ref._This);
+				This()._type = ref.This_const()._type;
+				_decorate = ref._decorate;
+				
+			}
+
+
+			virtual void copyTo(const ImageData& left)
+			{
 				if (IOData::getType() != left.getType())
 					throw HipeException("Cannot left argument in a ImageData");
+				if (left.Array_const().size() > 1)
+					throw HipeException("Number of images inside the source doesn't correspond to a ImageData");
+
+				ImageArrayData::copyTo(static_cast<const ImageArrayData &>(left));
+
 			}
 
-			cv::Mat & getMat()
+			const cv::Mat & getMat()
 			{
-				if (Array().empty()) Array().resize(1);
+				if (Array().empty()) This()._array.resize(1);
 
 				return Array()[0];
 				
+			}
+
+			inline bool empty() const
+			{
+				return Array_const().empty();
 			}
 		};
 	}

@@ -9,11 +9,11 @@ namespace filter
 			return cv::Mat::zeros(0, 0, CV_8UC1);
 		}
 
-		StreamVideoInput::StreamVideoInput(): IOData(STRMVID)
+		StreamVideoInput::StreamVideoInput(): VideoData(STRMVID)
 		{
 		}
 
-		StreamVideoInput::StreamVideoInput(const std::string & url) : IOData(STRMVID)
+		StreamVideoInput::StreamVideoInput(const std::string & url) : VideoData(STRMVID)
 		{
 			Data::registerInstance(new StreamVideoInput());
 
@@ -29,19 +29,24 @@ namespace filter
 		{
 		}
 
-		cv::Mat StreamVideoInput::newFrame() const
+		void copyTo(const StreamVideoInput& left)
+		{
+			throw HipeException("Not yet implemented copy of StreamVideoInput");
+		}
+
+		Data StreamVideoInput::newFrame()
 		{
 			cv::Mat data;
-			HipeStatus hipe_status = This()._capture.get()->read(data);
+			HipeStatus hipe_status = This_const()._capture.get()->read(data);
 			if (hipe_status == UNKOWN_ERROR)
 				throw HipeException("Error grabbing frame");
 			if (hipe_status == END_OF_STREAM)
-				data = cv::Mat::zeros(0, 0, CV_8U);
+				return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
 
-			return data;
+			return static_cast<Data>(ImageData(data));
 		}
 
-		StreamVideoInput::StreamVideoInput(const StreamVideoInput &data) : IOData(data._type)
+		StreamVideoInput::StreamVideoInput(const StreamVideoInput &data) : VideoData(data._type)
 		{
 			Data::registerInstance(data._This);
 			This()._filePath = data._filePath;
@@ -56,5 +61,6 @@ namespace filter
 			if (This()._capture.get()->open() != OK)
 				throw HipeException("Cannot open streaming capture");
 		}
+
 	}
 }
