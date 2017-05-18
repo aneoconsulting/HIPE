@@ -1,16 +1,16 @@
-#pragma once 
-// Algorithm header to reference 
+#pragma once
+// Algorithm header to reference
+#include <filter/Algos/ResultFilter.h>
 #include <filter/Algos/Akaze.h>
-#include <filter/Algos/AlgoExample_1.h>
-#include <filter/Algos/Crop.h>
+#include <filter/Algos/ShowImage.h>
+#include <filter/Algos/RotateImage.h>
+#include <filter/Algos/RootFilter.h>
+#include <filter/Algos/Resize.h>
 #include <filter/Algos/Cropper.h>
+#include <filter/Algos/ResizePattern.h>
 #include <filter/Algos/Gaussian.h>
 #include <filter/Algos/Latch.h>
-#include <filter/Algos/Resize.h>
-#include <filter/Algos/ResizePattern.h>
-#include <filter/Algos/ResultFilter.h>
-#include <filter/Algos/RootFilter.h>
-#include <filter/Algos/RotateImage.h>
-#include <filter/Algos/ShowImage.h>
-#include <filter/Algos/ShowVideo.h>
 #include <filter/Algos/StreamResultFilter.h>
+#include <filter/Algos/Crop.h>
+#include <filter/Algos/ShowVideo.h>
+#include <filter/Algos/AlgoExample_1.h>
