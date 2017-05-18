@@ -113,6 +113,27 @@ namespace filter
 				return *this;
 			}
 
+			IOData& addPair(const std::vector<cv::Point>& leftCrop, const ImageData& leftImage)
+			{
+				if (leftCrop.size() % 2 != 0)
+				{
+					std::stringstream strbuild;
+					strbuild << "Cannot push the list of crop because input " << leftCrop.size() << " isn't a modulo of 2";
+					throw HipeException(strbuild.str());
+				}
+
+				for (unsigned int index = 0; index < leftCrop.size(); index += 2)
+				{
+					cv::Rect rect(leftCrop[index], leftCrop[index + 1]);
+					This()._squareCrop.push_back(rect);
+				}
+
+				This()._picture = leftImage;
+				This().crops(true);
+
+				return *this;
+			}
+
 			IOData& operator<<(const std::vector<cv::Point>& left)
 			{
 				if (left.size() % 2 != 0)

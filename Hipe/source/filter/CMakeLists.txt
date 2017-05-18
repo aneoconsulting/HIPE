@@ -95,6 +95,16 @@ message(STATUS "Variable path for OpenCV [${OpenCV_DIR}]")
 
 find_package( OpenCV REQUIRED )
 
+#find_package(CUDA QUIET REQUIRED)
+
+# Pass options to NVCC
+#set(
+#    CUDA_NVCC_FLAGS
+#    ${CUDA_NVCC_FLAGS};
+#    -O3 -gencode arch=compute_35,code=sm_35
+#    )
+	
+#INCLUDE_DIRECTORIES(filter ${CUDA_INCLUDE_DIRS})
 include_directories(filter ${Hype_INCLUDEDIR})
 include_directories(filter ${OpenCV_INCLUDE_DIRS} )
 include_directories(filter ${Live_INCLUDEDIR} )
@@ -160,8 +170,9 @@ target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
 
 target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries( filter ${OpenCV_LIBS} )
-target_link_libraries( filter ${Lives_LIBS} )
+target_link_libraries(filter ${OpenCV_LIBS} )
+target_link_libraries(filter ${Lives_LIBS} )
+#target_link_libraries(filter ${CUDA_LIB_DIRS}/x64)
 
 #add_dependencies(filter reference)
 

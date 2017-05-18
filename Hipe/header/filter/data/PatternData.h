@@ -25,25 +25,36 @@ namespace filter
 
 			int _endOfSource;
 
-			
+		
 
+		
 		protected:
-			PatternData() : VideoData<PatternData>(IODataType::PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
+			PatternData(IOData::_Protection priv) : VideoData(PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
 			{
+
 			}
 
 		public:
+			PatternData() : VideoData<PatternData>(IODataType::PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
+			{
+				Data::registerInstance(new PatternData(IOData::_Protection()));
+				ImageData inputImage;
+
+				This()._inputSource = static_cast<Data>(inputImage);
+				newFrame();
+			}
+
+		
 			using VideoData::VideoData;
 
-		public:
-
+		
 			/**
 			* \brief A copy Constructor accepting a list of 2 Data (CROP and SOURCE)
 			* \param left the list of data
 			*/
 			PatternData(ImageData &inputImage) : VideoData(IODataType::PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
 			{
-				Data::registerInstance(new PatternData());
+				Data::registerInstance(new PatternData(IOData::_Protection()));
 
 				This()._inputSource = static_cast<Data>(inputImage);
 				newFrame();
@@ -56,7 +67,7 @@ namespace filter
 			 */
 			PatternData(const std::vector<Data>& left) : VideoData(IODataType::PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
 			{
-				Data::registerInstance(new PatternData());
+				Data::registerInstance(new PatternData(IOData::_Protection()));
 				bool crop_found = false;
 				bool source_found = false;
 
@@ -139,6 +150,7 @@ namespace filter
 			PatternData& operator<<(const ImageData& left)
 			{
 				This()._requestImg = left;
+				This()._endOfSource = -1;
 				return *this;
 			}
 
@@ -201,15 +213,14 @@ namespace filter
 				return This_const()._squareCrop;
 			}
 
-			void copyTo(const PatternData& left)
+			void copyTo(PatternData& left) const
 			{
-				ImageData imageRequest;
 				cv::Mat image;
-				left.This_const().imageRequest().getMat().copyTo(image);
-				imageRequest << image;
-				This()._requestImg = imageRequest;
-				This()._inputSource = left.This_const()._inputSource;
-				This()._squareCrop = left.This_const()._squareCrop;
+				This_const().imageRequest().getMat().copyTo(image);
+				ImageData imageRequest = image;
+				left.This()._requestImg = imageRequest;
+				left.This()._inputSource = This_const()._inputSource;
+				left.This()._squareCrop = This_const()._squareCrop;
 				
 				
 			}

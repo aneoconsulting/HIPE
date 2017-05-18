@@ -112,14 +112,14 @@ namespace filter {
 
 			};
 
-			virtual void copyTo(const OutputData& left)
+			virtual void copyTo( OutputData& left) const
 			{
 				if (IOData::getType() != left.getType())
 					throw HipeException("Cannot left argument in a ImageData");
 				if (left.Array_const().size() > 1)
 					throw HipeException("Number of images inside the source doesn't correspond to a ImageData");
 
-				ImageArrayData::copyTo(static_cast<const ImageArrayData &>(left));
+				ImageArrayData::copyTo(static_cast<ImageArrayData &>(left));
 
 			}
 			

@@ -82,6 +82,20 @@ namespace core
 				the_queue.pop();
 				return true;
 			}
+
+			bool trypop_until(Data& popped_value, int ms)
+			{
+				boost::mutex::scoped_lock lock(the_mutex);
+				the_condition_variable.timed_wait(lock, boost::posix_time::milliseconds(ms));
+				if (the_queue.empty())
+				{
+					return false;
+				}
+
+				popped_value = the_queue.front();
+				the_queue.pop();
+				return true;
+			}
 			
 			void readyToListen() { _listerners = true; }
 

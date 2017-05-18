@@ -66,6 +66,10 @@ namespace MESAI
 					WriteFrame(frame);
 				}
 			}
+			else
+			{
+				std::this_thread::sleep_for(std::chrono::microseconds(300));
+			}
         }
 	}
 

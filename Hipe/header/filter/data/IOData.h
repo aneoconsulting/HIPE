@@ -75,7 +75,7 @@ namespace filter
 				left._type = _type; // case where left._type == NONE
 			}
 
-			virtual void copyTo(const Data& left)
+			virtual void copyTo(Data& left) const
 			{
 				
 				_This->copyTo(left);
@@ -132,9 +132,9 @@ namespace filter
 			 * \brief Depracated to review  no way to copy on left if it's const ....
 			 * \param left 
 			 */
-			virtual void copyTo(const IOData& left)
+			virtual void copyTo(IOData& left) const
 			{
-				static_cast<Derived&>(*(Base::_This)).copyTo(static_cast<const Derived&>(left));
+				static_cast<const Derived&>(*(Base::_This)).copyTo(static_cast<Derived&>(left));
 			}
 			virtual bool empty() const
 			{

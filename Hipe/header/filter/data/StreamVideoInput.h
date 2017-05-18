@@ -31,9 +31,11 @@ namespace filter
 
 			StreamVideoInput(const StreamVideoInput &data);
 
+			StreamVideoInput::StreamVideoInput(const std::string & url);
 
-			StreamVideoInput(const std::string & url);
+			
 
+			
 			virtual ~StreamVideoInput();
 
 			Data newFrame();

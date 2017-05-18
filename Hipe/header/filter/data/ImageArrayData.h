@@ -47,14 +47,14 @@ namespace filter
 				return *this;
 			}
 
-			virtual void copyTo(const ImageArrayData& left)
+			virtual void copyTo(ImageArrayData& left) const
 			{
-				for (const cv::Mat & image: left.Array_const())
+				for (const cv::Mat & image: Array_const())
 				{
 					cv::Mat res;
 					image.copyTo(res);
 
-					This()._array.push_back(res);
+					left.This()._array.push_back(res);
 				}
 			}
 

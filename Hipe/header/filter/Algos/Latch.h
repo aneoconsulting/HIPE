@@ -19,12 +19,15 @@ namespace filter
 			REGISTER(Latch, ()), _connexData(data::INDATA)
 			{
 				hessianThreshold = 100;
+				
 			}
 
 			REGISTER_P(float, inlier_threshold);
 			REGISTER_P(float, nn_match_ratio);
 
 			REGISTER_P(int, hessianThreshold);
+
+			
 
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
@@ -34,7 +37,11 @@ namespace filter
 			{
 				//outputData.reset(new data::OutputData());
 				data::PatternData patternData = _connexData.pop();
-
+				if (patternData.crops().getSquareCrop().size() == 0)
+				{
+					_connexData.push(patternData.imageRequest());
+					return OK;
+				}
 
 
 

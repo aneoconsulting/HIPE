@@ -16,7 +16,7 @@ namespace filter
 
 			REGISTER(ShowImage, ()), _connexData(data::INOUT)
 			{
-				
+				wait = false;
 				
 			}
 
@@ -26,6 +26,7 @@ namespace filter
 			}
 
 			REGISTER_P(int, waitkey);
+			REGISTER_P(bool, wait);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
@@ -45,8 +46,12 @@ namespace filter
 
 						::cv::imshow(_name, myImage);
 						char c;
-						std::cout << "Waiting for key..." << std::endl;
-						cv::waitKey(0);
+
+						if (wait)
+						{
+							std::cout << "Waiting for key..." << std::endl;
+							cv::waitKey(0);
+						}
 					}
 				}
 
@@ -62,6 +67,6 @@ namespace filter
 
 		};
 
-		ADD_CLASS(ShowImage, waitkey);
+		ADD_CLASS(ShowImage, waitkey, wait);
 	}
 }

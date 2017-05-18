@@ -25,11 +25,12 @@ namespace filter
 			This()._capture.get()->open();
 		}
 
+
 		StreamVideoInput::~StreamVideoInput()
 		{
 		}
 
-		void copyTo(const StreamVideoInput& left)
+		void copyTo(StreamVideoInput& left) 
 		{
 			throw HipeException("Not yet implemented copy of StreamVideoInput");
 		}
@@ -49,11 +50,12 @@ namespace filter
 		StreamVideoInput::StreamVideoInput(const StreamVideoInput &data) : VideoData(data._type)
 		{
 			Data::registerInstance(data._This);
-			This()._filePath = data._filePath;
+			This()._filePath = data.This_const()._filePath;
 
 			std::string instanceName = "RTSPCapture";
 
-			This()._capture.reset(CaptureVideoFactory::getInstance()->getCaptureVideo(instanceName, _filePath.string()), [](CaptureVideo*) {});
+			//This()._capture.reset(CaptureVideoFactory::getInstance()->getCaptureVideo(instanceName, _filePath.string()), [](CaptureVideo*) {});
+			This()._capture = data.This_const()._capture;
 			
 			if (This()._capture.get()->create() != OK)
 				throw HipeException("Cannot create Streaming capture");

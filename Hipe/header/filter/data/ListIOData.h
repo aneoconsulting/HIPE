@@ -34,11 +34,11 @@ namespace filter
 				This()._listIoData = left._listIoData;
 			}
 
-			void copyTo(const ListIOData& left)
+			void copyTo(ListIOData& left) const
 			{
-				This()._listIoData.clear();
+				left.This()._listIoData.clear();
 
-				Add(left, true);
+				left.Add(*this, true);
 			}
 
 			void Add(const ListIOData& left, bool copy = false)

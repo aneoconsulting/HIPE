@@ -24,9 +24,9 @@ namespace filter {
 
 			virtual ~VideoData() {}
 
-			void copyTo(const VideoData& left)
+			void copyTo(VideoData& left) const
 			{
-				static_cast<Derived&>(*this).copyTo(static_cast<const Derived&>(left));
+				static_cast<const Derived&>(*this).copyTo(static_cast< Derived&>(left));
 			}
 
 			Data newFrame()

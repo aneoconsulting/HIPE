@@ -8,6 +8,7 @@
 #include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <filter/data/PatternData.h>
+#include "core/queue/ConcurrentQueue.h"
 
 namespace filter
 {
@@ -17,39 +18,71 @@ namespace filter
 
 		class FILTER_EXPORT Cropper : public IFilter
 		{
-			std::shared_ptr<data::PatternData> _pattern;
-
 		public:
-			class CVCropperData {
+			class CVCropperData 
+			{
 			public:
-				bool clicked;
-				bool drawing;
+				std::atomic<bool> clicked;
+				std::atomic<bool> drawing;
 				int index;
 				cv::String windowName;
 				std::vector<cv::Point> rectangle;
 				cv::Mat sandBoxImage;
+				cv::Mat sandBoxImage_backup;
 				data::PatternData pattern;
+				std::atomic<bool> started;
 
+				core::queue::ConcurrentQueue<std::vector<cv::Point>> arrayCrop;
 
 			public:
-				CVCropperData(const data::PatternData & pat) : pattern(pat), clicked(false), drawing(false), index(0)
+				CVCropperData(const data::PatternData & pat) : clicked(false), drawing(false), index(0), pattern(pat)
+				{
+					started = false;
+				}
+
+				CVCropperData(data::ImageData &image) : clicked(false), drawing(false), index(0), pattern(image)
+				{
+					started = false;
+				}
+
+				CVCropperData() : clicked(false), drawing(false), index(0)
+				{
+					started = false;
+				}
+
+				CVCropperData &operator<<(data::ImageData &inputImage)
+				{
+					pattern << inputImage;
+
+					return *this;
+				}
+
+				CVCropperData &operator<<(cv::Mat inputImage)
 				{
 					
+					pattern << data::ImageData(inputImage);
+
+					return *this;
 				}
+
 			};
 
-			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
+			std::shared_ptr<data::PatternData> _pattern;
+			std::shared_ptr<boost::thread> _task;
+			std::shared_ptr<CVCropperData> _cvCropperData;
+
+		
 			CONNECTOR(data::ImageData, data::PatternData);
 
 			
 
 			REGISTER(Cropper, ()), _connexData(data::INDATA)
 			{
-
-				waitkey = 10;
+				_cvCropperData = std::make_shared<CVCropperData>();
+				wait = false;
 			}
 
-			REGISTER_P(int, waitkey);
+			REGISTER_P(bool, wait);
 			~Cropper()
 			{
 
@@ -61,27 +94,34 @@ namespace filter
 			};
 
 		private:
-			void CropperAreaDrawer(filter::algos::Cropper::CVCropperData & cvCropperData)
+			void windowTask(std::shared_ptr<filter::algos::Cropper::CVCropperData> cvCropperData)
 			{
 				cv::namedWindow(_name, cv::WINDOW_NORMAL);
+				cv::setMouseCallback(_name, cropper_mouse_call, &_cvCropperData);
 
-				cvCropperData.windowName = _name;
-				
-				cvCropperData.clicked = false;
-				cv::setMouseCallback(_name, cropper_mouse_call, &cvCropperData);
-
-				cvCropperData.pattern.imageRequest().getMat().copyTo(cvCropperData.sandBoxImage);
-
-				while (1) {
-					cv::imshow(_name, cvCropperData.sandBoxImage);
+				while (_cvCropperData->started) {
+					cv::imshow(_name, cvCropperData->sandBoxImage);
 					auto ret = cv::waitKey(30);
 
 					if (ret == 27) {
+						cv::destroyWindow(_name);
 						break;
 					}
-					if (ret == 13) // Return pressed
+					if (ret == 13 || ret == ' ') // Return or space pressed
 					{
 						std::cout << "Keyboard has been pressed : " << ret << std::endl;
+
+						
+
+						cv::Mat patImage;
+						cvCropperData->sandBoxImage_backup.copyTo(patImage);
+
+						//Populate SquareCrops
+						cvCropperData->pattern.crops().addPair(cvCropperData->rectangle, patImage);
+
+						cvCropperData->arrayCrop.push(cvCropperData->rectangle);
+
+						cv::destroyWindow(_name);
 						break;
 					}
 					if (ret > 0)
@@ -89,7 +129,29 @@ namespace filter
 						std::cout << "unkonwn Keyboard has been pressed : " << ret << std::endl;
 					}
 				}
-				cv::destroyWindow(_name);
+			}
+
+			void CropperAreaDrawer()
+			{
+				
+
+				
+				//If the user doesn't yet click then refresh the sandbox
+				if (!_cvCropperData->clicked)
+				{
+					_cvCropperData->pattern.imageRequest().getMat().copyTo(_cvCropperData->sandBoxImage);
+				}
+				if (!_task)
+				{
+					_cvCropperData->started = true;
+					_cvCropperData->windowName = _name;
+					
+					_cvCropperData->clicked = false;
+					
+					_task = std::make_shared<boost::thread>(boost::bind(&Cropper::windowTask, this, _cvCropperData));
+				}
+				
+				
 			
 			}
 
@@ -108,7 +170,7 @@ namespace filter
 
 					return OK;
 				}
-				cv::namedWindow(_name);
+				
 
 				if (_connexData.size() == 0)
 					throw HipeException("There is no data to display coming from the parent node [NAME]");
@@ -117,19 +179,36 @@ namespace filter
 				auto myImage = image.getMat();
 				if(myImage.rows <= 0 || myImage.cols <= 0)
 					throw HipeException("Image to show doesn't data");
-				data::PatternData pattern = data::PatternData(image);
-				CVCropperData cvCropperData(pattern);
 				
-				CropperAreaDrawer(cvCropperData);
+				
+				
+				*(_cvCropperData) << myImage;
 
-				pattern.crops() << cvCropperData.rectangle;
-				cv::Mat patImage;
-				cvCropperData.pattern.imageRequest().getMat().copyTo(patImage);
+				CropperAreaDrawer();
+				std::vector<cv::Point> rect;
+				if (wait)
+				{
+					_cvCropperData->arrayCrop.wait_and_pop(rect);
+					_connexData.push(_cvCropperData->pattern);
+					_pattern = std::make_shared<data::PatternData>(_cvCropperData->pattern);
+				}
+				else if (_cvCropperData->arrayCrop.trypop_until(rect, 10) == false)
+				{
+					data::PatternData pattern(image);
 
-				pattern.crops() << patImage;
+					_connexData.push(pattern);
+
+				}
+				else
+				{
+					_connexData.push(_cvCropperData->pattern);
+					_pattern = std::make_shared<data::PatternData>(_cvCropperData->pattern);
+				}
 
 				
-				_connexData.push(pattern);
+
+				
+				
 				
 
 				return OK;
@@ -138,10 +217,12 @@ namespace filter
 			void dispose()
 			{
 				Model::dispose();
+				if (_task) 
+					_cvCropperData->started = false;
 				cv::destroyWindow(_name);
 			}
 		};
 
-		ADD_CLASS(Cropper, waitkey);
+		ADD_CLASS(Cropper, wait);
 	}
 }

@@ -41,9 +41,9 @@ namespace filter
 				
 			}
 
-			virtual void copyTo(const ImageData& left)
+			virtual void copyTo(ImageData& left) const
 			{
-				ImageData::copyTo(static_cast<const ImageData &>(left));
+				ImageData::copyTo(static_cast<ImageData &>(left));
 
 			}
 
