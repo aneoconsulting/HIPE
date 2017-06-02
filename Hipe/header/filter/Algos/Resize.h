@@ -47,7 +47,6 @@ namespace filter
 				}
 				return OK;
 			}
-
 		};
 
 		ADD_CLASS(Resize, ratio);
