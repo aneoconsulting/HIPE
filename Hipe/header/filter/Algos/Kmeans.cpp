@@ -23,9 +23,10 @@ namespace filter
 
 			}
 
-			REGISTER_P(double, ratio);
+			REGISTER_P(int, attempts);
+			REGISTER_P(int, clusterCount)
 
-			virtual std::string resultAsString() { return std::string("TODO"); };
+				virtual std::string resultAsString() { return std::string("TODO"); };
 
 		public:
 			HipeStatus process()
@@ -41,7 +42,7 @@ namespace filter
 					//Resize all images coming from the same parent
 					for (auto &myImage : images.Array())
 					{
-						myImage = KmeansItt(myImage);
+						myImage = KmeansItt(myImage, clusterCount, attempts);
 					}
 				}
 				return OK;
@@ -88,7 +89,7 @@ namespace filter
 				}
 			}
 
-			cv::Mat KmeansItt(cv::Mat myMAt)
+			cv::Mat KmeansItt(cv::Mat myMAt, int clusterCount, int attemps)
 			{
 				cv::Mat src = myMAt;
 				cv::Mat samples(src.rows * src.cols, 3, CV_32F);
@@ -98,9 +99,8 @@ namespace filter
 							samples.at<float>(y + x*src.rows, z) = src.at<cv::Vec3b>(y, x)[z];
 
 
-				int clusterCount = 15;
+
 				cv::Mat labels;
-				int attempts = 5;
 				cv::Mat centers;
 				kmeans(samples, clusterCount, labels, cv::TermCriteria(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 10000, 0.0001), attempts, cv::KMEANS_PP_CENTERS, centers);
 
@@ -117,7 +117,7 @@ namespace filter
 				return new_image;
 			}
 		};
-		ADD_CLASS(Kmeans, ratio);
+		ADD_CLASS(Kmeans, clusterCount, attempts);
 	}
 }
 
