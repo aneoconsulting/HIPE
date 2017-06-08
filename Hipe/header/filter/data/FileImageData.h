@@ -23,6 +23,11 @@ namespace filter
 
 		public:
 
+			FileImageData(const FileImageData & right) : IOData(IODataType::IMGF)
+			{
+				Data::registerInstance(right._This);
+			}
+
 			FileImageData(const std::string & filePath) : IOData(IODataType::IMGF)
 			{
 				Data::registerInstance(new FileImageData());
@@ -45,6 +50,15 @@ namespace filter
 			{
 				ImageData::copyTo(static_cast<ImageData &>(left));
 
+			}
+
+			FileImageData& operator=(const FileImageData& left)
+			{
+				_This = left._This;
+				_type = left._type;
+				_decorate = left._decorate;
+
+				return *this;
 			}
 
 		};

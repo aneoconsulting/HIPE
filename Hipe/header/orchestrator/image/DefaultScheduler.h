@@ -6,6 +6,7 @@
 #include "filter/data/ListIOData.h"
 #include "filter/data/PatternData.h"
 
+
 namespace orchestrator
 {
 	namespace image
@@ -13,13 +14,13 @@ namespace orchestrator
 		class DefaultScheduler : public orchestrator::Conductor
 		{
 		public:
-			typedef std::vector<std::vector<filter::IFilter *>> MatrixLayerNode;
+			typedef std::vector<std::vector<filter::Model *>> MatrixLayerNode;
 
 			DefaultScheduler()
 			{
 			}
 
-			static int getMaxLevelNode(filter::IFilter* filter, int level = 0)
+			static int getMaxLevelNode(filter::Model* filter, int level = 0)
 			{
 				for (auto& child : filter->getChildrens())
 				{
@@ -33,7 +34,7 @@ namespace orchestrator
 				return level;
 			}
 
-			static int setMatrixLayer(filter::IFilter* filter, MatrixLayerNode& matrixLayerNode)
+			static int setMatrixLayer(filter::Model* filter, MatrixLayerNode& matrixLayerNode)
 			{
 				if (std::find(matrixLayerNode[filter->getLevel()].begin(), matrixLayerNode[filter->getLevel()].end(), filter)
 					!= matrixLayerNode[filter->getLevel()].end())
@@ -50,7 +51,7 @@ namespace orchestrator
 				return 0;
 			}
 
-			static void cleanDataChild(filter::IFilter* filter)
+			static void cleanDataChild(filter::Model* filter)
 			{
 				filter->cleanUp();
 
@@ -61,7 +62,7 @@ namespace orchestrator
 				}
 			}
 
-			static void disposeChild(filter::IFilter* filter)
+			static void disposeChild(filter::Model* filter)
 			{
 				filter->dispose();
 
@@ -95,8 +96,8 @@ namespace orchestrator
 			{
 				const filter::data::StreamVideoInput & video = static_cast<const filter::data::StreamVideoInput&>(inputData);
 				cv::Mat frame;
-				filter::IFilter* filterRoot = reinterpret_cast<filter::IFilter *>(root);
-				filter::IFilter* cpyFilterRoot = copyAlgorithms(filterRoot);
+				filter::Model* filterRoot = reinterpret_cast<filter::Model *>(root);
+				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
 				
 				
 				std::shared_ptr<filter::data::StreamVideoInput> cpyVideo = std::make_shared<filter::data::StreamVideoInput>(video);
@@ -116,7 +117,7 @@ namespace orchestrator
 					{
 						cleanDataChild(cpyFilterRoot);
 						//Special case for rootNode dispatching to any children.
-						for (filter::IFilter * filter : matrixLayer[0])
+						for (filter::Model * filter : matrixLayer[0])
 						{
 							*(filter) << frame;
 						}
@@ -150,10 +151,10 @@ namespace orchestrator
 			{
 				VideoClass & video = static_cast<VideoClass&>(inputData);
 				cv::Mat frame;
-				filter::IFilter* filterRoot = reinterpret_cast<filter::IFilter *>(root);
+				filter::Model* filterRoot = root;
 				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
 				MatrixLayerNode matrixLayer(maxLevel + 1);
-				filter::IFilter* cpyFilterRoot = copyAlgorithms(filterRoot);
+				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
 
 				//TODO insert debug layers into the matrix
 				setMatrixLayer(filterRoot, matrixLayer);
@@ -176,7 +177,7 @@ namespace orchestrator
 					//For now we just pick up one image
 					while (!res.empty())
 					{
-						for (filter::IFilter * filter : matrixLayer[0])
+						for (filter::Model * filter : matrixLayer[0])
 						{
 							
 							*(filter) << res;
@@ -185,11 +186,32 @@ namespace orchestrator
 						cleanDataChild(cpyFilterRoot);
 		
 						//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
+						int error = 0;
 						for (int layer = 1; layer < matrixLayer.size() - 1; layer++)
 						{
 							for (auto& filter : matrixLayer[layer])
 							{
-								filter->process();
+								try
+								{
+									filter->process();
+								}
+								catch (std::exception& e) {
+									std::cerr << "Unkown error during the "<< filter->getName() << " execution. Msg : " << e.what() << ". Please contact us"  << std::endl;
+									cleanDataChild(cpyFilterRoot);
+									disposeChild(cpyFilterRoot);
+									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+										throw HipeException("Cannot free properly the Streaming videocapture");
+									return;
+								}
+
+								catch (HipeException& e) {
+									std::cerr << "HipeException error during the " << filter->getName() << " execution. Msg : " << e.what() << ". Please contact us" << std::endl;
+									cleanDataChild(cpyFilterRoot);
+									disposeChild(cpyFilterRoot);
+									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+										throw HipeException("Cannot free properly the Streaming videocapture");
+									return;
+								}
 							}
 						}
 
@@ -239,7 +261,7 @@ namespace orchestrator
 
 			void processImages(filter::Model* root, filter::data::Data & inputData, filter::data::Data &outputData, bool debug)
 			{
-				filter::IFilter* filterRoot = reinterpret_cast<filter::IFilter *>(root);
+				filter::Model* filterRoot = reinterpret_cast<filter::Model *>(root);
 				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
 
 				cleanDataChild(filterRoot);
@@ -249,11 +271,9 @@ namespace orchestrator
 				//TODO insert debug layers into the matrix
 				setMatrixLayer(filterRoot, matrixLayer);
 
-				for (filter::IFilter * filter : matrixLayer[0])
+				for (filter::Model * filter : matrixLayer[0])
 				{
-					
-					*(filter) << inputData;
-					
+					*(root) << inputData;	
 				}
 
 				//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP

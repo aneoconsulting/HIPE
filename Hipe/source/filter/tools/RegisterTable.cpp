@@ -1,9 +1,11 @@
 #include <tools/RegisterTable.h>
-#include <IFilter.h>
+#include <Model.h>
 #include <stack>
 #include <core/Invoker.h>
 #include <filter/tools/filterMacros.h>
 #include <filter/data/FileImageData.h>
+#include <filter/IFilter.h>
+#include <filter/Model.h>
 #include <filter/filter_export.h>
 
 FILTER_EXPORT RegisterTable* RegisterTable::instance = nullptr;
@@ -15,10 +17,10 @@ void* newFilter(std::string className)
 }
 
 
-filter::IFilter* copyFilter(filter::IFilter* filter)
+filter::Model* copyFilter(filter::Model* filter)
 {
 	if (filter == nullptr) return nullptr;
-	filter::IFilter* nFilter = RegisterTable::getInstance().newObjectInstance(filter->getConstructorName());
+	filter::Model* nFilter = RegisterTable::getInstance().newObjectInstance(filter->getConstructorName());
 	nFilter->setName(filter->getName());
 	nFilter->setLevel(filter->getLevel());
 
@@ -32,18 +34,19 @@ filter::IFilter* copyFilter(filter::IFilter* filter)
 	return nFilter;
 }
 
-filter::IFilter* copyAlgorithms(filter::IFilter* root)
+filter::Model* copyAlgorithms(filter::Model* root)
 {
 	if (root == nullptr) return nullptr;
-	filter::IFilter* newRoot = copyFilter(root);
+	filter::Model* newRoot = copyFilter(root);
 
 	filter::IFilter* copyParent;
-	filter::IFilter* parent = root;
+	filter::IFilter* parent = static_cast<filter::IFilter*>(root);
+	
 	std::stack<filter::IFilter*> heap;
 	std::stack<filter::IFilter*> copyHeap;
 
-	heap.push(root);
-	copyHeap.push(newRoot);
+	heap.push(parent);
+	copyHeap.push((filter::IFilter*)newRoot);
 
 	while (!heap.empty())
 	{
@@ -54,11 +57,11 @@ filter::IFilter* copyAlgorithms(filter::IFilter* root)
 
 		for (auto childMap : parent->getChildrens())
 		{
-			filter::IFilter* copyChild = copyFilter(childMap.second);
+			filter::IFilter* copyChild = static_cast<filter::IFilter*>(copyFilter(childMap.second));
 			copyChild->addDependencies(copyParent);
 			if (! childMap.second->getChildrens().empty())
 			{
-				heap.push(childMap.second);
+				heap.push(static_cast<filter::IFilter*>(childMap.second));
 				copyHeap.push(copyChild);
 			}
 			
@@ -69,16 +72,16 @@ filter::IFilter* copyAlgorithms(filter::IFilter* root)
 	return newRoot;
 }
 
-HipeStatus freeAlgorithms(filter::IFilter* root)
+HipeStatus freeAlgorithms(filter::Model* root)
 {
 	if (root == nullptr) return OK;
 	
-	filter::IFilter* parent = root;
-	std::stack<filter::IFilter*> heap;
-	std::vector<filter::IFilter*> vectorFilter;
+	filter::Model* parent = static_cast<filter::IFilter*>(root);
+	std::stack<filter::Model*> heap;
+	std::vector<filter::Model*> vectorFilter;
 
-	heap.push(root);
-	vectorFilter.push_back(root);
+	heap.push(parent);
+	vectorFilter.push_back(parent);
 
 	while (!heap.empty())
 	{

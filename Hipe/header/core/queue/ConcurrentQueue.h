@@ -42,6 +42,17 @@ namespace core
 				return the_queue.empty();
 			}
 
+			size_t size() 
+			{
+				boost::mutex::scoped_lock lock(the_mutex);
+				return the_queue.size();
+			}
+
+			bool pop(Data& popped_value)
+			{
+				return try_pop(popped_value);
+			}
+
 			bool try_pop(Data& popped_value)
 			{
 				boost::mutex::scoped_lock lock(the_mutex);

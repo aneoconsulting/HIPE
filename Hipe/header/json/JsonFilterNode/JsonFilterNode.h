@@ -1,13 +1,13 @@
 #pragma once
 #include <boost/property_tree/ptree.hpp>
-#include <filter/IFilter.h>
+#include <filter/Model.h>
 #include <filter/tools/RegisterTable.h>
 
 namespace json
 {
 	class JsonFilterNode
 	{
-		filter::IFilter* _filter;
+		filter::Model* _filter;
 
 		boost::property_tree::ptree& _params;
 	public:
@@ -31,7 +31,7 @@ namespace json
 		}
 
 
-		JsonFilterNode(filter::IFilter* filter, boost::property_tree::ptree& params) : _filter(filter), _params(params)
+		JsonFilterNode(filter::Model* filter, boost::property_tree::ptree& params) : _filter(filter), _params(params)
 		{
 		}
 
@@ -48,7 +48,7 @@ namespace json
 			}
 		}
 
-		filter::IFilter* getFilter()
+		filter::Model* getFilter()
 		{
 			return _filter;
 		}

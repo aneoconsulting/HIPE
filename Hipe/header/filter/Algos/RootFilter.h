@@ -3,7 +3,7 @@
 #include <filter/IFilter.h>
 #include <filter/tools/RegisterTable.h>
 #include <core/HipeException.h>
-#include "data/ConnexData.h"
+#include <filter/data/ConnexData.h>
 
 
 namespace filter {
@@ -25,14 +25,14 @@ namespace filter {
 				
 				return HipeStatus::OK;
 			}
-
-			virtual RootFilter &operator<<(data::Data & element)
+			
+			RootFilter &operator<<(data::Data & element)
 			{
-				_connexData.push(element);
+				_connexData.push(element); //ICI COPY constructor data bug with fields
 				return *this;
 			}
 
-			virtual RootFilter &operator<<(cv::Mat & element)
+			RootFilter &operator<<(cv::Mat & element)
 			{
 				data::ImageData image(element);
 				_connexData.push(image);

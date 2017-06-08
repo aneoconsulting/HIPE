@@ -75,6 +75,15 @@ namespace filter {
 
 				return (Array_const()[0].empty());
 			}
+
+			ImageData& operator=(const ImageData& left)
+			{
+				_This = left._This;
+				_type = left._type;
+				_decorate = left._decorate;
+
+				return *this;
+			}
 		};
 	}
 }

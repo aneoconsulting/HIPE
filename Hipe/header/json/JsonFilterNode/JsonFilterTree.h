@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 #include <map>
-#include <filter/IFilter.h>
-#include "json/JsonFilterNode/JsonFilterNode.h"
+#include <filter/Model.h>
+#include <json/JsonFilterNode/JsonFilterNode.h>
 #include <core/HipeException.h>
 
 
@@ -10,7 +10,7 @@ namespace json
 {
 	class JsonFilterTree : public filter::Model
 	{
-		std::map<std::string, filter::IFilter *> _filterMap;
+		std::map<std::string, filter::Model *> _filterMap;
 
 		//Check if the fully nodes are loaded;
 		//If not no dependencies node computation can be accomplish
@@ -43,7 +43,7 @@ namespace json
 		/// 
 		void add(JsonFilterNode& filterNode)
 		{
-			filter::IFilter* filter = filterNode.getFilter();
+			filter::Model* filter = filterNode.getFilter();
 			std::string name = filter->getName();
 
 			if (_filterMap.find(name) != _filterMap.end())
@@ -71,12 +71,11 @@ namespace json
 
 			for (auto& it : _filterMap)
 			{
-				filter::IFilter* filterNode = it.second;
+				filter::Model* filterNode = it.second;
 				const std::string name = it.first;
 
 				for (auto& parent : filterNode->getParents())
 				{
-					//_filterMap[parent.first]->addChildDependencies(filterNode);
 					if (_filterMap[parent.first] == nullptr)
 						throw HipeException("No node found with name " + parent.first);
 
@@ -107,8 +106,8 @@ namespace json
 			}
 		}
 
-		//Find the 
-		filter::IFilter * getRootNode()
+		//Find the root
+		filter::Model* getRootNode()
 		{
 			if (isFreezed == false) throw HipeException("Cannot get RootNode without dependencies computation of tree");
 
@@ -121,6 +120,55 @@ namespace json
 			throw HipeException("Unkown error. This code shouldn't happen");
 		}
 
+		void addDependencies(Model* filter) override
+		{
+		}
+
+		void addChildDependencies(Model* filter) override
+		{
+		}
+
+		void addDependenciesName(std::string filter) override
+		{
+		}
+
+		void addChildDependenciesName(std::string filter) override
+		{
+		}
+
+		std::map<std::string, Model*> getParents() const override
+		{
+			return std::map<std::string, Model*>();
+		}
+
+		std::map<std::string, Model*> getChildrens() const override
+		{
+			return std::map<std::string, Model*>();
+		}
+
+		Model* getRootFilter() override
+		{
+			return nullptr;
+		}
+
+		HipeStatus process() override
+		{
+			return OK;
+		}
+
+		Model& operator<<(filter::data::Data& element) override
+		{
+			return *this;
+		}
+
+		Model& operator<<(cv::Mat& element) override
+		{
+			return *this;
+		}
+
+		filter::data::ConnexDataBase& getConnector() override
+		{
+			throw HipeException("Cannot call method getConnector from the class JsonFilter");
+		}
 	};
 }
-

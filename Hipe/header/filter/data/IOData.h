@@ -37,7 +37,7 @@ namespace filter
 				else _decorate = false;
 			}
 
-
+		public:
 			virtual ~Data()
 			{
 			}
@@ -136,6 +136,7 @@ namespace filter
 			{
 				static_cast<const Derived&>(*(Base::_This)).copyTo(static_cast<Derived&>(left));
 			}
+
 			virtual bool empty() const
 			{
 

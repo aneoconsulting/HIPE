@@ -27,6 +27,8 @@ namespace filter
 			ImageArrayData(const data::ImageArrayData &right) : IOData(right._type)
 			{
 				Data::registerInstance(right._This);
+				_array.resize(0);
+				_decorate = true;
 			}
 
 			std::vector<cv::Mat> & Array()
@@ -61,6 +63,15 @@ namespace filter
 			inline bool empty() const
 			{
 				return Array_const().empty();
+			}
+
+			ImageArrayData& operator=(const ImageArrayData& left)
+			{
+				_This = left._This;
+				_type = left._type;
+				_decorate = left._decorate;
+
+				return *this;
 			}
 		};
 	}

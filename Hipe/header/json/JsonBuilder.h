@@ -1,5 +1,4 @@
 #pragma once
-#include <filter/IFilter.h>
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <filter/tools/RegisterTable.h>
 #include <json/JsonFilterNode/JsonFilterNode.h>

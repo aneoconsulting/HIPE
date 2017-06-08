@@ -31,7 +31,7 @@ namespace json
 			boost::property_tree::ptree child = element->second;
 			std::string type = element->first;
 			std::string name = child.get<std::string>("name");
-			filter::IFilter * res = (filter::IFilter *)newFilter(type);
+			filter::Model * res = static_cast<filter::Model *>(newFilter(type));
 			res->setName(name);
 			JsonFilterNode json_filter_node = JsonFilterNode(res, child);
 			json_filter_node.applyClassParameter();

@@ -5,6 +5,7 @@
 #include <opencv2/core/mat.hpp>
 #include "core/HipeException.h"
 #include "IOData.h"
+#include <core/queue/ConcurrentQueue.h>
 
 namespace filter
 {
@@ -24,21 +25,23 @@ namespace filter
 		class DataPort : public DataPortBase
 		{
 		public:
-			std::queue<D> data;
+			core::queue::ConcurrentQueue<D> data;
 
 			D get()
 			{
-				return data.front();
+				return pop();
 			}
 
 			D  pop()
 			{
-				D res = data.front();
-				data.pop();
-				return res;
+				D value;
+				if (data.pop(value) == false)
+					throw HipeException("No more data to pop from the dataPort");
+
+				return value;
 			}
 
-			void push(D dataIn)
+			void push(D & dataIn)
 			{
 				data.push(dataIn);
 			}
@@ -175,7 +178,7 @@ namespace filter
 				
 			}
 
-			void broacast(Dout dataOutput)
+			void broacast(Dout & dataOutput)
 			{
 		
 				for (auto& childPair : portOutput)
@@ -285,7 +288,7 @@ namespace filter
 
 			}
 
-			void push(Din dataOutput)
+			void push(Din & dataOutput)
 			{
 
 				ConnexData<Din, Din>::broacast(dataOutput);

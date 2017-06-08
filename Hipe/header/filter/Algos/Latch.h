@@ -1,7 +1,7 @@
 #pragma once
 #include <filter/tools/RegisterClass.h>
 #include <filter/IFilter.h>
-#include <core/HipeStatus.h>"
+#include <core/HipeStatus.h>
 #include <filter/data/ImageData.h>
 #include <filter/data/PatternData.h>
 #include <opencv2/xfeatures2d.hpp>

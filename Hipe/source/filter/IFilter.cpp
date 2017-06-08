@@ -34,8 +34,10 @@ void filter::IFilter::getNextChildren()
 	throw "Not yet implemented Need Iteraror as state and I don't like it";
 }
 
-void filter::IFilter::addDependencies(IFilter* parent)
+void filter::IFilter::addDependencies(Model* _parent)
 {
+	IFilter *parent = static_cast<IFilter *>(_parent);
+
 	if (parent->_childFilters.find(this->_name) != parent->_childFilters.end() && (parent->_childFilters[this->_name] != nullptr))
 	{
 		std::string errorMessage = std::string("Filter named ");
@@ -60,8 +62,10 @@ void filter::IFilter::addDependencies(IFilter* parent)
 
 }
 
-void filter::IFilter::addChildDependencies(IFilter* child)
+void filter::IFilter::addChildDependencies(Model* _child)
 {
+	IFilter* child = static_cast<IFilter *>(_child);
+
 	if (_childFilters.find(child->_name) != _childFilters.end() && (_childFilters[child->_name] != nullptr))
 	{
 		std::string errorMessage = std::string("Filter named ");

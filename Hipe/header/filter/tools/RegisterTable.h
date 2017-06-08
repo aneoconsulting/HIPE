@@ -14,12 +14,7 @@
 #include <filter/data/IOData.h>
 #include <filter/data/IODataType.h>
 #include <filter/filter_export.h>
-
-
-namespace filter
-{
-	class IFilter;
-}
+#include <filter/Model.h>
 
 
 /**
@@ -28,14 +23,14 @@ namespace filter
 class FILTER_EXPORT RegisterTable
 {
 	// Here is the core of the solution: this map of lambdas does all the "magic"
-	std::map<std::string, std::function<filter::IFilter*()>> functionTable;
+	std::map<std::string, std::function<filter::Model*()>> functionTable;
 
 	std::map<std::string, std::map<std::string, core::InvokerBase>> setterTable;
 
 
 	std::map<filter::data::IODataType, std::map<std::string, core::InvokerBase>> _IODataTable;
 
-	std::map<filter::IFilter *, std::string> reverse;
+	std::map<filter::Model *, std::string> reverse;
 
 
 public:
@@ -76,7 +71,7 @@ public:
 	 * \param constructor the method to delegate a new operator
 	 * \return the class name to be called outside function
 	 */
-	const std::string addClass(std::string className, std::function<filter::IFilter*()> constructor)
+	const std::string addClass(std::string className, std::function<filter::Model*()> constructor)
 	{
 		if (functionTable[className] == nullptr)
 			functionTable[className] = constructor;
@@ -140,7 +135,7 @@ public:
 	}
 
 	template <typename...Args>
-	void invoke(filter::IFilter* instance, std::string functionName, Args ...args)
+	void invoke(filter::Model* instance, std::string functionName, Args ...args)
 	{
 		std::string typeStr = functionName;
 
@@ -155,9 +150,9 @@ public:
 			throw HipeException("TODO : Don't know how to manage getter method");
 	}
 
-	filter::IFilter* newObjectInstance(std::string className, bool managed = true)
+	filter::Model* newObjectInstance(std::string className, bool managed = true)
 	{
-		std::function<filter::IFilter*()> function = functionTable[className];
+		std::function<filter::Model*()> function = functionTable[className];
 
 		if (!function)
 		{
@@ -167,7 +162,7 @@ public:
 			throw HipeException(build_string.str());
 		}
 
-		filter::IFilter* ret = functionTable[className]();
+		filter::Model* ret = functionTable[className]();
 
 		//if (managed)
 		reverse[ret] = className;
@@ -184,8 +179,8 @@ FILTER_EXPORT const std::vector<std::string> getTypes(std::string className);
 
 FILTER_EXPORT const std::vector<std::string> getParameterNames(std::string className);
 
-FILTER_EXPORT filter::IFilter* copyFilter(filter::IFilter* filter);
+FILTER_EXPORT filter::Model* copyFilter(filter::Model* filter);
 
-FILTER_EXPORT filter::IFilter* copyAlgorithms(filter::IFilter* root);
+FILTER_EXPORT filter::Model* copyAlgorithms(filter::Model* root);
 
-FILTER_EXPORT HipeStatus freeAlgorithms(filter::IFilter* root);
+FILTER_EXPORT HipeStatus freeAlgorithms(filter::Model* root);
