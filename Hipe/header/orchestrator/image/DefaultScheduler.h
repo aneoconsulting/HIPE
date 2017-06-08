@@ -186,8 +186,7 @@ namespace orchestrator
 						cleanDataChild(cpyFilterRoot);
 		
 						//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
-						int error = 0;
-						for (int layer = 1; layer < matrixLayer.size() - 1; layer++)
+						for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
 						{
 							for (auto& filter : matrixLayer[layer])
 							{
@@ -195,6 +194,15 @@ namespace orchestrator
 								{
 									filter->process();
 								}
+								catch (HipeException& e) {
+									std::cerr << "HipeException error during the " << filter->getName() << " execution. Msg : " << e.what() << ". Please contact us" << std::endl;
+									cleanDataChild(cpyFilterRoot);
+									disposeChild(cpyFilterRoot);
+									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+										throw HipeException("Cannot free properly the Streaming videocapture");
+									return;
+								}
+		
 								catch (std::exception& e) {
 									std::cerr << "Unkown error during the "<< filter->getName() << " execution. Msg : " << e.what() << ". Please contact us"  << std::endl;
 									cleanDataChild(cpyFilterRoot);
@@ -204,14 +212,6 @@ namespace orchestrator
 									return;
 								}
 
-								catch (HipeException& e) {
-									std::cerr << "HipeException error during the " << filter->getName() << " execution. Msg : " << e.what() << ". Please contact us" << std::endl;
-									cleanDataChild(cpyFilterRoot);
-									disposeChild(cpyFilterRoot);
-									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-										throw HipeException("Cannot free properly the Streaming videocapture");
-									return;
-								}
 							}
 						}
 
@@ -273,12 +273,12 @@ namespace orchestrator
 
 				for (filter::Model * filter : matrixLayer[0])
 				{
-					*(root) << inputData;	
+					*(filter) << inputData;	
 				}
 
 				//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
 				std::shared_ptr<filter::data::Data> inter_output;
-				for (int layer = 1; layer < matrixLayer.size() - 1; layer++)
+				for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
 				{
 					for (auto& filter : matrixLayer[layer])
 					{

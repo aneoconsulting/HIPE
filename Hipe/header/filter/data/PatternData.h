@@ -258,6 +258,7 @@ namespace filter
 
 					return static_cast<Data>(*this);
 				}
+				return Data();
 			}
 
 			inline bool empty() const

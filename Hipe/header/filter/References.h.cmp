@@ -5,6 +5,7 @@
 #include <filter/Algos/ShowImage.h>
 #include <filter/Algos/RotateImage.h>
 #include <filter/Algos/RootFilter.h>
+#include <filter/Algos/Surf.h>
 #include <filter/Algos/Resize.h>
 #include <filter/Algos/Cropper.h>
 #include <filter/Algos/ResizePattern.h>
