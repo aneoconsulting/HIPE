@@ -10,7 +10,7 @@ namespace filter {
 		{
 		public:
 			using IOData::IOData;
-
+			
 		protected:
 			ImageData(IOData::_Protection priv) : IOData(IMGF)
 			{
@@ -76,12 +76,12 @@ namespace filter {
 				return (Array_const()[0].empty());
 			}
 
-			ImageData& operator=(const ImageData& left)
+			ImageData& operator=(const Data& left)
 			{
-				_This = left._This;
-				_type = left._type;
-				_decorate = left._decorate;
-
+				Data::registerInstance(left);
+				_type = left.getType();
+				_decorate = left.getDecorate();
+				
 				return *this;
 			}
 		};

@@ -151,7 +151,7 @@ namespace filter
 
 			Din get()
 			{
-				Din in = static_cast<Din&>(port.pop());
+				Din in = port.pop();
 				return in;
 			}
 
@@ -160,7 +160,8 @@ namespace filter
 			{
 				if (!port.empty())
 				{
-					Din in = static_cast<Din&>(port.pop());
+					const Data & popped = port.pop();
+					Din in = popped;
 					if (_way == INOUT)
 					{
 						broacast(in);

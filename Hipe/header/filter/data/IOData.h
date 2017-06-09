@@ -42,9 +42,21 @@ namespace filter
 			{
 			}
 
+			inline void registerInstance(const Data & childInstance)
+			{
+				if (childInstance.getDecorate() == false)
+					throw HipeException("Cannot accept reference to object as This");
+				else
+					_This = childInstance._This;
+				
+				_decorate = true;
+				if (_This) _This->_decorate = false;
+				else _decorate = false;
+			}
+
 			inline void registerInstance(Data * childInstance)
 			{
-				_This.reset(childInstance);
+				_This = childInstance->_This;
 				
 				_decorate = true;
 				if (_This) _This->_decorate = false;
@@ -65,6 +77,11 @@ namespace filter
 			IODataType getType() const
 			{
 				return _type;
+			}
+			
+			bool getDecorate() const
+			{
+				return _decorate;
 			}
 
 			void copyTypeTo(Data& left)
@@ -124,6 +141,15 @@ namespace filter
 			};
 
 		public:
+			IOData() : Base()
+			{
+			}
+
+			IOData(const Base& base) : Base(base)
+			{
+			}
+
+			
 			virtual ~IOData()
 			{
 			}
@@ -166,7 +192,15 @@ namespace filter
 
 				return static_cast<Derived &>(*((Base::_This).get()));
 			}
-			
+
+			inline Derived & operator=(const Data& left)
+			{
+				Data::registerInstance(left);
+				Data::_type = left.getType();
+				Data::_decorate = left.getDecorate();
+				
+				return *this;
+			}
 
 		/*	IOData& operator<<(const IOData& left)
 			{

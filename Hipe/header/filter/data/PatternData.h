@@ -46,6 +46,9 @@ namespace filter
 
 		
 			using VideoData::VideoData;
+			PatternData(const Data& base) : VideoData(base), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
+			{
+			}
 
 		
 			/**
@@ -268,6 +271,16 @@ namespace filter
 
 				return res.empty();
 			}
+
+			PatternData& operator=(const Data& left)
+			{
+				Data::registerInstance(left);
+				_type = left.getType();
+				_decorate = left.getDecorate();
+				
+				return *this;
+			}
+
 
 		};
 	}
