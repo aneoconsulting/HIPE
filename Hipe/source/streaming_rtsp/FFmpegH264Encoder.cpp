@@ -152,14 +152,14 @@ namespace MESAI
 			return;
 		}
 
-		//ret = avpicture_alloc(&m_src_picture, AV_PIX_FMT_BGR24, c->width, c->height);
-		/*m_src_picture = av_frame_alloc();
+		//ret = avpicture_alloc((AVPicture*)&m_src_picture, AV_PIX_FMT_BGR24, m_AVIMOV_WIDTH, m_AVIMOV_HEIGHT, );
+		m_src_picture = av_frame_alloc();
 		m_src_picture->format = c->pix_fmt;
 		ret = av_image_alloc(m_src_picture->data, m_src_picture->linesize, c->width, c->height, AV_PIX_FMT_BGR24, 24);
 
 		if (ret < 0) {
 			return;
-		}*/
+		}
 
 		bufferSize = ret;
 		
@@ -202,7 +202,7 @@ namespace MESAI
 
 	void FFmpegH264Encoder::WriteFrame(cv::Mat & RGBFrame )
 	{	
-		//fill_data(m_src_picture->data[0], bufferSize, m_src_picture->linesize[0], RGBFrame);
+		fill_data(m_src_picture->data[0], bufferSize, m_src_picture->linesize[0], RGBFrame);
 
 		//memcpy(m_src_picture->data[0], RGBFrame.data, bufferSize);
 		int stride = RGBFrame.cols * 3;
