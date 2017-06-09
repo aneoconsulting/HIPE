@@ -56,8 +56,11 @@ namespace filter
 
 			inline void registerInstance(Data * childInstance)
 			{
-				_This = childInstance->_This;
-				
+				if (childInstance->getDecorate() == true)
+					_This = childInstance->_This;
+				else
+					_This.reset(childInstance);
+
 				_decorate = true;
 				if (_This) _This->_decorate = false;
 				else _decorate = false;
@@ -199,7 +202,7 @@ namespace filter
 				Data::_type = left.getType();
 				Data::_decorate = left.getDecorate();
 				
-				return *this;
+				return This();
 			}
 
 		/*	IOData& operator<<(const IOData& left)
