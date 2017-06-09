@@ -26,8 +26,7 @@ namespace json
 
 			if (orchestrator.empty())
 			{
-				boost::property_tree::ptree & orchestratorNode = treeRequest.get_child("orchestrator");
-				//orchestrator::OrchestratorFactory::getInstance()->addModel(json_filter_tree->getName(), json_filter_tree, orchestrator);
+				//boost::property_tree::ptree & orchestratorNode = treeRequest.get_child("orchestrator");
 				throw HipeException("Do we really want to deserialize an orchestrator object ?");
 
 			}

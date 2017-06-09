@@ -97,7 +97,7 @@ namespace filter
 			else
 			{
 				std::cout << "Corners are : ";
-				for (auto i = 0; i < userData.areaInfos.size(); i++)
+				for (unsigned int i = 0; i < userData.areaInfos.size(); i++)
 				{
 					std::cout << "Point : " << userData.areaInfos[i] << std::endl;
 				}

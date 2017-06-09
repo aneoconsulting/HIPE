@@ -103,9 +103,9 @@ namespace filter
 		class CopyObject
 		{
 		public:
-			static MyClass copy(MyClass left)
+			static MyClass copy(MyClass & left)
 			{
-				MyClass instance = left;
+				MyClass & instance = left;
 				//TODO For Opencv operator= isn't a copy specialize the copy to avoid the reference
 				// and call left.copyTo(instance);
 
@@ -190,7 +190,8 @@ namespace filter
 					*/
 					if (portOutput.size() > 1 && child->getWay() == INOUT)
 					{
-						portOutput[child]->push(CopyObject<Dout>::copy(dataOutput));
+						Dout cpy = CopyObject<Dout>::copy(dataOutput);
+						portOutput[child]->push(cpy);
 					}
 					else
 					{
