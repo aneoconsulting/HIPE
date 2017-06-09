@@ -299,7 +299,7 @@ namespace orchestrator
 					if (filter->getConstructorName().find("ResultFilter") != std::string::npos)
 					{
 						filter::data::ConnexDataBase & outRes = filter->getConnector();
-						outputData = (static_cast<filter::data::DataPort<filter::data::Data> &>(outRes.getPort())).pop();
+						outputData = (static_cast<filter::data::DataPort &>(outRes.getPort())).pop();
 						break;
 					}
 				}

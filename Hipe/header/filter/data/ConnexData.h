@@ -6,6 +6,7 @@
 #include "core/HipeException.h"
 #include "IOData.h"
 #include <core/queue/ConcurrentQueue.h>
+#include <filter/data/IOData.h>
 
 namespace filter
 {
@@ -21,27 +22,26 @@ namespace filter
 		 * \brief Data port contains the data to garentee the transition with all Ifilter and IModel
 		 * \tparam D the Data type to transit between 2 and more connexData
 		 */
-		template <class D>
 		class DataPort : public DataPortBase
 		{
 		public:
-			core::queue::ConcurrentQueue<D> data;
+			core::queue::ConcurrentQueue<Data> data;
 
-			D get()
+			Data get()
 			{
 				return pop();
 			}
 
-			D  pop()
+			Data  pop()
 			{
-				D value;
+				Data value;
 				if (data.pop(value) == false)
 					throw HipeException("No more data to pop from the dataPort");
 
 				return value;
 			}
 
-			void push(D & dataIn)
+			void push(Data & dataIn)
 			{
 				data.push(dataIn);
 			}
@@ -127,14 +127,14 @@ namespace filter
 		{
 		public:
 			
-			DataPort<Din> port;
+			DataPort port;
 
 			virtual DataPortBase &getPort()
 			{
 				return port;
 			}
 
-			std::map<ConnexDataBase *, DataPort<Dout> *> portOutput;
+			std::map<ConnexDataBase *, DataPort *> portOutput;
 
 			ConnexData() : ConnexDataBase(INDATA)
 			{
@@ -151,7 +151,8 @@ namespace filter
 
 			Din get()
 			{
-				return port.get();
+				Din in = static_cast<Din&>(port.pop());
+				return in;
 			}
 
 
@@ -159,7 +160,7 @@ namespace filter
 			{
 				if (!port.empty())
 				{
-					Din in = port.pop();
+					Din in = static_cast<Din&>(port.pop());
 					if (_way == INOUT)
 					{
 						broacast(in);
@@ -242,7 +243,7 @@ namespace filter
 			
 			ConnexData<Din, Dout> & operator<<(ConnexDataBase &left)
 			{
-				portOutput[&left] = static_cast<DataPort<Dout> *>(&(left.getPort()));
+				portOutput[&left] = static_cast<DataPort *>(&(left.getPort()));
 
 				return *this;
 			}
@@ -350,7 +351,7 @@ namespace filter
 			{
 				if (!ConnexData<Dout, Dout>::port.empty())
 				{
-					Dout in = ConnexData<Dout, Dout>::port.pop();
+					Dout in = ConnexData<Dout, Dout>::pop();
 					return in;
 				}
 
