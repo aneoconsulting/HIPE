@@ -45,9 +45,12 @@ namespace filter
 			{
 				if (!This()._capture.isOpened())
 				{
+
 					if (std::isdigit(This()._filePath.string().c_str()[0]))
 					{
 						This()._capture.open(atoi(This()._filePath.string().c_str()));
+						This()._capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+						This()._capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
 					} 
 					else
 						This()._capture.open(This()._filePath.string());
@@ -66,6 +69,7 @@ namespace filter
 					return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
 				}
 				
+
 				cv::Mat frame;
 				
 				This()._capture.read(frame);
