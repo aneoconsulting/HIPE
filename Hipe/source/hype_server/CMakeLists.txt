@@ -25,6 +25,13 @@ file(
 ##Include OpenCV 
 find_package( OpenCV REQUIRED )
 
+if (USE_DLIB)
+  include("${CMAKE_SOURCE_DIR}/dlib_config.cmake")
+  set(dlib_DIR "${DLIB_DIR}/lib/cmake/dlib/")
+
+  find_package( dlib REQUIRED )
+endif()
+
 
 
 ##hype_server LIBRARY
@@ -74,6 +81,10 @@ target_link_libraries(hype_server http)
 target_link_libraries(hype_server json)
 target_link_libraries(hype_server orchestrator)
 target_link_libraries(hype_server streaming)
+if (USE_DLIB)
+  target_link_libraries(hype_server dlib::dlib_shared)
+endif()
+
 message(STATUS "Library ffmpeg to include ${FFmpeg_LIBRARIES}") 
 message(STATUS "Library x264 to include ${x264_LIBRARIES}") 
 message(STATUS "Library Live to include ${Live_LIBRARIES}") 
@@ -85,6 +96,10 @@ target_link_libraries(hype_server ${Live_LIBRARIES})
 target_link_libraries(hype_server ${OpenCV_LIBS})
 target_link_libraries(hype_server ${Boost_LIBRARIES})
 target_link_libraries(hype_server ${CMAKE_THREAD_LIBS_INIT})
+
+if (USE_GPERFTOOLS)
+  target_link_libraries(hype_server ${GPERFTOOLS_DIR}/lib/libtcmalloc.a /usr/lib/aarch64-linux-gnu/libunwind.a /usr/lib/aarch64-linux-gnu/liblzma.a)
+endif()
 
 
 

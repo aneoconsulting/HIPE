@@ -141,21 +141,27 @@ namespace MESAI
 		//ret = avpicture_alloc(&m_dst_picture, c->pix_fmt, c->width, c->height);
 		m_dst_picture = av_frame_alloc();
 		m_dst_picture->format = c->pix_fmt;
-		m_dst_picture->data[0] = nullptr;
-        m_dst_picture->linesize[0] = -1;
+		//m_dst_picture->data[0] = nullptr;
+		m_dst_picture->linesize[0] = -1;
 		m_dst_picture->pts = 0;
-        m_dst_picture->width = m_c->width;
-        m_dst_picture->height = m_c->height;
+		m_dst_picture->width = m_c->width;
+		m_dst_picture->height = m_c->height;
 
-		ret = av_image_alloc(m_dst_picture->data, m_dst_picture->linesize, m_dst_picture->width, m_dst_picture->height, (AVPixelFormat)m_dst_picture->format, 32);
+		int size_dst_picture =  avpicture_get_size(AV_PIX_FMT_YUV420P, m_dst_picture->width, m_dst_picture->height);
+		ret = avpicture_fill((AVPicture*)m_dst_picture, (uint8_t *)av_malloc(size_dst_picture), AV_PIX_FMT_YUV420P, m_dst_picture->width, m_dst_picture->height); 
+		//ret = av_image_alloc(m_dst_picture->data, m_dst_picture->linesize, m_dst_picture->width, m_dst_picture->height, (AVPixelFormat)m_dst_picture->format, 64);
+		
 		if (ret < 0) {
 			return;
 		}
 
 		//ret = avpicture_alloc((AVPicture*)&m_src_picture, AV_PIX_FMT_BGR24, m_AVIMOV_WIDTH, m_AVIMOV_HEIGHT, );
 		m_src_picture = av_frame_alloc();
-		m_src_picture->format = c->pix_fmt;
-		ret = av_image_alloc(m_src_picture->data, m_src_picture->linesize, c->width, c->height, AV_PIX_FMT_BGR24, 24);
+		m_src_picture->format = AV_PIX_FMT_BGR24;
+		int size_src_picture =  avpicture_get_size(AV_PIX_FMT_BGR24, m_AVIMOV_WIDTH, m_AVIMOV_HEIGHT);
+		ret = avpicture_fill((AVPicture*)m_src_picture, (uint8_t *)av_malloc(size_src_picture), AV_PIX_FMT_BGR24, m_AVIMOV_WIDTH, m_AVIMOV_HEIGHT); 
+		
+		//ret = av_image_alloc(m_src_picture->data, m_src_picture->linesize,  m_AVIMOV_WIDTH, m_AVIMOV_HEIGHT, AV_PIX_FMT_BGR24, 64);
 
 		if (ret < 0) {
 			return;
@@ -180,7 +186,7 @@ namespace MESAI
 
 		sws_ctx = sws_getContext(m_AVIMOV_WIDTH, m_AVIMOV_HEIGHT, AV_PIX_FMT_BGR24,
 								 c->width, c->height, AV_PIX_FMT_YUV420P,
-								 SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
+								 SWS_BICUBIC, nullptr, nullptr, nullptr);
 		if (!sws_ctx) {
 			return;
 		}
@@ -208,7 +214,7 @@ namespace MESAI
 		int stride = RGBFrame.cols * 3;
 
 		sws_scale(sws_ctx,
-			&(RGBFrame.data), &stride,
+			  m_src_picture->data, m_src_picture->linesize,
 					0, m_AVIMOV_HEIGHT, m_dst_picture->data, m_dst_picture->linesize);
 		
 

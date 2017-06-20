@@ -29,16 +29,16 @@ namespace filter
 			std::stringstream uri;
 			cv::VideoWriter writer;
 
-			int setenv(const char *name, const char *value, int overwrite)
-			{
-				int errcode = 0;
-				if (!overwrite) {
-					size_t envsize = 0;
-					errcode = getenv_s(&envsize, NULL, 0, name);
-					if (errcode || envsize) return errcode;
-				}
-				return _putenv_s(name, value);
-			}
+			/* int setenv(const char *name, const char *value, int overwrite) */
+			/* { */
+			/* 	int errcode = 0; */
+			/* 	if (!overwrite) { */
+			/* 		size_t envsize = 0; */
+			/* 		errcode = getenv_s(&envsize, NULL, 0, name); */
+			/* 		if (errcode || envsize) return errcode; */
+			/* 	} */
+			/* 	return _putenv_s(name, value); */
+			/* } */
 
 			REGISTER(StreamResultFilter, ())
 			{
@@ -48,14 +48,17 @@ namespace filter
 				fps_avg = 0;
 				nb_frame = 0;
 				
-				setenv("GST_DEBUG", "cat:level...", 1);
+				//setenv("GST_DEBUG", "cat:level...", 1);
 				//uri << "appsrc !videoconvert ! x264enc noise - reduction = 10000 tune = zerolatency byte - stream = true threads = 4 ! mpegtsmux ! udpsink host = localhost port = ";
-				uri << "appsrc ! videoconvert ! x264enc ! rtph264pay config-interval=10 pt=96 ! udpsink host=127.0.0.1 port=";
-			
+				//uri << "appsrc ! videoconvert ! x264enc ! rtph264pay config-interval=10 pt=96 ! udpsink host=127.0.0.1 port=";
+				uri << "appsrc ! videoconvert ! x264enc ! rtph264pay config-interval=10 pt=96 ! udpsink host=192.168.1.255 auto-multicast=true port=";
 				
 			}
 
+			
 			REGISTER_P(int, port);
+
+			REGISTER_P(std::string, cmd);
 
 			~StreamResultFilter()
 			{
@@ -93,7 +96,7 @@ namespace filter
 			}
 		};
 		
-		ADD_CLASS(StreamResultFilter, port);
+		ADD_CLASS(StreamResultFilter, cmd, port);
 
 	}
 }

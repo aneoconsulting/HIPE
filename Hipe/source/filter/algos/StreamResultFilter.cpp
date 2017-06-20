@@ -58,8 +58,16 @@ namespace filter
 			cv::Size size = image_data.getMat().size();
 			if (!writer.isOpened()) {
 				/*cv::Size size = getImageDimension();*/
-				uri << port;
-				writer.open(uri.str(), 0, (double)fps_avg, size, true);
+			  if (cmd == "")
+			  {
+			      uri << port;
+				
+			      writer.open(uri.str(), 0, (double)fps_avg, size, true);
+			  }
+			  else
+			    {
+			      writer.open(cmd, 0, (double)fps_avg, size, true);
+			    }
 			}
 			cv::Mat copy;
 			image_data.getMat().copyTo(copy);

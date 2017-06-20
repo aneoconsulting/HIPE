@@ -219,11 +219,13 @@ namespace orchestrator
 						matrixLayer[matrixLayer.size() - 1][0]->process();
 						res = cpyVideo->newFrame();
 					}
+
 					cleanDataChild(cpyFilterRoot);
 					disposeChild(cpyFilterRoot);
 					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
 						throw HipeException("Cannot free properly the Streaming videocapture");
 				});
+				task.join();
 			}
 
 

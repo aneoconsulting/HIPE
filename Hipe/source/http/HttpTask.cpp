@@ -7,6 +7,11 @@
 #include <filter/data/Composer.h>
 #include <core/HipeException.h>
 
+#ifdef USE_GPERFTOOLS
+#include <gperftools/heap-checker.h>
+#include <assert.h>
+#endif
+
 
 using namespace boost::property_tree;
 using namespace std;
@@ -16,75 +21,90 @@ core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
 
 void http::HttpTask::runTask()
 {
-	try {
-		std::stringstream dataResponse;
+	#ifdef USE_GPERFTOOLS
+	static int iteration_leak=0;
+	HeapLeakChecker heap_checker("HttpTask");
+	#endif
+	{
+		try {
+			std::stringstream dataResponse;
 
 		
-		ptree treeRequest;
-		ptree treeResponse;
-		ptree treeResponseInfo;
+			ptree treeRequest;
+			ptree treeResponse;
+			ptree treeResponseInfo;
 
-		read_json(_request->content, treeRequest);
+			read_json(_request->content, treeRequest);
 
-		HttpTask::logger << "Check if algorithm need to be built";
-		auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);
-		treeResponseInfo.add("Algorithm", dataResponse.str());
-		dataResponse.str(std::string());
+			HttpTask::logger << "Check if algorithm need to be built";
+			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);
+			treeResponseInfo.add("Algorithm", dataResponse.str());
+			dataResponse.str(std::string());
 
-		HttpTask::logger << "Check if orchestrator need to be built";
-		auto orchestrator = json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest);
-		treeResponseInfo.add("Orchestrator", dataResponse.str());
-		dataResponse.str(std::string());
+			HttpTask::logger << "Check if orchestrator need to be built";
+			auto orchestrator = json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest);
+			treeResponseInfo.add("Orchestrator", dataResponse.str());
+			dataResponse.str(std::string());
 
-		stringstream strlog;
-		strlog << "Bind algorithm ";
-		strlog << json_filter_tree->getName() << " to orchestrator " << orchestrator;
+			stringstream strlog;
+			strlog << "Bind algorithm ";
+			strlog << json_filter_tree->getName() << " to orchestrator " << orchestrator;
 
-		HttpTask::logger << strlog.str();
+			HttpTask::logger << strlog.str();
 
-		orchestrator::OrchestratorFactory::getInstance()->bindModel(json_filter_tree->getName(), orchestrator);
-		treeResponseInfo.add("Binding", "OK");
-		treeResponse.add_child("Status", treeResponseInfo);
+			orchestrator::OrchestratorFactory::getInstance()->bindModel(json_filter_tree->getName(), orchestrator);
+			treeResponseInfo.add("Binding", "OK");
+			treeResponse.add_child("Status", treeResponseInfo);
 
-		std::stringstream status;
-		write_json(status, treeResponseInfo);
-		HttpTask::logger << "Response info :\n" << status.str();
+			std::stringstream status;
+			write_json(status, treeResponseInfo);
+			HttpTask::logger << "Response info :\n" << status.str();
 
-		//Check if data is present
-		if (treeRequest.count("data") != 0)
-		{
-			filter::data::Data data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
-			
-			if (data.getType() == filter::data::IODataType::LISTIO)
+			//Check if data is present
+			if (treeRequest.count("data") != 0)
 			{
-				filter::data::ListIOData & list_io_data = static_cast<filter::data::ListIOData&>(data);
+				filter::data::Data data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
+			
+				if (data.getType() == filter::data::IODataType::LISTIO)
+				{
+					filter::data::ListIOData & list_io_data = static_cast<filter::data::ListIOData&>(data);
+				}
+
+				//Start processing Algorithm with data
+				filter::data::Data outputData;
+
+				orchestrator::OrchestratorFactory::getInstance()->process(json_filter_tree->getName(), data, outputData);
+
+				//after the process execution Data should be an OutputData type
+				filter::data::OutputData & output_data = static_cast<filter::data::OutputData &>(outputData);
+			
+			
+				treeResponse.add_child("dataResponse", output_data.resultAsJson());
 			}
-
-			//Start processing Algorithm with data
-			filter::data::Data outputData;
-
-			orchestrator::OrchestratorFactory::getInstance()->process(json_filter_tree->getName(), data, outputData);
-
-			//after the process execution Data should be an OutputData type
-			filter::data::OutputData & output_data = static_cast<filter::data::OutputData &>(outputData);
-			
-			
-			treeResponse.add_child("dataResponse", output_data.resultAsJson());
-		}
-		write_json(dataResponse, treeResponse);
+			write_json(dataResponse, treeResponse);
 		
 
-		*_response << "HTTP/1.1 200 OK\r\n"
-			<< "Content-Type: application/json\r\n"
-			<< "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
-			<< dataResponse.str();
-		HttpTask::logger << "HttpTask response has been sent";
-	}
-	catch (std::exception& e) {
-		*_response << "HTTP/1.1 400 Bad Request\r\nContent-Length: " << strlen(e.what()) << "\r\n\r\n" << e.what();
-	}
+			*_response << "HTTP/1.1 200 OK\r\n"
+					   << "Content-Type: application/json\r\n"
+					   << "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
+					   << dataResponse.str();
+			HttpTask::logger << "HttpTask response has been sent";
+		}
+		catch (std::exception& e) {
+			*_response << "HTTP/1.1 400 Bad Request\r\nContent-Length: " << strlen(e.what()) << "\r\n\r\n" << e.what();
+		}
 
-	catch (HipeException& e) {
-		*_response << "HTTP/1.1 400 Bad Request\r\nContent-Length: " << strlen(e.what()) << "\r\n\r\n" << e.what();
+		catch (HipeException& e) {
+			*_response << "HTTP/1.1 400 Bad Request\r\nContent-Length: " << strlen(e.what()) << "\r\n\r\n" << e.what();
+		}
 	}
+#ifdef USE_GPERFTOOLS
+	iteration_leak++;
+	//if (iteration_leak == 10)
+	{
+		if (!heap_checker.NoLeaks()) assert(NULL == "heap memory leak");
+	}
+			
+#endif
+	
 }

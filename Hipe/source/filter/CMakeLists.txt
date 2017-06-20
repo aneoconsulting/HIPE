@@ -34,6 +34,14 @@ endfunction()
 include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/live_config.cmake")
+
+if (USE_DLIB)
+  include("${CMAKE_SOURCE_DIR}/dlib_config.cmake")
+  set(dlib_DIR "${DLIB_DIR}/lib/cmake/dlib/")
+
+  find_package( dlib REQUIRED )
+endif()
+
 set(Hype_INCLUDEDIR "../../header/")
 
 set(_src_filter_path ${CMAKE_CURRENT_SOURCE_DIR})
@@ -108,6 +116,9 @@ find_package( OpenCV REQUIRED )
 include_directories(filter ${Hype_INCLUDEDIR})
 include_directories(filter ${OpenCV_INCLUDE_DIRS} )
 include_directories(filter ${Live_INCLUDEDIR} )
+include_directories(filter ${dlib_INCLUDE_DIRS} )
+
+
 
 ##filter LIBRARY
 
@@ -172,6 +183,10 @@ target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(filter ${OpenCV_LIBS} )
 target_link_libraries(filter ${Lives_LIBS} )
+if (USE_DLIB)
+  target_link_libraries(filter dlib::dlib_shared )
+endif()
+
 #target_link_libraries(filter ${CUDA_LIB_DIRS}/x64)
 
 #add_dependencies(filter reference)

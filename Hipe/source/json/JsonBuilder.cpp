@@ -47,7 +47,14 @@ namespace json
 			dataResponse << "; ";
 
 		}
-		tree->freeze();
+		try
+		{
+			tree->freeze();
+		}
+		catch (HipeException & e)
+		{
+			throw;
+		}
 		orchestrator::OrchestratorFactory::getInstance()->addModel(algoName, tree);
 		if (tree == nullptr)
 			throw HipeException("fail to build algorithm");

@@ -61,11 +61,9 @@ namespace filter {
 
 			}
 
-			const cv::Mat & getMat()
+			const cv::Mat & getMat() const
 			{
-				if (Array().empty()) This()._array.resize(1);
-
-				return Array()[0];
+				return Array_const()[0];
 				
 			}
 

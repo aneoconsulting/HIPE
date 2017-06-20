@@ -76,6 +76,9 @@ target_link_libraries(unit_test ${Live_LIBRARIES})
 target_link_libraries(unit_test ${OpenCV_LIBS})
 target_link_libraries(unit_test ${Boost_LIBRARIES})
 target_link_libraries(unit_test ${CMAKE_THREAD_LIBS_INIT})
+if (USE_GPERFTOOLS)
+  target_link_libraries(unit_test ${GPERFTOOLS_DIR}/lib/libtcmalloc.a /usr/lib/aarch64-linux-gnu/libunwind.a /usr/lib/aarch64-linux-gnu/liblzma.a)
+endif()
 
 
 enable_testing()
