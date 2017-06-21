@@ -4,7 +4,7 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <filter/data/ImageData.h>
-
+#include <filter/data/SquareCrop.h>
 
 
 namespace filter
