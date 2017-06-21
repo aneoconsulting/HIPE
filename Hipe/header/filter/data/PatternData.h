@@ -15,7 +15,7 @@ namespace filter
 		class PatternData : public VideoData<PatternData>
 		{
 		public:
-			friend  class SqaureCrop;
+			friend  class SquareCrop;
 
 		private:
 			SquareCrop _squareCrop;

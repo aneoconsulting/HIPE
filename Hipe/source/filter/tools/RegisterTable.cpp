@@ -47,6 +47,7 @@ filter::Model* copyAlgorithms(filter::Model* root)
 
 	heap.push(parent);
 	copyHeap.push((filter::IFilter*)newRoot);
+	std::map<std::string, filter::IFilter *> copyChildCache; //To avoid multiple instance of same object with the same name;
 
 	while (!heap.empty())
 	{
@@ -57,8 +58,19 @@ filter::Model* copyAlgorithms(filter::Model* root)
 
 		for (auto childMap : parent->getChildrens())
 		{
-			filter::IFilter* copyChild = static_cast<filter::IFilter*>(copyFilter(childMap.second));
+			filter::IFilter* copyChild = nullptr;
+			if (copyChildCache.find(childMap.second->getName()) != copyChildCache.end())
+			{
+				copyChild = copyChildCache[childMap.second->getName()];
+			}
+			else
+			{
+				copyChild = static_cast<filter::IFilter*>(copyFilter(childMap.second));
+				copyChildCache[childMap.second->getName()] = copyChild;
+				
+			}
 			copyChild->addDependencies(copyParent);
+
 			if (! childMap.second->getChildrens().empty())
 			{
 				heap.push(static_cast<filter::IFilter*>(childMap.second));
@@ -78,10 +90,10 @@ HipeStatus freeAlgorithms(filter::Model* root)
 	
 	filter::Model* parent = static_cast<filter::IFilter*>(root);
 	std::stack<filter::Model*> heap;
-	std::vector<filter::Model*> vectorFilter;
+	std::map<filter::Model*, int> cacheFilter;
 
 	heap.push(parent);
-	vectorFilter.push_back(parent);
+	cacheFilter[parent] = 0;;
 
 	while (!heap.empty())
 	{
@@ -89,18 +101,19 @@ HipeStatus freeAlgorithms(filter::Model* root)
 		heap.pop();
 		for (auto childMap : parent->getChildrens())
 		{
-			vectorFilter.push_back(childMap.second);
+			cacheFilter[childMap.second] = 0;
 			if (!childMap.second->getChildrens().empty())
 			{
 				heap.push(childMap.second);
 			}
 		}
 	}
-	for (auto &filter : vectorFilter)
+	for (auto &filter : cacheFilter)
 	{
-		delete filter;
+		delete filter.first;
 	}
 
+	cacheFilter.clear();
 
 	return OK;
 }

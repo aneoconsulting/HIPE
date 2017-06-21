@@ -81,8 +81,18 @@ target_link_libraries(hype_server http)
 target_link_libraries(hype_server json)
 target_link_libraries(hype_server orchestrator)
 target_link_libraries(hype_server streaming)
+
 if (USE_DLIB)
-  target_link_libraries(hype_server dlib::dlib_shared)
+	if (WIN32)
+	target_link_libraries(hype_server dlib::dlib)
+	
+	#set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
+	#find_package(BLAS REQUIRED)
+	
+	elseif (UNIX)
+	target_link_libraries(hype_server dlib::dlib_shared)
+	endif()
+
 endif()
 
 message(STATUS "Library ffmpeg to include ${FFmpeg_LIBRARIES}") 

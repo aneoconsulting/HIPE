@@ -8,6 +8,7 @@
 #include <streaming/Streaming.h>
 #include <filter/tools/filterMacros.h>
 #include <filter/data/ImageData.h>
+#include <string>
 
 
 namespace filter
@@ -49,8 +50,6 @@ namespace filter
 				nb_frame = 0;
 				
 				//setenv("GST_DEBUG", "cat:level...", 1);
-				//uri << "appsrc !videoconvert ! x264enc noise - reduction = 10000 tune = zerolatency byte - stream = true threads = 4 ! mpegtsmux ! udpsink host = localhost port = ";
-				//uri << "appsrc ! videoconvert ! x264enc ! rtph264pay config-interval=10 pt=96 ! udpsink host=127.0.0.1 port=";
 				uri << "appsrc ! videoconvert ! x264enc ! rtph264pay config-interval=10 pt=96 ! udpsink host=192.168.1.255 auto-multicast=true port=";
 				
 			}

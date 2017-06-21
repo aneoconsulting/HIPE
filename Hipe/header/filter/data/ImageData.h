@@ -61,6 +61,16 @@ namespace filter {
 
 			}
 
+
+			cv::Mat & getMat()
+			{
+				if (Array_const().empty())
+					Array().push_back(cv::Mat(0, 0, 0));
+
+				return Array()[0];
+
+			}
+
 			const cv::Mat & getMat() const
 			{
 				return Array_const()[0];

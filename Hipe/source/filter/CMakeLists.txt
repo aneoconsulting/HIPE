@@ -184,7 +184,17 @@ target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(filter ${OpenCV_LIBS} )
 target_link_libraries(filter ${Lives_LIBS} )
 if (USE_DLIB)
-  target_link_libraries(filter dlib::dlib_shared )
+	if (WIN32)
+	target_link_libraries(filter dlib::dlib)
+	
+	#set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
+	#find_package(BLAS REQUIRED)
+	
+	elseif (UNIX)
+	target_link_libraries(filter dlib::dlib_shared)
+	endif()
+
+  
 endif()
 
 #target_link_libraries(filter ${CUDA_LIB_DIRS}/x64)

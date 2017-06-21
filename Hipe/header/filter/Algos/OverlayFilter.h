@@ -16,7 +16,7 @@ namespace filter
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
 			CONNECTOR(data::Data, data::ImageData);
 
-			REGISTER(OverlayFilter, ()), _connexData(data::INOUT)
+			REGISTER(OverlayFilter, ()), _connexData(data::INDATA)
 			{
 				
 			}
@@ -38,11 +38,17 @@ namespace filter
 					data::Data data1 = _connexData.pop();
 					data::Data data2 = _connexData.pop();
 
-					if (data1.getType() != data::IMGF && data1.getType() != data::TXT_ARR && data1.getType() != data::TXT)
+					if (data1.getType() != data::IMGF && 
+						data1.getType() != data::TXT_ARR && 
+						data1.getType() != data::TXT && 
+						data1.getType() != data::SQR_CROP)
 					{
 						throw HipeException("The Overlay object cant aggregate tan text ATM. Please Develop OverlayFilter");
 					}
-					if (data2.getType() != data::IMGF && data2.getType() != data::TXT_ARR && data2.getType() != data::TXT)
+					if (data2.getType() != data::IMGF &&
+						data2.getType() != data::TXT_ARR &&
+						data2.getType() != data::TXT &&
+						data2.getType() != data::SQR_CROP)
 					{
 						throw HipeException("The Overlay object cant aggregate tan text ATM. Please Develop OverlayFilter");
 					}
@@ -56,7 +62,20 @@ namespace filter
 					if (data2.getType() == data::IMGF)
 						image = static_cast<data::ImageData &>(data1);
 					
-					//TODO
+					if (data1.getType() == data::TXT || data2.getType() == data::TXT_ARR)
+						throw HipeException("Text overlay is not yet implemented");
+
+					data::SquareCrop crops;
+					if (data1.getType() == data::SQR_CROP)
+						crops = static_cast<data::SquareCrop &>(data1);
+					if (data2.getType() == data::SQR_CROP)
+						crops = static_cast<data::SquareCrop &>(data2);
+
+					for (cv::Rect & rect : crops.getSquareCrop())
+					{
+						cv::rectangle(image.getMat(), rect, cv::Scalar(255, 0, 0));
+					}
+					_connexData.push(image);
 				}
 				return OK;
 			}
