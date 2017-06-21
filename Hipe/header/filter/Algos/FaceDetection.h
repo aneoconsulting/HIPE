@@ -84,8 +84,10 @@ namespace filter
 						}
 						data::SquareCrop crop(image, rects);
 
-						if (This->crops.size() == 0)
-							This->crops.push(crop);
+						if (This->crops.size() != 0)
+							This->crops.clear();
+
+						This->crops.push(crop);
 
 
 					}
