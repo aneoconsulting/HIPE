@@ -13,7 +13,7 @@ endif()
 
 
 if (WIN32)
-add_compile_options(/wd4820 /wd4668 /wd4619 /wd4626 /wd5031 /wd4365)
+add_compile_options(/wd4820 /wd4668 /wd4619 /wd4626 /wd5031 /wd4365 /wd4710)
 endif()
 
 if(UNIX)

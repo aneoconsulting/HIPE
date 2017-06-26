@@ -11,11 +11,11 @@ namespace filter
 			{
 				while (This->isStart)
 				{
-					data::PatternData image;
-					if (!This->imagesStack.trypop_until(image, 30))
+					data::PatternData pattern;
+					if (!This->imagesStack.trypop_until(pattern, 30))
 						continue;
 
-					MatchContainer res = This->detectObject(image);
+					MatchContainer res = This->detectObject(pattern);
 			
 
 					if (This->result.size() != 0)
@@ -110,9 +110,13 @@ namespace filter
 
 		HipeStatus Latch::process()
 		{
+			if (!isStart.exchange(true))
+			{
+				startDetectObject();
+			}
 			//outputData.reset(new data::OutputData());
 			data::PatternData patternData = _connexData.pop();
-			if (patternData.crops().getSquareCrop().size() == 0)
+			if (patternData.crops().getSquareCrop().empty())
 			{
 				_connexData.push(patternData.imageRequest());
 				return OK;
@@ -128,11 +132,14 @@ namespace filter
 			
 			MatchContainer img_result;
 			cv::Mat res;
-			if (result.trypop_until(img_result, 30)) // wait 30ms no more
+			if (patternData.imageRequest().getMat().empty() || img_result.inliers2.empty() ||
+				img_result.patternImage.empty() || img_result.inliers1.empty() || img_result.goodMatches.empty())
 			{
-				
-				
-				cv::drawMatches(img_result.patternImage, img_result.inliers1, img_result.requestImage, img_result.inliers2, img_result.goodMatches, res);
+				_connexData.push(patternData.imageRequest());
+			}
+			else if (result.trypop_until(img_result, 30)) // wait 30ms no more
+			{
+				cv::drawMatches(patternData.imageRequest().getMat(), img_result.inliers2, img_result.patternImage, img_result.inliers1, img_result.goodMatches, res);
 				tosend = img_result;
 				_connexData.push(data::ImageData(res));
 			}
@@ -143,24 +150,9 @@ namespace filter
 			else
 			{
 				img_result = tosend; //Use backup because the algorithme is too late
-				cv::drawMatches(img_result.patternImage, img_result.inliers1, patternData.imageRequest().getMat(), img_result.inliers2, img_result.goodMatches, res);
+				cv::drawMatches(patternData.imageRequest().getMat(), img_result.inliers2, img_result.patternImage, img_result.inliers1, img_result.goodMatches, res);
 				_connexData.push(data::ImageData(res));
 			}
-			
-
-			//cv::imwrite("res.png", res);
-
-			//double inlier_ratio = inliers1.size() * 1.0 / matched1.size();
-			/*std::cout << "A-KAZE Matching Results" << std::endl;
-			std::cout << "*******************************" << std::endl;
-			std::cout << "# Keypoints 1:                        \t" << kpts1.size() << std::endl;
-			std::cout << "# Keypoints 2:                        \t" << kpts2.size() << std::endl;
-			std::cout << "# Matches:                            \t" << matched1.size() << std::endl;
-			std::cout << "# Inliers:                            \t" << inliers1.size() << std::endl;
-			std::cout << "# Inliers Ratio:                      \t" << inlier_ratio << std::endl;
-			std::cout << std::endl;*/
-
-
 			
 			return OK;
 		}

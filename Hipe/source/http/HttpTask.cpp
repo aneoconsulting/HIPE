@@ -35,6 +35,27 @@ void http::HttpTask::runTask()
 			ptree treeResponseInfo;
 
 			read_json(_request->content, treeRequest);
+			if (treeRequest.count("command") != 0)
+			{
+				std::string command = treeRequest.get_child("command").get<std::string>("type");
+				if (command.find("kill") != std::string::npos)
+				{
+					orchestrator::OrchestratorFactory::getInstance()->killall();
+				}
+				ptree ltreeResponse;
+				ltreeResponse.add("Status", "Task has been killed");
+				std::stringstream ldataResponse;
+				write_json(ldataResponse, ltreeResponse);
+				*_response << "HTTP/1.1 200 OK\r\n"
+					<< "Access-Control-Allow-Origin: *\r\n"
+					<< "Content-Type: application/json\r\n"
+					<< "Content-Length: " << ldataResponse.str().length() << "\r\n\r\n"
+					<< ldataResponse.str();
+				HttpTask::logger << "HttpTask response has been sent";
+				HttpTask::logger << ldataResponse.str();
+
+				return;
+			}
 
 			HttpTask::logger << "Check if algorithm need to be built";
 			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);
@@ -85,17 +106,35 @@ void http::HttpTask::runTask()
 		
 
 			*_response << "HTTP/1.1 200 OK\r\n"
+						<< "Access-Control-Allow-Origin: *\r\n"
 					   << "Content-Type: application/json\r\n"
 					   << "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
 					   << dataResponse.str();
 			HttpTask::logger << "HttpTask response has been sent";
+			HttpTask::logger << dataResponse.str();
 		}
 		catch (std::exception& e) {
-			*_response << "HTTP/1.1 400 Bad Request\r\nContent-Length: " << strlen(e.what()) << "\r\n\r\n" << e.what();
+			ptree treeResponse;
+			treeResponse.add("Status", e.what());
+			std::stringstream dataResponse;
+			write_json(dataResponse, treeResponse);
+			*_response << "HTTP/1.1 200 OK\r\n"
+			<< "Access-Control-Allow-Origin: *\r\n"
+				<< "Content-Type: application/json\r\n"
+				<< "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
+				<< dataResponse.str();
 		}
 
 		catch (HipeException& e) {
-			*_response << "HTTP/1.1 400 Bad Request\r\nContent-Length: " << strlen(e.what()) << "\r\n\r\n" << e.what();
+			ptree treeResponse;
+			treeResponse.add("Status", e.what());
+			std::stringstream dataResponse;
+			write_json(dataResponse, treeResponse);
+			*_response << "HTTP/1.1 200 OK\r\n"
+				<< "Access-Control-Allow-Origin: *\r\n"
+				<< "Content-Type: application/json\r\n"
+				<< "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
+				<< dataResponse.str();
 		}
 	}
 #ifdef USE_GPERFTOOLS

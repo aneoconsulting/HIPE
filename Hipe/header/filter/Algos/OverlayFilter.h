@@ -60,7 +60,7 @@ namespace filter
 					if (data1.getType() == data::IMGF)
 						image = static_cast<data::ImageData &>(data1);
 					if (data2.getType() == data::IMGF)
-						image = static_cast<data::ImageData &>(data1);
+						image = static_cast<data::ImageData &>(data2);
 					
 					if (data1.getType() == data::TXT || data2.getType() == data::TXT_ARR)
 						throw HipeException("Text overlay is not yet implemented");

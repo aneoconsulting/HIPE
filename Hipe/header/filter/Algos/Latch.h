@@ -41,8 +41,7 @@ namespace filter
 			{
 				hessianThreshold = 100;
 				skip_frame = 2;
-
-				startDetectObject();
+				isStart = false;
 				
 			}
 
@@ -66,6 +65,17 @@ namespace filter
 			void startDetectObject();
 			
 			HipeStatus process();
+
+			virtual void dispose()
+			{
+				isStart = false;
+
+				if (thr_server != nullptr) {
+					thr_server->join();
+					delete thr_server;
+					thr_server = nullptr;
+				}
+			}
 		};
 
 		ADD_CLASS(Latch, inlier_threshold, nn_match_ratio, hessianThreshold);

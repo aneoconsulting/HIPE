@@ -5,9 +5,11 @@
 #include <filter/Algos/Crop.h>
 #include <filter/Algos/Cropper.h>
 #include <filter/Algos/FaceDetection.h>
+#include <filter/Algos/FaceLandmark.h>
 #include <filter/Algos/Gaussian.h>
 #include <filter/Algos/Latch.h>
 #include <filter/Algos/OverlayFilter.h>
+#include <filter/Algos/OverlayMatFilter.h>
 #include <filter/Algos/Resize.h>
 #include <filter/Algos/ResizePattern.h>
 #include <filter/Algos/ResultFilter.h>

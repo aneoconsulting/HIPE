@@ -73,14 +73,15 @@ namespace filter
 				cv::Mat frame;
 				
 				This()._capture.read(frame);
-				
-				while (frame.rows <= 0 && frame.cols <= 0)
+				int retry = 150;
+				while (frame.rows <= 0 && frame.cols <= 0 && retry >= 0)
 				{
 					if (!This()._capture.isOpened() || !This()._capture.grab())
 					{
 						return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
 					}
 					This()._capture.read(frame);
+					retry--;
 				}
 			
 				return static_cast<Data>(ImageData(frame));;
