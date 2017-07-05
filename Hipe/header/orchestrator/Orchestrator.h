@@ -27,6 +27,11 @@ namespace orchestrator
 		{
 			
 		}
+
+		virtual void killall()
+		{
+			
+		}
 	};
 	
 	template<class Conduct>
@@ -58,6 +63,11 @@ namespace orchestrator
 		{
 			
 			_conductor->process(root, data, outPutData);
+		}
+
+		void killall()
+		{
+			_conductor->killall();
 		}
 	};
 
@@ -152,6 +162,12 @@ namespace orchestrator
 			return nullptr;
 		}
 
+		OrchestratorBase* getDefaultOrchestrator()
+		{
+			return _orchestrators.begin()->second;
+			
+		}
+
 		OrchestratorBase* getOrchestrator(const std::string& model_name)
 		{
 			if (_modelStore.find(model_name) != _modelStore.end())
@@ -184,8 +200,14 @@ namespace orchestrator
 				throw HipeException("Other Tree model not yet implemented");
 
 			auto orchestrator_base = getOrchestrator(model_name);
-
+			
 			orchestrator_base->process(root, data, outputData);
+		}
+
+		void killall()
+		{
+			auto orchestrator_base = getDefaultOrchestrator();
+			orchestrator_base->killall();
 		}
 
 		static void start_orchestrator();

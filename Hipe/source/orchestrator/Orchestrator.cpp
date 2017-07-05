@@ -15,8 +15,11 @@ namespace orchestrator
 		image::DefaultScheduler * default_scheduler = new image::DefaultScheduler();
 
 		orchestrator_factory->addOrchestrator("DefaultScheduler", default_scheduler);
+
+		
 	}
 
+	
 
 
 

@@ -33,19 +33,29 @@ namespace filter
 			 */
 			std::vector<cv::Mat> _cropCache;
 			
-		
-			SquareCrop()
-			{	
-
+			SquareCrop(IOData::_Protection priv) : IOData(IODataType::SQR_CROP)
+			{
+				
 			}
+		
 
 		public:
 			using IOData::IOData;
 
 		public:
+
+			SquareCrop() : IOData(IODataType::SQR_CROP)
+			{
+				IOData::_Protection priv;
+				Data::registerInstance(new SquareCrop(priv));
+				
+				This()._type = SQR_CROP;
+			}
+
 			SquareCrop(ImageData picture, std::vector<cv::Rect> squareCop) : IOData(IODataType::SQR_CROP)
 			{
-				Data::registerInstance(new SquareCrop());
+				IOData::_Protection priv;
+				Data::registerInstance(new SquareCrop(priv));
 				This()._squareCrop = squareCop;
 				This()._picture = picture;
 				This()._type = SQR_CROP;
@@ -53,7 +63,8 @@ namespace filter
 
 			SquareCrop(ImageData picture, std::vector<int> squareCrop) : IOData(IODataType::SQR_CROP)
 			{
-				Data::registerInstance(new SquareCrop());
+				IOData::_Protection priv;
+				Data::registerInstance(new SquareCrop(priv));
 				
 				This()._picture = picture;
 				This()._type = SQR_CROP;
@@ -80,7 +91,8 @@ namespace filter
 			virtual SquareCrop& operator=(const SquareCrop& left)
 			{
 				if (this == &left) return *this;
-				if (!left._This) Data::registerInstance(new SquareCrop());
+				IOData::_Protection priv;
+				if (!left._This) Data::registerInstance(new SquareCrop(priv));
 				else
 					Data::registerInstance(left._This);
 				

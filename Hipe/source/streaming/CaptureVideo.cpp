@@ -2,6 +2,7 @@
 #include <RTSPCapture.h>
 #include <core/Singleton.h>
 #include <streaming/streaming_export.h>
+#include <stdexcept>
 
 template<> CaptureVideoFactory * Singleton<CaptureVideoFactory>::_instance = nullptr;
 

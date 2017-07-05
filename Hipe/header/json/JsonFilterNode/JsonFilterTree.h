@@ -35,7 +35,14 @@ namespace json
 		void freeze()
 		{
 			isFreezed = true;
-			computeLinkDependencies();
+			try
+			{
+				computeLinkDependencies();
+			}
+			catch (const HipeException &e)
+			{
+				throw ;
+			}
 		}
 
 		///
@@ -77,7 +84,7 @@ namespace json
 				for (auto& parent : filterNode->getParents())
 				{
 					if (_filterMap[parent.first] == nullptr)
-						throw HipeException("No node found with name " + parent.first);
+						throw HipeException("No node found with name ");
 
 					filterNode->addDependencies(_filterMap[parent.first]);
 				}

@@ -40,6 +40,7 @@ namespace filter
 		public:
 			virtual ~Data()
 			{
+				release();
 			}
 
 			inline void registerInstance(const Data & childInstance)
@@ -56,8 +57,11 @@ namespace filter
 
 			inline void registerInstance(Data * childInstance)
 			{
-				_This = childInstance->_This;
-				
+				if (childInstance->getDecorate() == true)
+					_This = childInstance->_This;
+				else
+					_This.reset(childInstance);
+
 				_decorate = true;
 				if (_This) _This->_decorate = false;
 				else _decorate = false;
@@ -107,11 +111,22 @@ namespace filter
 
 			Data& operator=(const Data& left)
 			{
+				if (_This) _This.reset();
+
 				_This = left._This;
 				_type = left._type;
 				_decorate = left._decorate;
 
 				return *this;
+			}
+
+			void release()
+			{
+				if (_This)
+				{
+					_This.reset();
+					
+				}
 			}
 
 		protected:
@@ -152,8 +167,13 @@ namespace filter
 			
 			virtual ~IOData()
 			{
+				release();
 			}
 
+			void release()
+			{
+				Base::release();
+			}
 			/**
 			 * \brief Depracated to review  no way to copy on left if it's const ....
 			 * \param left 
@@ -199,7 +219,7 @@ namespace filter
 				Data::_type = left.getType();
 				Data::_decorate = left.getDecorate();
 				
-				return *this;
+				return This();
 			}
 
 		/*	IOData& operator<<(const IOData& left)

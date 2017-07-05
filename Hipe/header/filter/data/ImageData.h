@@ -49,6 +49,14 @@ namespace filter {
 				
 			}
 
+			virtual ~ImageData()
+			{
+
+				IOData::release();
+				_array.clear();
+
+			}
+
 
 			virtual void copyTo(ImageData& left) const
 			{
@@ -61,11 +69,19 @@ namespace filter {
 
 			}
 
-			const cv::Mat & getMat()
+
+			cv::Mat & getMat()
 			{
-				if (Array().empty()) This()._array.resize(1);
+				if (Array_const().empty())
+					Array().push_back(cv::Mat(0, 0, 0));
 
 				return Array()[0];
+
+			}
+
+			const cv::Mat & getMat() const
+			{
+				return Array_const()[0];
 				
 			}
 

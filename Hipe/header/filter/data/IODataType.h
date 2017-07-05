@@ -28,6 +28,8 @@ namespace filter
 			PATTERN = 0x5041545445524e, // Pattern type with crop and data source
 			SQR_CROP = 0x5351525f43524f50, // Square crop
 
+				TXT = 0x545854,
+				TXT_ARR = 0x5458545f415252,
 			NONE
 		};
 

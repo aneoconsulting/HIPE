@@ -54,19 +54,37 @@ namespace filter
 			if (computeFPS() == WAIT_FPS)	return OK;
 			
 			if (_connexData.empty()) return VECTOR_EMPTY;
-			
-			cv::Size size = getImageDimension();
+			data::ImageData image_data = _connexData.pop();
+			cv::Size size = image_data.getMat().size();
+			if (!writer.isOpened()) {
+				/*cv::Size size = getImageDimension();*/
+				if (cmd != "")
+				{
+					uri.clear();
+					uri << cmd;
+					writer.open(cmd, 0, (double)fps_avg, size, true);
+				}
+				else {
+					uri << port;
 
-			std::shared_ptr<TaskContainer> task_container = Streaming::getInstance()->getStreaming(port, size.height, size.width, fps_avg);
+					writer.open(uri.str(), 0, (double)fps_avg, size, true);
+				}
+			}
+			cv::Mat copy;
+			image_data.getMat().copyTo(copy);
+			//cv::cvtColor(image_data.getMat(), copy, CV_BGR2YUV_I420);
+			writer << copy;
+
+			//std::shared_ptr<TaskContainer> task_container = Streaming::getInstance()->getStreaming(port, size.height, size.width, fps_avg);
 
 			//filter::data::IOData copy(_data, true);
-			if (task_container->isActive()) // next iteration the streamer will be ready and active
-			{
-				data::ImageData image_data = _connexData.pop();
-				task_container->onFrameMethod(image_data.getMat());
-				
-			}
-			
+			//if (task_container->isActive()) // next iteration the streamer will be ready and active
+			//{
+			//	data::ImageData image_data = _connexData.pop();
+			//	task_container->onFrameMethod(image_data.getMat());
+			//	
+			//}
+			//
 
 			return OK;
 		}

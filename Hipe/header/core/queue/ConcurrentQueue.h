@@ -48,6 +48,13 @@ namespace core
 				return the_queue.size();
 			}
 
+			void clear()
+			{
+				boost::mutex::scoped_lock lock(the_mutex);
+				std::queue<Data> empty;
+				std::swap(the_queue, empty);
+			}
+
 			bool pop(Data& popped_value)
 			{
 				return try_pop(popped_value);

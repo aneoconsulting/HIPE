@@ -97,7 +97,7 @@ namespace MESAI
 		AVOutputFormat *m_fmt;
 		AVFormatContext *m_oc;
 		AVCodec *m_video_codec;
-		//AVFrame * m_src_picture;
+		AVFrame * m_src_picture;
 		AVFrame *m_dst_picture;
 	    SwsContext *sws_ctx;
 	    int bufferSize;

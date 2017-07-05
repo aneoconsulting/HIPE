@@ -50,9 +50,15 @@ namespace filter
 			{
 				return static_cast<Data>(DirectoryImgData(strPath));
 			}
-			static Data loadVideoFromFile(const std::string& path)
+			static Data loadVideoFromFile(const boost::property_tree::ptree& dataNode)
 			{
-				return static_cast<Data>(FileVideoInput(path));
+				std::string path = dataNode.get<std::string>("path");
+				bool loop = false;
+				if (dataNode.count("loop") != 0)
+				{
+					loop = dataNode.get<bool>("loop");
+				}
+				return static_cast<Data>(FileVideoInput(path, loop));
 			}
 
 			static Data loadVideoFromStream(const std::string & path)
@@ -116,7 +122,7 @@ namespace filter
 					return loadImageFromFile(dataNode.get<std::string>("path"));
 				case IODataType::VIDF:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
-					return loadVideoFromFile(dataNode.get<std::string>("path"));
+					return loadVideoFromFile(dataNode);
 				case IODataType::SEQIMGD:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
 					return loadImagesFromDirectory(dataNode.get<std::string>("path"));

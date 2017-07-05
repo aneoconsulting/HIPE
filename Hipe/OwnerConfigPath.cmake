@@ -38,6 +38,13 @@ SET(WEBRTC_DIR "${Hipe_external}/${HIPE_PLATFORM}/webrtc"  CACHE PATH "SOURCEY_L
 
 SET(UV_DIR "${Hipe_external}/${HIPE_PLATFORM}/libuv"  CACHE PATH "LIBUV_LIBRARYDIR" FORCE )
 
+
+SET(DLIB_DIR "${Hipe_external}/${HIPE_PLATFORM}/dlib/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE )
+
+SET(USE_DLIB On  CACHE bool "Activate Dlib library" FORCE )
+
+set( OpenBLAS_DIR "${${Hipe_external}/${HIPE_PLATFORM}}/OpenBLAS/" )
+
 else()
 
 
@@ -52,4 +59,7 @@ SET(x264_DIR "${Hipe_external}/${HIPE_PLATFORM}/" CACHE PATH "x264" FORCE )
 SET(LIVE_DIR "${Hipe_external}/${HIPE_PLATFORM}/"  CACHE PATH "Live_DIR" FORCE )
 
 SET(FFMPEG_DIR "${Hipe_external}/${HIPE_PLATFORM}/"  CACHE PATH "FFMPEG_LIBRARYDIR" FORCE )
+
+SET(DLIB_DIR "${Hipe_external}/${HIPE_PLATFORM}/usr/local/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE )
+SET(USE_DLIB On  CACHE bool "Activate Dlib library" FORCE )
 endif()

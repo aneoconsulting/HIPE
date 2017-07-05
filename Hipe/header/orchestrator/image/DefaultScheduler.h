@@ -4,7 +4,8 @@
 #include <filter/data/StreamVideoInput.h>
 #include <boost/thread/thread.hpp>
 #include "filter/data/ListIOData.h"
-#include "filter/data/PatternData.h"
+#include <filter/data/PatternData.h>
+#include <orchestrator/TaskInfo.h>
 
 
 namespace orchestrator
@@ -15,6 +16,7 @@ namespace orchestrator
 		{
 		public:
 			typedef std::vector<std::vector<filter::Model *>> MatrixLayerNode;
+			std::vector<TaskInfo> runningTasks;
 
 			DefaultScheduler()
 			{
@@ -98,10 +100,10 @@ namespace orchestrator
 				cv::Mat frame;
 				filter::Model* filterRoot = reinterpret_cast<filter::Model *>(root);
 				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
-				
+				std::atomic<bool> * isActive = new std::atomic<bool>(true);
 				
 				std::shared_ptr<filter::data::StreamVideoInput> cpyVideo = std::make_shared<filter::data::StreamVideoInput>(video);
-				boost::thread task([cpyFilterRoot, cpyVideo]()
+				boost::thread * task = new boost::thread([cpyFilterRoot, cpyVideo, isActive]()
 				{
 					int maxLevel = getMaxLevelNode(cpyFilterRoot->getRootFilter());
 					std::shared_ptr<filter::data::Data> outputData;
@@ -113,7 +115,7 @@ namespace orchestrator
 					filter::data::Data frame = cpyVideo->newFrame();
 					//TODO manage a buffering every things is here to do it
 					//For now we just pick up one image
-					while (!frame.empty())
+					while (!frame.empty() && (*isActive) == true)
 					{
 						cleanDataChild(cpyFilterRoot);
 						//Special case for rootNode dispatching to any children.
@@ -141,7 +143,11 @@ namespace orchestrator
 					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
 						throw HipeException("Cannot free properly the Streaming videocapture");
 				});
-
+				TaskInfo taskInfo;
+				taskInfo.task.reset(task);
+				taskInfo.isActive.reset(isActive);
+				taskInfo.filter.reset(cpyFilterRoot, [](filter::Model *) {});
+				runningTasks.push_back(taskInfo);
 				//task.join();
 				
 			}
@@ -155,13 +161,14 @@ namespace orchestrator
 				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
 				MatrixLayerNode matrixLayer(maxLevel + 1);
 				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
+				std::atomic<bool> * isActive = new std::atomic<bool>(true);
 
 				//TODO insert debug layers into the matrix
 				setMatrixLayer(filterRoot, matrixLayer);
 
 				std::shared_ptr<VideoClass> cpyVideo = std::make_shared<VideoClass>(video);
 
-				boost::thread task([cpyFilterRoot, cpyVideo, maxLevel]()
+				boost::thread *task = new boost::thread([cpyFilterRoot, cpyVideo, maxLevel, isActive]()
 				{
 					//int maxLevel = getMaxLevelNode(cpyFilterRoot->getRootFilter());
 					std::shared_ptr<filter::data::Data> thr_outputData;
@@ -171,11 +178,13 @@ namespace orchestrator
 					//TODO insert debug layers into the matrix
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
 
-					filter::data::Data res = cpyVideo->newFrame();
+					filter::data::Data res;
+					
+					res = cpyVideo->newFrame();
 
 					//TODO manage a buffering every things is here to do it
 					//For now we just pick up one image
-					while (!res.empty())
+					while (!res.empty() && (*isActive) == true)
 					{
 						for (filter::Model * filter : matrixLayer[0])
 						{
@@ -215,15 +224,36 @@ namespace orchestrator
 							}
 						}
 
-						//Special case for final result
-						matrixLayer[matrixLayer.size() - 1][0]->process();
+						//Special case for final result and other filter
+						for (auto& filter : matrixLayer[matrixLayer.size() - 1])
+						{
+							if (filter == nullptr) continue;
+
+						
+							filter->process(); // Nothing to keep we are in async and detach task. Just execute
+
+							filter::data::ConnexDataBase & outRes = filter->getConnector();
+							filter::data::DataPort & port = (static_cast<filter::data::DataPort &>(outRes.getPort()));
+							while (port.size() != 0)
+							{
+								port.pop();
+							}
+						}
+						res.release();
 						res = cpyVideo->newFrame();
 					}
+
 					cleanDataChild(cpyFilterRoot);
 					disposeChild(cpyFilterRoot);
 					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
 						throw HipeException("Cannot free properly the Streaming videocapture");
 				});
+				TaskInfo taskInfo;
+				taskInfo.task.reset(task);
+				taskInfo.isActive.reset(isActive);
+				taskInfo.filter.reset(cpyFilterRoot, [](filter::Model *) {});
+				runningTasks.push_back(taskInfo);
+				//task->join();
 			}
 
 
@@ -289,19 +319,18 @@ namespace orchestrator
 					}
 				}
 				
-				//Special case for final result
-				//Bug : What's happenning when the last layer has OutputFiltert and another Node (i.e : ShowImage)
-				matrixLayer[matrixLayer.size() - 1][0]->process();
+				//Special case for final result and other filter
 				for (auto& filter : matrixLayer[matrixLayer.size() - 1])
 				{
 					if (filter == nullptr) continue;
-
+					
 					if (filter->getConstructorName().find("ResultFilter") != std::string::npos)
 					{
 						filter::data::ConnexDataBase & outRes = filter->getConnector();
 						outputData = (static_cast<filter::data::DataPort &>(outRes.getPort())).pop();
-						break;
+						
 					}
+					filter->process();
 				}
 				
 				cleanDataChild(filterRoot);
@@ -315,7 +344,6 @@ namespace orchestrator
 			void process(filter::Model* root, filter::data::Data& inputData, filter::data::Data &outputData, bool debug = false)
 			{	
 				
-
 			    if (filter::data::DataTypeMapper::isSequence(inputData.getType()))
 				{
 					processSequence(root, inputData, outputData, debug);
@@ -352,6 +380,20 @@ namespace orchestrator
 					throw HipeException("Unknown type of data");
 				}
 				
+			}
+
+			virtual void killall()
+			{
+				for (TaskInfo & taskInfo : runningTasks)
+				{
+					std::atomic<bool>* isActive = taskInfo.isActive.get();
+					*(isActive) = false;
+					if (taskInfo.task->joinable())
+						taskInfo.task->join();
+
+
+				}
+				runningTasks.clear();
 			}
 		};
 	}

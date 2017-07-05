@@ -34,6 +34,12 @@ endfunction()
 include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/live_config.cmake")
+
+if (USE_DLIB)
+  include("${CMAKE_SOURCE_DIR}/dlib_config.cmake")
+    
+endif()
+
 set(Hype_INCLUDEDIR "../../header/")
 
 set(_src_filter_path ${CMAKE_CURRENT_SOURCE_DIR})
@@ -108,6 +114,9 @@ find_package( OpenCV REQUIRED )
 include_directories(filter ${Hype_INCLUDEDIR})
 include_directories(filter ${OpenCV_INCLUDE_DIRS} )
 include_directories(filter ${Live_INCLUDEDIR} )
+include_directories(filter ${Dlib_INCLUDEDIR} )
+
+
 
 ##filter LIBRARY
 
@@ -172,6 +181,20 @@ target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(filter ${OpenCV_LIBS} )
 target_link_libraries(filter ${Lives_LIBS} )
+if (USE_DLIB)
+	if (WIN32)
+	target_link_libraries(filter ${Dlib_LIBRARIES})
+	
+	#set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
+	#find_package(BLAS REQUIRED)
+	
+	elseif (UNIX)
+	target_link_libraries(filter ${Dlib_LIBRARIES})
+	endif()
+
+  
+endif()
+
 #target_link_libraries(filter ${CUDA_LIB_DIRS}/x64)
 
 #add_dependencies(filter reference)
