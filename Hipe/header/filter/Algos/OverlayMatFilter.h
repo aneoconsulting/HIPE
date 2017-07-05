@@ -64,17 +64,17 @@ namespace filter
 						for (int x = 0;x<matImg.cols;x++)
 						{
 							//int alpha = ov.at<Vec3b>(y,x)[3];
-							if (overMat.at<Vec3b>(y, x)[0] + overMat.at<Vec3b>(y, x)[1] + overMat.at<Vec3b>(y, x)[2] == 0)
+							if (overMat.at<cv::Vec3b>(y, x)[0] + overMat.at<cv::Vec3b>(y, x)[1] + overMat.at<cv::Vec3b>(y, x)[2] == 0)
 							{
-								result.at<Vec3b>(y, x)[0] = matImg.at<Vec3b>(y, x)[0];
-								result.at<Vec3b>(y, x)[1] = matImg.at<Vec3b>(y, x)[1];
-								result.at<Vec3b>(y, x)[2] = matImg.at<Vec3b>(y, x)[2];
+								result.at<cv::Vec3b>(y, x)[0] = matImg.at<cv::Vec3b>(y, x)[0];
+								result.at<cv::Vec3b>(y, x)[1] = matImg.at<cv::Vec3b>(y, x)[1];
+								result.at<cv::Vec3b>(y, x)[2] = matImg.at<cv::Vec3b>(y, x)[2];
 							} 
 							else
 							{
-								result.at<Vec3b>(y, x)[0] = overMat.at<Vec3b>(y, x)[0];
-								result.at<Vec3b>(y, x)[1] = overMat.at<Vec3b>(y, x)[1];
-								result.at<Vec3b>(y, x)[2] = overMat.at<Vec3b>(y, x)[2];
+								result.at<cv::Vec3b>(y, x)[0] = overMat.at<cv::Vec3b>(y, x)[0];
+								result.at<cv::Vec3b>(y, x)[1] = overMat.at<cv::Vec3b>(y, x)[1];
+								result.at<cv::Vec3b>(y, x)[2] = overMat.at<cv::Vec3b>(y, x)[2];
 							}
 						}
 					_connexData.push(data::ImageData(result));

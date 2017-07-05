@@ -6,6 +6,7 @@ cd "${DIR_SCRIPT}"
 DIR_SCRIPT=`pwd -P`
 
 export HIPE_EXTERNAL=/mnt/ssd/hipeExternal
+export HIPE_EXTERNAL=/work/external/
 
 
 mkdir -p build || true

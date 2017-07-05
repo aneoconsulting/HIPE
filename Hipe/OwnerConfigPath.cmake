@@ -60,6 +60,6 @@ SET(LIVE_DIR "${Hipe_external}/${HIPE_PLATFORM}/"  CACHE PATH "Live_DIR" FORCE )
 
 SET(FFMPEG_DIR "${Hipe_external}/${HIPE_PLATFORM}/"  CACHE PATH "FFMPEG_LIBRARYDIR" FORCE )
 
-SET(DLIB_DIR "${Hipe_external}/${HIPE_PLATFORM}/usr/local/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE )
+SET(DLIB_DIR "${Hipe_external}/${HIPE_PLATFORM}/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE )
 SET(USE_DLIB On  CACHE bool "Activate Dlib library" FORCE )
 endif()
