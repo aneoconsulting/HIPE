@@ -178,7 +178,9 @@ namespace orchestrator
 					//TODO insert debug layers into the matrix
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
 
-					filter::data::Data res = cpyVideo->newFrame();
+					filter::data::Data res;
+					
+					res = cpyVideo->newFrame();
 
 					//TODO manage a buffering every things is here to do it
 					//For now we just pick up one image
@@ -222,8 +224,22 @@ namespace orchestrator
 							}
 						}
 
-						//Special case for final result
-						matrixLayer[matrixLayer.size() - 1][0]->process();
+						//Special case for final result and other filter
+						for (auto& filter : matrixLayer[matrixLayer.size() - 1])
+						{
+							if (filter == nullptr) continue;
+
+						
+							filter->process(); // Nothing to keep we are in async and detach task. Just execute
+
+							filter::data::ConnexDataBase & outRes = filter->getConnector();
+							filter::data::DataPort & port = (static_cast<filter::data::DataPort &>(outRes.getPort()));
+							while (port.size() != 0)
+							{
+								port.pop();
+							}
+						}
+						res.release();
 						res = cpyVideo->newFrame();
 					}
 
@@ -303,19 +319,18 @@ namespace orchestrator
 					}
 				}
 				
-				//Special case for final result
-				//Bug : What's happenning when the last layer has OutputFiltert and another Node (i.e : ShowImage)
-				matrixLayer[matrixLayer.size() - 1][0]->process();
+				//Special case for final result and other filter
 				for (auto& filter : matrixLayer[matrixLayer.size() - 1])
 				{
 					if (filter == nullptr) continue;
-
+					
 					if (filter->getConstructorName().find("ResultFilter") != std::string::npos)
 					{
 						filter::data::ConnexDataBase & outRes = filter->getConnector();
 						outputData = (static_cast<filter::data::DataPort &>(outRes.getPort())).pop();
-						break;
+						
 					}
+					filter->process();
 				}
 				
 				cleanDataChild(filterRoot);

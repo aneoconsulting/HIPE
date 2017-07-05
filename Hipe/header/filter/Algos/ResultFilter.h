@@ -29,7 +29,15 @@ namespace filter
 			HipeStatus process()
 			{
 				//Copy result data
-				//Nothing to do here get the result from scheduler for any other process			
+				//Nothing to do here get the result from scheduler for any other process
+				//No children then pop every data from the connector
+				if (_childFilters.size() == 0)
+				{
+					while (_connexData.size() != 0)
+					{
+						_connexData.pop();
+					}
+				}
 				return OK;
 			}
 

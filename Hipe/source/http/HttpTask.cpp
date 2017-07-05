@@ -38,12 +38,22 @@ void http::HttpTask::runTask()
 			if (treeRequest.count("command") != 0)
 			{
 				std::string command = treeRequest.get_child("command").get<std::string>("type");
-				if (command.find("kill") != std::string::npos)
+				ptree ltreeResponse;
+				if (command.find("kill") != std::string::npos || command.find("exit") != std::string::npos)
 				{
 					orchestrator::OrchestratorFactory::getInstance()->killall();
+					ltreeResponse.add("Status", "Task has been killed");
+					if(command.find("exit") != std::string::npos)
+						ltreeResponse.add("process", "Server is exiting");
+
 				}
-				ptree ltreeResponse;
-				ltreeResponse.add("Status", "Task has been killed");
+				else
+				{
+					ltreeResponse.add("Status", command + "is unkown command");
+				}
+				
+				
+				
 				std::stringstream ldataResponse;
 				write_json(ldataResponse, ltreeResponse);
 				*_response << "HTTP/1.1 200 OK\r\n"
@@ -53,6 +63,11 @@ void http::HttpTask::runTask()
 					<< ldataResponse.str();
 				HttpTask::logger << "HttpTask response has been sent";
 				HttpTask::logger << ldataResponse.str();
+
+				if (command.find("exit") != std::string::npos)
+				{
+					exit(0);
+				}
 
 				return;
 			}

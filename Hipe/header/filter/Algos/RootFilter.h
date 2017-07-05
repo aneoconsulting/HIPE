@@ -22,7 +22,14 @@ namespace filter {
 		public:
 			HipeStatus process()
 			{
-				
+				//No children then pop every data from the connector
+				if (_childFilters.size() == 0)
+				{
+					while (_connexData.size() != 0)
+					{
+						_connexData.pop();
+					}
+				}
 				return HipeStatus::OK;
 			}
 			

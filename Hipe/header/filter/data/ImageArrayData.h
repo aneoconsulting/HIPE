@@ -5,7 +5,7 @@ namespace filter
 {
 	namespace data 
 	{
-		class ImageArrayData : public IOData<Data, ImageArrayData>
+		class ImageArrayData : public IOData <Data, ImageArrayData>
 		{
 		protected:
 			std::vector<cv::Mat> _array;
@@ -29,6 +29,12 @@ namespace filter
 				Data::registerInstance(right._This);
 				_array.resize(0);
 				_decorate = true;
+			}
+
+			virtual ~ImageArrayData()
+			{
+				IOData::release();
+				_array.clear();
 			}
 
 			std::vector<cv::Mat> & Array()

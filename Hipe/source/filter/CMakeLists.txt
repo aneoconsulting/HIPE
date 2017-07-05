@@ -37,9 +37,7 @@ include("${CMAKE_SOURCE_DIR}/live_config.cmake")
 
 if (USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/dlib_config.cmake")
-  set(dlib_DIR "${DLIB_DIR}/lib/cmake/dlib/")
-
-  find_package( dlib REQUIRED )
+    
 endif()
 
 set(Hype_INCLUDEDIR "../../header/")
@@ -116,7 +114,7 @@ find_package( OpenCV REQUIRED )
 include_directories(filter ${Hype_INCLUDEDIR})
 include_directories(filter ${OpenCV_INCLUDE_DIRS} )
 include_directories(filter ${Live_INCLUDEDIR} )
-include_directories(filter ${dlib_INCLUDE_DIRS} )
+include_directories(filter ${Dlib_INCLUDEDIR} )
 
 
 
@@ -185,13 +183,13 @@ target_link_libraries(filter ${OpenCV_LIBS} )
 target_link_libraries(filter ${Lives_LIBS} )
 if (USE_DLIB)
 	if (WIN32)
-	target_link_libraries(filter dlib::dlib)
+	target_link_libraries(filter ${Dlib_LIBRARIES})
 	
 	#set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
 	#find_package(BLAS REQUIRED)
 	
 	elseif (UNIX)
-	target_link_libraries(filter dlib::dlib_shared)
+	target_link_libraries(filter ${Dlib_LIBRARIES})
 	endif()
 
   

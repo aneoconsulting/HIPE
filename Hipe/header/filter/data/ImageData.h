@@ -49,6 +49,14 @@ namespace filter {
 				
 			}
 
+			virtual ~ImageData()
+			{
+
+				IOData::release();
+				_array.clear();
+
+			}
+
 
 			virtual void copyTo(ImageData& left) const
 			{

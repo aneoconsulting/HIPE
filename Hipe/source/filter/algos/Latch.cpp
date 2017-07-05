@@ -132,8 +132,7 @@ namespace filter
 			
 			MatchContainer img_result;
 			cv::Mat res;
-			if (patternData.imageRequest().getMat().empty() || img_result.inliers2.empty() ||
-				img_result.patternImage.empty() || img_result.inliers1.empty() || img_result.goodMatches.empty())
+			if (patternData.imageRequest().getMat().empty())
 			{
 				_connexData.push(patternData.imageRequest());
 			}

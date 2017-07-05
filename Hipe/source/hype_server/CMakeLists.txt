@@ -27,9 +27,6 @@ find_package( OpenCV REQUIRED )
 
 if (USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/dlib_config.cmake")
-  set(dlib_DIR "${DLIB_DIR}/lib/cmake/dlib/")
-
-  find_package( dlib REQUIRED )
 endif()
 
 
@@ -84,13 +81,13 @@ target_link_libraries(hype_server streaming)
 
 if (USE_DLIB)
 	if (WIN32)
-	target_link_libraries(hype_server dlib::dlib)
+	target_link_libraries(hype_server ${Dlib_LIBRARIES})
 	
 	#set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
 	#find_package(BLAS REQUIRED)
 	
 	elseif (UNIX)
-	target_link_libraries(hype_server dlib::dlib_shared)
+	target_link_libraries(hype_server ${Dlib_LIBRARIES})
 	endif()
 
 endif()
