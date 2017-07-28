@@ -122,7 +122,7 @@ namespace filter
 				return OK;
 			}
 
-			if (count_frame % skip_frame == 0)
+			if (skip_frame <= 0 || count_frame % skip_frame == 0)
 			{
 				if (imagesStack.size() != 0)
 					imagesStack.clear();
@@ -137,6 +137,12 @@ namespace filter
 				_connexData.push(patternData.imageRequest());
 			}
 			else if (result.trypop_until(img_result, 30)) // wait 30ms no more
+			{
+				cv::drawMatches(patternData.imageRequest().getMat(), img_result.inliers2, img_result.patternImage, img_result.inliers1, img_result.goodMatches, res);
+				tosend = img_result;
+				_connexData.push(data::ImageData(res));
+			}
+			else if (wait == true && result.trypop_until(img_result, 5000)) // wait 5 sec it's like infinite but allow to kill thread
 			{
 				cv::drawMatches(patternData.imageRequest().getMat(), img_result.inliers2, img_result.patternImage, img_result.inliers1, img_result.goodMatches, res);
 				tosend = img_result;

@@ -40,9 +40,9 @@ namespace filter
 			REGISTER(Latch, ()), _connexData(data::INDATA)
 			{
 				hessianThreshold = 100;
-				skip_frame = 2;
+				skip_frame = -1;
 				isStart = false;
-				
+				wait = false;
 			}
 
 			REGISTER_P(float, inlier_threshold);
@@ -52,6 +52,7 @@ namespace filter
 
 			REGISTER_P(int, skip_frame);
 
+			REGISTER_P(bool, wait);
 			
 
 
@@ -78,6 +79,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(Latch, inlier_threshold, nn_match_ratio, hessianThreshold);
+		ADD_CLASS(Latch, inlier_threshold, nn_match_ratio, hessianThreshold, wait);
 	}
 }

@@ -47,3 +47,19 @@ std::string ToString(hUInt64 n)
 	}
 	return newString;
 }
+
+
+std::string removeDirectoryName(std::string pathname)
+{
+	std::string sep;
+#ifdef WIN32
+	sep = "\\";
+#else
+	sep = "/";
+#endif
+	if (pathname.find(sep) == -1)
+		return pathname;
+
+	return pathname.substr(pathname.find_last_of(sep), pathname.size());
+
+}

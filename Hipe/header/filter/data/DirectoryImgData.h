@@ -32,6 +32,14 @@ namespace filter {
 						strbuild << "Cannot open file : " <<  filenames[i];
 						throw HipeException(strbuild.str());
 					}
+
+					cv::putText(mat,
+						removeDirectoryName(filenames[i]),
+						cv::Point(25, 25), // Coordinates
+						cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
+						1.0, // Scale. 2.0 = 2x bigger
+						cv::Scalar(255, 255, 255), // Color
+						1); // Anti-alias
 					This()._array.push_back(mat);
 				}
 				if (This()._array.empty())

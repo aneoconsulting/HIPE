@@ -9,3 +9,6 @@
 hUInt64 ToHex(const std::string& s, bool upper_case = true);
 
 std::string ToString(hUInt64 n);
+
+
+std::string removeDirectoryName(std::string pathname);
