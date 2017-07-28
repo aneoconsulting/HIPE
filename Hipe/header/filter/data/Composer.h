@@ -101,11 +101,25 @@ namespace filter
 			static Data loadSquareCrop(const boost::property_tree::ptree& cropTree)
 			{
 				std::vector<Data> res;
-				std::vector<int> pts = as_vector<int>(cropTree, "crop");
+				std::vector<int> pts;
+				
 				auto pcitureJson = cropTree.get_child("IMGF");
 				Data data_from_composer = getDataFromComposer("IMGF", pcitureJson);
 				ImageData picture(static_cast<const ImageData &>(data_from_composer));
 				
+
+				if (cropTree.count("crop") != 0)
+				{
+					pts = as_vector<int>(cropTree, "crop");
+				}
+				else
+				{
+					const cv::Mat & cropImage = picture.getMat();
+
+					//Then the image itself is the crop
+					pts.push_back(0); pts.push_back(0);
+					pts.push_back(cropImage.cols); pts.push_back(cropImage.rows);
+				}
 				filter::data::SquareCrop squareCrop(picture, pts);
 
 				return squareCrop;
@@ -137,7 +151,7 @@ namespace filter
 					filter::data::Composer::checkJsonFieldExist(dataNode, "desc");
 					return loadPatternData(dataNode);
 				case IODataType::SQR_CROP:
-					filter::data::Composer::checkJsonFieldExist(dataNode, "crop");
+					
 					filter::data::Composer::checkJsonFieldExist(dataNode, "IMGF");
 					return loadSquareCrop(dataNode);
 				case IODataType::NONE:

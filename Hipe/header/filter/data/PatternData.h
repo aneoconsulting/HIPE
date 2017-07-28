@@ -153,7 +153,7 @@ namespace filter
 			PatternData& operator<<(const ImageData& left)
 			{
 				This()._requestImg = left;
-				This()._endOfSource = -1;
+				//This()._endOfSource = -1;
 				return *this;
 			}
 
