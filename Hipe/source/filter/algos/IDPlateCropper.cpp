@@ -14,7 +14,7 @@ HipeStatus filter::algos::IDPlateCropper::process()
 
 cv::Mat filter::algos::IDPlateCropper::preprocessPlate(const cv::Mat & plateImage)
 {
-	// Bilateral filtering to reduce noise
+	// Bilateral filtering to smooth images and reduce noise
 	cv::Mat output = applyBilateralFiltering(plateImage, bfilterPasses, false);
 
 	// Convert image to grayscale
@@ -56,13 +56,15 @@ cv::Mat filter::algos::IDPlateCropper::preprocessPlate(const cv::Mat & plateImag
 		for (int x = 0; x < output.size().width; x++)
 		{
 			cv::Point currentPixel(x, y);
-			// TODO: Color: pas propre
 			if (row[x] == maskColor[0] && currentPixel != biggestBlobPos)
 			{
 				int area = floodFill(output, currentPixel, cv::Scalar(0, 0, 0));
 			}
 		}
 	}
+
+	// Debugging
+	showImage(output);
 
 	// Find contours of biggest blob:
 	cv::Rect RegionToCrop = cv::boundingRect(output);
@@ -79,7 +81,9 @@ cv::Mat filter::algos::IDPlateCropper::preprocessPlate(const cv::Mat & plateImag
 	if (RegionToCrop.x + RegionToCrop.width > output.cols)	RegionToCrop.width = output.cols - RegionToCrop.x;
 	if (RegionToCrop.y + RegionToCrop.height > output.rows) RegionToCrop.height = output.rows - RegionToCrop.y;
 
+
 	output = plateImage(RegionToCrop);
+
 	// Debugging
 	showImage(output);
 
@@ -94,6 +98,7 @@ cv::Mat filter::algos::IDPlateCropper::applyBilateralFiltering(const cv::Mat & p
 	double sigmaColor = 31.0 * 2.0;
 	double sigmaSpace = 31.0 * 0.5;
 
+	// Using CPU to compute can take time
 	for (int i = 0; i < iterations; ++i)
 	{
 		if (!useGPU)
@@ -116,6 +121,9 @@ cv::Mat filter::algos::IDPlateCropper::applyBilateralFiltering(const cv::Mat & p
 				throw HipeException("Use GPU is set to true but no enabled CUDA GPU was found.");
 			}
 		}
+
+		// Debug
+		showImage(output);
 	}
 
 	return output;
@@ -124,7 +132,7 @@ cv::Mat filter::algos::IDPlateCropper::applyBilateralFiltering(const cv::Mat & p
 cv::Mat filter::algos::IDPlateCropper::convertToGrayscale(const cv::Mat & plateImageColor)
 {
 	cv::Mat output;
-	plateImageColor.channels() != 1 ? cv::cvtColor(plateImageColor, output, CV_BGR2GRAY) : output = plateImageColor.clone();
+	(plateImageColor.channels() == 3 || plateImageColor.channels() == 4) ? cv::cvtColor(plateImageColor, output, CV_BGR2GRAY) : output = plateImageColor.clone();
 
 	return output;
 }
@@ -134,12 +142,15 @@ cv::Point filter::algos::IDPlateCropper::maskBlobs(cv::Mat & plateImageBlackWhit
 	int maxArea = -1;
 	cv::Point maxAreaPos;
 
+	const int threshold = 128;
+
+	// For each pixel, if pixel color is greater than threshold, it's a blob : paint it black. The biggest found area is the whole plate
 	for (int y = 0; y < plateImageBlackWhite.size().height; y++)
 	{
 		const uchar* row = plateImageBlackWhite.ptr(y);
 		for (int x = 0; x < plateImageBlackWhite.size().width; x++)
 		{
-			if (row[x] >= 128)
+			if (row[x] >= threshold)
 			{
 				cv::Point pos(x, y);
 				int currArea = cv::floodFill(plateImageBlackWhite, pos, color);
@@ -147,6 +158,9 @@ cv::Point filter::algos::IDPlateCropper::maskBlobs(cv::Mat & plateImageBlackWhit
 				{
 					maxAreaPos = pos;
 					maxArea = currArea;
+
+					// Debug
+					showImage(plateImageBlackWhite);
 				}
 			}
 		}
@@ -156,6 +170,7 @@ cv::Point filter::algos::IDPlateCropper::maskBlobs(cv::Mat & plateImageBlackWhit
 
 void filter::algos::IDPlateCropper::showImage(const cv::Mat & image)
 {
+	if (!debug_) return;
 	cv::namedWindow("debug");
 	cv::imshow("debug", image);
 	cv::waitKey(0);

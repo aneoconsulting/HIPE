@@ -23,9 +23,11 @@ namespace filter
 			{
 				useGPU = false;
 				bfilterPasses = 2;
+				debug_ = false;
 			}
 			REGISTER_P(bool, useGPU);
-			REGISTER_P(bool, bfilterPasses);
+			REGISTER_P(int, bfilterPasses);
+			REGISTER_P(bool, debug_);
 
 		public:
 			HipeStatus process() override;
@@ -41,6 +43,6 @@ namespace filter
 			void showImage(const cv::Mat& image);
 		};
 
-		ADD_CLASS(IDPlateCropper, useGPU, bfilterPasses);
+		ADD_CLASS(IDPlateCropper, useGPU, bfilterPasses, debug_);
 	}
 }

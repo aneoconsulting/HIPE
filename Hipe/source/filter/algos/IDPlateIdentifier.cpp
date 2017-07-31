@@ -5,12 +5,18 @@ HipeStatus filter::Algos::IDPlateIdentifier::process()
 	data::ImageData data = _connexData.pop();
 	cv::Mat image = data.getMat();
 
+	// Find characters
 	LabelOCR labelOCR(true);
-	std::vector<cv::Mat> characters = detectTextArea(image);
+	std::vector<cv::Rect> charactersRects;
+	std::vector<cv::Mat> characters = detectTextArea(image, charactersRects);
 
-	labelOCR.runRecognition(characters, 2);
+	// Identify them using Tesseract
+	std::vector<std::string> labels = labelOCR.runRecognition(characters, 30);	// legacy: labelType = 2
 
-	_connexData.push(image);
+	// Output results in an image
+	cv::Mat output = createOutputImage(image, charactersRects, labels);
+
+	_connexData.push(output);
 	return OK;
 }
 
@@ -27,14 +33,14 @@ bool filter::Algos::IDPlateIdentifier::compareRectsByPosition(const cv::Rect & a
 	return (ax < bx);
 }
 
-std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::Mat & plateImage)
+std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::Mat & plateImage, std::vector<cv::Rect> & out_charactersRects)
 {
 	cv::Mat image = plateImage;
 	// Preprocess image
 	cv::Mat preprocessed = preprocessImage(plateImage);
 	cv::Mat binarizedImage;
 
-	//vector<Rect> textAreas = boundingLetters(small, binary, 0.0f, 1.0f);
+	// Find characters
 	std::vector<cv::Rect> characters = findPlateCharacters(preprocessed, 0.0f, 1.0f, binarizedImage);
 
 	cv::Mat charactersBounds = image.clone();
@@ -44,6 +50,7 @@ std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::
 	}
 	showImage(charactersBounds);
 
+	// Sort and filter them (how ?)
 	std::vector<cv::Rect> charactersFiltered = sortAndFilterCharacters(characters, plateImage.rows, 0.06, 0.35);
 
 	charactersBounds = image.clone();
@@ -53,7 +60,9 @@ std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::
 	}
 	showImage(charactersBounds);
 
-	charactersFiltered = blobsRectangle(preprocessed, charactersFiltered);
+	// ?
+	//charactersFiltered = blobsRectangle(preprocessed, charactersFiltered);
+	//std::vector<std::vector<cv::Rect>> debugChars = separateCharactersByLines(charactersFiltered, plateImage);
 	std::vector<cv::Mat> croppedCharactersImages;
 
 	for (auto & character : charactersFiltered)
@@ -64,6 +73,7 @@ std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::
 		showImage(clone);
 	}
 
+	out_charactersRects = charactersFiltered;
 	return croppedCharactersImages;
 }
 
@@ -155,8 +165,7 @@ std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::blobsRectangle(const cv:
 	//// Concatenation caractères + caractères filtrés ? Manque quelque chose ?
 	//for (int i = 0; i < filteredTextAreas.size(); i++)
 	//	characters.push_back(filteredTextAreas[i]);
-
-	filteredTextAreas.clear();
+	//filteredTextAreas.clear();
 
 	const int deltaY = 4;
 	const double deltaXRatio = 0.60;
@@ -204,7 +213,7 @@ std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::blobsRectangle(const cv:
 			const double deltaX = deltaXRatio * characters[j].width;
 
 			if (abs(nextRectCenter.y - lastRectCenter.y) <= deltaY &&
-				nextRectCenter.x > lastRect.x && nextRectCenter.x < lastRect.x + nextRect.width + deltaX)
+				nextRectCenter.x > lastRect.x && nextRectCenter.x < lastRect.x + lastRect.width + deltaX)
 			{
 				// Debug
 				cv::Mat temp2 = convertGrayscaleToBGR(plateImage);
@@ -235,24 +244,130 @@ std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::blobsRectangle(const cv:
 		}
 	}
 
-	cv::Mat draw = plateImage.clone();
-	const int inc = 10;
+	cv::Mat draw = convertGrayscaleToBGR(plateImage);
 
-	for (int i = 0; i < filteredTextAreas.size(); i++)
+	// Debug
+	for (auto & character : filteredTextAreas)
 	{
-		filteredTextAreas[i].x = (cv::max)(filteredTextAreas[i].x - inc / 2, 0);
-		filteredTextAreas[i].y = (cv::max)(filteredTextAreas[i].y - inc / 2, 0);
-		filteredTextAreas[i].width = filteredTextAreas[i].width + inc;
-		filteredTextAreas[i].height = filteredTextAreas[i].height + inc;
-
-		filteredTextAreas[i].width = (filteredTextAreas[i].x + filteredTextAreas[i].width) > draw.cols ? filteredTextAreas[i].width - inc : filteredTextAreas[i].width;
-		filteredTextAreas[i].height = (filteredTextAreas[i].y + filteredTextAreas[i].height) > draw.rows ? filteredTextAreas[i].height - inc : filteredTextAreas[i].height;
-
-		rectangle(draw, filteredTextAreas[i], cv::Scalar(255, 0, 0), 4);
+		cv::rectangle(draw, character, cv::Scalar(255, 0, 0), 1);
 	}
 	showImage(draw);
 
+	draw = convertGrayscaleToBGR(plateImage);
+	const int inc = 10;
+	for (int i = 0; i < filteredTextAreas.size(); i++)
+	{
+		int oldX = filteredTextAreas[i].x;
+		int oldY = filteredTextAreas[i].y;
+		int oldWidth = filteredTextAreas[i].width;
+		int oldHeight = filteredTextAreas[i].height;
+
+		filteredTextAreas[i].x = (cv::max)(filteredTextAreas[i].x - inc / 2, 0);
+		filteredTextAreas[i].y = (cv::max)(filteredTextAreas[i].y - inc / 2, 0);
+
+		filteredTextAreas[i].width = filteredTextAreas[i].width + inc;
+		filteredTextAreas[i].height = filteredTextAreas[i].height + inc;
+
+		//// OLD
+		//filteredTextAreas[i].width = (filteredTextAreas[i].x + filteredTextAreas[i].width) > draw.cols ? filteredTextAreas[i].width - inc : filteredTextAreas[i].width;
+		//filteredTextAreas[i].height = (filteredTextAreas[i].y + filteredTextAreas[i].height) > draw.rows ? filteredTextAreas[i].height - inc : filteredTextAreas[i].height;
+
+		// NEW
+		int endWidth = filteredTextAreas[i].x + filteredTextAreas[i].width;
+		int endHeight = filteredTextAreas[i].y + filteredTextAreas[i].height;
+		int newWidth = draw.cols - 1 - filteredTextAreas[i].x;
+		int newHeight = draw.rows - 1 - filteredTextAreas[i].y;
+
+		filteredTextAreas[i].width = endWidth > draw.cols - 1 ? newWidth : filteredTextAreas[i].width;
+		filteredTextAreas[i].height = endHeight > draw.rows - 1 ? newHeight : filteredTextAreas[i].height;
+
+		// Debug
+		cv::rectangle(draw, filteredTextAreas[i], cv::Scalar(255, 0, 0), 4);
+	}
+	// Debug
+	showImage(draw);
+
 	return filteredTextAreas;
+}
+
+std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCharactersByLines(std::vector<cv::Rect>& charactersSorted, const cv::Mat & debugImage)
+{
+	cv::Mat image = debugImage.clone();
+
+	const int verticalDelta = 10;
+	//const int horizontalDelta = 10;
+
+	std::vector<std::vector<cv::Rect>> output;
+
+	std::vector<cv::Rect>::const_iterator it = charactersSorted.begin();
+	std::vector<cv::Rect>::const_iterator itNext = it + 1;
+	std::vector<cv::Rect> line;
+
+	while (it != charactersSorted.end() && itNext != charactersSorted.end())
+	{
+		// Add current point to line
+		line.push_back(*it);
+
+		// We Work on borders
+		// Use Right border for first rect and left border for second one
+		const cv::Point itBorder(it->x + it->width, it->y + it->height / 2);
+		const cv::Point itNextBorder(itNext->x, itNext->y + itNext->height / 2);
+
+		//Debug
+		cv::Mat image; // = debugImage.clone();
+		if (image.data && debug_)
+		{
+			cv::rectangle(image, *it, cv::Scalar(255, 0, 0));
+			cv::circle(image, itBorder, 2, cv::Scalar(0, 0, 0), 2);
+			cv::rectangle(image, *itNext, cv::Scalar(255, 0, 0));
+			cv::circle(image, itNextBorder, 2, cv::Scalar(255, 255, 255), 2);
+			showImage(image);
+		}
+
+		// Compare borders y
+		int delta = abs(itBorder.y - itNextBorder.y);
+		// if without delta, create new line
+		if (delta > verticalDelta)
+		{
+			//Debug
+			if (image.data && debug_)
+			{
+				cv::rectangle(image, *itNext, cv::Scalar(0, 0, 255));
+				showImage(image);
+			}
+
+			output.push_back(line);
+			line.clear();
+		}
+		else
+		{
+			// Debug
+			if (image.data && debug_)
+			{
+				cv::rectangle(image, *itNext, cv::Scalar(0, 255, 0));
+				showImage(image);
+			}
+		}
+
+		it = itNext;
+		++itNext;
+	}
+
+	// Push last point and last line
+	line.push_back(*it);
+	output.push_back(line);
+
+	cv::Mat temp = debugImage.clone();
+	for (auto & line : output)
+	{
+		for (auto & rect : line)
+		{
+			cv::rectangle(temp, rect, cv::Scalar(255, 0, 0), 2);
+		}
+	}
+
+	showImage(temp);
+	return output;
 }
 
 std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::findPlateCharacters(const cv::Mat & plateImage, double xMinPos, double xMaxPos, cv::Mat & binarizedImage)
@@ -286,7 +401,9 @@ std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::findPlateCharacters(cons
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarchy;
 
-	cv::findContours(imageGrayscale.clone(), contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE, cv::Point(0, 0));
+	cv::Mat contoursDebug = imageGrayscale.clone();
+	cv::findContours(contoursDebug, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE, cv::Point(0, 0));
+	showImage(contoursDebug);
 
 	//// Find characters
 	std::vector<cv::Rect> charactersRects;
@@ -306,33 +423,42 @@ std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::findPlateCharacters(cons
 		maskROI = cv::Scalar(0, 0, 0);
 
 		// fill the contour
-		cv::drawContours(mask, contours, idx, cv::Scalar(255, 255, 255), CV_FILLED);
+		cv::drawContours(mask, contours, idx, cv::Scalar(255, 255, 255), 4); // Anciennement CV_FILLED
 
-		////Debug
+		//// Debug
 		//showImage(mask);
 
-		// ratio of non-zero pixels in the filled region
+		// Ratio of non-zero pixels in the filled region
 		double ratio = static_cast<double>(cv::countNonZero(maskROI)) / (characterRect.width * characterRect.height);
 
-		//Debug
-		cv::rectangle(debugImage, characterRect, cv::Scalar(255, 0, 0), 2);
+		//// Debug
+		//cv::rectangle(debugImage, characterRect, cv::Scalar(255, 0, 0), 2);
 		//showImage(debugImage);
 
 		// Assume that at least 45% of the rect area is filled if it contains text
-		if (ratio > lowerBound && ratio < upperBound
-			&&
-			// Constraints on rect size
-			(characterRect.height > minRectSize.height && characterRect.width > minRectSize.width)
-			// These two conditions alone are not very robust. better to use something
-			// like the number of significant peaks in a horizontal projection as a third condition
-			&&
-			characterRect.width <= maxRectWidth
-			&&
-			// Bug when the image is already cropped
-			characterRect.x >= xMinPos
-			&&
-			characterRect.x <= xMaxPos
-			)
+		// Debug
+		bool ratioBool = ratio > lowerBound && ratio < upperBound;
+		bool sizeBool = characterRect.height > minRectSize.height && characterRect.width > minRectSize.width;
+		bool maxWidthBool = characterRect.width <= maxRectWidth;
+		bool minPosBool = characterRect.x >= xMinPos;
+		bool maxPosBool = characterRect.x <= xMaxPos;
+
+
+		//if (ratio > lowerBound && ratio < upperBound
+		//	&&
+		//	// Constraints on rect size
+		//	(characterRect.height > minRectSize.height && characterRect.width > minRectSize.width)
+		//	// These two conditions alone are not very robust. better to use something
+		//	// like the number of significant peaks in a horizontal projection as a third condition
+		//	&&
+		//	characterRect.width <= maxRectWidth
+		//	&&
+		//	// Bug when the image is already cropped
+		//	characterRect.x >= xMinPos
+		//	&&
+		//	characterRect.x <= xMaxPos
+		//	)
+		if (ratioBool && sizeBool && maxWidthBool && minPosBool && maxPosBool)
 		{
 			charactersRects.push_back(characterRect);
 
@@ -370,6 +496,7 @@ cv::Mat filter::Algos::IDPlateIdentifier::applyMorphTransform(const cv::Mat & im
 
 int filter::Algos::IDPlateIdentifier::showImage(const cv::Mat & image)
 {
+	if (!debug_) return 0;
 	cv::namedWindow("debug");
 	cv::imshow("debug", image);
 	cv::waitKey(0);
@@ -381,31 +508,66 @@ int filter::Algos::IDPlateIdentifier::showImage(const cv::Mat & image)
 cv::Mat filter::Algos::IDPlateIdentifier::convertColorToGrayscale(const cv::Mat & plateImageColor)
 {
 	cv::Mat output;
+	if (plateImageColor.channels() == 2)
+	{
+		std::cout << "[WARNING] IDplateIdentifier::convertColorToGrayscale - Alpha is not handled";
+	}
 	(plateImageColor.channels() != 1) ? cv::cvtColor(plateImageColor, output, CV_BGR2GRAY) : output = plateImageColor.clone();
 
-	//std::cout << "convetColorToGrayscale - Input: Channels(" << plateImageColor.channels() << "). // Type(" << plateImageColor.type() << ")" << std::endl;
-	//std::cout << "convetColorToGrayscale - Output: Channels(" << output.channels() << "). // Type(" << output.type() << ")" << std::endl;
 	return output; return cv::Mat();
 }
 
 cv::Mat filter::Algos::IDPlateIdentifier::convertGrayscaleToBGR(const cv::Mat & plateImage)
 {
 	cv::Mat output;
+	if (plateImage.channels() == 4)
+	{
+		std::cout << "[WARNING] IDplateIdentifier::convertGrayscaleToBGR - Alpha is not handled";
+	}
 	(plateImage.channels() != 3) ? cv::cvtColor(plateImage, output, CV_GRAY2BGR) : output = plateImage.clone();
 
-	//std::cout << "convertGrayscaleToBGR - Input: Channels(" << plateImageGrayscale.channels() << "). // Type(" << plateImageGrayscale.type() << ")" << std::endl;
-	//std::cout << "convertGrayscaleToBGR - Output: Channels(" << output.channels() << "). // Type(" << output.type() << ")" << std::endl;
+	return output;
+}
+
+cv::Mat filter::Algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels)
+{
+	cv::Mat output = plateImage.clone();
+
+	if (charactersRects.size() != charactersLabels.size())
+	{
+		throw HipeException("[ERROR] IDPlateRectifier::createOutputImage - invalid arguments, charactersRects and charactersLabels size don't match.");
+	}
+
+	const int fontFace = cv::FONT_HERSHEY_PLAIN;
+	const double fontScale = 2;
+	const int fontThickness = 2;
+	int baseline = 0;
+
+	for (size_t i = 0; i < charactersRects.size(); ++i)
+	{
+		const cv::Rect& character = charactersRects[i];
+		cv::Size textSize = cv::getTextSize(charactersLabels[i], fontFace, fontScale, fontThickness, &baseline);
+
+		const int posX = (cv::max)(0, (cv::min)(character.x + (character.width - textSize.width) / 2, plateImage.cols - 1));
+		const int posY = (cv::max)(0, (cv::min)(character.y + (character.height + textSize.height) / 2, plateImage.rows - 1));
+		cv::Point textPos(posX, posY);
+
+		cv::putText(output, charactersLabels[i], textPos, fontFace, fontScale, cv::Scalar(0, 0, 255), fontThickness);
+	}
+
+	showImage(output);
+
 	return output;
 }
 
 filter::Algos::LabelOCR::LabelOCR()
 {
 	init();
-	showImages_ = false;
+	debug_ = false;
 }
 
 filter::Algos::LabelOCR::LabelOCR(bool showImages)
-	: showImages_(showImages)
+	: debug_(showImages)
 {
 	init();
 }
@@ -427,7 +589,7 @@ void filter::Algos::LabelOCR::preProcess(const cv::Mat & InputImage, cv::Mat & b
 		-1.0, -1.0, -1.0, -1.0, -1.0);
 
 	cv::Mat midImage = quantizeImage(InputImage, 2);
-	showImage(midImage);
+	//showImage(midImage);
 
 	//bilateralFilter(midImage, midImage2, ksize, ksize * 2, ksize / 2);
 	cv::Mat midImageGrayscale;
@@ -438,6 +600,9 @@ void filter::Algos::LabelOCR::preProcess(const cv::Mat & InputImage, cv::Mat & b
 	//dst = equalize(dst);
 
 	binImage = binarizeImage(midImageGrayscale);
+
+	const int margin = 20;
+
 
 	//filter2D(dst, midImage2, InputImage.depth(), HPKernel);
 	//cvtColor(midImage2, binImage, COLOR_RGB2GRAY);*/
@@ -460,27 +625,34 @@ void filter::Algos::LabelOCR::preProcess(const cv::Mat & InputImage, cv::Mat & b
 
 	//binImage = InputImage;
 
-	showImage(binImage);
+	//showImage(binImage);
 	//threshold(midImage, binImage, 60, 255, CV_THRESH_BINARY);
 	//threshold(binImage, binImage ,0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
 	//erode(binImage, binImage, 3, Point(-1, -1), 2, 1, 1);
 	//morphologyEx( binImage,binImage,MORPH_CLOSE, Morph);
 }
 
-std::vector<std::string> filter::Algos::LabelOCR::runRecognition(const std::vector<cv::Mat>& labelImage, int labelType)
+std::vector<std::string> filter::Algos::LabelOCR::runRecognition(const std::vector<cv::Mat>& labelsImages, int labelType)
 {
 	std::vector<std::string> output;
+	const int minConfidence = 30;
 
-	output.resize(labelImage.size());
-
-	for (size_t i = 0; i < labelImage.size(); i++)
+	for (size_t i = 0; i < labelsImages.size(); ++i)
 	{
-		if (!labelImage[i].empty() && labelType == 1)
-			output[i] = runPrediction1(labelImage[i], i);
-
-		if (!labelImage[i].empty() && labelType == 2)
-			output[i] = runPrediction2(labelImage[i], i);
+		cv::Mat labelImage = labelsImages[i];
+		if (!labelImage.empty())
+		{
+			// Legacy Note: labelType was 1 (min confidence = 1, component level = OCR_LEVEL_TEXTLINE), or 2 (min confidene = 30, component level = 0)
+			std::string result = runPrediction(labelImage, minConfidence, i);
+			output.push_back(result);
+		}
+		else
+		{
+			output.push_back("error");
+			std::cout << "[WARNING] IDPlateIdentifier::LabelOCR - label image is invalid" << std::endl;
+		}
 	}
+
 	return (output);
 }
 
@@ -489,100 +661,48 @@ void filter::Algos::LabelOCR::init()
 	tesseOCR_ = cv::text::OCRTesseract::create(NULL, "eng", "ABCDEFHIJKLMNOPQRSTUVWXYZ0123456789-Code", 3, 7);
 }
 
-std::string filter::Algos::LabelOCR::runPrediction1(const cv::Mat & labelImage, int i)
+std::string filter::Algos::LabelOCR::runPrediction(const cv::Mat & labelImage, int minConfidence, int imageIndex)
 {
-	std::string t1;
-	if (labelImage.empty())	return t1;
+	cv::Mat image = labelImage.clone();
 
-	cv::Mat textImage;
-	cv::Mat drawImage = labelImage.clone();
-
-	double labelROI_x = labelImage.cols * 0.10;	// initial point x
-	double labelROI_y = labelImage.rows * 0.76; // initial point y
-	double labelROI_w = labelImage.cols * 0.6;	// width
-	double labelROI_h = labelImage.rows * 0.20; // heigth
-
-	cv::Rect labelROI(labelROI_x, labelROI_y, labelROI_w, labelROI_h);
-
-	cv::Mat midImage;
-	preProcess(drawImage, textImage);
-
-	//tesseOCR_->setWhiteList("W");
-	t1 = tesseOCR_->run(textImage, 1, cv::text::OCR_LEVEL_TEXTLINE);
-	// Get the text
-
-	/*t1 = string(text1);
-	if (t1.size() > 2)
-	t1.resize(t1.size() - 2);*/
-
-	std::cout << "label_" << i << ": " << t1 << std::endl;
-
-	if (showImages_)
+	// Assert image is valid
+	if (!labelImage.data)
 	{
-		cv::putText(drawImage, t1, cv::Point(labelROI.x + 7, labelROI.y - 5), cv::FONT_HERSHEY_PLAIN, 1.5, cv::Scalar(0, 0, 255), 2, 8); // CV_FONT_HERSHEY_SIMPLEX
-		cv::rectangle(drawImage, labelROI, cv::Scalar(0, 0, 255), 2, 8, 0);
-
-		std::string iStr = std::to_string(i);
-
-		cv::imshow("label_" + iStr, labelImage);
-		cv::imshow("textImage_1_" + iStr, textImage);
-		cv::imshow("letters_1_" + iStr, drawImage);
-		cv::waitKey(0);
+		throw HipeException("IDPlateIdentifier::LabelOCR::runPrediction - Input image is invalid");
 	}
 
-	return t1;
-}
+	// Preprocess image
+	cv::Mat preprocessedImage;
+	preProcess(image, preprocessedImage);
+	const int margin = 20;
+	preprocessedImage = enlargeCharacter(preprocessedImage, margin);
 
-std::string filter::Algos::LabelOCR::runPrediction2(const cv::Mat & labelImage, int i)
-{
-	std::string t1;
-	if (labelImage.empty())	return t1;
+	// Find character
+	//std::string text = tesseOCR_->run(preprocessedImage, 1, cv::text::OCR_LEVEL_TEXTLINE);	// legacy runPrediction1
+	//std::string text = tesseOCR_->run(preprocessedImage, 30);									// legacy runPrediction2
+	std::string text = tesseOCR_->run(preprocessedImage, minConfidence);
 
-	cv::Mat textImage;
-	cv::Mat drawImage = labelImage.clone();
+	// Log the text
+	if (imageIndex >= 0)	std::cout << "label_" << imageIndex << ": " << text << std::endl;
 
-	double labelROI_x = 0;					// initial point x
-	double labelROI_y = 0;					// initial point y
-	double labelROI_w = labelImage.cols;	// width
-	double labelROI_h = labelImage.rows;	// heigth
-
-	cv::Rect labelROI(labelROI_x, labelROI_y, labelROI_w, labelROI_h);
-
-	cv::Mat midImage;
-	preProcess(drawImage, textImage);
-	drawImage = cv::Mat::zeros(textImage.size(), CV_8UC3);
-
-	//textImage = drawImage;
-
-	t1 = tesseOCR_->run(textImage, 30);
-	//tess.TesseractRect(textImage.data, 1, textImage.step1(), labelROI.x, labelROI.y, labelROI.width, labelROI.height);
-	// Get the text
-	//char* text1 = tess.GetUTF8Text();
-	//t1 = string(text1);
-	showImage(textImage);
-
-
-	std::cout << "label_" << i << ": " << t1 << std::endl;
-
-	if (showImages_)
+	// Debug
+	if (debug_)
 	{
-		cv::putText(drawImage, t1, cv::Point(labelROI.x + 7, labelROI.y + 5), cv::FONT_HERSHEY_PLAIN, 1.5, cv::Scalar(0, 0, 255), 2, 8); // CV_FONT_HERSHEY_SIMPLEX
-		cv::rectangle(drawImage, labelROI, cv::Scalar(0, 0, 255), 2, 8, 0);
+		cv::Size labelTextSize = cv::getTextSize(text, cv::FONT_HERSHEY_PLAIN, 2, 2, nullptr);
+		cv::Mat labelMat = cv::Mat::zeros(preprocessedImage.size(), CV_8UC3);
 
-		std::string iStr(std::to_string(i));
+		const int posX = (cv::max)(0, (cv::min)((labelMat.cols - labelTextSize.width) / 2, labelMat.cols));
+		const int posY = (cv::max)(0, (cv::min)((labelMat.rows + labelTextSize.height) / 2, labelMat.rows));
+		cv::Point textPos(posX, posY);
 
-		imshow("label_" + iStr, labelImage);
-		imshow("textImage_2_" + iStr, textImage);
-		imshow("letters_2_" + iStr, drawImage);
+		cv::putText(labelMat, text, textPos, cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(0, 0, 255), 2, 8);
 
-		cv::waitKey(0);
-
-		cv::destroyWindow("label_" + iStr);
-		cv::destroyWindow("textImage_2_" + iStr);
-		cv::destroyWindow("letters_2_" + iStr);
+		showImage(labelImage);
+		showImage(preprocessedImage);
+		showImage(labelMat);
 	}
 
-	return (t1);
+	return text;
 }
 
 void filter::Algos::LabelOCR::filterUndesiredChars(std::string & str)
@@ -630,8 +750,27 @@ cv::Mat filter::Algos::LabelOCR::binarizeImage(const cv::Mat & image)
 	return output;
 }
 
+cv::Mat filter::Algos::LabelOCR::enlargeCharacter(const cv::Mat & character, int margin)
+{
+	const cv::Size newSize(character.cols + margin * 2, character.rows + margin * 2);
+	cv::Mat output(cv::Mat::zeros(newSize, character.type()));
+
+	cv::Rect roi(margin, margin, character.cols, character.rows);
+	character.copyTo(output(roi));
+
+	//showImage(output);
+
+	cv::Mat dilateKernel = cv::getStructuringElement(cv::MorphShapes::MORPH_CROSS, cv::Size(3, 3));
+	cv::dilate(output, output, dilateKernel);
+
+	//showImage(output);
+
+	return output;
+}
+
 int filter::Algos::LabelOCR::showImage(const cv::Mat & image)
 {
+	if (!debug_) return 0;
 	cv::namedWindow("debug");
 	cv::imshow("debug", image);
 	cv::waitKey(0);

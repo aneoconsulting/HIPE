@@ -26,10 +26,13 @@ namespace filter
 				leftRatio = 5.0;
 				rightRatio = 5.0;
 				topRatio = 5.0;
+				debug_ = false;
 			}
 			REGISTER_P(double, leftRatio);
 			REGISTER_P(double, rightRatio);
 			REGISTER_P(double, topRatio);
+			REGISTER_P(bool, debug_)
+
 
 		public:
 			HipeStatus process() override;
@@ -81,6 +84,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(IDPlateRectifier, leftRatio, rightRatio, topRatio);
+		ADD_CLASS(IDPlateRectifier, leftRatio, rightRatio, topRatio, debug_);
 	}
 }
