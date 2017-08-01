@@ -10,6 +10,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/cudaimgproc.hpp>
 
+#include "filter/Algos/IDPlate/IDPlateTools.h"
+
 
 namespace filter
 {
@@ -23,26 +25,20 @@ namespace filter
 			{
 				useGPU = false;
 				bfilterPasses = 2;
-				debug_ = false;
+				_debug = false;
 			}
 			REGISTER_P(bool, useGPU);
 			REGISTER_P(int, bfilterPasses);
-			REGISTER_P(bool, debug_);
+			REGISTER_P(bool, _debug);
 
 		public:
 			HipeStatus process() override;
 
 		private:
 			cv::Mat preprocessPlate(const cv::Mat& plateImage);
-
-			cv::Mat applyBilateralFiltering(const cv::Mat& plateImage, int iterations, bool useGPU = false);
-			cv::Mat convertToGrayscale(const cv::Mat& plateImageColor);
 			cv::Point maskBlobs(cv::Mat& plateImageBlackWhite, const cv::Scalar& color);
-
-
-			void showImage(const cv::Mat& image);
 		};
 
-		ADD_CLASS(IDPlateCropper, useGPU, bfilterPasses, debug_);
+		ADD_CLASS(IDPlateCropper, useGPU, bfilterPasses, _debug);
 	}
 }

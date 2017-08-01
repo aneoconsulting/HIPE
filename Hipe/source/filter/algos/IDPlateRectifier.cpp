@@ -1,5 +1,6 @@
 #include "filter\Algos\IDPlateRectifier.h"
 
+
 HipeStatus filter::algos::IDPlateRectifier::process()
 {
 	data::ImageData data = _connexData.pop();
@@ -9,7 +10,7 @@ HipeStatus filter::algos::IDPlateRectifier::process()
 	normalizeRatios();
 
 	// Find ID plate's characters
-	std::vector<cv::Rect> plateCharacters = findPlateCharacters(image);
+	std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacters(image, 0.1, 0.8, _debug);
 
 	// Separate them by rows (lines)
 	std::vector<int> characterRows = separateTextRows(plateCharacters);
@@ -18,14 +19,14 @@ HipeStatus filter::algos::IDPlateRectifier::process()
 	characterRows.push_back(image.rows - 1);
 
 	//Debug
-	if (debug_)
+	if (_debug)
 	{
 		cv::Mat debugImage = image.clone();
 		for (auto & row : characterRows)
 		{
 			cv::line(debugImage, cv::Point(0, row), cv::Point(debugImage.cols - 1, row), cv::Scalar(0, 0, 255), 4);
 		}
-		showImage(debugImage);
+		filter::algos::IDPlate::showImage(debugImage);
 	}
 
 	// Sort characters by rows
@@ -38,143 +39,20 @@ HipeStatus filter::algos::IDPlateRectifier::process()
 	cv::Mat rectifiedPlate = perspectiveCrop(image, bounds);
 
 	// Debug
-	showImage(rectifiedPlate);
+	if (_debug)	filter::algos::IDPlate::showImage(rectifiedPlate);
 
 	_connexData.push(data::ImageData(rectifiedPlate));
 	return OK;
 }
 
-bool filter::algos::IDPlateRectifier::compareRectsByPosition(const cv::Rect & a, const cv::Rect & b)
-{
-	int ay = (a.y * 0.5);
-	int ax = (a.x * 0.5);
-	int by = (b.y * 0.5);
-	int bx = (b.x * 0.5);
-
-	if (abs(ay - by) > 10)
-		return (ay < by);
-
-	return (ax < bx);
-}
-
-bool filter::algos::IDPlateRectifier::compareByDeriv(const std::pair<int, int>& a, const std::pair<int, int>& b)
+bool filter::algos::IDPlateRectifier::compByDeriv(const std::pair<int, int>& a, const std::pair<int, int>& b)
 {
 	return a.first > b.first;
 }
 
-bool filter::algos::IDPlateRectifier::compareRectByHorizontalPosition(const cv::Rect & a, const cv::Rect & b)
+bool filter::algos::IDPlateRectifier::compRectByHPos(const cv::Rect & a, const cv::Rect & b)
 {
 	return a.x < b.x;
-}
-
-std::vector<cv::Rect> filter::algos::IDPlateRectifier::findPlateCharacters(const cv::Mat & plateImage)
-{
-	cv::Mat imageCopy = plateImage.clone();
-	cv::Mat imageGrayscale = convertColorToGrayscale(imageCopy);
-
-	cv::Mat debugImage = convertGrayscaleToBGR(imageGrayscale);
-
-	//// Preprocess image
-	// First morphological transform
-	imageGrayscale = applyMorphTransform(imageGrayscale, cv::MorphShapes::MORPH_ELLIPSE, cv::MorphTypes::MORPH_GRADIENT, cv::Size(3, 3));
-	// Debug
-	showImage(imageGrayscale);
-
-	// Convert to black & white
-	const int threshold = 64;
-	cv::threshold(imageGrayscale, imageGrayscale, threshold, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-	// Debug
-	showImage(imageGrayscale);
-
-	// Second morphological transform
-	imageGrayscale = applyMorphTransform(imageGrayscale, cv::MorphShapes::MORPH_RECT, cv::MorphTypes::MORPH_CLOSE, cv::Size(3, 1));
-	//Debug
-	showImage(imageGrayscale);
-
-	// Find contours of preprocessed image
-	std::vector<std::vector<cv::Point>> contours;
-	std::vector<cv::Vec4i> hierarchy;
-
-	cv::findContours(imageGrayscale.clone(), contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE, cv::Point(0, 0));
-
-	//// Find characters
-	std::vector<cv::Rect> charactersRects;
-	cv::Mat mask = cv::Mat::zeros(imageGrayscale.size(), CV_8UC1);
-
-	const double lowerBound = 0.20;
-	const double upperBound = 0.80;
-	const cv::Size minRectSize(8, 20);
-	const double maxRectWidth = 0.1 * imageGrayscale.cols;
-	const double xMinPos = 0.1 * imageGrayscale.cols;
-	const double xMaxPos = 0.8 * imageGrayscale.cols;
-
-	for (int idx = 0; idx >= 0; idx = hierarchy[idx][0])
-	{
-		cv::Rect characterRect = cv::boundingRect(contours[idx]);
-		cv::Mat maskROI(mask, characterRect);
-		maskROI = cv::Scalar(0, 0, 0);
-
-		// fill the contour
-		cv::drawContours(mask, contours, idx, cv::Scalar(255, 255, 255), CV_FILLED);
-
-		//// Debug (low level)
-		//showImage(mask);
-
-		// ratio of non-zero pixels in the filled region
-		double ratio = static_cast<double>(cv::countNonZero(maskROI)) / (characterRect.width * characterRect.height);
-
-		//// Debug (low level)
-		//if (debug_)
-		//{
-		//	cv::rectangle(debugImage, characterRect, cv::Scalar(255, 0, 0), 2);
-		//	showImage(debugImage);
-		//}
-
-		// Assume that at least 45% of the rect area is filled if it contains text
-		if (ratio > lowerBound && ratio < upperBound
-			&&
-			// Constraints on rect size
-			(characterRect.height > minRectSize.height && characterRect.width > minRectSize.width)
-			// These two conditions alone are not very robust. better to use something
-			// like the number of significant peaks in a horizontal projection as a third condition
-			&&
-			characterRect.width <= maxRectWidth
-			&&
-			// Bug when the image is already cropped
-			characterRect.x >= xMinPos
-			&&
-			characterRect.x <= xMaxPos
-			)
-		{
-			charactersRects.push_back(characterRect);
-
-			// Debug (low level)
-			if (debug_)
-			{
-				cv::rectangle(debugImage, characterRect, cv::Scalar(0, 255, 0), 2);
-			}
-		}
-
-		else
-		{
-			// Debug (low level)
-			if (debug_)
-			{
-				cv::rectangle(debugImage, characterRect, cv::Scalar(0, 0, 255), 2);
-			}
-		}
-		
-		// Debug (low level)
-		//showImage(debugImage);
-	}
-
-	// Debug
-	showImage(debugImage);
-
-	// Sort found characters by position
-	std::sort(charactersRects.begin(), charactersRects.end(), [this](const cv::Rect& a, const cv::Rect& b) { return this->compareRectsByPosition(a, b); });
-
-	return charactersRects;
 }
 
 std::vector<int> filter::algos::IDPlateRectifier::separateTextRows(const std::vector<cv::Rect>& charactersRects)
@@ -205,7 +83,7 @@ std::vector<int> filter::algos::IDPlateRectifier::separateTextRows(const std::ve
 
 	mean /= charactersRects.size();
 
-	std::sort(deriv.begin(), deriv.end(), [this](const std::pair<int, int>& a, const std::pair<int, int>& b) { return this->compareByDeriv(a, b); });
+	std::sort(deriv.begin(), deriv.end(), [this](const std::pair<int, int>& a, const std::pair<int, int>& b) { return this->compByDeriv(a, b); });
 
 	for (int i = 0; i < deriv.size(); i++)
 	{
@@ -224,20 +102,19 @@ std::vector<int> filter::algos::IDPlateRectifier::separateTextRows(const std::ve
 
 std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::sortCharactersByRows(const cv::Mat & plateImage, const std::vector<cv::Rect>& plateCharacters, const std::vector<int>& charactersRows)
 {
-
 	const int lines = charactersRows.size();
 	std::vector<std::vector<cv::Rect>> rows(lines);
 
 	// Debug
 	cv::Mat image;
-	if (debug_)
+	if (_debug)
 	{
 		image = plateImage.clone();
 		for (int i = 0; i < lines; i++)
 		{
 			cv::line(image, cv::Point(0, charactersRows[i]), cv::Point(image.cols - 1, charactersRows[i]), cv::Scalar(0, 0, 255));
 		}
-		showImage(image);
+		filter::algos::IDPlate::showImage(image);
 	}
 
 
@@ -247,7 +124,7 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::sortCharacte
 		nextLine = charactersRows[j];
 
 		// Debug
-		if (debug_)
+		if (_debug)
 		{
 			image = plateImage.clone();
 		}
@@ -260,7 +137,7 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::sortCharacte
 			rectCenter.y = plateCharacters[i].y + plateCharacters[i].height * 0.5;
 
 			// Debug
-			if (debug_)
+			if (_debug)
 			{
 				cv::circle(image, rectCenter, 4, cv::Scalar(255, 255, 0), 4);
 				//showImage(image);
@@ -286,7 +163,7 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findCharactersBounds(con
 	// Sort the rects in the lines by position
 	for (auto & line : bestLines)
 	{
-		std::sort(line.begin(), line.end(), [this](const cv::Rect& a, const cv::Rect& b) { return this->compareRectByHorizontalPosition(a, b); });
+		std::sort(line.begin(), line.end(), [this](const cv::Rect& a, const cv::Rect& b) { return this->compRectByHPos(a, b); });
 	}
 
 	// Find the lines bounds
@@ -308,6 +185,7 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::findLongestT
 
 	for (int i = 0; i < textList.size(); i++)
 	{
+		// Exclude lines too short
 		if (textList[i].size() < countMinCharacters) continue;
 
 		std::vector<double> deriv(textList[i].size() - 1);
@@ -387,7 +265,7 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findCharactersLinesBound
 	int xMaxRight = std::numeric_limits<int>::min();
 	int yMaxRight = std::numeric_limits<int>::min();
 
-	// Find characters englobing 4 corners (min/max left x/y coords min/max right x/y coords)
+	// Find characters' englobing 4 corners (min/max left x/y coords min/max right x/y coords)
 	for (auto & line : lines)
 	{
 		const cv::Rect& firstCharacter = line.front();
@@ -403,7 +281,7 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findCharactersLinesBound
 		if (yMaxRight < lastCharacter.y + lastCharacter.height)		yMaxRight = lastCharacter.y + lastCharacter.height;
 
 
-		if (debug && debug_)
+		if (debug && _debug)
 		{
 			cv::Mat temp = image.clone();
 			cv::rectangle(temp, firstCharacter, cv::Scalar(255, 0, 0));
@@ -421,18 +299,18 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findCharactersLinesBound
 			cv::line(temp, cv::Point(0, yMaxLeft), cv::Point(temp.cols, yMaxLeft), cv::Scalar(255, 0, 255));
 			cv::line(temp, cv::Point(0, yMinRight), cv::Point(temp.cols, yMinRight), cv::Scalar(255, 0, 255));
 			cv::line(temp, cv::Point(0, yMaxRight), cv::Point(temp.cols, yMaxRight), cv::Scalar(255, 0, 255));
-			showImage(temp);
+			filter::algos::IDPlate::showImage(temp);
 		}
 	}
 
 	cv::Point topLeft(xMinLeft, yMinLeft);
 	cv::Point topRight(xMaxRight, yMinRight);
 
-	if (debug && debug_)
+	if (debug && _debug)
 	{
 		cv::Mat temp = image.clone();
 		cv::line(temp, topLeft, topRight, cv::Scalar(255, 255, 0), 4);
-		showImage(temp);
+		filter::algos::IDPlate::showImage(temp);
 	}
 
 	// To compute the bottom corners we must take into account the homography perspective
@@ -452,7 +330,7 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findCharactersLinesBound
 	cv::Point bottomRight(xMaxRight, finalBottomRightY);
 	cv::Point bottomLeft(xMinLeft, finalBottomLeftY);
 
-	if (debug)
+	if (debug && _debug)
 	{
 		cv::Mat temp = image.clone();
 		cv::circle(temp, topLeft, 4, cv::Scalar(255, 0, 255), 4);
@@ -465,7 +343,7 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findCharactersLinesBound
 		cv::line(temp, bottomRight, bottomLeft, cv::Scalar(0, 0, 255), 3);
 		cv::line(temp, bottomLeft, topLeft, cv::Scalar(0, 0, 255), 3);
 
-		showImage(temp);
+		filter::algos::IDPlate::showImage(temp);
 	}
 
 
@@ -480,14 +358,14 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findCharactersLinesBound
 
 std::vector<cv::Point> filter::algos::IDPlateRectifier::findPlateTextArea(const cv::Mat & plateImage, const std::vector<cv::Point>& textCorners)
 {
-	cv::Mat image = convertColorToGrayscale(plateImage);
+	cv::Mat image = filter::algos::IDPlate::convertColor2Gray(plateImage);
 
 	std::vector<cv::Point> newCorners(textCorners);
 
-	//Preprocess image (binary & bigger lines)
+	// Preprocess image (binary & bigger lines)
 	cv::Mat binaryImage;
 	cv::Canny(image, binaryImage, 100, 50, 3, true);
-	binaryImage = applyMorphTransform(binaryImage, cv::MorphShapes::MORPH_CROSS, cv::MorphTypes::MORPH_GRADIENT, cv::Size(3, 3));
+	binaryImage = filter::algos::IDPlate::applyMorphTransform(binaryImage, cv::MorphShapes::MORPH_CROSS, cv::MorphTypes::MORPH_GRADIENT, cv::Size(3, 3));
 
 	// Extract the image's Horizontal lines
 	cv::Mat horizontalLines;
@@ -499,7 +377,7 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findPlateTextArea(const 
 	cv::dilate(horizontalLines, horizontalLines, horizontalKernel);
 	cv::dilate(horizontalLines, horizontalLines, cv::Mat::ones(3, 3, CV_8UC1));
 	// Debug
-	showImage(horizontalLines);
+	if (_debug)filter::algos::IDPlate::showImage(horizontalLines);
 
 	// Find top line
 	std::vector<cv::Point> topCorners = findAreaTopLine(horizontalLines, textCorners);
@@ -513,18 +391,45 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findPlateTextArea(const 
 	cv::erode(binaryImage, verticalLines, verticalKernel);
 	cv::dilate(verticalLines, verticalLines, verticalKernel);
 	// Debug
-	showImage(verticalLines);
+	if (_debug)filter::algos::IDPlate::showImage(verticalLines);
 
+	// Find left line
 	std::vector<cv::Point> leftCorners = findAreaLeftLine(verticalLines, newCorners);
 	newCorners[0] = leftCorners[0];
 	newCorners[3] = leftCorners[1];
 
+	// Find right line
 	std::vector<cv::Point> rightCorners = findAreaRightLine(verticalLines, newCorners);
 	newCorners[1] = rightCorners[0];
 	newCorners[2] = rightCorners[1];
 
+	// Add offset to botom line
 	// Debug
-	if (debug_)
+	if (_debug)
+	{
+		cv::Mat temp(plateImage.clone());
+		cv::circle(temp, newCorners[2], 4, cv::Scalar(255, 255, 0), 1);
+		cv::circle(temp, newCorners[3], 4, cv::Scalar(255, 255, 0), 1);
+		filter::algos::IDPlate::showImage(temp);
+	}
+
+	const int offset = 0;
+	const int maxOffsettedValue = cv::max(newCorners[2].y, newCorners[3].y) + offset;
+	if (maxOffsettedValue < plateImage.rows - 1)
+	{
+		newCorners[2].y += offset;
+		newCorners[3].y += offset;
+	}
+	// If offset is too high add what can be added
+	else
+	{
+		const int newOffset = maxOffsettedValue - plateImage.rows - 1;
+		newCorners[2].y += maxOffsettedValue;
+		newCorners[3].y += maxOffsettedValue;
+	}
+
+	// Debug
+	if (_debug)
 	{
 		cv::Mat newTextArea = plateImage.clone();
 		cv::circle(newTextArea, newCorners[0], 3, cv::Scalar(255, 0, 0), 2);
@@ -537,7 +442,7 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findPlateTextArea(const 
 		cv::line(newTextArea, newCorners[2], newCorners[3], cv::Scalar(255, 0, 255), 2);
 		cv::line(newTextArea, newCorners[3], newCorners[0], cv::Scalar(255, 0, 255), 2);
 
-		showImage(newTextArea);
+		filter::algos::IDPlate::showImage(newTextArea);
 	}
 	return newCorners;
 }
@@ -565,14 +470,14 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaTopLine(const cv
 	pt2.x = cv::max(0, (int)(pt2.x /*- abs(xmax - xmin) / 4.0*/));
 
 	// Debug
-	if (debug_)
+	if (_debug)
 	{
-		cv::Mat searchLine = convertGrayscaleToBGR(plateHorizontalLines);
+		cv::Mat searchLine = filter::algos::IDPlate::convertGray2Color(plateHorizontalLines);
 		cv::line(searchLine, cv::Point(pt1.x, 0), pt1, cv::Scalar(0, 0, 255), 1);
 		cv::line(searchLine, cv::Point(pt2.x, 0), pt2, cv::Scalar(0, 0, 255), 1);
 		cv::circle(searchLine, pt1, 3, cv::Scalar(255, 255, 0), 3);
 		cv::circle(searchLine, pt2, 3, cv::Scalar(255, 255, 0), 3);
-		showImage(searchLine);
+		filter::algos::IDPlate::showImage(searchLine);
 	}
 
 	ptNext.x = pt1.x;
@@ -612,13 +517,13 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaTopLine(const cv
 	}
 
 	// Debug
-	if (debug_)
+	if (_debug)
 	{
-		cv::Mat topLine = convertGrayscaleToBGR(plateHorizontalLines);
+		cv::Mat topLine = filter::algos::IDPlate::convertGray2Color(plateHorizontalLines);
 		cv::line(topLine, pt1, cartesianMax, cv::Scalar(0, 0, 255), 1);
 		cv::circle(topLine, pt1, 3, cv::Scalar(255, 255, 0), 3);
 		cv::circle(topLine, cartesianMax, 3, cv::Scalar(255, 255, 0), 3);
-		showImage(topLine);
+		filter::algos::IDPlate::showImage(topLine);
 	}
 
 	// Now compute new corners and lines intersection
@@ -644,134 +549,16 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaTopLine(const cv
 	topLineCorners.push_back(areaTopRightCorner);
 
 	// Debug
-	if (debug_)
+	if (_debug)
 	{
-		cv::Mat topLine = convertGrayscaleToBGR(plateHorizontalLines);
+		cv::Mat topLine = filter::algos::IDPlate::convertGray2Color(plateHorizontalLines);
 		cv::line(topLine, areaTopLeftCorner, areaTopRightCorner, cv::Scalar(0, 0, 255), 1);
 		cv::circle(topLine, areaTopLeftCorner, 3, cv::Scalar(255, 255, 0), 3);
 		cv::circle(topLine, areaTopRightCorner, 3, cv::Scalar(255, 255, 0), 3);
-		showImage(topLine);
+		filter::algos::IDPlate::showImage(topLine);
 	}
 
 	return topLineCorners;
-}
-
-cv::Point filter::algos::IDPlateRectifier::_findNextTopPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
-{
-	bool foundBegin = false;
-	int begin;
-	int end;
-
-	int chan = plateImage.channels();
-
-	cv::Mat col = plateImage.col(currPosition.x).clone();
-	cv::Mat tCol = col.t();
-
-	// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
-	//const uchar * _col = tCol.ptr<unsigned char>(0);
-	//Now look for next line by white pixel
-	for (int y = currPosition.y; y >= limit.y; y--)
-	{
-		// TODO: <== HERE
-		const int channelValue = static_cast<int>(tCol.at<uchar>(0, y));
-		//if (foundBegin == false && _col[y] == 255)	// TM: <== Weird behavior with pointers
-		if (!foundBegin && channelValue == 255)
-		{
-			foundBegin = true;
-			begin = y;
-			continue;
-		}
-
-		//if (foundBegin == true && _col[y] == 0)			// TM: <== Weird behavior with pointers
-		if (foundBegin && channelValue == 0)
-		{
-			end = cv::max(0, y - 1);
-
-			cv::Point output(currPosition.x, cv::max(0, begin + (end - begin) / 2));
-
-			// Debug
-			
-			//cv::Mat temp = col.clone();
-			//cv::circle(temp, output, 4, cv::Scalar(255, 255, 0));
-			//showImage(temp);
-
-			return output;
-		}
-	}
-	if (!foundBegin) return cv::Point(-1, -1);
-
-	return cv::Point(currPosition.y, 0);
-}
-
-int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
-{
-	const double nbSampleTheta = 60;
-	const double nbSampleRho = 60;
-	const double minAngle = -CV_PI / 12; // (- 15 degrees)
-	const double maxAngle = CV_PI / 12; // ( + 15 degrees)
-	const double rho = lineVec[0];
-	const double strideTheta = (maxAngle - minAngle) / nbSampleTheta;
-	const double strideRho = (rho) / nbSampleRho;
-
-	int sum = 0;
-	int sumMax = 0;
-	double tBest = 0.0;
-
-	cv::Point2f bestPoint;
-
-	for (double t = maxAngle; t > minAngle; t -= strideTheta)
-	{
-		sum = 0;
-		double sinT = sin(t);
-		double cosT = cos(t);
-
-		for (double r = 1; r < rho; r += strideRho)
-		{
-			int x = cv::max(0.0, cv::min((double)image.cols - 1, origin.x + r * cosT));
-
-			int y = cv::max(0.0, cv::min((double)image.rows - 1, origin.y + r * sinT));
-
-
-			// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
-			//const uchar * rows = image.ptr(y);
-			//const int debugVAlue = rows[x];
-			const int channelValue = static_cast<int>(image.at<uchar>(y, x));
-			//if (rows[x] == 255)
-			if (channelValue == 255.0)
-			{
-				sum++;
-			}
-		}
-
-		// Debug
-		const int debugX = origin.x + rho * cosT;
-		const int debugY = origin.y + rho * sinT;
-		//cv::Mat searchLine = convertGrayscaleToBGR(image);
-		//cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
-		//cv::circle(searchLine, cv::Point2f(debugX, debugY), 3, cv::Scalar(0, 0, 255), 3);
-		//cv::line(searchLine, origin, cv::Point2f(debugX, debugY), cv::Scalar(0, 255, 0), 2);
-		//showImage(searchLine);
-
-		if (sumMax < sum)
-		{
-			sumMax = sum;
-			tBest = t;
-
-			// Debug
-			bestPoint = cv::Point2f(debugX, debugY);
-		}
-	}
-
-	//// Debug
-	//cv::Mat temp = convertGrayscaleToBGR(image);
-	//cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
-	//cv::circle(temp, bestPoint, 2, cv::Scalar(255, 0, 0), 3);
-	//cv::line(temp, origin, bestPoint, cv::Scalar(0, 0, 255), 4);
-	//showImage(temp);
-
-	out_bestLineParameters = cv::Vec2f(rho, tBest);
-
-	return sumMax;
 }
 
 std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaLeftLine(const cv::Mat & plateVerticalLines, const std::vector<cv::Point>& textCorners)
@@ -797,14 +584,16 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaLeftLine(const c
 	pt2.y = cv::max(0, (int)(pt2.y - abs(ymax - ymin) / 6.0));				// 6 is the middle of 3 lines of text
 
 
-																			// Debug
-	cv::Mat searchLine = convertGrayscaleToBGR(plateVerticalLines);
-	cv::line(searchLine, cv::Point(0, pt1.y), pt1, cv::Scalar(0, 0, 255), 1);
-	cv::line(searchLine, cv::Point(0, pt2.y), pt2, cv::Scalar(0, 0, 255), 1);
-	cv::circle(searchLine, pt1, 3, cv::Scalar(255, 255, 0), 3);
-	cv::circle(searchLine, pt2, 3, cv::Scalar(255, 255, 0), 3);
-	showImage(searchLine);
-
+	// Debug
+	if (_debug)
+	{
+		cv::Mat searchLine = filter::algos::IDPlate::convertGray2Color(plateVerticalLines);
+		cv::line(searchLine, cv::Point(0, pt1.y), pt1, cv::Scalar(0, 0, 255), 1);
+		cv::line(searchLine, cv::Point(0, pt2.y), pt2, cv::Scalar(0, 0, 255), 1);
+		cv::circle(searchLine, pt1, 3, cv::Scalar(255, 255, 0), 3);
+		cv::circle(searchLine, pt2, 3, cv::Scalar(255, 255, 0), 3);
+		filter::algos::IDPlate::showImage(searchLine);
+	}
 	ptNext.x = pt1.x;
 	ptNext.y = pt1.y;
 	int maxValue = 0;
@@ -845,12 +634,14 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaLeftLine(const c
 	}
 
 	// Debug
-	cv::Mat leftLine = convertGrayscaleToBGR(plateVerticalLines);
-	cv::line(leftLine, pt1, cartesianMax, cv::Scalar(0, 0, 255), 2);
-	cv::circle(leftLine, pt1, 3, cv::Scalar(255, 255, 0), 3);
-	cv::circle(leftLine, cartesianMax, 3, cv::Scalar(255, 255, 0), 3);
-	showImage(leftLine);
-
+	if (_debug)
+	{
+		cv::Mat leftLine = filter::algos::IDPlate::convertGray2Color(plateVerticalLines);
+		cv::line(leftLine, pt1, cartesianMax, cv::Scalar(0, 0, 255), 2);
+		cv::circle(leftLine, pt1, 3, cv::Scalar(255, 255, 0), 3);
+		cv::circle(leftLine, cartesianMax, 3, cv::Scalar(255, 255, 0), 3);
+		filter::algos::IDPlate::showImage(leftLine);
+	}
 	//Now compute corner and the new intersection
 	cv::Vec4i line1, line2;
 	std::vector<cv::Point> LeftCorners;
@@ -874,18 +665,174 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaLeftLine(const c
 	LeftCorners.push_back(areaBottomLeftCorner);
 
 	// Debug
-	leftLine = IDPlateRectifier::convertGrayscaleToBGR(plateVerticalLines);
-	cv::line(leftLine, areaTopLeftCorner, areaBottomLeftCorner, cv::Scalar(0, 0, 255), 1);
-	cv::circle(leftLine, areaTopLeftCorner, 3, cv::Scalar(255, 255, 0), 3);
-	cv::circle(leftLine, areaBottomLeftCorner, 3, cv::Scalar(255, 255, 0), 3);
-	showImage(leftLine);
+	if (_debug)
+	{
+		cv::Mat leftLine = filter::algos::IDPlate::convertGray2Color(plateVerticalLines);
+		cv::line(leftLine, areaTopLeftCorner, areaBottomLeftCorner, cv::Scalar(0, 0, 255), 1);
+		cv::circle(leftLine, areaTopLeftCorner, 3, cv::Scalar(255, 255, 0), 3);
+		cv::circle(leftLine, areaBottomLeftCorner, 3, cv::Scalar(255, 255, 0), 3);
+		filter::algos::IDPlate::showImage(leftLine);
 
-	cv::Mat upperLeftCorner = leftLine;
-	cv::line(upperLeftCorner, areaTopLeftCorner, textCorners[1], cv::Scalar(0, 0, 255), 1);
-	cv::circle(upperLeftCorner, textCorners[1], 3, cv::Scalar(255, 255, 0), 3);
-	IDPlateRectifier::showImage(upperLeftCorner);
-
+		cv::Mat upperLeftCorner = leftLine;
+		cv::line(upperLeftCorner, areaTopLeftCorner, textCorners[1], cv::Scalar(0, 0, 255), 1);
+		cv::circle(upperLeftCorner, textCorners[1], 3, cv::Scalar(255, 255, 0), 3);
+		filter::algos::IDPlate::showImage(upperLeftCorner);
+	}
 	return LeftCorners;
+}
+
+std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaRightLine(const cv::Mat & plateVerticalLines, const std::vector<cv::Point>& textCorners)
+{
+	cv::Point2f pt1 = textCorners[1];
+	cv::Point2f pt2 = textCorners[2];
+	cv::Point2f ptNext;
+	IDPlateRectifier::SearchDirection searchDirection = IDPlateRectifier::SearchDirection::RIGHT;
+
+	// TODO: WARNING: BE CAREFUL HERE: what if pt1.x == pt2.x ?
+	int xmin = cv::min(pt1.x, pt2.x);
+	int xmax = cv::max(pt1.x, pt2.x);
+	int ymin = (pt1.x == xmin) ? pt1.y : pt2.y;
+	int ymax = (pt2.x == xmax) ? pt2.y : pt1.y;
+
+	// be sure the point are ordered
+	pt1.x = xmin; pt2.y = ymin;
+	pt2.x = xmax; pt2.y = ymax;
+
+	// Move a bit the on the y axis to stick on vertical line
+	pt1.y = cv::min(plateVerticalLines.rows - 1, (int)(pt1.y + abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
+	pt2.y = cv::max(0, (int)(pt2.y - abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
+	ptNext.x = pt1.x;
+	ptNext.y = pt1.y;
+
+	int max = 0;
+	cv::Point cartesianMax(-1, -1);
+
+	double rho = sqrt(square(xmax - xmin) + square(ymax - ymin));
+
+	cv::Point2f limit;
+	limit.x = (cv::min(static_cast<double>(pt1.x + rightRatio * plateVerticalLines.cols), static_cast<double>(plateVerticalLines.cols - 1)));
+	limit.y = pt1.y; // ignore the limit on x for top line research
+
+	while (ptNext.x < plateVerticalLines.cols)
+	{
+		ptNext = _findNextRightPivotPoint(plateVerticalLines, ptNext, limit);
+		//After avoid to shift on a horizontal line a bad rows, we set to the orignal value of row
+
+		if (ptNext.x == -1) break;
+
+
+		double theta = 0.0;
+
+		cv::Vec2f bestAlign;
+
+
+		//ptNext.y is somewhere on the vertical line. We want the proper value of y
+		//int current_best = bestlineStickV(input, ptNext, Vec2f(rho, theta), best_align);
+		int currentBest = findBestVerticalLine(plateVerticalLines, ptNext, cv::Vec2f(rho, theta), bestAlign);
+
+		if (max < currentBest)
+		{
+			max = currentBest;
+			pt1.x = ptNext.x; pt1.y = ptNext.y;
+			cartesianMax.x = ptNext.x + rho * cos(bestAlign[1]);
+			cartesianMax.y = ptNext.y + rho * sin(bestAlign[1]);
+		}
+	}
+
+	// Debug
+	if (_debug)
+	{
+		cv::Mat rightLine = filter::algos::IDPlate::convertGray2Color(plateVerticalLines);
+		cv::line(rightLine, pt1, cartesianMax, cv::Scalar(0, 0, 255), 2);
+		cv::circle(rightLine, pt1, 3, cv::Scalar(255, 255, 0), 3);
+		cv::circle(rightLine, cartesianMax, 3, cv::Scalar(255, 255, 0), 3);
+		filter::algos::IDPlate::showImage(rightLine);
+	}
+	//Now compute corner and the new intersection
+	cv::Vec4i line1, line2;
+	std::vector<cv::Point> rightCorners;
+	line1[0] = textCorners[0].x;
+	line1[1] = textCorners[0].y;
+	line1[2] = textCorners[1].x;
+	line1[3] = textCorners[1].y;
+
+	line2[0] = pt1.x;
+	line2[1] = pt1.y;
+	line2[2] = cartesianMax.x;
+	line2[3] = cartesianMax.y;
+	cv::Point areaTopRightCorner = computeLinesIntersectionPoint(line1, line2);
+	rightCorners.push_back(areaTopRightCorner);
+
+	line1[0] = textCorners[2].x;
+	line1[1] = textCorners[2].y;
+	line1[2] = textCorners[3].x;
+	line1[3] = textCorners[3].y;
+	cv::Point areaBottomRightCorner = computeLinesIntersectionPoint(line1, line2);
+	rightCorners.push_back(areaBottomRightCorner);
+
+	// Debug
+	if (_debug)
+	{
+		cv::Mat rightLine = filter::algos::IDPlate::convertGray2Color(plateVerticalLines);
+		cv::line(rightLine, areaTopRightCorner, areaBottomRightCorner, cv::Scalar(0, 0, 255), 1);
+		cv::circle(rightLine, areaTopRightCorner, 3, cv::Scalar(255, 255, 0), 3);
+		cv::circle(rightLine, areaBottomRightCorner, 3, cv::Scalar(255, 255, 0), 3);
+		filter::algos::IDPlate::showImage(rightLine);
+	}
+	return rightCorners;
+}
+
+cv::Point filter::algos::IDPlateRectifier::_findNextTopPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
+{
+	bool foundBegin = false;
+	int begin;
+	int end;
+
+	int chan = plateImage.channels();
+
+	cv::Mat col = plateImage.col(currPosition.x).clone();
+	cv::Mat tCol = col.t();
+
+	// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
+	//const uchar * _col = tCol.ptr<unsigned char>(0);
+
+	// Look in line for next white pixel
+	for (int y = currPosition.y; y >= limit.y; y--)
+	{
+		// TODO: <== HERE
+		const int channelValue = static_cast<int>(tCol.at<uchar>(0, y));
+		//if (foundBegin == false && _col[y] == 255)	// TM: <== Weird behavior with pointers
+		// First white pixel found case
+		if (!foundBegin && channelValue == 255)
+		{
+			foundBegin = true;
+			begin = y;
+			continue;
+		}
+
+		//if (foundBegin == true && _col[y] == 0)			// TM: <== Weird behavior with pointers
+		// Second white pixel found case
+		if (foundBegin && channelValue == 0)
+		{
+			end = cv::max(0, y - 1);
+
+			// Output middle of found white line
+			cv::Point output(currPosition.x, cv::max(0, begin + (end - begin) / 2));
+
+			// Debug
+
+			//cv::Mat temp = col.clone();
+			//cv::circle(temp, output, 4, cv::Scalar(255, 255, 0));
+			//showImage(temp);
+
+			return output;
+		}
+	}
+	// No white pixel found
+	// TODO: returning -1 -1 seems to induce errors
+	if (!foundBegin) return cv::Point(-1, -1);
+
+	return cv::Point(currPosition.y, 0);
 }
 
 cv::Point filter::algos::IDPlateRectifier::_findNextLeftPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
@@ -941,6 +888,129 @@ cv::Point filter::algos::IDPlateRectifier::_findNextLeftPivotPoint(const cv::Mat
 		cv::Point output(cv::max(0, limit.x + abs(begin - limit.x) / 2), currPosition.y);
 		return output;
 	}
+}
+
+cv::Point filter::algos::IDPlateRectifier::_findNextRightPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
+{
+	bool foundBegin = false;
+	int begin, end;
+
+	// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
+	//const uchar* row = plateImage.ptr(currPosition.y);
+
+	//Now look for next line by white pixel
+	for (int x = currPosition.x + 1; x < limit.x; x++)
+	{
+		//// Debug
+		//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(plateImage);
+		//cv::Point currentPos(x, currPosition.y);
+		//cv::circle(temp, currentPos, 2, cv::Scalar(0, 0, 255), 2);
+		//IDPlateRectifier::showImage(temp);
+
+
+		const int channelValue = static_cast<int>(plateImage.at<uchar>(currPosition.y, x));
+		//if (found_begin == false && row[x] == 255)	// TM: <== Weird behavior with pointers
+		if (!foundBegin && channelValue == 255)
+		{
+			foundBegin = true;
+			begin = x;
+			continue;
+		}
+
+		//if (found_begin == true && row[x] == 0)
+		if (foundBegin && channelValue == 0)
+		{
+			end = cv::max(0, x - 1);
+			cv::Point output(cv::max(0, begin + (end - begin) / 2), currPosition.y);
+			//// Debug
+			//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(plateImage);
+			//cv::circle(temp, output, 4, cv::Scalar(255, 255, 0));
+			//IDPlateRectifier::showImage(temp);
+			return output;
+		}
+	}
+
+	if (!foundBegin) return cv::Point(-1, -1);
+
+	//return cv::Point(-1, pt.y);
+	else
+	{
+		cv::Point output(cv::max(0, limit.x + abs(limit.x - begin) / 2), currPosition.y);
+		return output;
+	}
+}
+
+int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
+{
+	const double nbSampleTheta = 60;
+	const double nbSampleRho = 60;
+	const double minAngle = -CV_PI / 12; // (- 15 degrees)
+	const double maxAngle = CV_PI / 12; // ( + 15 degrees)
+	const double rho = lineVec[0];
+	const double strideTheta = (maxAngle - minAngle) / nbSampleTheta;
+	const double strideRho = (rho) / nbSampleRho;
+
+	int sum = 0;
+	int sumMax = 0;
+	double tBest = 0.0;
+
+	cv::Point2f bestPoint;
+
+	// Rotate around pivot point from max angle to min angle
+	for (double t = maxAngle; t > minAngle; t -= strideTheta)
+	{
+		sum = 0;
+		double sinT = sin(t);
+		double cosT = cos(t);
+
+		// Analyze each pixel value from pivot point and rotating line. The one with the largest sum of white pixel is the line we're looking for
+		for (double r = 1; r < rho; r += strideRho)
+		{
+			int x = cv::max(0.0, cv::min((double)image.cols - 1, origin.x + r * cosT));
+			int y = cv::max(0.0, cv::min((double)image.rows - 1, origin.y + r * sinT));
+
+			// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
+			//const uchar * rows = image.ptr(y);
+			//const int debugVAlue = rows[x];
+			const int channelValue = static_cast<int>(image.at<uchar>(y, x));
+			//if (rows[x] == 255)
+			if (channelValue == 255.0)
+			{
+				sum++;
+			}
+		}
+
+		// Debug
+		const int debugX = origin.x + rho * cosT;
+		const int debugY = origin.y + rho * sinT;
+		//cv::Mat searchLine = convertGrayscaleToBGR(image);
+		//cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
+		//cv::circle(searchLine, cv::Point2f(debugX, debugY), 3, cv::Scalar(0, 0, 255), 3);
+		//cv::line(searchLine, origin, cv::Point2f(debugX, debugY), cv::Scalar(0, 255, 0), 2);
+		//showImage(searchLine);
+
+		// Each time we find a new best line, store the angle
+		if (sumMax < sum)
+		{
+			sumMax = sum;
+			tBest = t;
+
+			// Debug
+			bestPoint = cv::Point2f(debugX, debugY);
+		}
+	}
+
+	//// Debug
+	//cv::Mat temp = convertGrayscaleToBGR(image);
+	//cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
+	//cv::circle(temp, bestPoint, 2, cv::Scalar(255, 0, 0), 3);
+	//cv::line(temp, origin, bestPoint, cv::Scalar(0, 0, 255), 4);
+	//showImage(temp);
+
+	// Output angle
+	out_bestLineParameters = cv::Vec2f(rho, tBest);
+
+	return sumMax;
 }
 
 int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
@@ -1022,170 +1092,47 @@ int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image,
 	return maxSum;
 }
 
-std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaRightLine(const cv::Mat & plateVerticalLines, const std::vector<cv::Point>& textCorners)
+cv::Point2f filter::algos::IDPlateRectifier::computeLinesIntersectionPoint(const cv::Vec4i & a, const cv::Vec4i & b)
 {
-	cv::Point2f pt1 = textCorners[1];
-	cv::Point2f pt2 = textCorners[2];
-	cv::Point2f ptNext;
-	IDPlateRectifier::SearchDirection searchDirection = IDPlateRectifier::SearchDirection::RIGHT;
+	int x1 = a[0], y1 = a[1];
+	int x2 = a[2], y2 = a[3];
+	int x3 = b[0], y3 = b[1];
+	int x4 = b[2], y4 = b[3];
 
-	// TODO: WARNING: BE CAREFUL HERE: what if pt1.x == pt2.x ?
-	int xmin = cv::min(pt1.x, pt2.x);
-	int xmax = cv::max(pt1.x, pt2.x);
-	int ymin = (pt1.x == xmin) ? pt1.y : pt2.y;
-	int ymax = (pt2.x == xmax) ? pt2.y : pt1.y;
-
-	// be sure the point are ordered
-	pt1.x = xmin; pt2.y = ymin;
-	pt2.x = xmax; pt2.y = ymax;
-
-	// Move a bit the on the y axis to stick on vertical line
-	pt1.y = cv::min(plateVerticalLines.rows - 1, (int)(pt1.y + abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
-	pt2.y = cv::max(0, (int)(pt2.y - abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
-	ptNext.x = pt1.x;
-	ptNext.y = pt1.y;
-
-	int max = 0;
-	cv::Point cartesianMax(-1, -1);
-
-	double rho = sqrt(square(xmax - xmin) + square(ymax - ymin));
-
-	cv::Point2f limit;
-	limit.x = (cv::min(static_cast<double>(pt1.x + rightRatio * plateVerticalLines.cols), static_cast<double>(plateVerticalLines.cols - 1)));
-	limit.y = pt1.y; // ignore the limit on x for top line research
-
-	while (ptNext.x < plateVerticalLines.cols)
+	if (float d = ((float)(x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4)))
 	{
-		ptNext = _findNextRightPivotPoint(plateVerticalLines, ptNext, limit);
-		//After avoid to shift on a horizontal line a bad rows, we set to the orignal value of row
-
-		if (ptNext.x == -1) break;
-
-
-		double theta = 0.0;
-
-		cv::Vec2f bestAlign;
-
-
-		//ptNext.y is somewhere on the vertical line. We want the proper value of y
-		//int current_best = bestlineStickV(input, ptNext, Vec2f(rho, theta), best_align);
-		int currentBest = findBestVerticalLine(plateVerticalLines, ptNext, cv::Vec2f(rho, theta), bestAlign);
-
-		if (max < currentBest)
-		{
-			max = currentBest;
-			pt1.x = ptNext.x; pt1.y = ptNext.y;
-			cartesianMax.x = ptNext.x + rho * cos(bestAlign[1]);
-			cartesianMax.y = ptNext.y + rho * sin(bestAlign[1]);
-		}
+		cv::Point2f pt;
+		pt.x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / d;
+		pt.y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / d;
+		return pt;
 	}
-
-	// Debug
-	cv::Mat rightLine = convertGrayscaleToBGR(plateVerticalLines);
-	cv::line(rightLine, pt1, cartesianMax, cv::Scalar(0, 0, 255), 2);
-	cv::circle(rightLine, pt1, 3, cv::Scalar(255, 255, 0), 3);
-	cv::circle(rightLine, cartesianMax, 3, cv::Scalar(255, 255, 0), 3);
-	showImage(rightLine);
-
-	//Now compute corner and the new intersection
-	cv::Vec4i line1, line2;
-	std::vector<cv::Point> rightCorners;
-	line1[0] = textCorners[0].x;
-	line1[1] = textCorners[0].y;
-	line1[2] = textCorners[1].x;
-	line1[3] = textCorners[1].y;
-
-	line2[0] = pt1.x;
-	line2[1] = pt1.y;
-	line2[2] = cartesianMax.x;
-	line2[3] = cartesianMax.y;
-	cv::Point areaTopRightCorner = computeLinesIntersectionPoint(line1, line2);
-	rightCorners.push_back(areaTopRightCorner);
-
-	line1[0] = textCorners[2].x;
-	line1[1] = textCorners[2].y;
-	line1[2] = textCorners[3].x;
-	line1[3] = textCorners[3].y;
-	cv::Point areaBottomRightCorner = computeLinesIntersectionPoint(line1, line2);
-	rightCorners.push_back(areaBottomRightCorner);
-
-	// Debug
-	rightLine = convertGrayscaleToBGR(plateVerticalLines);
-	cv::line(rightLine, areaTopRightCorner, areaBottomRightCorner, cv::Scalar(0, 0, 255), 1);
-	cv::circle(rightLine, areaTopRightCorner, 3, cv::Scalar(255, 255, 0), 3);
-	cv::circle(rightLine, areaBottomRightCorner, 3, cv::Scalar(255, 255, 0), 3);
-	showImage(rightLine);
-
-	return rightCorners;
-}
-
-cv::Point filter::algos::IDPlateRectifier::_findNextRightPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
-{
-	bool foundBegin = false;
-	int begin, end;
-
-	// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
-	//const uchar* row = plateImage.ptr(currPosition.y);
-
-	//Now look for next line by white pixel
-	for (int x = currPosition.x + 1; x < limit.x; x++)
-	{
-		//// Debug
-		//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(plateImage);
-		//cv::Point currentPos(x, currPosition.y);
-		//cv::circle(temp, currentPos, 2, cv::Scalar(0, 0, 255), 2);
-		//IDPlateRectifier::showImage(temp);
-
-
-		const int channelValue = static_cast<int>(plateImage.at<uchar>(currPosition.y, x));
-		//if (found_begin == false && row[x] == 255)	// TM: <== Weird behavior with pointers
-		if (!foundBegin && channelValue == 255)
-		{
-			foundBegin = true;
-			begin = x;
-			continue;
-		}
-
-		//if (found_begin == true && row[x] == 0)
-		if (foundBegin && channelValue == 0)
-		{
-			end = cv::max(0, x - 1);
-			cv::Point output(cv::max(0, begin + (end - begin) / 2), currPosition.y);
-			//// Debug
-			//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(plateImage);
-			//cv::circle(temp, output, 4, cv::Scalar(255, 255, 0));
-			//IDPlateRectifier::showImage(temp);
-			return output;
-		}
-	}
-
-	if (!foundBegin) return cv::Point(-1, -1);
-
-	//return cv::Point(-1, pt.y);
 	else
-	{
-		cv::Point output(cv::max(0, limit.x + abs(limit.x - begin) / 2), currPosition.y);
-		return output;
-	}
+		return cv::Point2f(-1, -1);
 }
 
 cv::Mat filter::algos::IDPlateRectifier::perspectiveCrop(const cv::Mat & plateImage, const std::vector<cv::Point>& textCorners)
 {
-	assert(plateImage.data);
+	if (!plateImage.data)
+	{
+		throw HipeException("[ERROR] IDPlateRectifier::perspectiveCrop - Invalid image");
+	}
 
 	//Debug
-	cv::Mat temp = plateImage.clone();
-	cv::circle(temp, textCorners[0], 3, cv::Scalar(0, 0, 255), 2);
-	cv::circle(temp, textCorners[1], 3, cv::Scalar(0, 0, 255), 2);
-	cv::circle(temp, textCorners[2], 3, cv::Scalar(0, 0, 255), 2);
-	cv::circle(temp, textCorners[3], 3, cv::Scalar(0, 0, 255), 2);
+	if (_debug)
+	{
+		cv::Mat temp = plateImage.clone();
+		cv::circle(temp, textCorners[0], 3, cv::Scalar(0, 0, 255), 2);
+		cv::circle(temp, textCorners[1], 3, cv::Scalar(0, 0, 255), 2);
+		cv::circle(temp, textCorners[2], 3, cv::Scalar(0, 0, 255), 2);
+		cv::circle(temp, textCorners[3], 3, cv::Scalar(0, 0, 255), 2);
 
-	cv::line(temp, textCorners[0], textCorners[1], cv::Scalar(0, 0, 255));
-	cv::line(temp, textCorners[1], textCorners[2], cv::Scalar(0, 0, 255));
-	cv::line(temp, textCorners[2], textCorners[3], cv::Scalar(0, 0, 255));
-	cv::line(temp, textCorners[3], textCorners[0], cv::Scalar(0, 0, 255));
-	IDPlateRectifier::showImage(temp);
-
+		cv::line(temp, textCorners[0], textCorners[1], cv::Scalar(0, 0, 255));
+		cv::line(temp, textCorners[1], textCorners[2], cv::Scalar(0, 0, 255));
+		cv::line(temp, textCorners[2], textCorners[3], cv::Scalar(0, 0, 255));
+		cv::line(temp, textCorners[3], textCorners[0], cv::Scalar(0, 0, 255));
+		filter::algos::IDPlate::showImage(temp);
+	}
+	// From the 4 corners find the homography matrix to output a flat image
 	cv::Rect boundingRect = cv::boundingRect(textCorners);
 
 	std::vector<cv::Point2f> perspectiveInput;
@@ -1208,60 +1155,9 @@ cv::Mat filter::algos::IDPlateRectifier::perspectiveCrop(const cv::Mat & plateIm
 	return output;
 }
 
-cv::Point2f filter::algos::IDPlateRectifier::computeLinesIntersectionPoint(const cv::Vec4i & a, const cv::Vec4i & b)
-{
-	int x1 = a[0], y1 = a[1];
-	int x2 = a[2], y2 = a[3];
-	int x3 = b[0], y3 = b[1];
-	int x4 = b[2], y4 = b[3];
-
-	if (float d = ((float)(x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4)))
-	{
-		cv::Point2f pt;
-		pt.x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / d;
-		pt.y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / d;
-		return pt;
-	}
-	else
-		return cv::Point2f(-1, -1);
-}
-
-cv::Mat filter::algos::IDPlateRectifier::applyMorphTransform(const cv::Mat & image, cv::MorphShapes morphShape, cv::MorphTypes morphType, cv::Size kernelSize)
-{
-	cv::Mat output;
-	cv::Mat morphKernel = cv::getStructuringElement(morphShape, kernelSize);
-	cv::morphologyEx(image, output, morphType, morphKernel);
-
-	return output;
-}
-
-void filter::algos::IDPlateRectifier::showImage(const cv::Mat & image)
-{
-	if (!debug_) return;
-	cv::namedWindow("debug");
-	cv::imshow("debug", image);
-	cv::waitKey(0);
-	cv::destroyWindow("debug");
-}
-
-cv::Mat filter::algos::IDPlateRectifier::convertColorToGrayscale(const cv::Mat & plateImageColor)
-{
-	cv::Mat output;
-	(plateImageColor.channels() != 1) ? cv::cvtColor(plateImageColor, output, CV_BGR2GRAY) : output = plateImageColor.clone();
-
-	return output;
-}
-
-cv::Mat filter::algos::IDPlateRectifier::convertGrayscaleToBGR(const cv::Mat & plateImageGrayscale)
-{
-	cv::Mat output;
-	(plateImageGrayscale.channels() != 3) ? cv::cvtColor(plateImageGrayscale, output, CV_GRAY2BGR) : output = plateImageGrayscale.clone();
-
-	return output;
-}
-
 void filter::algos::IDPlateRectifier::normalizeRatios(int leftBound, int rightBound)
 {
+	// Assert search ratios and bounds are valid
 	if (!isInInclusiveRange(leftRatio, leftBound, rightBound) || !isInInclusiveRange(rightRatio, leftBound, rightBound) || !isInInclusiveRange(topRatio, leftBound, rightBound))
 	{
 		throw HipeException("Error in IDPlateRectifier: Search ratios params are outside permitted range (0%-100%)");
@@ -1290,12 +1186,9 @@ void filter::algos::IDPlateRectifier::normalizeRatios(int leftBound, int rightBo
 		topRatio = (topRatio - leftBound) / range;
 		topRatio = topRatio * range + leftBound;
 	}
-
 }
+
 bool filter::algos::IDPlateRectifier::isInInclusiveRange(double value, double leftBound, double rightBound)
 {
-
 	return (value >= leftBound && value <= rightBound);
 }
-
-

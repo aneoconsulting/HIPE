@@ -16,6 +16,8 @@
 #include <opencv2/cudaimgproc.hpp>
 #include <opencv2/text.hpp>
 
+#include "filter/Algos/IDPlate/IDPlateTools.h"
+
 
 namespace filter {
 	namespace Algos {
@@ -24,31 +26,24 @@ namespace filter {
 			CONNECTOR(data::ImageData, data::ImageData);
 			REGISTER(IDPlateIdentifier, ()), _connexData(data::INDATA)
 			{
-				debug_ = false;
+				_debug = false;
 			}
-			REGISTER_P(bool, debug_);
+			REGISTER_P(bool, _debug);
 
 		public:
 			HipeStatus process() override;
-
-			bool compareRectsByPosition(const cv::Rect& a, const cv::Rect& b);
 
 		private:
 			std::vector<cv::Mat> detectTextArea(const cv::Mat & plateImage, std::vector<cv::Rect>& out_charactersRects = std::vector<cv::Rect>());
 			cv::Mat preprocessImage(const cv::Mat& plateImage);
 			std::vector<cv::Rect> sortAndFilterCharacters(std::vector<cv::Rect>& characters, int plateImageRows, double lowerBound, double upperBound);
-			std::vector<cv::Rect> blobsRectangle(const cv::Mat& plateImage, std::vector<cv::Rect>& characters);
+			//std::vector<cv::Rect> blobsRectangle(const cv::Mat& plateImage, std::vector<cv::Rect>& characters);
 			std::vector < std::vector<cv::Rect>> separateCharactersByLines(std::vector<cv::Rect>& charactersSorted, const cv::Mat& debugImage = cv::Mat());
-
-			std::vector<cv::Rect> findPlateCharacters(const cv::Mat& plateImage, double xMinPos, double xMaxPos, cv::Mat& binarizedImage = cv::Mat());
-			cv::Mat applyMorphTransform(const cv::Mat& image, cv::MorphShapes morphShape, cv::MorphTypes morphType, cv::Size kernelSize);
-
-			int showImage(const cv::Mat& image);
-			cv::Mat convertColorToGrayscale(const cv::Mat& plateImageColor);
-			cv::Mat convertGrayscaleToBGR(const cv::Mat& plateImage);
 
 			cv::Mat createOutputImage(const cv::Mat& plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels);
 		};
+
+		ADD_CLASS(IDPlateIdentifier, _debug);
 
 		class LabelOCR {
 		public:
@@ -72,13 +67,11 @@ namespace filter {
 
 			cv::Mat enlargeCharacter(const cv::Mat& character, int margin);
 
-			int showImage(const cv::Mat& image);
-
 		private:
 			cv::Ptr<cv::text::OCRTesseract> tesseOCR_;
-			bool debug_ = true;
+			bool _debug;
 		};
 
-		ADD_CLASS(IDPlateIdentifier, debug_);
+
 	}
 }
