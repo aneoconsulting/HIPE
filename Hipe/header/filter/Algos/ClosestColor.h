@@ -31,7 +31,6 @@ namespace filter
 					cv::Vec3b color = img.at<cv::Vec3b>(0, 0);
 					Color closestColor = getClosestColor(color);
 
-
 					cv::Mat result(cv::Size(32, 32), img.type(), closestColor.value);
 
 					_connexData.push(data::ImageData(result));
