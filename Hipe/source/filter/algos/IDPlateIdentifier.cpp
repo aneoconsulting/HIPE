@@ -1,4 +1,4 @@
-#include <filter\Algos\IDPlateIdentifier.h>
+#include <filter/Algos/IDPlateIdentifier.h>
 
 HipeStatus filter::Algos::IDPlateIdentifier::process()
 {
@@ -32,7 +32,7 @@ std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::
 	//std::vector<cv::Rect> characters = filter::algos::IDPlate::findPlateCharacters(preprocessed, 0.04f, .8f, _debug, 4, binarizedImage); // Old values were minPosX 0.1, maxPosX 1.0, ratioLowerBound 0.20, ratioUpperBound 0.80
 
 	const double drawContourThickness = 4;
-	std::vector<cv::Rect> characters = filter::algos::IDPlate::findPlateCharacter(preprocessed, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, binarizedImage, _debug);
+	std::vector<cv::Rect> characters = filter::algos::IDPlate::findPlateCharacter(preprocessed, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
 
 	if (_debug)
 	{

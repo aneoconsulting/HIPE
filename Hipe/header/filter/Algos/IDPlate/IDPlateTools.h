@@ -32,7 +32,7 @@ namespace filter
 			 * @param binarizedImage output matrix of the binarized image computed while looking for characters
 			 * @param debugLevel parameter used to show and draw debug information
 			 */
-			std::vector<cv::Rect> findPlateCharacter(const cv::Mat& plateImage, double minPosX, double maxPosX, double charMinFillRatio, double charMaxFillRatio, cv::Size charRectMinSize = cv::Size(8,20), int contoursFillMethod = CV_FILLED, cv::Mat& out_binarizedImage = cv::Mat(), int debugLevel = 0);
+			std::vector<cv::Rect> findPlateCharacter(const cv::Mat& plateImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, double charMinFillRatio, double charMaxFillRatio, cv::Size charRectMinSize = cv::Size(8,20), int contoursFillMethod = CV_FILLED, int debugLevel = 0);
 
 			cv::Mat convertColor2Gray(const cv::Mat& colorImage);
 			cv::Mat convertGray2Color(const cv::Mat& grayImage);

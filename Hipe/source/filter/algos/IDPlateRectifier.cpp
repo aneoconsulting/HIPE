@@ -1,4 +1,4 @@
-#include "filter\Algos\IDPlateRectifier.h"
+#include <filter/Algos/IDPlateRectifier.h>
 
 
 HipeStatus filter::algos::IDPlateRectifier::process()
@@ -12,7 +12,7 @@ HipeStatus filter::algos::IDPlateRectifier::process()
 	// Find ID plate's characters
 	//std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacters(image, 0.1, 0.8, _debug); // Old values were minPosX 0.1, maxPosX 0.8, ratioLowerBound 0.20, ratioUpperBound 0.80
 	const double drawContourThickness = CV_FILLED;
-	std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacter(image, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, cv::Mat(), _debug);
+	std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacter(image, cv::Mat(), charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
 	// Separate them by rows (lines)
 	std::vector<int> characterRows = separateTextRows(plateCharacters);
 

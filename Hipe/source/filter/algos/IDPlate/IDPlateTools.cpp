@@ -158,7 +158,7 @@ cv::Mat filter::algos::IDPlate::applyMorphTransform(const cv::Mat & image, cv::M
 //	return charactersRects;
 //}
 
-std::vector<cv::Rect> filter::algos::IDPlate::findPlateCharacter(const cv::Mat & plateImage, double minPosX, double maxPosX, double charMinFillRatio, double charMaxFillRatio, cv::Size charRectMinSize, int contoursFillMethod, cv::Mat & out_binarizedImage, int debugLevel)
+std::vector<cv::Rect> filter::algos::IDPlate::findPlateCharacter(const cv::Mat& plateImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, double charMinFillRatio, double charMaxFillRatio, cv::Size charRectMinSize, int contoursFillMethod, int debugLevel)
 {
 	cv::Mat imageCopy = plateImage.clone();
 	cv::Mat imageGrayscale = filter::algos::IDPlate::convertColor2Gray(imageCopy);
@@ -283,7 +283,14 @@ cv::Mat filter::algos::IDPlate::convertColor2Gray(const cv::Mat & colorImage)
 	{
 		std::cout << "[WARNING] IDplateIdentifier::convertColor2Gray - Alpha is not handled";
 	}
-	(colorImage.channels() == 3) ? cv::cvtColor(colorImage, output, CV_BGR2GRAY) : output = colorImage.clone();
+	if (colorImage.channels() == 3)
+	{
+		cv::cvtColor(colorImage, output, CV_BGR2GRAY);
+	}
+	else
+	{
+		output = colorImage.clone();
+	}
 
 	return output;
 }
@@ -295,8 +302,14 @@ cv::Mat filter::algos::IDPlate::convertGray2Color(const cv::Mat & grayImage)
 	{
 		std::cout << "[WARNING] IDplateIdentifier::convertGray2Color - Alpha is not handled";
 	}
-	(grayImage.channels() == 1) ? cv::cvtColor(grayImage, output, CV_GRAY2BGR) : output = grayImage.clone();
-
+	if (grayImage.channels() == 1)
+	{
+		cv::cvtColor(grayImage, output, CV_GRAY2BGR);
+	}
+	else
+	{
+		output = grayImage.clone();
+	}
 	return output;
 }
 

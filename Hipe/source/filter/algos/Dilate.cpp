@@ -1,4 +1,4 @@
-#include "algos/Dilate.h"
+#include <filter/Algos/Dilate.h>
 
 int filter::algos::Dilate::convertMorphType(const std::string & name)
 {
