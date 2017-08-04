@@ -29,7 +29,10 @@ std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::
 	cv::Mat binarizedImage;
 
 	// Find characters
-	std::vector<cv::Rect> characters = filter::algos::IDPlate::findPlateCharacters(preprocessed, 0.0f, 1.0f, _debug, 4, binarizedImage);
+	//std::vector<cv::Rect> characters = filter::algos::IDPlate::findPlateCharacters(preprocessed, 0.04f, .8f, _debug, 4, binarizedImage); // Old values were minPosX 0.1, maxPosX 1.0, ratioLowerBound 0.20, ratioUpperBound 0.80
+
+	const double drawContourThickness = 4;
+	std::vector<cv::Rect> characters = filter::algos::IDPlate::findPlateCharacter(preprocessed, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, binarizedImage, _debug);
 
 	if (_debug)
 	{
@@ -407,11 +410,11 @@ cv::Mat filter::Algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plat
 filter::Algos::LabelOCR::LabelOCR()
 {
 	init();
-	_debug = false;
+	_debug = 0;
 }
 
-filter::Algos::LabelOCR::LabelOCR(bool showImages)
-	: _debug(showImages)
+filter::Algos::LabelOCR::LabelOCR(int debugLevel)
+	: _debug(debugLevel)
 {
 	init();
 }
@@ -530,7 +533,7 @@ std::string filter::Algos::LabelOCR::runPrediction(const cv::Mat & labelImage, i
 	if (imageIndex >= 0)	std::cout << "label_" << imageIndex << ": " << text << std::endl;
 
 	// Debug
-	if (_debug)
+	if (_debug > 2)
 	{
 		cv::Size labelTextSize = cv::getTextSize(text, cv::FONT_HERSHEY_PLAIN, 2, 2, nullptr);
 		cv::Mat labelMat = cv::Mat::zeros(preprocessedImage.size(), CV_8UC3);
@@ -541,9 +544,9 @@ std::string filter::Algos::LabelOCR::runPrediction(const cv::Mat & labelImage, i
 
 		cv::putText(labelMat, text, textPos, cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(0, 0, 255), 2, 8);
 
-		//filter::algos::IDPlate::showImage(labelImage);
-		//filter::algos::IDPlate::showImage(preprocessedImage);
-		//filter::algos::IDPlate::showImage(labelMat);
+		filter::algos::IDPlate::showImage(labelImage);
+		filter::algos::IDPlate::showImage(preprocessedImage);
+		filter::algos::IDPlate::showImage(labelMat);
 	}
 
 	return text;
@@ -606,13 +609,13 @@ cv::Mat filter::Algos::LabelOCR::enlargeCharacter(const cv::Mat & character, int
 	cv::Rect roi(margin, margin, character.cols, character.rows);
 	character.copyTo(output(roi));
 
-	//if(debug_)	filter::algos::IDPlate::showImage(output);
+	if(_debug > 2)	filter::algos::IDPlate::showImage(output);
 
 	// Bigger character
 	cv::Mat dilateKernel = cv::getStructuringElement(cv::MorphShapes::MORPH_CROSS, cv::Size(3, 3));
 	cv::dilate(output, output, dilateKernel);
 
-	//if(debug_)	filter::algos::IDPlate::showImage(output);
+	if(_debug > 2)	filter::algos::IDPlate::showImage(output);
 
 	return output;
 }

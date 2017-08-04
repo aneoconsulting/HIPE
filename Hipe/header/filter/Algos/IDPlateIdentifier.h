@@ -26,9 +26,21 @@ namespace filter {
 			CONNECTOR(data::ImageData, data::ImageData);
 			REGISTER(IDPlateIdentifier, ()), _connexData(data::INDATA)
 			{
-				_debug = false;
+				_debug = 0;
+				charMinXBound = 0.05;
+				charMaxXBound = 0.8;
+				charMinFillRatio = 0.2;
+				charMaxFillRatio = 0.9;
+				charMinWidth = 8;
+				charMinHeight = 20;
 			}
-			REGISTER_P(bool, _debug);
+			REGISTER_P(int, _debug);
+			REGISTER_P(double, charMinXBound);
+			REGISTER_P(double, charMaxXBound);
+			REGISTER_P(double, charMinFillRatio);
+			REGISTER_P(double, charMaxFillRatio);
+			REGISTER_P(int, charMinWidth);
+			REGISTER_P(int, charMinHeight);
 
 		public:
 			HipeStatus process() override;
@@ -43,12 +55,12 @@ namespace filter {
 			cv::Mat createOutputImage(const cv::Mat& plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels);
 		};
 
-		ADD_CLASS(IDPlateIdentifier, _debug);
+		ADD_CLASS(IDPlateIdentifier, _debug, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, charMinWidth, charMinHeight);
 
 		class LabelOCR {
 		public:
 			LabelOCR();
-			LabelOCR(bool showImages);
+			LabelOCR(int debugLevel);
 			virtual ~LabelOCR();
 
 			void preProcess(const cv::Mat &InputImage, cv::Mat &binImage);
@@ -69,7 +81,7 @@ namespace filter {
 
 		private:
 			cv::Ptr<cv::text::OCRTesseract> tesseOCR_;
-			bool _debug;
+			int _debug;
 		};
 
 
