@@ -46,7 +46,7 @@ namespace filter {
 			HipeStatus process() override;
 
 		private:
-			std::vector<cv::Mat> detectTextArea(const cv::Mat & plateImage, std::vector<cv::Rect>& out_charactersRects = std::vector<cv::Rect>());
+			std::vector<cv::Mat> detectTextArea(const cv::Mat & plateImage, std::vector<cv::Rect>& out_charactersRects);
 			cv::Mat preprocessImage(const cv::Mat& plateImage);
 			std::vector<cv::Rect> sortAndFilterCharacters(std::vector<cv::Rect>& characters, int plateImageRows, double lowerBound, double upperBound);
 			//std::vector<cv::Rect> blobsRectangle(const cv::Mat& plateImage, std::vector<cv::Rect>& characters);

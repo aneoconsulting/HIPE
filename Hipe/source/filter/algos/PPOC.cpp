@@ -424,7 +424,7 @@ bool filter::algos::PPOC::isObjectPresent(const cv::Mat & queryImage, const IPDe
 	cv::blur(queryGray, queryGray, cv::Size(3, 3));
 
 	// Image croppée de la source => roiOnRefImage
-	cv::Mat & ROIOnRef = poi.descImg();
+	cv::Mat ROIOnRef = poi.descImg();
 	if (!ROIOnRef.data)
 	{
 		throw HipeException("[ERROR] PPOC::isObjectPresent - no data in poi");
