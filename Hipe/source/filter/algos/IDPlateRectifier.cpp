@@ -15,10 +15,11 @@ HipeStatus filter::algos::IDPlateRectifier::process()
 	cv::Mat binarizedImage;
 	std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacter(image, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
 	// Separate them by rows (lines)
-	std::vector<int> characterRows = separateTextRows(plateCharacters);
+	//std::vector<int> characterRows = separateTextRows(plateCharacters);
+	std::vector<int> characterRows = filter::algos::IDPlate::splitImgByCharRows(image, plateCharacters);
 
-	// Add line to bottom of image (we want rows separated by top and bottom lines)
-	characterRows.push_back(image.rows - 1);
+	//// Add line to bottom of image (we want rows separated by top and bottom lines)
+	//characterRows.push_back(image.rows - 1);
 
 	//Debug
 	if (_debug)
@@ -32,7 +33,7 @@ HipeStatus filter::algos::IDPlateRectifier::process()
 	}
 
 	// Sort characters by rows
-	std::vector<std::vector<cv::Rect>> charactersSorted = sortCharactersByRows(image, plateCharacters, characterRows);
+	std::vector<std::vector<cv::Rect>> charactersSorted = filter::algos::IDPlate::splitCharactersByRows(plateCharacters, characterRows, image, _debug);
 
 	// Find whole text area
 	std::vector<cv::Point> bounds = findCharactersBounds(image, charactersSorted);
@@ -57,105 +58,105 @@ bool filter::algos::IDPlateRectifier::compRectByHPos(const cv::Rect & a, const c
 	return a.x < b.x;
 }
 
-std::vector<int> filter::algos::IDPlateRectifier::separateTextRows(const std::vector<cv::Rect>& charactersRects)
-{
-	std::vector<int> lines;
+//std::vector<int> filter::algos::IDPlateRectifier::separateTextRows(const std::vector<cv::Rect>& charactersRects)
+//{
+//	std::vector<int> lines;
+//
+//	std::vector<std::pair<int, int>> deriv(charactersRects.size());
+//	std::vector<std::pair<int, int>> deriv2(charactersRects.size());
+//
+//	deriv[0].first = 0;
+//	deriv[0].second = 0;
+//
+//	int mean = 0;
+//	const double inclusionRatio = 0.9;
+//
+//	for (int i = 1; i < charactersRects.size(); i++)
+//	{
+//		//Ignore False EOL (i.e : do not consider letter perspective) Ignore Inclusion of letter in 90% of other
+//		if ((charactersRects[i - 1].y >= charactersRects[i].y && charactersRects[i - 1].y <= charactersRects[i].y + inclusionRatio * charactersRects[i].height) ||
+//			(charactersRects[i].y >= charactersRects[i - 1].y && charactersRects[i].y <= charactersRects[i - 1].y + inclusionRatio * charactersRects[i - 1].height))
+//			continue;
+//
+//		deriv[i - 1].first = abs(charactersRects[i - 1].y - charactersRects[i].y);
+//		deriv[i - 1].second = i - 1;
+//
+//		mean += deriv[i - 1].first;
+//	}
+//
+//	mean /= charactersRects.size();
+//
+//	std::sort(deriv.begin(), deriv.end(), [this](const std::pair<int, int>& a, const std::pair<int, int>& b) { return this->compByDeriv(a, b); });
+//
+//	for (int i = 0; i < deriv.size(); i++)
+//	{
+//		if (deriv[i].first > 3)
+//		{
+//			int y = charactersRects[deriv[i].second].y + charactersRects[deriv[i].second].height;
+//			lines.push_back(y);
+//
+//		}
+//	}
+//
+//	std::sort(lines.begin(), lines.end());
+//
+//	return lines;
+//}
 
-	std::vector<std::pair<int, int>> deriv(charactersRects.size());
-	std::vector<std::pair<int, int>> deriv2(charactersRects.size());
-
-	deriv[0].first = 0;
-	deriv[0].second = 0;
-
-	int mean = 0;
-	const double inclusionRatio = 0.9;
-
-	for (int i = 1; i < charactersRects.size(); i++)
-	{
-		//Ignore False EOL (i.e : do not consider letter perspective) Ignore Inclusion of letter in 90% of other
-		if ((charactersRects[i - 1].y >= charactersRects[i].y && charactersRects[i - 1].y <= charactersRects[i].y + inclusionRatio * charactersRects[i].height) ||
-			(charactersRects[i].y >= charactersRects[i - 1].y && charactersRects[i].y <= charactersRects[i - 1].y + inclusionRatio * charactersRects[i - 1].height))
-			continue;
-
-		deriv[i - 1].first = abs(charactersRects[i - 1].y - charactersRects[i].y);
-		deriv[i - 1].second = i - 1;
-
-		mean += deriv[i - 1].first;
-	}
-
-	mean /= charactersRects.size();
-
-	std::sort(deriv.begin(), deriv.end(), [this](const std::pair<int, int>& a, const std::pair<int, int>& b) { return this->compByDeriv(a, b); });
-
-	for (int i = 0; i < deriv.size(); i++)
-	{
-		if (deriv[i].first > 3)
-		{
-			int y = charactersRects[deriv[i].second].y + charactersRects[deriv[i].second].height;
-			lines.push_back(y);
-
-		}
-	}
-
-	std::sort(lines.begin(), lines.end());
-
-	return lines;
-}
-
-std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::sortCharactersByRows(const cv::Mat & plateImage, const std::vector<cv::Rect>& plateCharacters, const std::vector<int>& charactersRows)
-{
-	const int lines = charactersRows.size();
-	std::vector<std::vector<cv::Rect>> rows(lines);
-
-	// Debug
-	cv::Mat image;
-	if (_debug)
-	{
-		image = plateImage.clone();
-		for (int i = 0; i < lines; i++)
-		{
-			cv::line(image, cv::Point(0, charactersRows[i]), cv::Point(image.cols - 1, charactersRows[i]), cv::Scalar(0, 0, 255));
-		}
-		filter::algos::IDPlate::showImage(image);
-	}
-
-
-	// For each line and the next one
-	for (int j = 0, prevLine = 0, nextLine = charactersRows[j]; j < lines; j++)
-	{
-		nextLine = charactersRows[j];
-
-		// Debug
-		if (_debug)
-		{
-			image = plateImage.clone();
-		}
-
-		// For each character : if character is between the two lines add it to the correct container
-		for (int i = 0; i < plateCharacters.size(); i++)
-		{
-			cv::Point rectCenter;
-			rectCenter.x = plateCharacters[i].x + plateCharacters[i].width * 0.5;
-			rectCenter.y = plateCharacters[i].y + plateCharacters[i].height * 0.5;
-
-			// Debug
-			if (_debug)
-			{
-				cv::circle(image, rectCenter, 4, cv::Scalar(255, 255, 0), 4);
-				//showImage(image);
-			}
-
-			if (rectCenter.y > prevLine && rectCenter.y < nextLine)
-			{
-				rows[j].push_back(plateCharacters[i]);
-			}
-		}
-
-		prevLine = nextLine;
-	}
-
-	return rows;
-}
+//std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::sortCharactersByRows(const cv::Mat & plateImage, const std::vector<cv::Rect>& plateCharacters, const std::vector<int>& charactersRows)
+//{
+//	const int lines = charactersRows.size();
+//	std::vector<std::vector<cv::Rect>> rows(lines);
+//
+//	// Debug
+//	cv::Mat image;
+//	if (_debug)
+//	{
+//		image = plateImage.clone();
+//		for (int i = 0; i < lines; i++)
+//		{
+//			cv::line(image, cv::Point(0, charactersRows[i]), cv::Point(image.cols - 1, charactersRows[i]), cv::Scalar(0, 0, 255));
+//		}
+//		filter::algos::IDPlate::showImage(image);
+//	}
+//
+//
+//	// For each line and the next one
+//	for (int j = 0, prevLine = 0, nextLine = charactersRows[j]; j < lines; j++)
+//	{
+//		nextLine = charactersRows[j];
+//
+//		// Debug
+//		if (_debug)
+//		{
+//			image = plateImage.clone();
+//		}
+//
+//		// For each character : if character is between the two lines add it to the correct container
+//		for (int i = 0; i < plateCharacters.size(); i++)
+//		{
+//			cv::Point rectCenter;
+//			rectCenter.x = plateCharacters[i].x + plateCharacters[i].width * 0.5;
+//			rectCenter.y = plateCharacters[i].y + plateCharacters[i].height * 0.5;
+//
+//			// Debug
+//			if (_debug)
+//			{
+//				cv::circle(image, rectCenter, 4, cv::Scalar(255, 255, 0), 4);
+//				//showImage(image);
+//			}
+//
+//			if (rectCenter.y > prevLine && rectCenter.y < nextLine)
+//			{
+//				rows[j].push_back(plateCharacters[i]);
+//			}
+//		}
+//
+//		prevLine = nextLine;
+//	}
+//
+//	return rows;
+//}
 
 std::vector<cv::Point> filter::algos::IDPlateRectifier::findCharactersBounds(const cv::Mat & image, const std::vector<std::vector<cv::Rect>>& charactersSorted)
 {
@@ -208,7 +209,7 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::findLongestT
 		nbDeriv[i].second = derivMean;
 	}
 
-	int bestIndex = -1;
+	int bestIndex = -1;		// TODO: Exception
 	int bestSumDeriv2 = std::numeric_limits<int>::max();
 
 	//Select best index by deriv second 
@@ -218,7 +219,7 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::findLongestT
 
 		if (nbDeriv[i].first == 0 || nbDeriv[i].second == 0.0)
 			continue;
-		if (i + linesToFind > nbDeriv.size())
+		if (i + linesToFind > nbDeriv.size())	// TODO: Exception
 			break;
 		bool isEmpty = false;
 
@@ -244,7 +245,7 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::findLongestT
 	}
 
 	for (int j = 0; j < linesToFind; j++) {
-		longestLines[j] = textList[bestIndex + j];
+		longestLines[j] = textList[bestIndex + j];	// TODO: Exception
 	}
 
 	return longestLines;

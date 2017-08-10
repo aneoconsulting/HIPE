@@ -16,9 +16,22 @@ namespace filter
 	{
 		namespace IDPlate
 		{
+			/**
+			 * \brief 
+			 * \param plateImage 
+			 * \param iterations 
+			 * \param diameter 
+			 * \param sigmaColor 
+			 * \param sigmaSpace 
+			 * \param debug 
+			 * \param useGPU 
+			 * \return 
+			 */
 			cv::Mat applyBilateralFiltering(const cv::Mat& plateImage, int iterations, int diameter, double sigmaColor, double sigmaSpace, bool debug = false, bool useGPU = false);
 			cv::Mat applyMorphTransform(const cv::Mat& image, cv::MorphShapes morphShape, cv::MorphTypes morphType, cv::Size kernelSize);
 
+			std::vector<int> splitImgByCharRows(const cv::Mat& image, const std::vector<cv::Rect>& characters);
+			std::vector<std::vector<cv::Rect>> splitCharactersByRows(const std::vector<cv::Rect> characters, std::vector<int> rows, const cv::Mat & image, int debug = 0);
 			//std::vector<cv::Rect> findPlateCharacters(const cv::Mat& plateImage, double xMinPos, double xMaxPos, bool debug = false, int contoursFillMethod = CV_FILLED, cv::Mat& binarizedImage = cv::Mat());
 
 			/** Identify characters in the plate using their computed rects
@@ -48,10 +61,38 @@ namespace filter
 					int by = (b.y * 0.5);
 					int bx = (b.x * 0.5);
 
-					if (abs(ay - by) > 10)
+					const int delta = 10;	// 10
+					if (abs(ay - by) > delta)
 						return (ay < by);
 
 					return (ax < bx);
+				}
+			};
+
+			struct LineData
+			{
+				double averageY;
+				double averageCharWidth, averageCharHeight;
+				
+				int minHeight, maxHeight;
+				int minWidth, maxWidth;
+
+				LineData()
+					: averageY(0), averageCharWidth(0), averageCharHeight(0), minHeight(0), maxHeight(0), minWidth(0), maxWidth(0)
+				{
+				}
+
+				LineData(double averageY, double averageCharWidth, double averagCharHeight, int minHeight, int maxHeight, int minWidth, int maxWidth)
+					: averageY(averageY), averageCharWidth(averageCharWidth), averageCharHeight(averagCharHeight), minHeight(minHeight), maxHeight(maxHeight), minWidth(minWidth), maxWidth(maxWidth)
+				{
+				}
+			};
+
+			struct CompareByDeriv
+			{
+				bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b)
+				{
+					return a.first > b.first;
 				}
 			};
 		}

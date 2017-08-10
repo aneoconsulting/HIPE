@@ -33,6 +33,13 @@ namespace filter {
 				charMaxFillRatio = 0.9;
 				charMinWidth = 8;
 				charMinHeight = 20;
+
+				dbgMinX = 0.0;
+				dbgMaxX = 1.0;
+				dbgMinLines = 1;
+				ratioY = 1.0;
+				ratioHeight = 1.0;
+				ratioWidth = 1.0;
 			}
 			REGISTER_P(int, _debug);
 			REGISTER_P(double, charMinXBound);
@@ -41,6 +48,13 @@ namespace filter {
 			REGISTER_P(double, charMaxFillRatio);
 			REGISTER_P(int, charMinWidth);
 			REGISTER_P(int, charMinHeight);
+
+			REGISTER_P(double, dbgMinX);
+			REGISTER_P(double, dbgMaxX);
+			REGISTER_P(int, dbgMinLines);
+			REGISTER_P(double, ratioY);
+			REGISTER_P(double, ratioHeight);
+			REGISTER_P(double, ratioWidth);
 
 		public:
 			HipeStatus process() override;
@@ -51,11 +65,12 @@ namespace filter {
 			std::vector<cv::Rect> sortAndFilterCharacters(std::vector<cv::Rect>& characters, int plateImageRows, double lowerBound, double upperBound);
 			//std::vector<cv::Rect> blobsRectangle(const cv::Mat& plateImage, std::vector<cv::Rect>& characters);
 			std::vector < std::vector<cv::Rect>> separateCharactersByLines(std::vector<cv::Rect>& charactersSorted, const cv::Mat& debugImage = cv::Mat());
-
+			void findCharacters(const cv::Mat& plateImage);
+			std::vector<std::vector<cv::Rect>> segmentCharacters(const std::vector<std::vector<cv::Rect>> & lines);
 			cv::Mat createOutputImage(const cv::Mat& plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels);
 		};
 
-		ADD_CLASS(IDPlateIdentifier, _debug, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, charMinWidth, charMinHeight);
+		ADD_CLASS(IDPlateIdentifier, _debug, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, charMinWidth, charMinHeight, dbgMinX, dbgMaxX, dbgMinLines, ratioY, ratioHeight, ratioWidth);
 
 		class LabelOCR {
 		public:

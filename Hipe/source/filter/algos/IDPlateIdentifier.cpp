@@ -8,13 +8,16 @@ HipeStatus filter::Algos::IDPlateIdentifier::process()
 	// Find characters
 	LabelOCR labelOCR(true);
 	std::vector<cv::Rect> charactersRects;
-	std::vector<cv::Mat> characters = detectTextArea(image, charactersRects);
 
-	// Identify them using Tesseract
-	std::vector<std::string> labels = labelOCR.runRecognition(characters, 30);	// legacy: labelType = 2
+	findCharacters(image);
+	cv::Mat output = image;
+	//std::vector<cv::Mat> characters = detectTextArea(image, charactersRects);
 
-	// Output results in an image
-	cv::Mat output = createOutputImage(image, charactersRects, labels);
+	//// Identify them using Tesseract
+	//std::vector<std::string> labels = labelOCR.runRecognition(characters, 30);	// legacy: labelType = 2
+
+	//// Output results in an image
+	//cv::Mat output = createOutputImage(image, charactersRects, labels);
 
 	_connexData.push(output);
 	return OK;
@@ -59,10 +62,10 @@ std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::
 
 	//// ?
 	//charactersFiltered = blobsRectangle(preprocessed, charactersFiltered);
-	
+
 	//// Separate characters by lines
 	//std::vector<std::vector<cv::Rect>> debugChars = separateCharactersByLines(charactersFiltered, plateImage);
-	
+
 	// Extract characters: crop image with rectangles
 	std::vector<cv::Mat> croppedCharacters;
 	for (auto & character : charactersFiltered)
@@ -91,7 +94,7 @@ cv::Mat filter::Algos::IDPlateIdentifier::preprocessImage(const cv::Mat & plateI
 	int diameter = 15;
 	double sigmaColor = 15.0 * 2.0;
 	double sigmaSpace = 15.0 * 0.5;
-	
+
 	image = filter::algos::IDPlate::applyBilateralFiltering(image, 1, diameter, sigmaColor, sigmaSpace, _debug, false);
 
 	// Convert to grayscale
@@ -101,12 +104,12 @@ cv::Mat filter::Algos::IDPlateIdentifier::preprocessImage(const cv::Mat & plateI
 	// Create a CLAHE object(Arguments are optional).
 	cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0);
 	clahe->apply(image, image);
-	if(_debug)	filter::algos::IDPlate::showImage(image);
+	if (_debug)	filter::algos::IDPlate::showImage(image);
 
 	// Binarize image
 	//cv::GaussianBlur(image, image, cv::Size(3, 3), 0);
 	cv::bitwise_not(image, image);
-	if(_debug)	filter::algos::IDPlate::showImage(image);
+	if (_debug)	filter::algos::IDPlate::showImage(image);
 
 	return image;
 }
@@ -292,7 +295,7 @@ std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCha
 {
 	cv::Mat image = debugImage.clone();
 
-	const int verticalDelta = 10;
+	const int verticalDelta = 5;
 
 	std::vector<std::vector<cv::Rect>> output;
 
@@ -312,7 +315,7 @@ std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCha
 
 		//Debug
 		cv::Mat image = debugImage.clone();
-		if (image.data && _debug)
+		if (image.data && _debug > 2)
 		{
 			cv::rectangle(image, *it, cv::Scalar(255, 0, 0));
 			cv::circle(image, itBorder, 2, cv::Scalar(0, 0, 0), 2);
@@ -327,7 +330,7 @@ std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCha
 		if (delta > verticalDelta)
 		{
 			//Debug
-			if (image.data && _debug)
+			if (image.data && _debug > 2)
 			{
 				cv::rectangle(image, *itNext, cv::Scalar(0, 0, 255));
 				filter::algos::IDPlate::showImage(image);
@@ -339,7 +342,7 @@ std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCha
 		else
 		{
 			// Debug
-			if (image.data && _debug)
+			if (image.data && _debug > 2)
 			{
 				cv::rectangle(image, *itNext, cv::Scalar(0, 255, 0));
 				filter::algos::IDPlate::showImage(image);
@@ -356,7 +359,7 @@ std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCha
 
 	// Debug
 	image = debugImage.clone();
-	if (image.data && _debug)
+	if (image.data && _debug > 2)
 	{
 		for (auto & line : output)
 		{
@@ -370,6 +373,654 @@ std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCha
 	}
 
 	return output;
+}
+
+void filter::Algos::IDPlateIdentifier::findCharacters(const cv::Mat & plateImage)
+{
+	//// Preprocess image
+	cv::Mat preprocessed = preprocessImage(plateImage);
+	cv::Mat imageGrayscale = filter::algos::IDPlate::convertColor2Gray(preprocessed);
+	cv::Mat debugImage = filter::algos::IDPlate::convertGray2Color(imageGrayscale);
+
+	// First morphological transform
+	imageGrayscale = filter::algos::IDPlate::applyMorphTransform(imageGrayscale, cv::MorphShapes::MORPH_ELLIPSE, cv::MorphTypes::MORPH_GRADIENT, cv::Size(3, 3));
+
+	// Debug (show first morphology preprocess)
+	if (_debug)	filter::algos::IDPlate::showImage(imageGrayscale);
+
+	// Convert to black & white
+	const int threshold = 64;
+	cv::threshold(imageGrayscale, imageGrayscale, threshold, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+
+	// Debug (show converted (binary) image)
+	if (_debug)	filter::algos::IDPlate::showImage(imageGrayscale);
+
+	// Second morphological transform
+	imageGrayscale = filter::algos::IDPlate::applyMorphTransform(imageGrayscale, cv::MorphShapes::MORPH_RECT, cv::MorphTypes::MORPH_CLOSE, cv::Size(3, 1));
+
+	////////// DONT FORGET TO OUTPUT IMAGE WHEN CODE WILL BE SEPARATED IN DIFFERENT FUNCTIONS
+	//////// Output "binarized" plate image
+	//////out_binarizedImage = imageGrayscale.clone();
+
+	// Debug (show second morphology transform)
+	if (_debug)	filter::algos::IDPlate::showImage(imageGrayscale);
+
+	// Find contours of preprocessed image
+	std::vector<std::vector<cv::Point>> contours;
+	std::vector<cv::Vec4i> hierarchy;
+
+	cv::Mat contoursDebug = imageGrayscale.clone();
+	cv::findContours(contoursDebug, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE, cv::Point(0, 0));
+
+	// Debug (show found contours)
+	if (_debug)	filter::algos::IDPlate::showImage(contoursDebug);
+
+	// Debug
+	cv::Mat temp;
+	if (_debug)	temp = plateImage.clone();
+
+	//// Extract rects from found contours
+	std::vector<cv::Rect> charactersFromContours;
+	for (int idx = 0; idx >= 0; idx = hierarchy[idx][0])
+	{
+		cv::Rect currRect = cv::boundingRect(contours[idx]);
+
+		//// fiter out really small rects
+		//if (currRect.width <= minWidth && currRect.height <= minHeight)	continue;
+		//if (currRect.width > maxWidth && currRect.height > maxHeight)	continue;
+
+		charactersFromContours.push_back(currRect);
+
+		// Debug (show current found contours' englobing rect)
+		if (_debug)
+		{
+			cv::rectangle(temp, charactersFromContours.back(), cv::Scalar(255, 0, 0), 2);
+			if (_debug > 2)
+			{
+				filter::algos::IDPlate::showImage(temp);
+			}
+		}
+	}
+
+	// Debug (show all found contours's englobing rects)
+	if (_debug)	filter::algos::IDPlate::showImage(temp);
+
+
+	//// Filter characters (1st pass)
+	// From position (X axis)
+	const int minXBound = dbgMinX * plateImage.cols;
+	const int maxXBound = dbgMaxX * plateImage.cols;
+	// From size [X + (X - 1) ; X]
+	const int minLines = dbgMinLines;
+	const int maxLines = 2 * minLines - 1;
+	const int maxSize = plateImage.rows / minLines;
+	const int minSize = plateImage.rows / maxLines;
+
+	// Debug (show position bounds)
+	if (_debug > 1)
+	{
+		temp = plateImage.clone();
+		cv::line(temp, cv::Point(minXBound, 0), cv::Point(minXBound, temp.rows - 1), cv::Scalar(255, 0, 255), 2);
+		cv::line(temp, cv::Point(maxXBound, 0), cv::Point(maxXBound, temp.rows - 1), cv::Scalar(255, 0, 255), 2);
+
+		filter::algos::IDPlate::showImage(temp);
+	}
+
+
+	std::vector<cv::Rect> filteredCharacters, dubiousCharacters;
+	for (auto & character : charactersFromContours)
+	{
+		// Debug (show processed rect in blue)
+		if (_debug > 2)
+		{
+			cv::rectangle(temp, character, cv::Scalar(255, 0, 0), 1);
+			cv::circle(temp, cv::Point(character.x, character.y), 2, cv::Scalar(0, 0, 255), 2);
+
+			filter::algos::IDPlate::showImage(temp);
+		}
+
+		// Filter rect
+		// TODO: Should filtering be inclusive or exclusive ?
+		const bool position = character.x >= minXBound && character.x < maxXBound ? true : false;
+		const bool size = character.height >= minSize && character.height < maxSize ? true : false;
+
+		// Assert rect is within position (image X axis) bounds
+		if (position)
+		{
+			// If size is correct accept char
+			if (size)
+			{
+				filteredCharacters.push_back(character);
+
+				// Debug (paint validated rect in green)
+				if (_debug > 2)
+				{
+					cv::rectangle(temp, character, cv::Scalar(0, 255, 0), 1);
+				}
+			}
+			// If not, it in fact can possibly be a good one. Put it aside for a second pass validation test
+			// Either way we do not want the rects outside the position bounds to be checked again.
+			else
+			{
+				dubiousCharacters.push_back(character);
+
+				// Debug (paint doubt on rect in yellow)
+				if (_debug > 2)
+				{
+					cv::rectangle(temp, character, cv::Scalar(255, 255, 0), 1);
+				}
+			}
+		}
+		else
+		{
+			// Debug (paint rejected rect in red)
+			if (_debug > 2)
+			{
+				cv::rectangle(temp, character, cv::Scalar(0, 0, 255), 1);
+			}
+		}
+
+		// Debug (show result of rect analysis)
+		if (_debug > 2) filter::algos::IDPlate::showImage(temp);
+	}
+
+	// Debug (show all validated and dubious rects)
+	if (_debug)
+	{
+		temp = plateImage.clone();
+		for (auto & character : filteredCharacters)
+		{
+			cv::rectangle(temp, character, cv::Scalar(0, 255, 0), 1);
+		}
+		for (auto & character : dubiousCharacters)
+		{
+			cv::rectangle(temp, character, cv::Scalar(255, 255, 0), 1);
+		}
+
+		filter::algos::IDPlate::showImage(temp);
+	}
+
+	//// Find characters lines and sort them
+	// Sort rects by coordinates
+	std::sort(filteredCharacters.begin(), filteredCharacters.end(), filter::algos::IDPlate::CompRectsByPos());
+	std::sort(dubiousCharacters.begin(), dubiousCharacters.end(), filter::algos::IDPlate::CompRectsByPos());
+
+	// Find lines
+	std::vector<int> rowsPositions = filter::algos::IDPlate::splitImgByCharRows(plateImage, filteredCharacters);
+
+	// Debug (show computed separator lines)
+	if (_debug)
+	{
+		debugImage = plateImage.clone();
+		for (auto & row : rowsPositions)
+		{
+			cv::line(debugImage, cv::Point(0, row), cv::Point(debugImage.cols - 1, row), cv::Scalar(0, 0, 255), 4);
+		}
+
+		filter::algos::IDPlate::showImage(debugImage);
+	}
+
+	// Split characters in lines
+	// TODO: (las param must be _debug, not 0)
+	std::vector<std::vector<cv::Rect>> charactersLines = filter::algos::IDPlate::splitCharactersByRows(filteredCharacters, rowsPositions, plateImage, 0);
+	//std::vector<std::vector<cv::Rect>> dubiousCharactersLines = filter::algos::IDPlate::splitCharactersByRows(dubiousCharacters, rowsPositions, plateImage, 0);
+
+	//// Refilter characters to validate dubious ones
+	// Find each line median rect center value
+	std::vector<filter::algos::IDPlate::LineData> charactersLinesData;
+	for (auto & line : charactersLines)
+	{
+		filter::algos::IDPlate::LineData lineData;
+		lineData.minWidth = lineData.minHeight = (std::numeric_limits<int>::max)();
+		lineData.maxWidth = lineData.maxHeight = (std::numeric_limits<int>::min)();
+
+		for (auto & character : line)
+		{
+			lineData.averageY += character.y + character.height / 2.0;
+			lineData.averageCharWidth += character.width;
+			lineData.averageCharHeight += character.height;
+
+			if (character.width < lineData.minWidth)	lineData.minWidth = character.width;
+			if (character.width > lineData.maxWidth)	lineData.maxWidth = character.width;
+			if (character.height < lineData.minHeight)	lineData.minHeight = character.height;
+			if (character.height > lineData.maxHeight)	lineData.maxHeight = character.height;
+		}
+
+		lineData.averageY /= line.size();
+		lineData.averageCharWidth /= line.size();
+		lineData.averageCharHeight /= line.size();
+
+		charactersLinesData.push_back(lineData);
+	}
+
+	// Debug (show computed average Y values)
+	if (_debug)
+	{
+		debugImage = plateImage.clone();
+		for (auto & lineData : charactersLinesData)
+		{
+			cv::line(debugImage, cv::Point(0, lineData.averageY), cv::Point(plateImage.cols - 1, lineData.averageY), cv::Scalar(0, 0, 255), 2);
+		}
+
+		filter::algos::IDPlate::showImage(debugImage);
+	}
+
+	// Refilter characters using median value (the ones between 1st and last character on line)
+	std::vector<cv::Rect> validCharacters;
+	//const double heightRatio = 0.1;	// Ratio used (percentage) to compute delta in pixels
+	for(int lineIdx = 0; lineIdx < charactersLines.size(); ++lineIdx)
+	{
+		// Assert characters will be between 1st and last rect
+		const int minXPos = charactersLines[lineIdx].front().x;
+		const int maxXPos = charactersLines[lineIdx].back().x + charactersLines[lineIdx].back().width;
+
+		const filter::algos::IDPlate::LineData& lineData = charactersLinesData[lineIdx];
+
+		// Delta in pixels used to validateCharacters
+		const double deltaY = ratioY * lineData.averageCharHeight / 2.0;
+		const double deltaHeight = ratioHeight * lineData.averageCharHeight / 2.0;
+		const double deltaWidth = ratioWidth * lineData.averageCharWidth / 2.0;
+
+		// Analyze every dubious character
+		for(std::vector<cv::Rect>::iterator itDubiousChar = dubiousCharacters.begin(); itDubiousChar != dubiousCharacters.end();)
+		{
+			// Debug (show min X and max X computed from first and last character of line and show current dubious rect)
+			if(_debug > 2)
+			{
+				debugImage = plateImage.clone();
+				// X Bounds
+				cv::line(debugImage, cv::Point(minXPos, 0), cv::Point(minXPos, debugImage.rows - 1), cv::Scalar(255, 0, 255), 2);
+				cv::line(debugImage, cv::Point(maxXPos, 0), cv::Point(maxXPos, debugImage.rows - 1), cv::Scalar(255, 0, 255), 2);
+				
+				// Average Y
+				cv::line(debugImage, cv::Point(0, lineData.averageY), cv::Point(debugImage.cols - 1, lineData.averageY), cv::Scalar(127, 0, 127), 2);
+				cv::line(debugImage, cv::Point(0, lineData.averageY - deltaY), cv::Point(debugImage.cols - 1, lineData.averageY - deltaY), cv::Scalar(255, 0, 255), 1);
+				cv::line(debugImage, cv::Point(0, lineData.averageY + deltaY), cv::Point(debugImage.cols - 1, lineData.averageY + deltaY), cv::Scalar(255, 0, 255), 1);
+				
+				// Dubious rect
+				cv::rectangle(debugImage, *itDubiousChar, cv::Scalar(255, 255, 0), 2);
+				// Dubious rect Y
+				cv::circle(debugImage, cv::Point(itDubiousChar->x, itDubiousChar->y + itDubiousChar->height / 2.0), 2, cv::Scalar(255, 255, 0), 2);
+
+				filter::algos::IDPlate::showImage(debugImage);
+			}
+			// Character must be between first and last character of line
+			// TODO: must bounds be inclusive or exclusive?
+			if (itDubiousChar->x >= minXPos && itDubiousChar->x <= maxXPos)
+			{
+				// Character must be near median Y line and similar to others
+				const double middleY = itDubiousChar->y + itDubiousChar->height / 2.0;
+
+				const bool bMiddle = middleY >= lineData.averageY - deltaY && middleY <= lineData.averageY + deltaY;
+				const bool bWidth = itDubiousChar->width >= cv::max<double>(0.0, lineData.minWidth - deltaWidth) && itDubiousChar->width <= cv::min<double>(lineData.maxWidth + deltaWidth, plateImage.cols - 1);
+				const bool bHeight = itDubiousChar->height >= cv::max<double>(0.0, lineData.minHeight - deltaHeight) && itDubiousChar->height <= cv::min<double>(lineData.maxHeight + deltaHeight, plateImage.rows - 1);
+
+				//const bool bWidth = itDubiousChar->width >= lineData.averageCharWidth - deltaWidth && itDubiousChar->width <= lineData.averageCharWidth + deltaWidth;
+				//const bool bHeight = itDubiousChar->height >= lineData.averageCharHeight - deltaHeight && itDubiousChar->height <= lineData.averageCharHeight + deltaHeight;
+				
+				if (bMiddle && bWidth && bHeight)
+				{
+					// Debug (show validate dubious char)
+					if (_debug > 2)
+					{
+						cv::rectangle(debugImage, *itDubiousChar, cv::Scalar(0, 255, 0), 2);
+
+						filter::algos::IDPlate::showImage(debugImage);
+					}
+					// If valid save it and erase it from dubious list to save computing time
+					validCharacters.push_back(*itDubiousChar);
+					itDubiousChar = dubiousCharacters.erase(itDubiousChar);
+					continue;
+				}
+				else
+				{
+					// Debug (show invalid dubious char)
+					if (_debug > 2)
+					{
+						cv::rectangle(debugImage, *itDubiousChar, cv::Scalar(0, 0, 255), 2);
+
+						filter::algos::IDPlate::showImage(debugImage);
+					}
+
+					//// We also can filter invalid characters which coordinates are above the line.
+					//// They can only be noise so we can delete them to speed up computing time
+					//if(middleY < lineData.averageY && !bMiddle)
+					//{
+					//	itDubiousChar = dubiousCharacters.erase(itDubiousChar);
+					//	continue;
+					//}
+				}
+			}
+			++itDubiousChar;
+		}
+	}
+
+	// Debug (show valid and newly validated characters)
+	if (_debug)
+	{
+		debugImage = plateImage.clone();
+		for (auto & character : validCharacters)
+		{
+			cv::rectangle(debugImage, character, cv::Scalar(0, 255, 0), 2);
+		}
+		for (auto & line : charactersLines)
+		{
+			for(auto & character : line)
+			{
+				cv::rectangle(debugImage, character, cv::Scalar(0, 255, 0), 1);
+			}
+		}
+		filter::algos::IDPlate::showImage(debugImage);
+	}
+
+	// Cleanup used variables
+	validCharacters.insert(validCharacters.end(), filteredCharacters.begin(), filteredCharacters.end());
+	std::sort(validCharacters.begin(), validCharacters.end(), filter::algos::IDPlate::CompRectsByPos());
+	charactersLines = filter::algos::IDPlate::splitCharactersByRows(validCharacters, rowsPositions, plateImage, 0);
+	validCharacters.clear();
+	charactersLinesData.clear();
+
+	// Recompute each line median Y value
+	for (auto & line : charactersLines)
+	{
+		filter::algos::IDPlate::LineData lineData;
+		lineData.minWidth = lineData.minHeight = (std::numeric_limits<int>::max)();
+		lineData.maxWidth = lineData.maxHeight = (std::numeric_limits<int>::min)();
+
+		for (auto & character : line)
+		{
+			lineData.averageY += character.y + character.height / 2.0;
+			lineData.averageCharWidth += character.width;
+			lineData.averageCharHeight += character.height;
+
+			if (character.width < lineData.minWidth)	lineData.minWidth = character.width;
+			if (character.width > lineData.maxWidth)	lineData.maxWidth = character.width;
+			if (character.height < lineData.minHeight)	lineData.minHeight = character.height;
+			if (character.height > lineData.maxHeight)	lineData.maxHeight = character.height;
+		}
+
+		lineData.averageY /= line.size();
+		lineData.averageCharWidth /= line.size();
+		lineData.averageCharHeight /= line.size();
+
+		charactersLinesData.push_back(lineData);
+	}
+
+	// Refilter characters using median value (the ones outside 1st and last character on line)
+	for (int lineIdx = 0; lineIdx < charactersLines.size(); ++lineIdx)
+	{
+		// Assert characters will be between 1st and last rect
+		const int minXPos = charactersLines[lineIdx].front().x;
+		const int maxXPos = charactersLines[lineIdx].back().x + charactersLines[lineIdx].back().width;
+
+		const filter::algos::IDPlate::LineData& lineData = charactersLinesData[lineIdx];
+
+		// Delta in pixels used to validateCharacters
+		const double deltaY = ratioY * lineData.averageCharHeight / 2.0;
+		const double deltaHeight = ratioHeight * lineData.averageCharHeight / 2.0;
+		const double deltaWidth = ratioWidth * lineData.averageCharWidth / 2.0;
+
+		// Analyze every dubious character
+		for (std::vector<cv::Rect>::iterator itDubiousChar = dubiousCharacters.begin(); itDubiousChar != dubiousCharacters.end();)
+		{
+			// Debug (show min X and max X computed from first and last character of line and show current dubious rect)
+			if (_debug > 2)
+			{
+				debugImage = plateImage.clone();
+				// X Bounds
+				cv::line(debugImage, cv::Point(minXPos, 0), cv::Point(minXPos, debugImage.rows - 1), cv::Scalar(255, 0, 255), 2);
+				cv::line(debugImage, cv::Point(maxXPos, 0), cv::Point(maxXPos, debugImage.rows - 1), cv::Scalar(255, 0, 255), 2);
+
+				// Average Y
+				cv::line(debugImage, cv::Point(0, lineData.averageY), cv::Point(debugImage.cols - 1, lineData.averageY), cv::Scalar(127, 0, 127), 2);
+				cv::line(debugImage, cv::Point(0, lineData.averageY - deltaY), cv::Point(debugImage.cols - 1, lineData.averageY - deltaY), cv::Scalar(255, 0, 255), 1);
+				cv::line(debugImage, cv::Point(0, lineData.averageY + deltaY), cv::Point(debugImage.cols - 1, lineData.averageY + deltaY), cv::Scalar(255, 0, 255), 1);
+
+				// Dubious rect
+				cv::rectangle(debugImage, *itDubiousChar, cv::Scalar(255, 255, 0), 2);
+				// Dubious rect Y
+				cv::circle(debugImage, cv::Point(itDubiousChar->x, itDubiousChar->y + itDubiousChar->height / 2.0), 2, cv::Scalar(255, 255, 0), 2);
+
+				filter::algos::IDPlate::showImage(debugImage);
+			}
+			// This time character must be outside first and last character of line
+			// TODO: must bounds be inclusive or exclusive?
+			if (!(itDubiousChar->x >= minXPos && itDubiousChar->x <= maxXPos))
+			{
+				// Character must be near median Y line and similar to others
+				const double middleY = itDubiousChar->y + itDubiousChar->height / 2.0;
+
+				const bool bMiddle = middleY >= lineData.averageY - deltaY && middleY <= lineData.averageY + deltaY;
+				const bool bWidth = itDubiousChar->width >= cv::max<double>(0.0, lineData.minWidth - deltaWidth) && itDubiousChar->width <= cv::min<double>(lineData.maxWidth + deltaWidth, plateImage.cols - 1);
+				const bool bHeight = itDubiousChar->height >= cv::max<double>(0.0, lineData.minHeight - deltaHeight) && itDubiousChar->height <= cv::min<double>(lineData.maxHeight + deltaHeight, plateImage.rows - 1);
+
+				if (bMiddle && bWidth && bHeight)
+				{
+					// Debug (show validate dubious char)
+					if (_debug > 2)
+					{
+						cv::rectangle(debugImage, *itDubiousChar, cv::Scalar(0, 255, 0), 2);
+
+						filter::algos::IDPlate::showImage(debugImage);
+					}
+					// If valid save it and erase it from dubious list to speed up compute time
+					validCharacters.push_back(*itDubiousChar);
+					itDubiousChar = dubiousCharacters.erase(itDubiousChar);
+					continue;
+				}
+				else
+				{
+					// Debug (show invalid dubious char)
+					if (_debug > 2)
+					{
+						cv::rectangle(debugImage, *itDubiousChar, cv::Scalar(0, 0, 255), 2);
+
+						filter::algos::IDPlate::showImage(debugImage);
+					}
+
+					// Here we can safely delete every rect whose coordinates are bove the average line
+					if (middleY < lineData.averageY)
+					{
+						itDubiousChar = dubiousCharacters.erase(itDubiousChar);
+						continue;
+					}
+				}
+			}
+			++itDubiousChar;
+		}
+	}
+
+	// Debug (show valid and newly validated characters)
+	if (_debug)
+	{
+		debugImage = plateImage.clone();
+		for (auto & character : validCharacters)
+		{
+			cv::rectangle(debugImage, character, cv::Scalar(0, 255, 0), 2);
+		}
+		for (auto & line : charactersLines)
+		{
+			for (auto & character : line)
+			{
+				cv::rectangle(debugImage, character, cv::Scalar(0, 255, 0), 1);
+			}
+		}
+		filter::algos::IDPlate::showImage(debugImage);
+	}
+
+	//// Split contours in lines
+	//// TODO: (last param must be _debug, not 0)
+	//std::vector<std::vector<cv::Rect>> rectsLines = filter::algos::IDPlate::splitCharactersByRows(charactersFromContours, rowsPositions, plateImage, 0);
+
+	//// Find average, min, and max character sizes from first filtered characters
+	//std::vector<cv::Size> averageCharactersSizes;
+	//std::vector<cv::Size> minSizes, maxSizes;
+
+	//for (auto & line : charsLines)
+	//{
+	//	cv::Size averageSize(0, 0);
+	//	cv::Size minSize((std::numeric_limits<int>::max)(), (std::numeric_limits<int>::max)());
+	//	cv::Size maxSize((std::numeric_limits<int>::min)(), (std::numeric_limits<int>::min)());
+
+	//	for (auto & character : line)
+	//	{
+	//		averageSize.width += character.width;
+	//		averageSize.height += character.height;
+
+	//		if (character.width < minSize.width)	minSize.width = character.width;
+	//		if (character.height < minSize.height)	minSize.height = character.height;
+
+	//		if (character.width > maxSize.width)	maxSize.width = character.width;
+	//		if (character.height > maxSize.height)	maxSize.height = character.height;
+
+	//		if (_debug > 2)
+	//		{
+	//			cv::Mat temp = plateImage.clone();
+	//			cv::rectangle(temp, character, cv::Scalar(255, 0, 0), 2);
+	//			filter::algos::IDPlate::showImage(temp);
+	//		}
+	//	}
+	//	averageSize.width /= line.size();
+	//	averageSize.height /= line.size();
+
+	//	averageCharactersSizes.push_back(averageSize);
+	//	minSizes.push_back(minSize);
+	//	maxSizes.push_back(maxSize);
+	//}
+	//if (_debug)	filter::algos::IDPlate::showImage(plateImage);
+
+	//// Use average size + delta to validate characters : KO
+	//const cv::Size delta(10, 10);
+	//std::vector<std::vector<cv::Rect>> keepedChars(rectsLines.size());
+	//for (int i = 0; i < rectsLines.size(); ++i)
+	//{
+	//	const std::vector<cv::Rect> & currLine = rectsLines[i];
+	//	for (int j = 0; j < currLine.size(); ++j)
+	//	{
+	//		// Debug
+	//		if (_debug > 2)
+	//		{
+	//			cv::Mat temp = plateImage.clone();
+	//			cv::rectangle(temp, currLine[j], cv::Scalar(255, 0, 0), 2);
+	//			filter::algos::IDPlate::showImage(temp);
+	//		}
+
+	//		const cv::Size2d minSize(averageCharactersSizes[i].width - (delta.width / 2.0), averageCharactersSizes[i].height - (delta.height / 2.0));
+	//		const cv::Size2d maxSize(averageCharactersSizes[i].width + (delta.width / 2.0), averageCharactersSizes[i].height + (delta.height / 2.0));
+
+	//		const bool width = currLine[j].width >= minSize.width && currLine[j].width < maxSize.width;
+	//		const bool height = currLine[j].height >= minSize.height && currLine[j].height < maxSize.height;
+
+	//		if (width && height)
+	//		{
+	//			keepedChars[i].push_back(currLine[j]);
+	//		}
+	//	}
+	//}
+
+	//// Debug
+	//if (_debug)
+	//{
+	//	cv::Mat wholeTemp = plateImage.clone();
+	//	for (auto & line : keepedChars)
+	//	{
+	//		cv::Mat temp = plateImage.clone();
+	//		for (auto & chara : line)
+	//		{
+	//			cv::rectangle(temp, chara, cv::Scalar(0, 255, 0), 2);
+	//			cv::rectangle(wholeTemp, chara, cv::Scalar(0, 255, 0), 2);
+	//		}
+
+	//		filter::algos::IDPlate::showImage(temp);
+	//	}
+	//	filter::algos::IDPlate::showImage(wholeTemp);
+	//}
+
+	//// Create buckets
+	//const int step = 4;
+	//const int bucketCount = plateImage.cols % step ? plateImage.cols / step + 1 : plateImage.cols;
+
+
+	//std::vector<std::vector<std::vector<cv::Rect>>> bucketsLines(rectsLines.size(), std::vector<std::vector<cv::Rect>>(bucketCount));
+
+	//for (int lineIdx = 0; lineIdx < rectsLines.size(); ++lineIdx)
+	//{
+	//	const std::vector<cv::Rect>& line = rectsLines[lineIdx];
+	//	for (int rectIdx = 0; rectIdx < line.size(); ++rectIdx)
+	//	{
+	//		const cv::Rect & rect = line[rectIdx];
+	//		const int bucketIdx = rect.width / step;
+	//		bucketsLines[lineIdx][bucketIdx].push_back(rect);
+	//	}
+	//}
+
+	//if (_debug)
+	//{
+	//	for (auto & line : bucketsLines)
+	//	{
+	//		for (auto & bucket : line)
+	//		{
+	//			cv::Mat temp = plateImage.clone();
+	//			for (auto & rect : bucket)
+	//			{
+	//				cv::rectangle(temp, rect, cv::Scalar(255, 0, 0), 2);
+	//			}
+	//			filter::algos::IDPlate::showImage(temp);
+	//		}
+	//	}
+	//}
+	//// Extract lines
+	//if (_debug)	temp = plateImage.clone();
+	//std::vector<std::vector<cv::Rect>> charactersLines = separateCharactersByLines(charactersFromContours, temp);
+
+	//// Debug
+	//if (_debug)
+	//{
+	//	for (auto & line : charactersLines)
+	//	{
+	//		temp = plateImage.clone();
+	//		for (auto & character : line)
+	//		{
+	//			cv::rectangle(temp, character, cv::Scalar(255, 0, 0), 2);
+
+	//		}
+	//		filter::algos::IDPlate::showImage(temp);
+	//	}
+	//}
+	////for (int i = 0; i < contours.size(); ++i)
+	////{
+	////	// Sort rects
+	////	std::sort()
+	////	// Extract lines (using y coord) and exclude really small rects
+	////	// Segment rects by size (using x coord)
+	////	// Find most frequent size (range)
+	////	// Use range + offset to validate characters
+	////}
+
+
+}
+
+std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::segmentCharacters(const std::vector<std::vector<cv::Rect>>& lines)
+{
+	//// We'll segment the rects by their width in ranges of 5 pixels
+	//// Find limit (widest rect)
+	//int maxWidth = 0;
+	//for (auto & line : lines)
+	//	for (auto & rect : line)
+	//		if (rect.width > maxWidth) maxWidth = rect.width;
+
+	//// If limit is not % 5, add the difference
+	//int modulo = maxWidth % 5;
+	//if (modulo)
+	//{
+	//	maxWidth += 5 - modulo;
+	//}
+
+	//// Create container
+	//int segments = maxWidth / 5;
+	//std::vector<std::vector<cv::Rect>>
+	//// segment
+	return std::vector<std::vector<cv::Rect>>();
 }
 
 cv::Mat filter::Algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels)
@@ -402,7 +1053,7 @@ cv::Mat filter::Algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plat
 		cv::putText(output, charactersLabels[i], textPos, fontFace, fontScale, cv::Scalar(0, 0, 255), fontThickness);
 	}
 
-	if(_debug)	filter::algos::IDPlate::showImage(output);
+	if (_debug)	filter::algos::IDPlate::showImage(output);
 
 	return output;
 }
@@ -609,13 +1260,13 @@ cv::Mat filter::Algos::LabelOCR::enlargeCharacter(const cv::Mat & character, int
 	cv::Rect roi(margin, margin, character.cols, character.rows);
 	character.copyTo(output(roi));
 
-	if(_debug > 2)	filter::algos::IDPlate::showImage(output);
+	if (_debug > 2)	filter::algos::IDPlate::showImage(output);
 
 	// Bigger character
 	cv::Mat dilateKernel = cv::getStructuringElement(cv::MorphShapes::MORPH_CROSS, cv::Size(3, 3));
 	cv::dilate(output, output, dilateKernel);
 
-	if(_debug > 2)	filter::algos::IDPlate::showImage(output);
+	if (_debug > 2)	filter::algos::IDPlate::showImage(output);
 
 	return output;
 }

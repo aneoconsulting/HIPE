@@ -54,8 +54,8 @@ namespace filter
 			bool compRectByHPos(const cv::Rect& a, const cv::Rect& b);
 
 		private:
-			std::vector<int> separateTextRows(const std::vector<cv::Rect> & charactersRects);
-			std::vector<std::vector<cv::Rect>> sortCharactersByRows(const cv::Mat& plateImage, const std::vector<cv::Rect>& plateCharacters, const std::vector<int>& charactersRows);
+			//std::vector<int> separateTextRows(const std::vector<cv::Rect> & charactersRects);
+			//std::vector<std::vector<cv::Rect>> sortCharactersByRows(const cv::Mat& plateImage, const std::vector<cv::Rect>& plateCharacters, const std::vector<int>& charactersRows);
 			std::vector<cv::Point> findCharactersBounds(const cv::Mat& image, const std::vector<std::vector<cv::Rect>>& charactersSorted);
 			std::vector<std::vector<cv::Rect>> findLongestTextLines(int linesToFind, const std::vector<std::vector<cv::Rect>>& textList);
 			std::vector<cv::Point> findCharactersLinesBounds(const std::vector<std::vector<cv::Rect>> lines, const cv::Mat& image = cv::Mat());
