@@ -65,7 +65,7 @@ namespace filter {
 			std::vector<cv::Rect> sortAndFilterCharacters(std::vector<cv::Rect>& characters, int plateImageRows, double lowerBound, double upperBound);
 			//std::vector<cv::Rect> blobsRectangle(const cv::Mat& plateImage, std::vector<cv::Rect>& characters);
 			std::vector < std::vector<cv::Rect>> separateCharactersByLines(std::vector<cv::Rect>& charactersSorted, const cv::Mat& debugImage = cv::Mat());
-			void findCharacters(const cv::Mat& plateImage);
+			//void findCharacters(const cv::Mat& plateImage);
 			std::vector<std::vector<cv::Rect>> segmentCharacters(const std::vector<std::vector<cv::Rect>> & lines);
 			cv::Mat createOutputImage(const cv::Mat& plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels);
 		};

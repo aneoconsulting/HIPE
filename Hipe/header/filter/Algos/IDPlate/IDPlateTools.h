@@ -16,6 +16,12 @@ namespace filter
 	{
 		namespace IDPlate
 		{
+			enum LineFilteringMethod
+			{
+				FILTER_INSIDE,
+				FILTER_OUTSIDE
+			};
+
 			/**
 			 * \brief 
 			 * \param plateImage 
@@ -46,7 +52,9 @@ namespace filter
 			 * @param debugLevel parameter used to show and draw debug information
 			 */
 			std::vector<cv::Rect> findPlateCharacter(const cv::Mat& plateImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, double charMinFillRatio, double charMaxFillRatio, cv::Size charRectMinSize = cv::Size(8,20), int contoursFillMethod = CV_FILLED, int debugLevel = 0);
-
+			std::vector<std::vector<cv::Rect>> extractPlateCharacters(const cv::Mat& preprocessedImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, int minLines, int maxLines, double ratioY, double ratioHeight, double ratioWidth, const cv::Mat& dbgImage, int debug = 0);
+			std::vector<cv::Rect> filterCharactersFromSize(const cv::Mat& image, std::vector<cv::Rect> characters, double minPosX, double maxPosX, int minLines, int maxLines, std::vector<cv::Rect>& out_dubiousCharacters, const cv::Mat& dbgImage, int debug);
+			std::vector<cv::Rect> filterFalseNegativeChars(const cv::Mat& image, const std::vector<std::vector<cv::Rect>>& textLines, std::vector<cv::Rect>& dubiousCharacters, LineFilteringMethod filterMethod, double ratioY, double ratioWidth, double ratioHeight, const cv::Mat& dbgImage, int debug = 0, bool speedUp = false);
 			cv::Mat convertColor2Gray(const cv::Mat& colorImage);
 			cv::Mat convertGray2Color(const cv::Mat& grayImage);
 			cv::Mat downscaleImage(const cv::Mat& image, int ratio);
@@ -69,11 +77,19 @@ namespace filter
 				}
 			};
 
+			struct CompareByDeriv
+			{
+				bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b)
+				{
+					return a.first > b.first;
+				}
+			};
+
 			struct LineData
 			{
 				double averageY;
 				double averageCharWidth, averageCharHeight;
-				
+
 				int minHeight, maxHeight;
 				int minWidth, maxWidth;
 
@@ -85,14 +101,6 @@ namespace filter
 				LineData(double averageY, double averageCharWidth, double averagCharHeight, int minHeight, int maxHeight, int minWidth, int maxWidth)
 					: averageY(averageY), averageCharWidth(averageCharWidth), averageCharHeight(averagCharHeight), minHeight(minHeight), maxHeight(maxHeight), minWidth(minWidth), maxWidth(maxWidth)
 				{
-				}
-			};
-
-			struct CompareByDeriv
-			{
-				bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b)
-				{
-					return a.first > b.first;
 				}
 			};
 		}
