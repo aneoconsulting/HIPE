@@ -977,7 +977,7 @@ int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & imag
 			//const int debugVAlue = rows[x];
 			const int channelValue = static_cast<int>(image.at<uchar>(y, x));
 			//if (rows[x] == 255)
-			if (channelValue == 255.0)
+			if (channelValue == 255)
 			{
 				sum++;
 			}
