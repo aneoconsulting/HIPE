@@ -222,13 +222,13 @@ std::vector<cv::Rect> filter::algos::IDPlate::findPlateCharacter(const cv::Mat& 
 		cv::drawContours(mask, contours, idx, cv::Scalar(255, 255, 255), contoursFillMethod);
 
 		// Debug
-		if (debugLevel > 1)	filter::algos::IDPlate::showImage(mask);
+		if (debugLevel > 2)	filter::algos::IDPlate::showImage(mask);
 
 		// Ratio of non-zero pixels in the filled region
 		double ratio = static_cast<double>(cv::countNonZero(maskROI)) / (characterRect.width * characterRect.height);
 
 		// Debug
-		if (debugLevel > 1)
+		if (debugLevel > 2)
 		{
 			cv::rectangle(debugImage, characterRect, cv::Scalar(255, 0, 0), 2);
 			filter::algos::IDPlate::showImage(debugImage);
@@ -251,18 +251,18 @@ std::vector<cv::Rect> filter::algos::IDPlate::findPlateCharacter(const cv::Mat& 
 			charactersRects.push_back(characterRect);
 
 			// Debug
-			if (debugLevel > 1)	cv::rectangle(debugImage, characterRect, cv::Scalar(0, 255, 0), 2);
+			if (debugLevel > 2)	cv::rectangle(debugImage, characterRect, cv::Scalar(0, 255, 0), 2);
 		}
 
 		// Debug
 		else
 		{
 
-			if (debugLevel > 1)	cv::rectangle(debugImage, characterRect, cv::Scalar(0, 0, 255), 2);
+			if (debugLevel > 2)	cv::rectangle(debugImage, characterRect, cv::Scalar(0, 0, 255), 2);
 		}
 
 		//Debug
-		if (debugLevel > 1)	filter::algos::IDPlate::showImage(debugImage);
+		if (debugLevel > 2)	filter::algos::IDPlate::showImage(debugImage);
 	}
 
 	//Debug

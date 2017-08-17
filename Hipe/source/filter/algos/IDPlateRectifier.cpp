@@ -519,6 +519,15 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaTopLine(const cv
 			pt1.x = ptNext.x; pt1.y = ptNext.y;
 			cartesianMax.x = ptNext.x + rho * cos(bestAlign[1]);
 			cartesianMax.y = ptNext.y + rho * sin(bestAlign[1]);
+
+			if (_debug > 1)
+			{
+				cv::Mat topLine = filter::algos::IDPlate::convertGray2Color(plateHorizontalLines);
+				cv::line(topLine, pt1, cartesianMax, cv::Scalar(255, 0, 0), 2);
+				cv::circle(topLine, pt1, 2, cv::Scalar(255, 255, 0), 1);
+				cv::circle(topLine, cartesianMax, 2, cv::Scalar(255, 255, 0), 1);
+				filter::algos::IDPlate::showImage(topLine);
+			}
 		}
 	}
 
@@ -638,6 +647,15 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaLeftLine(const c
 			pt1.x = ptNext.x; pt1.y = ptNext.y;
 			cartesianMax.x = ptNext.x + rho * cos(bestAlign[1]);
 			cartesianMax.y = ptNext.y + rho * sin(bestAlign[1]);
+
+			if (_debug > 1)
+			{
+				cv::Mat leftLine = filter::algos::IDPlate::convertGray2Color(plateVerticalLines);
+				cv::line(leftLine, pt1, cartesianMax, cv::Scalar(255, 0, 0), 2);
+				cv::circle(leftLine, pt1, 2, cv::Scalar(255, 255, 0), 1);
+				cv::circle(leftLine, cartesianMax, 2, cv::Scalar(255, 255, 0), 1);
+				filter::algos::IDPlate::showImage(leftLine);
+			}
 		}
 
 	}
@@ -748,6 +766,15 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaRightLine(const 
 			pt1.x = ptNext.x; pt1.y = ptNext.y;
 			cartesianMax.x = ptNext.x + rho * cos(bestAlign[1]);
 			cartesianMax.y = ptNext.y + rho * sin(bestAlign[1]);
+
+			if (_debug > 1)
+			{
+				cv::Mat rightLine = filter::algos::IDPlate::convertGray2Color(plateVerticalLines);
+				cv::line(rightLine, pt1, cartesianMax, cv::Scalar(255, 0, 0), 2);
+				cv::circle(rightLine, pt1, 2, cv::Scalar(255, 255, 0), 1);
+				cv::circle(rightLine, cartesianMax, 2, cv::Scalar(255, 255, 0), 1);
+				filter::algos::IDPlate::showImage(rightLine);
+			}
 		}
 	}
 
@@ -1099,6 +1126,79 @@ cv::Point filter::algos::IDPlateRectifier::_findNextRightPivotPoint(const cv::Ma
 }
 
 
+//int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
+//{
+//	const double nbSampleTheta = 60;
+//	const double nbSampleRho = 60;
+//	const double minAngle = -CV_PI / 12; // (- 15 degrees)
+//	const double maxAngle = CV_PI / 12; // ( + 15 degrees)
+//	const double rho = lineVec[0];
+//	const double strideTheta = (maxAngle - minAngle) / nbSampleTheta;
+//	const double strideRho = (rho) / nbSampleRho;
+//
+//	int sum = 0;
+//	int sumMax = 0;
+//	double tBest = 0.0;
+//
+//	cv::Point2f bestPoint;
+//
+//	// Rotate around pivot point from max angle to min angle
+//	for (double t = maxAngle; t > minAngle; t -= strideTheta)
+//	{
+//		sum = 0;
+//		double sinT = sin(t);
+//		double cosT = cos(t);
+//
+//		// Analyze each pixel value from pivot point and rotating line. The one with the largest sum of white pixel is the line we're looking for
+//		for (double r = 1; r < rho; r += strideRho)
+//		{
+//			int x = cv::max(0.0, cv::min((double)image.cols - 1, origin.x + r * cosT));
+//			int y = cv::max(0.0, cv::min((double)image.rows - 1, origin.y + r * sinT));
+//
+//			// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
+//			//const uchar * rows = image.ptr(y);
+//			//const int debugVAlue = rows[x];
+//			const int channelValue = static_cast<int>(image.at<uchar>(y, x));
+//			//if (rows[x] == 255)
+//			if (channelValue == 255)
+//			{
+//				sum++;
+//			}
+//		}
+//
+//		// Debug
+//		const int debugX = origin.x + rho * cosT;
+//		const int debugY = origin.y + rho * sinT;
+//		//cv::Mat searchLine = convertGrayscaleToBGR(image);
+//		//cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
+//		//cv::circle(searchLine, cv::Point2f(debugX, debugY), 3, cv::Scalar(0, 0, 255), 3);
+//		//cv::line(searchLine, origin, cv::Point2f(debugX, debugY), cv::Scalar(0, 255, 0), 2);
+//		//showImage(searchLine);
+//
+//		// Each time we find a new best line, store the angle
+//		if (sumMax < sum)
+//		{
+//			sumMax = sum;
+//			tBest = t;
+//
+//			// Debug
+//			bestPoint = cv::Point2f(debugX, debugY);
+//		}
+//	}
+//
+//	//// Debug
+//	//cv::Mat temp = convertGrayscaleToBGR(image);
+//	//cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
+//	//cv::circle(temp, bestPoint, 2, cv::Scalar(255, 0, 0), 3);
+//	//cv::line(temp, origin, bestPoint, cv::Scalar(0, 0, 255), 4);
+//	//showImage(temp);
+//
+//	// Output angle
+//	out_bestLineParameters = cv::Vec2f(rho, tBest);
+//
+//	return sumMax;
+//}
+
 int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
 {
 	const double nbSampleTheta = 60;
@@ -1113,7 +1213,8 @@ int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & imag
 	int sumMax = 0;
 	double tBest = 0.0;
 
-	cv::Point2f bestPoint;
+	double dbgValX, dbgValY;
+	cv::Point2f dbgBestPoint;
 
 	// Rotate around pivot point from max angle to min angle
 	for (double t = maxAngle; t > minAngle; t -= strideTheta)
@@ -1125,52 +1226,145 @@ int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & imag
 		// Analyze each pixel value from pivot point and rotating line. The one with the largest sum of white pixel is the line we're looking for
 		for (double r = 1; r < rho; r += strideRho)
 		{
-			int x = cv::max(0.0, cv::min((double)image.cols - 1, origin.x + r * cosT));
-			int y = cv::max(0.0, cv::min((double)image.rows - 1, origin.y + r * sinT));
+			int x = cv::max(0.0, cv::min(static_cast<double>(image.cols) - 1, origin.x + r * cosT));
+			int y = cv::max(0.0, cv::min(static_cast<double>(image.rows) - 1, origin.y + r * sinT));
 
-			// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
-			//const uchar * rows = image.ptr(y);
-			//const int debugVAlue = rows[x];
-			const int channelValue = static_cast<int>(image.at<uchar>(y, x));
-			//if (rows[x] == 255)
-			if (channelValue == 255)
+			if (_debug > 2)
+			{
+				cv::Mat temp = filter::algos::IDPlate::convertGray2Color(image);
+				cv::circle(temp, origin, 4, cv::Scalar(0, 255, 0), 2);
+				cv::circle(temp, cv::Point(x, y), 2, cv::Scalar(0, 0, 255));
+				filter::algos::IDPlate::showImage(temp);
+			}
+
+			const uchar* pRow = image.ptr<uchar>(y);
+			const int value = static_cast<int>(pRow[x]);
+			if (value == 255)
 			{
 				sum++;
 			}
 		}
 
 		// Debug
-		const int debugX = origin.x + rho * cosT;
-		const int debugY = origin.y + rho * sinT;
-		//cv::Mat searchLine = convertGrayscaleToBGR(image);
-		//cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
-		//cv::circle(searchLine, cv::Point2f(debugX, debugY), 3, cv::Scalar(0, 0, 255), 3);
-		//cv::line(searchLine, origin, cv::Point2f(debugX, debugY), cv::Scalar(0, 255, 0), 2);
-		//showImage(searchLine);
+		if (_debug > 2)
+		{
+			dbgValX = origin.x + rho * cosT;
+			dbgValY = origin.y + rho * sinT;
+		}
 
+		if (_debug > 2)
+		{
+			cv::Mat searchLine = filter::algos::IDPlate::convertGray2Color(image);
+			cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
+			cv::circle(searchLine, cv::Point2f(dbgValX, dbgValY), 3, cv::Scalar(0, 0, 255), 3);
+			cv::line(searchLine, origin, cv::Point2f(dbgValX, dbgValY), cv::Scalar(0, 255, 0), 2);
+			filter::algos::IDPlate::showImage(searchLine);
+		}
 		// Each time we find a new best line, store the angle
-		if (sumMax < sum)
+		if (sum >= sumMax)
 		{
 			sumMax = sum;
 			tBest = t;
 
 			// Debug
-			bestPoint = cv::Point2f(debugX, debugY);
+			if (_debug > 2)	dbgBestPoint = cv::Point2f(dbgValX, dbgValY);
 		}
 	}
 
-	//// Debug
-	//cv::Mat temp = convertGrayscaleToBGR(image);
-	//cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
-	//cv::circle(temp, bestPoint, 2, cv::Scalar(255, 0, 0), 3);
-	//cv::line(temp, origin, bestPoint, cv::Scalar(0, 0, 255), 4);
-	//showImage(temp);
-
+	if (_debug > 2)
+	{
+		// Debug
+		cv::Mat temp = filter::algos::IDPlate::convertGray2Color(image);
+		cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
+		cv::circle(temp, dbgBestPoint, 2, cv::Scalar(255, 0, 0), 3);
+		cv::line(temp, origin, dbgBestPoint, cv::Scalar(0, 0, 255), 4);
+		filter::algos::IDPlate::showImage(temp);
+	}
 	// Output angle
 	out_bestLineParameters = cv::Vec2f(rho, tBest);
 
 	return sumMax;
 }
+
+//int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
+//{
+//	const double nbSampleTheta = 100;
+//	const double nbSampleRho = 60;
+//	const double minAngle = CV_PI / 2 - CV_PI / 12; // (- 15 degrees)
+//	const double maxAngle = CV_PI / 2 + CV_PI / 12; // ( + 15 degrees)
+//	const double rho = lineVec[0];
+//	const double strideTheta = (maxAngle - minAngle) / nbSampleTheta;
+//	const double strideRho = (rho / nbSampleRho) < 1.0 ? 1.0 : (rho / nbSampleRho);
+//
+//	int sum;
+//	int maxSum = 0;
+//	double tBest = 0.0;
+//	cv::Point2f bestPoint;
+//
+//	for (double t = maxAngle; t > minAngle; t -= strideTheta)
+//	{
+//		sum = 0;
+//		double sinT = sin(t);
+//		double cosT = cos(t);
+//
+//		for (double r = 0.0; r < rho; r += strideRho)
+//		{
+//			int x = cv::min(image.cols - 1, (int)(origin.x + r * cosT + 0.5));
+//			x = cv::max(0, x);
+//
+//			int y = cv::min(image.rows - 1, (int)(origin.y + r * sinT + 0.5));
+//			y = cv::max(0, y);
+//
+//			// Debug
+//			if (_debug > 2)
+//			{
+//				cv::Mat searchLine = filter::algos::IDPlate::convertGray2Color(image);
+//				cv::circle(searchLine, origin, 3, cv::Scalar(255, 0, 255), 2);
+//				cv::circle(searchLine, cv::Point(x, y), 3, cv::Scalar(255, 0, 255), 2);
+//				cv::line(searchLine, origin, cv::Point(x, y), cv::Scalar(0, 255, 0, 4));
+//				filter::algos::IDPlate::showImage(searchLine);
+//			}
+//
+//			//const uchar * rows = image.ptr(y);
+//			const int channelValue = static_cast<int>(image.at<uchar>(y, x));
+//			//if (rows[x] == 255)
+//			if (channelValue == 255)
+//			{
+//				sum++;
+//			}
+//		}
+//
+//		// Debug
+//		double debugX = origin.x + rho * cosT + 0.5;
+//		double debugY = origin.y + rho * sinT + 0.5;
+//		//cv::Mat searchLine = convertGrayscaleToBGR(image);
+//		//cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
+//		//cv::circle(searchLine, cv::Point2f(debugX, debugY), 3, cv::Scalar(0, 0, 255), 3);
+//		//cv::line(searchLine, origin, cv::Point2f(debugX, debugY), cv::Scalar(0, 255, 0), 2);
+//		//showImage(searchLine);
+//
+//
+//		if (maxSum < sum)
+//		{
+//			maxSum = sum;
+//			tBest = t;
+//
+//			// Debug
+//			bestPoint = cv::Point2f(debugX, debugY);
+//		}
+//	}
+//
+//	//// Debug
+//	//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(image);
+//	//cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
+//	//cv::circle(temp, bestPoint, 2, cv::Scalar(255, 0, 0), 3);
+//	//cv::line(temp, origin, bestPoint, cv::Scalar(0, 0, 255), 4);
+//	//IDPlateRectifier::showImage(temp);
+//
+//	out_bestLineParameters = cv::Vec2f(rho, tBest);
+//
+//	return maxSum;
+//}
 
 int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
 {
@@ -1183,9 +1377,10 @@ int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image,
 	const double strideRho = (rho / nbSampleRho) < 1.0 ? 1.0 : (rho / nbSampleRho);
 
 	int sum;
-	int maxSum = 0;
+	int sumMax = 0;
 	double tBest = 0.0;
-	cv::Point2f bestPoint;
+	double dbgValX, dbgValY;
+	cv::Point2f dbgBestPoint;
 
 	for (double t = maxAngle; t > minAngle; t -= strideTheta)
 	{
@@ -1195,61 +1390,82 @@ int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image,
 
 		for (double r = 0.0; r < rho; r += strideRho)
 		{
-			int x = cv::min(image.cols - 1, (int)(origin.x + r * cosT + 0.5));
+			int x = cv::min(image.cols - 1, static_cast<int>(origin.x + r * cosT + 0.5));
 			x = cv::max(0, x);
 
-			int y = cv::min(image.rows - 1, (int)(origin.y + r * sinT + 0.5));
+			int y = cv::min(image.rows - 1, static_cast<int>(origin.y + r * sinT + 0.5));
 			y = cv::max(0, y);
 
-			// Debug
 			if (_debug > 2)
 			{
-				cv::Mat searchLine = filter::algos::IDPlate::convertGray2Color(image);
-				cv::circle(searchLine, origin, 3, cv::Scalar(255, 0, 255), 2);
-				cv::circle(searchLine, cv::Point(x, y), 3, cv::Scalar(255, 0, 255), 2);
-				cv::line(searchLine, origin, cv::Point(x, y), cv::Scalar(0, 255, 0, 4));
-				filter::algos::IDPlate::showImage(searchLine);
+				cv::Mat temp = filter::algos::IDPlate::convertGray2Color(image);
+				cv::circle(temp, origin, 4, cv::Scalar(0, 255, 0), 2);
+				cv::circle(temp, cv::Point(x, y), 2, cv::Scalar(0, 0, 255));
+				filter::algos::IDPlate::showImage(temp);
 			}
-			//const uchar * rows = image.ptr(y);
-			const int channelValue = static_cast<int>(image.at<uchar>(y, x));
-			//if (rows[x] == 255)
-			if (channelValue == 255)
+
+			//// Debug
+			//if (_debug)
+			//{
+			//	cv::Mat searchLine = filter::algos::IDPlate::convertGray2Color(image);
+			//	cv::circle(searchLine, origin, 3, cv::Scalar(255, 0, 255), 2);
+			//	cv::circle(searchLine, cv::Point(x, y), 3, cv::Scalar(255, 0, 255), 2);
+			//	cv::line(searchLine, origin, cv::Point(x, y), cv::Scalar(0, 255, 0, 4));
+			//	filter::algos::IDPlate::showImage(searchLine);
+			//}
+
+			// Read pixel value
+			const uchar *pRow = image.ptr<uchar>(y);
+			const int value = static_cast<int>(pRow[x]);
+
+			if (value == 255)
 			{
 				sum++;
 			}
 		}
 
 		// Debug
-		double debugX = origin.x + rho * cosT + 0.5;
-		double debugY = origin.y + rho * sinT + 0.5;
-		//cv::Mat searchLine = convertGrayscaleToBGR(image);
-		//cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
-		//cv::circle(searchLine, cv::Point2f(debugX, debugY), 3, cv::Scalar(0, 0, 255), 3);
-		//cv::line(searchLine, origin, cv::Point2f(debugX, debugY), cv::Scalar(0, 255, 0), 2);
-		//showImage(searchLine);
 
-
-		if (maxSum < sum)
+		if (_debug > 2)
 		{
-			maxSum = sum;
+			dbgValX = origin.x + rho * cosT + 0.5;
+			dbgValY = origin.y + rho * sinT + 0.5;
+		}
+		if (_debug > 2)
+		{
+			cv::Mat searchLine = filter::algos::IDPlate::convertGray2Color(image);
+			cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
+			cv::circle(searchLine, cv::Point2f(dbgValX, dbgValY), 3, cv::Scalar(0, 0, 255), 3);
+			cv::line(searchLine, origin, cv::Point2f(dbgValX, dbgValY), cv::Scalar(0, 255, 0), 2);
+			filter::algos::IDPlate::showImage(searchLine);
+		}
+
+		if (sum >= sumMax)
+		{
+			sumMax = sum;
 			tBest = t;
 
 			// Debug
-			bestPoint = cv::Point2f(debugX, debugY);
+			if (_debug > 2)	dbgBestPoint = cv::Point2f(dbgValX, dbgValY);
 		}
 	}
 
-	//// Debug
-	//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(image);
-	//cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
-	//cv::circle(temp, bestPoint, 2, cv::Scalar(255, 0, 0), 3);
-	//cv::line(temp, origin, bestPoint, cv::Scalar(0, 0, 255), 4);
-	//IDPlateRectifier::showImage(temp);
+	// Debug
+	if (_debug > 2)
+	{
+		cv::Mat temp = filter::algos::IDPlate::convertGray2Color(image);
+		cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
+		cv::circle(temp, dbgBestPoint, 2, cv::Scalar(255, 0, 0), 3);
+		cv::line(temp, origin, dbgBestPoint, cv::Scalar(0, 0, 255), 4);
+		filter::algos::IDPlate::showImage(temp);
+	}
 
 	out_bestLineParameters = cv::Vec2f(rho, tBest);
 
-	return maxSum;
+	return sumMax;
 }
+
+
 
 cv::Point2f filter::algos::IDPlateRectifier::computeLinesIntersectionPoint(const cv::Vec4i & a, const cv::Vec4i & b)
 {
