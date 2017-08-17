@@ -40,6 +40,8 @@ namespace filter {
 				ratioY = 1.0;
 				ratioHeight = 1.0;
 				ratioWidth = 1.0;
+				ratioMinArea = 1.0;
+				ratioMaxArea = 1.0;
 			}
 			REGISTER_P(int, _debug);
 			REGISTER_P(double, charMinXBound);
@@ -55,6 +57,8 @@ namespace filter {
 			REGISTER_P(double, ratioY);
 			REGISTER_P(double, ratioHeight);
 			REGISTER_P(double, ratioWidth);
+			REGISTER_P(double, ratioMinArea);
+			REGISTER_P(double, ratioMaxArea);
 
 		public:
 			HipeStatus process() override;
@@ -70,7 +74,7 @@ namespace filter {
 			cv::Mat createOutputImage(const cv::Mat& plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels);
 		};
 
-		ADD_CLASS(IDPlateIdentifier, _debug, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, charMinWidth, charMinHeight, dbgMinX, dbgMaxX, dbgMinLines, ratioY, ratioHeight, ratioWidth);
+		ADD_CLASS(IDPlateIdentifier, _debug, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, charMinWidth, charMinHeight, dbgMinX, dbgMaxX, dbgMinLines, ratioY, ratioHeight, ratioWidth, ratioMinArea, ratioMaxArea);
 
 		class LabelOCR {
 		public:

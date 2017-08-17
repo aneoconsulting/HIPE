@@ -5,14 +5,14 @@ HipeStatus filter::algos::IDPlateCropper::process()
 	data::ImageData data = _connexData.pop();
 	cv::Mat image = data.getMat();
 
-	cv::Mat roi = preprocessPlate(image);
+	cv::Mat roi = processPlateImage(image);
 
 	_connexData.push(data::ImageData(roi));
 
 	return OK;
 }
 
-cv::Mat filter::algos::IDPlateCropper::preprocessPlate(const cv::Mat & plateImage)
+cv::Mat filter::algos::IDPlateCropper::processPlateImage(const cv::Mat & plateImage)
 {
 	// Bilateral filtering to smooth images and reduce noise
 	const int bDiameter = 31;

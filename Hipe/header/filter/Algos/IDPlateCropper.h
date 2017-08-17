@@ -25,17 +25,30 @@ namespace filter
 			{
 				useGPU = false;
 				bfilterPasses = 2;
-				_debug = false;
+				_debug = 0;
 			}
 			REGISTER_P(bool, useGPU);
 			REGISTER_P(int, bfilterPasses);
-			REGISTER_P(bool, _debug);
+			REGISTER_P(int, _debug);
 
 		public:
 			HipeStatus process() override;
 
 		private:
-			cv::Mat preprocessPlate(const cv::Mat& plateImage);
+			/**
+			 * \brief Preprocess plate image and binarize it then search for blobs. The biggest one will be the ROI with the text
+			 * \param plateImage the ID plate photo in color
+			 * \return an extracted ROI containing only the plate and its text
+			 */
+			cv::Mat processPlateImage(const cv::Mat& plateImage);
+
+
+			/**
+			 * \brief Find and mask all the blobs of and image
+			 * \param plateImageBlackWhite A binary input image
+			 * \param color The color used to mask all found and processed blobs
+			 * \return The position of the biggest blob in the image
+			 */
 			cv::Point maskBlobs(cv::Mat& plateImageBlackWhite, const cv::Scalar& color);
 		};
 

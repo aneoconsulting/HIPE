@@ -5,7 +5,7 @@ cv::Mat filter::algos::IDPlate::applyBilateralFiltering(const cv::Mat & plateIma
 {
 	cv::Mat output = plateImage.clone();
 
-	// Using CPU to compute can take time
+	// Using CPU to compute do take time
 	for (int i = 0; i < iterations; ++i)
 	{
 		if (!useGPU)
@@ -29,8 +29,8 @@ cv::Mat filter::algos::IDPlate::applyBilateralFiltering(const cv::Mat & plateIma
 			}
 		}
 
-		//// Debug
-		//showImage(output);
+		// Debug
+		if (debug)	showImage(output);
 	}
 
 	return output;
@@ -121,12 +121,12 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlate::splitCharactersByRows
 		charRectCenter.x = character.x + character.width * 0.5;
 		charRectCenter.y = character.y + character.height * 0.5;
 
-		//// Debug
-		//if (debug > 2)
-		//{
-		//	cv::circle(image, charRectCenter, 4, cv::Scalar(255, 255, 0), 4);
-		//	showImage(dbgImage);
-		//}
+		// Debug
+		if (debug > 2)
+		{
+			cv::circle(dbgImage, charRectCenter, 4, cv::Scalar(255, 255, 0), 4);
+			showImage(dbgImage);
+		}
 
 		// Find prev & next line
 		for (int idx = 0, prevRow = 0, nextRow = 0; idx < linesCount; ++idx)
@@ -140,38 +140,6 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlate::splitCharactersByRows
 			prevRow = nextRow;
 		}
 	}
-
-
-	//// For each line and the next one
-	//for (int j = 0, prevLine = 0, nextLine = rows[j]; j < linesCount; j++)
-	//{
-	//	nextLine = rows[j];
-
-	//	// Debug
-	//	if (debug)	dbgImage = image.clone();
-
-	//	// For each character : if character is between the two lines add it to the correct container
-	//	for (int i = 0; i < inout_characters.size(); i++)
-	//	{
-	//		cv::Point rectCenter;
-	//		rectCenter.x = inout_characters[i].x + inout_characters[i].width * 0.5;
-	//		rectCenter.y = inout_characters[i].y + inout_characters[i].height * 0.5;
-
-	//		// Debug
-	//		if (debug > 2)
-	//		{
-	//			cv::circle(image, rectCenter, 4, cv::Scalar(255, 255, 0), 4);
-	//			showImage(dbgImage);
-	//		}
-
-	//		if (rectCenter.y > prevLine && rectCenter.y < nextLine)
-	//		{
-	//			sortedCharacters[j].push_back(inout_characters[i]);
-	//		}
-	//	}
-
-	//	prevLine = nextLine;
-	//}
 
 	// Debug
 	if (debug)
@@ -189,19 +157,6 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlate::splitCharactersByRows
 	return sortedCharacters;
 }
 
-/**
- * \brief
- * \param plateImage
- * \param out_binarizedImage
- * \param minPosX
- * \param maxPosX
- * \param charMinFillRatio
- * \param charMaxFillRatio
- * \param charRectMinSize
- * \param contoursFillMethod
- * \param debugLevel
- * \return
- */
 std::vector<cv::Rect> filter::algos::IDPlate::findPlateCharacter(const cv::Mat& plateImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, double charMinFillRatio, double charMaxFillRatio, cv::Size charRectMinSize, int contoursFillMethod, int debugLevel)
 {
 	cv::Mat imageCopy = plateImage.clone();
@@ -266,13 +221,13 @@ std::vector<cv::Rect> filter::algos::IDPlate::findPlateCharacter(const cv::Mat& 
 		// fill the contours (if countoursFillMethod/Thichness is < 0 the shape will be filled, either way it will use the value as a line thickness parametter
 		cv::drawContours(mask, contours, idx, cv::Scalar(255, 255, 255), contoursFillMethod);
 
-		//// Debug
+		// Debug
 		if (debugLevel > 1)	filter::algos::IDPlate::showImage(mask);
 
 		// Ratio of non-zero pixels in the filled region
 		double ratio = static_cast<double>(cv::countNonZero(maskROI)) / (characterRect.width * characterRect.height);
 
-		//// Debug
+		// Debug
 		if (debugLevel > 1)
 		{
 			cv::rectangle(debugImage, characterRect, cv::Scalar(255, 0, 0), 2);
@@ -320,7 +275,7 @@ std::vector<cv::Rect> filter::algos::IDPlate::findPlateCharacter(const cv::Mat& 
 	return charactersRects;
 }
 
-std::vector<std::vector<cv::Rect>> filter::algos::IDPlate::extractPlateCharacters(const cv::Mat & preprocessedImage, cv::Mat & out_binarizedImage, double minPosX, double maxPosX, int minLines, int maxLines, double ratioY, double ratioHeight, double ratioWidth, const cv::Mat& dbgImage, int debug)
+std::vector<std::vector<cv::Rect>> filter::algos::IDPlate::extractPlateCharacters(const cv::Mat & preprocessedImage, cv::Mat & out_binarizedImage, double minPosX, double maxPosX, int minLines, int maxLines, double ratioY, double ratioMinArea, double ratioMaxArea, const cv::Mat& dbgImage, int debug)
 {
 	// 1. Preprocess Image
 	cv::Mat imageGrayscale = convertColor2Gray(preprocessedImage);
@@ -341,10 +296,8 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlate::extractPlateCharacter
 	// Second morphological transform
 	imageGrayscale = applyMorphTransform(imageGrayscale, cv::MorphShapes::MORPH_RECT, cv::MorphTypes::MORPH_CLOSE, cv::Size(3, 1));
 
-
 	//Output "binarized" plate image
 	out_binarizedImage = imageGrayscale.clone();
-
 
 	// Debug (show second morphology transform)
 	if (debug)	showImage(imageGrayscale);
@@ -412,7 +365,8 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlate::extractPlateCharacter
 	std::vector<std::vector<cv::Rect>> textLines = splitCharactersByRows(validCharacters, linesPositions, dbgImage, debug);
 
 	// 7. Second filtering (false negative inside first and last rects of line)
-	std::vector<cv::Rect> falseNegativeChars = filterFalseNegativeChars(imageGrayscale, textLines, dubiousCharacters, LineFilteringMethod::FILTER_INSIDE, ratioY, ratioWidth, ratioHeight, dbgImage, debug, false);
+	std::vector<cv::Rect> falseNegativeChars = filterFalseNegativeChars(imageGrayscale, textLines, dubiousCharacters, LineFilteringMethod::FILTER_INSIDE, ratioY, ratioMinArea, ratioMaxArea, dbgImage, debug, false);
+
 
 	// 8. Add newly found characters to valid ones
 	validCharacters.insert(validCharacters.end(), falseNegativeChars.begin(), falseNegativeChars.end());
@@ -423,7 +377,7 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlate::extractPlateCharacter
 	textLines = splitCharactersByRows(validCharacters, linesPositions, dbgImage, debug);
 
 	// 10. Third filtering (false negative outside first and last rects of line)
-	falseNegativeChars = filterFalseNegativeChars(imageGrayscale, textLines, dubiousCharacters, LineFilteringMethod::FILTER_OUTSIDE, ratioY, ratioWidth, ratioHeight, dbgImage, debug, false);
+	falseNegativeChars = filterFalseNegativeChars(imageGrayscale, textLines, dubiousCharacters, LineFilteringMethod::FILTER_OUTSIDE, ratioY, ratioMinArea, ratioMaxArea, dbgImage, debug, false);
 
 	// 8. Add newly found characters to valid ones
 	validCharacters.insert(validCharacters.end(), falseNegativeChars.begin(), falseNegativeChars.end());
@@ -455,7 +409,6 @@ std::vector<cv::Rect> filter::algos::IDPlate::filterCharactersFromSize(const cv:
 
 		showImage(temp);
 	}
-
 
 	std::vector<cv::Rect> filteredCharacters, dubiousCharacters;
 	for (auto & character : characters)
@@ -534,33 +487,15 @@ std::vector<cv::Rect> filter::algos::IDPlate::filterCharactersFromSize(const cv:
 	return filteredCharacters;
 }
 
-std::vector<cv::Rect> filter::algos::IDPlate::filterFalseNegativeChars(const cv::Mat& image, const std::vector<std::vector<cv::Rect>> & textLines, std::vector<cv::Rect>& dubiousCharacters, LineFilteringMethod filterMethod, double ratioY, double ratioWidth, double ratioHeight, const cv::Mat & dbgImage, int debug, bool speedUp)
-{
 
+
+std::vector<cv::Rect> filter::algos::IDPlate::filterFalseNegativeChars(const cv::Mat& image, const std::vector<std::vector<cv::Rect>> & textLines, std::vector<cv::Rect>& dubiousCharacters, LineFilteringMethod filterMethod, double ratioY, double ratioMinArea, double ratioMaxArea, const cv::Mat & dbgImage, int debug, bool speedUp)
+{
 	// Extract useful data from text lines
 	std::vector<LineData> charactersLinesData;
 	for (auto & line : textLines)
 	{
-		LineData lineData;
-		lineData.minWidth = lineData.minHeight = std::numeric_limits<int>::max();
-		lineData.maxWidth = lineData.maxHeight = std::numeric_limits<int>::min();
-
-		for (auto & character : line)
-		{
-			lineData.averageY += character.y + character.height / 2.0;
-			lineData.averageCharWidth += character.width;
-			lineData.averageCharHeight += character.height;
-
-			if (character.width < lineData.minWidth)	lineData.minWidth = character.width;
-			if (character.width > lineData.maxWidth)	lineData.maxWidth = character.width;
-			if (character.height < lineData.minHeight)	lineData.minHeight = character.height;
-			if (character.height > lineData.maxHeight)	lineData.maxHeight = character.height;
-		}
-
-		lineData.averageY /= line.size();
-		lineData.averageCharWidth /= line.size();
-		lineData.averageCharHeight /= line.size();
-
+		LineData lineData = extractLineData(line);
 		charactersLinesData.push_back(lineData);
 	}
 
@@ -579,7 +514,6 @@ std::vector<cv::Rect> filter::algos::IDPlate::filterFalseNegativeChars(const cv:
 
 	// Refilter characters using median value (the ones between 1st and last character on line)
 	std::vector<cv::Rect> validCharacters;
-	//const double heightRatio = 0.1;	// Ratio used (percentage) to compute delta in pixels
 	for (int lineIdx = 0; lineIdx < textLines.size(); ++lineIdx)
 	{
 		// Assert characters will be between 1st and last rect
@@ -589,9 +523,9 @@ std::vector<cv::Rect> filter::algos::IDPlate::filterFalseNegativeChars(const cv:
 		const LineData& lineData = charactersLinesData[lineIdx];
 
 		// Delta in pixels used to validateCharacters
-		const double deltaY = ratioY * lineData.averageCharHeight / 2.0;
-		const double deltaHeight = ratioHeight * lineData.averageCharHeight / 2.0;
-		const double deltaWidth = ratioWidth * lineData.averageCharWidth / 2.0;
+		const double deltaY = ratioY * lineData.averageCharHeight;
+		const double minArea = ratioMinArea * lineData.averageArea;
+		const double maxArea = ratioMaxArea * lineData.averageArea;
 
 		// Analyze every dubious character
 		for (std::vector<cv::Rect>::iterator itDubiousChar = dubiousCharacters.begin(); itDubiousChar != dubiousCharacters.end();)
@@ -616,36 +550,35 @@ std::vector<cv::Rect> filter::algos::IDPlate::filterFalseNegativeChars(const cv:
 
 				showImage(temp);
 			}
-			// Apply select chosen filter method
-			// TODO: must bounds be inclusive or exclusive?
-			bool filteringMethodCondition = false;
+
+			 // Apply select chosen filter method
+			bool filteringCondition = false;;
 			switch (filterMethod)
 			{
-			case FILTER_INSIDE:
+			case LineFilteringMethod::FILTER_INSIDE:
 				// Character must be INSIDE first and last known rects of line 
-				if (itDubiousChar->x >= minXPos && itDubiousChar->x <= maxXPos)	filteringMethodCondition = true;
+				if (itDubiousChar->x >= minXPos && itDubiousChar->x <= maxXPos)	filteringCondition = true;
 				break;
-			case FILTER_OUTSIDE:
+			case LineFilteringMethod::FILTER_OUTSIDE:
 				// Character must be OUTSIDE first and last known rects of line
-				if (!(itDubiousChar->x >= minXPos && itDubiousChar->x <= maxXPos))	filteringMethodCondition = true;
+				if (!(itDubiousChar->x >= minXPos && itDubiousChar->x <= maxXPos))	filteringCondition = true;
 				break;
 			default:
-				break;
+				throw HipeException("[ERROR] IDPlateTools::filterFalseNegativeChars - Unknown filter method");
 			}
 
-			if (filteringMethodCondition)
+			// Character must be INSIDE first and last known rects of line 
+			if (filteringCondition)
 			{
 				// Character must be near median Y line and similar to others
 				const double middleY = itDubiousChar->y + itDubiousChar->height / 2.0;
+				const double area = itDubiousChar->width * itDubiousChar->height;
 
 				const bool bMiddle = middleY >= lineData.averageY - deltaY && middleY <= lineData.averageY + deltaY;
-				const bool bWidth = itDubiousChar->width >= cv::max<double>(0.0, lineData.minWidth - deltaWidth) && itDubiousChar->width <= cv::min<double>(lineData.maxWidth + deltaWidth, image.cols - 1);
-				const bool bHeight = itDubiousChar->height >= cv::max<double>(0.0, lineData.minHeight - deltaHeight) && itDubiousChar->height <= cv::min<double>(lineData.maxHeight + deltaHeight, image.rows - 1);
+				//const bool bArea = area >= lineData.averageArea - deltaArea && area <= lineData.averageArea + deltaArea;
+				const bool bArea = area >= minArea && area <= maxArea;
 
-				//const bool bWidth = itDubiousChar->width >= lineData.averageCharWidth - deltaWidth && itDubiousChar->width <= lineData.averageCharWidth + deltaWidth;
-				//const bool bHeight = itDubiousChar->height >= lineData.averageCharHeight - deltaHeight && itDubiousChar->height <= lineData.averageCharHeight + deltaHeight;
-
-				if (bMiddle && bWidth && bHeight)
+				if (bMiddle && bArea)
 				{
 					// Debug (show validate dubious char)
 					if (debug > 2)
@@ -672,7 +605,7 @@ std::vector<cv::Rect> filter::algos::IDPlate::filterFalseNegativeChars(const cv:
 					// When no filter pass will be processed again, we can safely delete every character which coordinates are above the line.
 					// They can only be noise so we can delete them to speed up computing time
 					//if(middleY < lineData.averageY && !bMiddle && speedUp)
-					if(middleY < lineData.averageY && speedUp)
+					if (middleY < lineData.averageY && speedUp)
 					{
 						itDubiousChar = dubiousCharacters.erase(itDubiousChar);
 						continue;
@@ -704,6 +637,191 @@ std::vector<cv::Rect> filter::algos::IDPlate::filterFalseNegativeChars(const cv:
 	return validCharacters;
 }
 
+//std::vector<cv::Rect> filter::algos::IDPlate::filterFalseNegativeChars(const cv::Mat& image, const std::vector<std::vector<cv::Rect>> & textLines, std::vector<cv::Rect>& dubiousCharacters, LineFilteringMethod filterMethod, double ratioY, double ratioWidth, double ratioHeight, const cv::Mat & dbgImage, int debug, bool speedUp)
+//{
+//	// Extract useful data from text lines
+//	std::vector<LineData> charactersLinesData;
+//	for (auto & line : textLines)
+//	{
+//		LineData lineData = extractLineData(line);
+//		charactersLinesData.push_back(lineData);
+//	}
+//
+//	// Debug (show computed average Y values)
+//	cv::Mat temp;
+//	if (debug)
+//	{
+//		temp = dbgImage.clone();
+//		for (auto & lineData : charactersLinesData)
+//		{
+//			cv::line(temp, cv::Point(0, lineData.averageY), cv::Point(temp.cols - 1, lineData.averageY), cv::Scalar(0, 0, 255), 2);
+//		}
+//
+//		showImage(temp);
+//	}
+//
+//	// Refilter characters using median value (the ones between 1st and last character on line)
+//	std::vector<cv::Rect> validCharacters;
+//	//const double heightRatio = 0.1;	// Ratio used (percentage) to compute delta in pixels
+//	for (int lineIdx = 0; lineIdx < textLines.size(); ++lineIdx)
+//	{
+//		// Assert characters will be between 1st and last rect
+//		const int minXPos = textLines[lineIdx].front().x;
+//		const int maxXPos = textLines[lineIdx].back().x + textLines[lineIdx].back().width;
+//
+//		const LineData& lineData = charactersLinesData[lineIdx];
+//
+//		// Delta in pixels used to validateCharacters
+//		const double deltaY = ratioY * lineData.averageCharHeight / 2.0;
+//		const double deltaHeight = ratioHeight * lineData.averageCharHeight / 2.0;
+//		const double deltaWidth = ratioWidth * lineData.averageCharWidth / 2.0;
+//
+//		// Analyze every dubious character
+//		for (std::vector<cv::Rect>::iterator itDubiousChar = dubiousCharacters.begin(); itDubiousChar != dubiousCharacters.end();)
+//		{
+//			// Debug (show min X and max X computed from first and last character of line and show current dubious rect)
+//			if (debug > 2)
+//			{
+//				temp = dbgImage.clone();
+//				// X Bounds
+//				cv::line(temp, cv::Point(minXPos, 0), cv::Point(minXPos, temp.rows - 1), cv::Scalar(255, 0, 255), 2);
+//				cv::line(temp, cv::Point(maxXPos, 0), cv::Point(maxXPos, temp.rows - 1), cv::Scalar(255, 0, 255), 2);
+//
+//				// Average Y
+//				cv::line(temp, cv::Point(0, lineData.averageY), cv::Point(temp.cols - 1, lineData.averageY), cv::Scalar(127, 0, 127), 2);
+//				cv::line(temp, cv::Point(0, lineData.averageY - deltaY), cv::Point(temp.cols - 1, lineData.averageY - deltaY), cv::Scalar(255, 0, 255), 1);
+//				cv::line(temp, cv::Point(0, lineData.averageY + deltaY), cv::Point(temp.cols - 1, lineData.averageY + deltaY), cv::Scalar(255, 0, 255), 1);
+//
+//				// Dubious rect
+//				cv::rectangle(temp, *itDubiousChar, cv::Scalar(255, 255, 0), 2);
+//				// Dubious rect Y
+//				cv::circle(temp, cv::Point(itDubiousChar->x, itDubiousChar->y + itDubiousChar->height / 2.0), 2, cv::Scalar(255, 255, 0), 2);
+//
+//				showImage(temp);
+//			}
+//			// Apply select chosen filter method
+//			// TODO: must bounds be inclusive or exclusive?
+//			bool filteringMethodCondition = false;
+//			switch (filterMethod)
+//			{
+//			case FILTER_INSIDE:
+//				// Character must be INSIDE first and last known rects of line 
+//				if (itDubiousChar->x >= minXPos && itDubiousChar->x <= maxXPos)	filteringMethodCondition = true;
+//				break;
+//			case FILTER_OUTSIDE:
+//				// Character must be OUTSIDE first and last known rects of line
+//				if (!(itDubiousChar->x >= minXPos && itDubiousChar->x <= maxXPos))	filteringMethodCondition = true;
+//				break;
+//			default:
+//				break;
+//			}
+//
+//			if (filteringMethodCondition)
+//			{
+//				// Character must be near median Y line and similar to others
+//				const double middleY = itDubiousChar->y + itDubiousChar->height / 2.0;
+//
+//				const bool bMiddle = middleY >= lineData.averageY - deltaY && middleY <= lineData.averageY + deltaY;
+//				const bool bWidth = itDubiousChar->width >= cv::max<double>(0.0, lineData.minWidth - deltaWidth) && itDubiousChar->width <= cv::min<double>(lineData.maxWidth + deltaWidth, image.cols - 1);
+//				const bool bHeight = itDubiousChar->height >= cv::max<double>(0.0, lineData.minHeight - deltaHeight) && itDubiousChar->height <= cv::min<double>(lineData.maxHeight + deltaHeight, image.rows - 1);
+//
+//				//const bool bWidth = itDubiousChar->width >= lineData.averageCharWidth - deltaWidth && itDubiousChar->width <= lineData.averageCharWidth + deltaWidth;
+//				//const bool bHeight = itDubiousChar->height >= lineData.averageCharHeight - deltaHeight && itDubiousChar->height <= lineData.averageCharHeight + deltaHeight;
+//
+//				if (bMiddle && bWidth && bHeight)
+//				{
+//					// Debug (show validate dubious char)
+//					if (debug > 2)
+//					{
+//						cv::rectangle(temp, *itDubiousChar, cv::Scalar(0, 255, 0), 2);
+//
+//						showImage(temp);
+//					}
+//					// If valid save it and erase it from dubious list to save computing time
+//					validCharacters.push_back(*itDubiousChar);
+//					itDubiousChar = dubiousCharacters.erase(itDubiousChar);
+//					continue;
+//				}
+//				else
+//				{
+//					// Debug (show invalid dubious char)
+//					if (debug > 2)
+//					{
+//						cv::rectangle(temp, *itDubiousChar, cv::Scalar(0, 0, 255), 2);
+//
+//						showImage(temp);
+//					}
+//
+//					// When no filter pass will be processed again, we can safely delete every character which coordinates are above the line.
+//					// They can only be noise so we can delete them to speed up computing time
+//					//if(middleY < lineData.averageY && !bMiddle && speedUp)
+//					if (middleY < lineData.averageY && speedUp)
+//					{
+//						itDubiousChar = dubiousCharacters.erase(itDubiousChar);
+//						continue;
+//					}
+//				}
+//			}
+//			++itDubiousChar;
+//		}
+//	}
+//
+//	// Debug (show valid and newly validated characters)
+//	if (debug)
+//	{
+//		temp = dbgImage.clone();
+//		for (auto & character : validCharacters)
+//		{
+//			cv::rectangle(temp, character, cv::Scalar(0, 255, 0), 2);
+//		}
+//		for (auto & line : textLines)
+//		{
+//			for (auto & character : line)
+//			{
+//				cv::rectangle(temp, character, cv::Scalar(0, 255, 0), 1);
+//			}
+//		}
+//		showImage(temp);
+//	}
+//
+//	return validCharacters;
+//}
+
+
+filter::algos::IDPlate::LineData filter::algos::IDPlate::extractLineData(const std::vector<cv::Rect>& line)
+{
+	LineData lineData;
+	lineData.minWidth = lineData.minHeight = std::numeric_limits<int>::max();
+	lineData.maxWidth = lineData.maxHeight = std::numeric_limits<int>::min();
+	lineData.minArea = std::numeric_limits<double>::max();
+	lineData.maxArea = std::numeric_limits<double>::min();
+
+	for (auto & character : line)
+	{
+		lineData.averageY += character.y + character.height / 2.0;
+		lineData.averageCharWidth += character.width;
+		lineData.averageCharHeight += character.height;
+
+		double area = character.width * character.height;
+		lineData.averageArea += area;
+
+		if (character.width < lineData.minWidth)	lineData.minWidth = character.width;
+		if (character.width > lineData.maxWidth)	lineData.maxWidth = character.width;
+		if (character.height < lineData.minHeight)	lineData.minHeight = character.height;
+		if (character.height > lineData.maxHeight)	lineData.maxHeight = character.height;
+
+		if (area > lineData.maxArea)	lineData.maxArea = area;
+		if (area < lineData.minArea)	lineData.minArea = area;
+	}
+
+	lineData.averageY /= line.size();
+	lineData.averageCharWidth /= line.size();
+	lineData.averageCharHeight /= line.size();
+	lineData.averageArea /= line.size();
+
+	return lineData;
+}
+
 cv::Mat filter::algos::IDPlate::convertColor2Gray(const cv::Mat & colorImage)
 {
 	cv::Mat output;
@@ -711,6 +829,7 @@ cv::Mat filter::algos::IDPlate::convertColor2Gray(const cv::Mat & colorImage)
 	{
 		std::cout << "[WARNING] IDplateIdentifier::convertColor2Gray - Alpha is not handled";
 	}
+
 	if (colorImage.channels() == 3)
 	{
 		cv::cvtColor(colorImage, output, CV_BGR2GRAY);
@@ -730,6 +849,7 @@ cv::Mat filter::algos::IDPlate::convertGray2Color(const cv::Mat & grayImage)
 	{
 		std::cout << "[WARNING] IDplateIdentifier::convertGray2Color - Alpha is not handled";
 	}
+
 	if (grayImage.channels() == 1)
 	{
 		cv::cvtColor(grayImage, output, CV_GRAY2BGR);
@@ -741,11 +861,11 @@ cv::Mat filter::algos::IDPlate::convertGray2Color(const cv::Mat & grayImage)
 	return output;
 }
 
-cv::Mat filter::algos::IDPlate::downscaleImage(const cv::Mat & image, int ratio)
+cv::Mat filter::algos::IDPlate::downscaleImage(const cv::Mat & image, int downscaleRatio)
 {
-	if (ratio < 1)	throw HipeException("IDPlateTools::downscaleImage - downscale ratio must be positive");
+	if (!downscaleRatio > 1)	throw HipeException("IDPlateTools::downscaleImage - downscale ratio must be positive");
 
-	const cv::Size newSize(image.cols / ratio, image.rows / ratio);
+	const cv::Size newSize(image.cols / downscaleRatio, image.rows / downscaleRatio);
 
 	cv::Mat output;
 	cv::resize(image, output, newSize, 0.0, 0.0, cv::INTER_CUBIC);
@@ -753,10 +873,10 @@ cv::Mat filter::algos::IDPlate::downscaleImage(const cv::Mat & image, int ratio)
 	return output;
 }
 
-void filter::algos::IDPlate::showImage(const cv::Mat & image)
+void filter::algos::IDPlate::showImage(const cv::Mat & image, int waitTime)
 {
 	cv::namedWindow("debug image");
 	cv::imshow("debug image", image);
-	cv::waitKey(0);
+	if (waitTime >= 0)	cv::waitKey(waitTime);
 	cv::destroyWindow("debug image");
 }

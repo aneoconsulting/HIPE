@@ -14,7 +14,7 @@ HipeStatus filter::Algos::IDPlateIdentifier::process()
 	cv::Mat binarizedImage;
 
 	int maxLines = 2 * dbgMinLines - 1;
-	std::vector<std::vector<cv::Rect>> characters = filter::algos::IDPlate::extractPlateCharacters(preprocessed, binarizedImage, dbgMinX, dbgMaxX, dbgMinLines, maxLines, ratioY, ratioHeight, ratioWidth, image, _debug);
+	std::vector<std::vector<cv::Rect>> characters = filter::algos::IDPlate::extractPlateCharacters(preprocessed, binarizedImage, dbgMinX, dbgMaxX, dbgMinLines, maxLines, ratioY, ratioMinArea, ratioMaxArea, image, _debug);
 
 
 	//findCharacters(image);
