@@ -47,14 +47,52 @@ namespace filter
 				}
 			};
 
+
+			/**
+			 * \brief Data structure used to store useful informations about the properties of a line of cv::Rect
+			 */
 			struct LineData
 			{
+				/**
+				 * \brief The average position on the Y axis of the Rects.
+				 */
 				double averageY;
-				double averageCharWidth, averageCharHeight;
-				double minArea, maxArea, averageArea;
-
-				int minHeight, maxHeight;
-				int minWidth, maxWidth;
+				/**
+				 * \brief The average width of the Rects
+				 */
+				double averageCharWidth;
+				/**
+				 * \brief The average height of the Rects
+				 */
+				double averageCharHeight;
+				/**
+				 * \brief The area of the smallest found Rect
+				 */
+				double minArea;
+				/**
+				 * \brief The area of the biggest found Rect
+				 */
+				double maxArea;
+				/**
+				 * \brief The average area of the Rects
+				 */
+				double averageArea;
+				/**
+				 * \brief The height of the shortest found Rect
+				 */
+				int minHeight;
+				/**
+				 * \brief The height of the tallest found Rect
+				 */
+				int maxHeight;
+				/**
+				 * \brief The width of the smallest found Rect
+				 */
+				int minWidth;
+				/**
+				 * \brief The width of the largest found Rect
+				 */
+				int maxWidth;
 
 				LineData()
 					: averageY(0), averageCharWidth(0), averageCharHeight(0), minArea(0), maxArea(0), averageArea(0), minHeight(0), maxHeight(0), minWidth(0), maxWidth(0)
@@ -114,20 +152,39 @@ namespace filter
 			//std::vector<cv::Rect> findPlateCharacters(const cv::Mat& plateImage, double xMinPos, double xMaxPos, bool debug = false, int contoursFillMethod = CV_FILLED, cv::Mat& binarizedImage = cv::Mat());
 
 			/** Identify characters in the plate using their computed rects
-			 * @param plateImage the raw plate ROI where the characters are located
-			 * @param minPosX the minimun position on the x axis used to start searching for characters, as a ratio (0.0 - 1.0) of the image width. Every rect before this coordinate will be excluded
-			 * @param minPosX the maximum position on the x axis used to stop searching for characters, as a ratio (0.0 - 1.0) of the image width. Every rect after this coordinate will be excluded
-			 * @param charMinFillRatio the min percentage, as a ratio (0.0 - 1.0) of colored pixels in each character's rect used to validate a character.
-			 * @param charMaxFillRatio the max percentage, as a ratio (0.0 - 1.0) of colored pixels in each character's rect used to validate a character
-			 * @param charRectMinSize the minimum size (width & height) of a rect to be evaluated as a possible character (legacy value was 8,20)
-			 * @param contoursFillMethod the method used to fill each found contours when looking for characters. A value < 0 will flood fill the found countoured area but a value > 0 will be used as the thickness to draw the contours
-			 * @param binarizedImage output matrix of the binarized image computed while looking for characters
-			 * @param debugLevel parameter used to show and draw debug information
+			 * \param plateImage the raw plate ROI where the characters are located
+			 * \param minPosX the minimun position on the x axis used to start searching for characters, as a ratio (0.0 - 1.0) of the image width. Every rect before this coordinate will be excluded
+			 * \param minPosX the maximum position on the x axis used to stop searching for characters, as a ratio (0.0 - 1.0) of the image width. Every rect after this coordinate will be excluded
+			 * \param charMinFillRatio the min percentage, as a ratio (0.0 - 1.0) of colored pixels in each character's rect used to validate a character.
+			 * \param charMaxFillRatio the max percentage, as a ratio (0.0 - 1.0) of colored pixels in each character's rect used to validate a character
+			 * \param charRectMinSize the minimum size (width & height) of a rect to be evaluated as a possible character (legacy value was 8,20)
+			 * \param contoursFillMethod the method used to fill each found contours when looking for characters. A value < 0 will flood fill the found countoured area but a value > 0 will be used as the thickness to draw the contours
+			 * \param out_binarizedImage (output) the computed binary image containing the characters contours (white characters on black background)
+			 * \param debugLevel parameter used to show and draw debug information
 			 */
 			std::vector<cv::Rect> findPlateCharacter(const cv::Mat& plateImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, double charMinFillRatio, double charMaxFillRatio, cv::Size charRectMinSize = cv::Size(8,20), int contoursFillMethod = CV_FILLED, int debugLevel = 0);
-			//std::vector<std::vector<cv::Rect>> extractPlateCharacters(const cv::Mat& preprocessedImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, int minLines, int maxLines, double ratioY, double ratioHeight, double ratioWidth, const cv::Mat& dbgImage, int debug = 0);
-			std::vector<std::vector<cv::Rect>> extractPlateCharacters(const cv::Mat& preprocessedImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, int minLines, int maxLines, double ratioY, double ratioMinArea, double ratioMaxArea, const cv::Mat& dbgImage, int debug = 0);
 			
+			//std::vector<std::vector<cv::Rect>> extractPlateCharacters(const cv::Mat& preprocessedImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, int minLines, int maxLines, double ratioY, double ratioHeight, double ratioWidth, const cv::Mat& dbgImage, int debug = 0);
+			/**
+			 * \brief 
+			 * \param preprocessedImage The preprocessed image of the ID plate (binarized: black characters on white background)
+			 * \param out_binarizedImage (output) the computed binary image containing the characters contours (white characters on black background)
+			 * \param minPosX The min position bound on the X Axis to start looking for characters
+			 * \param maxPosX The max position bound on the X Axis to end searching for characters
+			 * \param minLines Used to compute the biggest size a character can possibly have. The min number of lines of characters the plate ID can contain.
+			 * \param maxLines Used to compute the smallest size a character can possibly have. The max number of lnes of characters the plate ID can contain. A good value is 2 * minLines - 1 (i.e. minLines + minLines - 1 interlines)
+			 * \param ratioY A delta percentage of the average height of each line's characters used to valide false negative characters.
+			 *  Every Character of the same line is not on the same Y Axis coordinate. ratioY is used to look around this Y coordinate.
+			 *  Every character which Y coordinate is not within the bounds [Y - delta; Y + delta] will be discarded.
+			 * \param ratioMinArea A delta percentage of the average area of each line's characters bounding box used to validate false negative characters.
+			 *  Every character which area will be inferior than the average area - delta will be discarded.
+			 * \param ratioMaxArea A delta percentage of the average area of each line's characters bounding box used to validate false negative characters.
+			 *  Every character which area will be greater than the average area + delta will be discarded.
+			 * \param dbgImage The color image of the ID plate used for debug purposes only.
+			 * \param debug The debug level used to draw and log debug informations.
+			 * \return Returns the image's found extracted characters' bounding rects sorted by coordinates and lines
+			 */
+			std::vector<std::vector<cv::Rect>> extractPlateCharacters(const cv::Mat& preprocessedImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, int minLines, int maxLines, double ratioY, double ratioMinArea, double ratioMaxArea, const cv::Mat& dbgImage, int debug = 0);
 
 			/**
 			 * \brief Filter characters (rects) using their position (X axis) and their height.

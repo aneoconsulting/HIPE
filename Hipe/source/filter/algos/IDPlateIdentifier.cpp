@@ -13,83 +13,85 @@ HipeStatus filter::Algos::IDPlateIdentifier::process()
 	cv::Mat preprocessed = preprocessImage(image);
 	cv::Mat binarizedImage;
 
+	// Find characters rois
 	int maxLines = 2 * dbgMinLines - 1;
 	std::vector<std::vector<cv::Rect>> characters = filter::algos::IDPlate::extractPlateCharacters(preprocessed, binarizedImage, dbgMinX, dbgMaxX, dbgMinLines, maxLines, ratioY, ratioMinArea, ratioMaxArea, image, _debug);
 
+	// Crop rois to create separate images
+	std::vector <std::vector<cv::Mat>> croppedCharactersLines;
+	for(auto & line : characters)
+	{
+		croppedCharactersLines.push_back(cropROIs(image, line));
+	}
 
-	//findCharacters(image);
-	cv::Mat output = image;
-	//std::vector<cv::Mat> characters = detectTextArea(image, charactersRects);
+	// Identify them using Tesseract
+	std::vector < std::vector<std::string>> labelsLines;
+	for (auto & line : croppedCharactersLines)
+	{
+		labelsLines.push_back(labelOCR.runRecognition(line, 30));	// legacy: labelType = 2
+	}
 
-	//// Identify them using Tesseract
-	//std::vector<std::string> labels = labelOCR.runRecognition(characters, 30);	// legacy: labelType = 2
-
-	//// Output results in an image
-	//cv::Mat output = createOutputImage(image, charactersRects, labels);
+	// Output results in an image
+	cv::Mat output = image.clone();
+	for(int i = 0; i < croppedCharactersLines.size(); ++i)
+	{
+		output = createOutputImage(output, characters[i], labelsLines[i]);
+	}
 
 	_connexData.push(output);
 	return OK;
 }
 
-std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::Mat & plateImage, std::vector<cv::Rect> & out_charactersRects)
-{
-	cv::Mat image = plateImage;
-
-	// Preprocess image
-	cv::Mat preprocessed = preprocessImage(plateImage);
-	cv::Mat binarizedImage;
-
-	// Find characters
-	//std::vector<cv::Rect> characters = filter::algos::IDPlate::findPlateCharacters(preprocessed, 0.04f, .8f, _debug, 4, binarizedImage); // Old values were minPosX 0.1, maxPosX 1.0, ratioLowerBound 0.20, ratioUpperBound 0.80
-
-	const double drawContourThickness = 4;
-	std::vector<cv::Rect> characters = filter::algos::IDPlate::findPlateCharacter(preprocessed, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
-
-	if (_debug)
-	{
-		cv::Mat charactersBounds = image.clone();
-		for (auto & character : characters)
-		{
-			cv::rectangle(charactersBounds, character, cv::Scalar(0, 0, 255), 2);
-		}
-		filter::algos::IDPlate::showImage(charactersBounds);
-	}
-
-	// Sort and filter them (how ?)
-	std::vector<cv::Rect> charactersFiltered = sortAndFilterCharacters(characters, plateImage.rows, 0.06, 0.35);
-
-	if (_debug)
-	{
-		cv::Mat charactersBounds = image.clone();
-		for (auto & character : charactersFiltered)
-		{
-			cv::rectangle(charactersBounds, character, cv::Scalar(0, 0, 255), 2);
-		}
-		filter::algos::IDPlate::showImage(charactersBounds);
-	}
-
-	//// ?
-	//charactersFiltered = blobsRectangle(preprocessed, charactersFiltered);
-
-	//// Separate characters by lines
-	//std::vector<std::vector<cv::Rect>> debugChars = separateCharactersByLines(charactersFiltered, plateImage);
-
-	// Extract characters: crop image with rectangles
-	std::vector<cv::Mat> croppedCharacters;
-	for (auto & character : charactersFiltered)
-	{
-		cv::Mat clone(image(character).clone());
-		croppedCharacters.push_back(clone);
-
-
-		//if(_debug)	filter::algos::IDPlate::showImage(clone);
-	}
-
-	// Return characters rects
-	out_charactersRects = charactersFiltered;
-	// Return cropped images
-	return croppedCharacters;
-}
+//std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::detectTextArea(const cv::Mat & plateImage, std::vector<cv::Rect> & out_charactersRects)
+//{
+//	cv::Mat image = plateImage;
+//
+//	// Preprocess image
+//	cv::Mat preprocessed = preprocessImage(plateImage);
+//	cv::Mat binarizedImage;
+//
+//	const double drawContourThickness = 4;
+//	std::vector<cv::Rect> characters = filter::algos::IDPlate::findPlateCharacter(preprocessed, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
+//
+//	if (_debug)
+//	{
+//		cv::Mat charactersBounds = image.clone();
+//		for (auto & character : characters)
+//		{
+//			cv::rectangle(charactersBounds, character, cv::Scalar(0, 0, 255), 2);
+//		}
+//		filter::algos::IDPlate::showImage(charactersBounds);
+//	}
+//
+//	// Sort and filter them (how ?)
+//	std::vector<cv::Rect> charactersFiltered = sortAndFilterCharacters(characters, plateImage.rows, 0.06, 0.35);
+//
+//	if (_debug)
+//	{
+//		cv::Mat charactersBounds = image.clone();
+//		for (auto & character : charactersFiltered)
+//		{
+//			cv::rectangle(charactersBounds, character, cv::Scalar(0, 0, 255), 2);
+//		}
+//		filter::algos::IDPlate::showImage(charactersBounds);
+//	}
+//
+//	// Extract characters: crop image with rectangles
+//	std::vector<cv::Mat> croppedCharacters;
+//	for (auto & character : charactersFiltered)
+//	{
+//		cv::Mat clone(image(character).clone());
+//		croppedCharacters.push_back(clone);
+//
+//
+//		if(_debug > 2)	filter::algos::IDPlate::showImage(clone);
+//	}
+//
+//	// Return characters rects
+//	out_charactersRects = charactersFiltered;
+//	// Return cropped images
+//	return croppedCharacters;
+//}
 
 cv::Mat filter::Algos::IDPlateIdentifier::preprocessImage(const cv::Mat & plateImage)
 {
@@ -122,35 +124,51 @@ cv::Mat filter::Algos::IDPlateIdentifier::preprocessImage(const cv::Mat & plateI
 	return image;
 }
 
-std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::sortAndFilterCharacters(std::vector<cv::Rect>& characters, int plateImageRows, double lowerBound, double upperBound)
+cv::Mat filter::Algos::IDPlateIdentifier::cropROI(const cv::Mat& image, const cv::Rect& roi)
 {
-	std::vector<cv::Rect> charactersFiltered;
-
-	// Sort characters
-	//std::sort(characters.begin(), characters.end(), [](const cv::Rect& a, const cv::Rect& b) { filter::algos::IDPlate::compRectsByPos(a, b); });
-	std::sort(characters.begin(), characters.end(), filter::algos::IDPlate::CompRectsByPos());
-
-	if (lowerBound > upperBound)
-	{
-		double temp = upperBound;
-		upperBound = lowerBound;
-		lowerBound = temp;
-	}
-
-	// Filter out
-	for (auto & character : characters)
-	{
-		if (static_cast<double>(character.height) / static_cast<double>(plateImageRows) > upperBound) continue;
-		if (static_cast<double>(character.height) / static_cast<double>(plateImageRows) < lowerBound) continue; // area is a line ?? or something else ?
-
-		//// Dilate width the right of the rectangle to check if there is more rect 
-		//textAreas[i].width += 0.50 * textAreas[i].width;
-
-		charactersFiltered.push_back(character);
-	}
-
-	return charactersFiltered;
+	return image(roi).clone();
 }
+
+std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::cropROIs(const cv::Mat& image, const std::vector<cv::Rect>& rois)
+{
+	std::vector<cv::Mat> output;
+	for (auto & roi : rois)
+	{
+		output.push_back(cropROI(image, roi));
+	}
+
+	return output;
+}
+
+//std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::sortAndFilterCharacters(std::vector<cv::Rect>& characters, int plateImageRows, double lowerBound, double upperBound)
+//{
+//	std::vector<cv::Rect> charactersFiltered;
+//
+//	// Sort characters
+//	//std::sort(characters.begin(), characters.end(), [](const cv::Rect& a, const cv::Rect& b) { filter::algos::IDPlate::compRectsByPos(a, b); });
+//	std::sort(characters.begin(), characters.end(), filter::algos::IDPlate::CompRectsByPos());
+//
+//	if (lowerBound > upperBound)
+//	{
+//		double temp = upperBound;
+//		upperBound = lowerBound;
+//		lowerBound = temp;
+//	}
+//
+//	// Filter out
+//	for (auto & character : characters)
+//	{
+//		if (static_cast<double>(character.height) / static_cast<double>(plateImageRows) > upperBound) continue;
+//		if (static_cast<double>(character.height) / static_cast<double>(plateImageRows) < lowerBound) continue; // area is a line ?? or something else ?
+//
+//		//// Dilate width the right of the rectangle to check if there is more rect 
+//		//textAreas[i].width += 0.50 * textAreas[i].width;
+//
+//		charactersFiltered.push_back(character);
+//	}
+//
+//	return charactersFiltered;
+//}
 
 //std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::blobsRectangle(const cv::Mat & plateImage, std::vector<cv::Rect>& characters)
 //{
@@ -299,89 +317,89 @@ std::vector<cv::Rect> filter::Algos::IDPlateIdentifier::sortAndFilterCharacters(
 //	return filteredTextAreas;
 //}
 
-std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCharactersByLines(std::vector<cv::Rect>& charactersSorted, const cv::Mat & debugImage)
-{
-	cv::Mat image = debugImage.clone();
-
-	const int verticalDelta = 5;
-
-	std::vector<std::vector<cv::Rect>> output;
-
-	std::vector<cv::Rect>::const_iterator it = charactersSorted.begin();
-	std::vector<cv::Rect>::const_iterator itNext = it + 1;
-	std::vector<cv::Rect> line;
-
-	while (it != charactersSorted.end() && itNext != charactersSorted.end())
-	{
-		// Add current point to line
-		line.push_back(*it);
-
-		// We Work on borders
-		// Use Right border for first rect and left border for second one
-		const cv::Point itBorder(it->x + it->width, it->y + it->height / 2);
-		const cv::Point itNextBorder(itNext->x, itNext->y + itNext->height / 2);
-
-		//Debug
-		cv::Mat image = debugImage.clone();
-		if (image.data && _debug > 2)
-		{
-			cv::rectangle(image, *it, cv::Scalar(255, 0, 0));
-			cv::circle(image, itBorder, 2, cv::Scalar(0, 0, 0), 2);
-			cv::rectangle(image, *itNext, cv::Scalar(255, 0, 0));
-			cv::circle(image, itNextBorder, 2, cv::Scalar(255, 255, 255), 2);
-			filter::algos::IDPlate::showImage(image);
-		}
-
-		// Compare borders y
-		int delta = abs(itBorder.y - itNextBorder.y);
-		// if outside delta, create new line
-		if (delta > verticalDelta)
-		{
-			//Debug
-			if (image.data && _debug > 2)
-			{
-				cv::rectangle(image, *itNext, cv::Scalar(0, 0, 255));
-				filter::algos::IDPlate::showImage(image);
-			}
-
-			output.push_back(line);
-			line.clear();
-		}
-		else
-		{
-			// Debug
-			if (image.data && _debug > 2)
-			{
-				cv::rectangle(image, *itNext, cv::Scalar(0, 255, 0));
-				filter::algos::IDPlate::showImage(image);
-			}
-		}
-
-		it = itNext;
-		++itNext;
-	}
-
-	// Push last point and last line
-	line.push_back(*it);
-	output.push_back(line);
-
-	// Debug
-	image = debugImage.clone();
-	if (image.data && _debug > 2)
-	{
-		for (auto & line : output)
-		{
-			for (auto & rect : line)
-			{
-				cv::rectangle(image, rect, cv::Scalar(255, 0, 0), 2);
-			}
-		}
-
-		filter::algos::IDPlate::showImage(image);
-	}
-
-	return output;
-}
+//std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCharactersByLines(std::vector<cv::Rect>& charactersSorted, const cv::Mat & debugImage)
+//{
+//	cv::Mat image = debugImage.clone();
+//
+//	const int verticalDelta = 5;
+//
+//	std::vector<std::vector<cv::Rect>> output;
+//
+//	std::vector<cv::Rect>::const_iterator it = charactersSorted.begin();
+//	std::vector<cv::Rect>::const_iterator itNext = it + 1;
+//	std::vector<cv::Rect> line;
+//
+//	while (it != charactersSorted.end() && itNext != charactersSorted.end())
+//	{
+//		// Add current point to line
+//		line.push_back(*it);
+//
+//		// We Work on borders
+//		// Use Right border for first rect and left border for second one
+//		const cv::Point itBorder(it->x + it->width, it->y + it->height / 2);
+//		const cv::Point itNextBorder(itNext->x, itNext->y + itNext->height / 2);
+//
+//		//Debug
+//		cv::Mat image = debugImage.clone();
+//		if (image.data && _debug > 2)
+//		{
+//			cv::rectangle(image, *it, cv::Scalar(255, 0, 0));
+//			cv::circle(image, itBorder, 2, cv::Scalar(0, 0, 0), 2);
+//			cv::rectangle(image, *itNext, cv::Scalar(255, 0, 0));
+//			cv::circle(image, itNextBorder, 2, cv::Scalar(255, 255, 255), 2);
+//			filter::algos::IDPlate::showImage(image);
+//		}
+//
+//		// Compare borders y
+//		int delta = abs(itBorder.y - itNextBorder.y);
+//		// if outside delta, create new line
+//		if (delta > verticalDelta)
+//		{
+//			//Debug
+//			if (image.data && _debug > 2)
+//			{
+//				cv::rectangle(image, *itNext, cv::Scalar(0, 0, 255));
+//				filter::algos::IDPlate::showImage(image);
+//			}
+//
+//			output.push_back(line);
+//			line.clear();
+//		}
+//		else
+//		{
+//			// Debug
+//			if (image.data && _debug > 2)
+//			{
+//				cv::rectangle(image, *itNext, cv::Scalar(0, 255, 0));
+//				filter::algos::IDPlate::showImage(image);
+//			}
+//		}
+//
+//		it = itNext;
+//		++itNext;
+//	}
+//
+//	// Push last point and last line
+//	line.push_back(*it);
+//	output.push_back(line);
+//
+//	// Debug
+//	image = debugImage.clone();
+//	if (image.data && _debug > 2)
+//	{
+//		for (auto & line : output)
+//		{
+//			for (auto & rect : line)
+//			{
+//				cv::rectangle(image, rect, cv::Scalar(255, 0, 0), 2);
+//			}
+//		}
+//
+//		filter::algos::IDPlate::showImage(image);
+//	}
+//
+//	return output;
+//}
 
 //void filter::Algos::IDPlateIdentifier::findCharacters(const cv::Mat & plateImage)
 //{
@@ -1008,28 +1026,28 @@ std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::separateCha
 //
 //}
 
-std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::segmentCharacters(const std::vector<std::vector<cv::Rect>>& lines)
-{
-	//// We'll segment the rects by their width in ranges of 5 pixels
-	//// Find limit (widest rect)
-	//int maxWidth = 0;
-	//for (auto & line : lines)
-	//	for (auto & rect : line)
-	//		if (rect.width > maxWidth) maxWidth = rect.width;
-
-	//// If limit is not % 5, add the difference
-	//int modulo = maxWidth % 5;
-	//if (modulo)
-	//{
-	//	maxWidth += 5 - modulo;
-	//}
-
-	//// Create container
-	//int segments = maxWidth / 5;
-	//std::vector<std::vector<cv::Rect>>
-	//// segment
-	return std::vector<std::vector<cv::Rect>>();
-}
+//std::vector<std::vector<cv::Rect>> filter::Algos::IDPlateIdentifier::segmentCharacters(const std::vector<std::vector<cv::Rect>>& lines)
+//{
+//	//// We'll segment the rects by their width in ranges of 5 pixels
+//	//// Find limit (widest rect)
+//	//int maxWidth = 0;
+//	//for (auto & line : lines)
+//	//	for (auto & rect : line)
+//	//		if (rect.width > maxWidth) maxWidth = rect.width;
+//
+//	//// If limit is not % 5, add the difference
+//	//int modulo = maxWidth % 5;
+//	//if (modulo)
+//	//{
+//	//	maxWidth += 5 - modulo;
+//	//}
+//
+//	//// Create container
+//	//int segments = maxWidth / 5;
+//	//std::vector<std::vector<cv::Rect>>
+//	//// segment
+//	return std::vector<std::vector<cv::Rect>>();
+//}
 
 cv::Mat filter::Algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels)
 {
@@ -1211,16 +1229,16 @@ std::string filter::Algos::LabelOCR::runPrediction(const cv::Mat & labelImage, i
 	return text;
 }
 
-void filter::Algos::LabelOCR::filterUndesiredChars(std::string & str)
-{
-	char chars[] = "?";
-
-	for (unsigned int i = 0; i < strlen(chars); ++i)
-	{
-		// you need include <algorithm> to use general algorithms like std::remove()
-		str.erase(std::remove(str.begin(), str.end(), chars[i]), str.end());
-	}
-}
+//void filter::Algos::LabelOCR::filterUndesiredChars(std::string & str)
+//{
+//	char chars[] = "?";
+//
+//	for (unsigned int i = 0; i < strlen(chars); ++i)
+//	{
+//		// you need include <algorithm> to use general algorithms like std::remove()
+//		str.erase(std::remove(str.begin(), str.end(), chars[i]), str.end());
+//	}
+//}
 
 cv::Mat filter::Algos::LabelOCR::quantizeImage(const cv::Mat & image, int clusters, int maxIterations)
 {
