@@ -41,12 +41,12 @@ namespace filter
 				cv::Mat image(data.getMat());
 
 				// Get Date
-				struct tm time;
+				struct tm *time;
 				time_t currTime = std::time(nullptr);
-				localtime_s(&time, &currTime);
+				time = std::localtime(&currTime);
 
 				std::ostringstream oss;
-				oss << std::put_time(&time, "%d%m%Y_%H%M%S");
+				oss << std::put_time(time, "%d%m%Y_%H%M%S");
 				std::string date = oss.str();
 
 				// Get full filename
