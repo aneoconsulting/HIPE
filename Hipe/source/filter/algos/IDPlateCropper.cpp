@@ -28,13 +28,7 @@ cv::Mat filter::algos::IDPlateCropper::processPlateImage(const cv::Mat & plateIm
 	cv::Canny(output.clone(), output, 450, 100);
 
 	// Dilate image to enlarge found contours
-	cv::Mat dilateKernel =
-		(cv::Mat_<uchar>(5, 5) <<
-			0, 0, 1, 0, 0,
-			0, 0, 1, 0, 0,
-			1, 1, 1, 1, 1,
-			0, 0, 1, 0, 0,
-			0, 0, 1, 0, 0);
+	cv::Mat dilateKernel = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(5, 5));
 	dilate(output, output, dilateKernel);
 
 	// Color blobs on image and find biggest blob
@@ -42,7 +36,10 @@ cv::Mat filter::algos::IDPlateCropper::processPlateImage(const cv::Mat & plateIm
 	// Debug
 	if (_debug)	filter::algos::IDPlate::showImage(output);
 
-	cv::Point biggestBlobPos = maskBlobs(output, maskColor);
+	//cv::Point biggestBlobPos = maskBlobs(output, maskColor);
+	unsigned char threshold = 128;
+	float biggestBlobArea;
+	cv::Point biggestBlobPos = filter::algos::IDPlate::findBiggestBlobPos(output, maskColor, maskColor, threshold, biggestBlobArea, _debug);
 
 	// Debug
 	if (_debug)	filter::algos::IDPlate::showImage(output);
@@ -91,33 +88,33 @@ cv::Mat filter::algos::IDPlateCropper::processPlateImage(const cv::Mat & plateIm
 	return output;
 }
 
-cv::Point filter::algos::IDPlateCropper::maskBlobs(cv::Mat & plateImageBlackWhite, const cv::Scalar & color)
-{
-	int maxArea = -1;
-	cv::Point maxAreaPos;
-
-	const int threshold = 128;
-
-	// For each pixel, if pixel color is greater than threshold, it's a blob : paint it black. The biggest found area is the whole plate
-	for (int y = 0; y < plateImageBlackWhite.size().height; y++)
-	{
-		const uchar* row = plateImageBlackWhite.ptr(y);
-		for (int x = 0; x < plateImageBlackWhite.size().width; x++)
-		{
-			if (row[x] >= threshold)
-			{
-				cv::Point pos(x, y);
-				int currArea = cv::floodFill(plateImageBlackWhite, pos, color);
-				if (currArea > maxArea)
-				{
-					maxAreaPos = pos;
-					maxArea = currArea;
-
-					// Debug
-					if (_debug)	filter::algos::IDPlate::showImage(plateImageBlackWhite);
-				}
-			}
-		}
-	}
-	return maxAreaPos;
-}
+//cv::Point filter::algos::IDPlateCropper::maskBlobs(cv::Mat & plateImageBlackWhite, const cv::Scalar & color)
+//{
+//	int maxArea = -1;
+//	cv::Point maxAreaPos;
+//
+//	const int threshold = 128;
+//
+//	// For each pixel, if pixel color is greater than threshold, it's a blob : paint it black. The biggest found area is the whole plate
+//	for (int y = 0; y < plateImageBlackWhite.size().height; y++)
+//	{
+//		const uchar* row = plateImageBlackWhite.ptr(y);
+//		for (int x = 0; x < plateImageBlackWhite.size().width; x++)
+//		{
+//			if (row[x] >= threshold)
+//			{
+//				cv::Point pos(x, y);
+//				int currArea = cv::floodFill(plateImageBlackWhite, pos, color);
+//				if (currArea > maxArea)
+//				{
+//					maxAreaPos = pos;
+//					maxArea = currArea;
+//
+//					// Debug
+//					if (_debug)	filter::algos::IDPlate::showImage(plateImageBlackWhite);
+//				}
+//			}
+//		}
+//	}
+//	return maxAreaPos;
+//}

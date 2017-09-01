@@ -35,17 +35,16 @@ namespace filter
 				charMinWidth = 8;
 				charMinHeight = 20;
 			}
-			REGISTER_P(double, leftRatio);
-			REGISTER_P(double, rightRatio);
-			REGISTER_P(double, topRatio);
-			REGISTER_P(int, _debug);
-			REGISTER_P(double, charMinXBound);
-			REGISTER_P(double, charMaxXBound);
-			REGISTER_P(double, charMinFillRatio);
-			REGISTER_P(double, charMaxFillRatio);
-			REGISTER_P(int, charMinWidth);
-			REGISTER_P(int, charMinHeight);
-
+			REGISTER_P(double, leftRatio);			//!< Percentage of the image width used to extend and limit the search of the plate text area's left vertical line.
+			REGISTER_P(double, rightRatio);			//!< Percentage of the image width used to extend and limit the search of the plate text area's right vertical line.
+			REGISTER_P(double, topRatio);			//!< Percentage of the image height used to extend and limit the search of the plate text area's top horizontal line.
+			REGISTER_P(int, _debug);				//!< The desired debug level. The default level is 0 (disabled). A higher value will enable more debug informations
+			REGISTER_P(double, charMinXBound);		//!< The minimum position on the X axis to search for characters in the image
+			REGISTER_P(double, charMaxXBound);		//!< The maximum position on the X axis to search for characters in the image
+			REGISTER_P(double, charMinFillRatio);	//!< The minimum ratio of colored pixels a character rect must contain to be accepted as a valid one
+			REGISTER_P(double, charMaxFillRatio);	//!< The maximum ratio of colored pixels a character rect can contain to be accepted as a valid one
+			REGISTER_P(int, charMinWidth);			//!< The minimum width a character rect must have to be accepted as a valid one
+			REGISTER_P(int, charMinHeight);			//!< The minimum height a character rect must have to be accepted as a valid one
 
 		public:
 			HipeStatus process() override;
@@ -61,9 +60,6 @@ namespace filter
 			bool compRectByHPos(const cv::Rect& a, const cv::Rect& b);
 
 		private:
-			//std::vector<int> separateTextRows(const std::vector<cv::Rect> & charactersRects);
-			//std::vector<std::vector<cv::Rect>> sortCharactersByRows(const cv::Mat& plateImage, const std::vector<cv::Rect>& plateCharacters, const std::vector<int>& charactersRows);
-
 			/**
 			 * \brief Compute the bounds of a rectangle englobing the most relevant text lines of an ID plate image trying to match the pattern of the lines on the image
 			 * \param image The ID plate's image
@@ -181,9 +177,9 @@ namespace filter
 
 
 			/**
-			 * \brief Square a number
+			 * \brief Square function
 			 * \param a the number to square
-			 * \return the number squared
+			 * \return the squared value of the number
 			 */
 			static double square(double a)
 			{

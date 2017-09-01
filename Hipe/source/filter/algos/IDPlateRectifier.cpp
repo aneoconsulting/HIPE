@@ -10,12 +10,11 @@ HipeStatus filter::algos::IDPlateRectifier::process()
 	//normalizeRatios();
 
 	// Find ID plate's characters
-	//std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacters(image, 0.1, 0.8, _debug); // Old values were minPosX 0.1, maxPosX 0.8, ratioLowerBound 0.20, ratioUpperBound 0.80
 	const double drawContourThickness = CV_FILLED;
 	cv::Mat binarizedImage;
 	std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacter(image, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
+	
 	// Separate them by rows (lines)
-	//std::vector<int> characterRows = separateTextRows(plateCharacters);
 	std::vector<int> characterRows = filter::algos::IDPlate::splitImgByCharRows(image, plateCharacters);
 
 	//// Add line to bottom of image (we want rows separated by top and bottom lines)
@@ -57,106 +56,6 @@ bool filter::algos::IDPlateRectifier::compRectByHPos(const cv::Rect & a, const c
 {
 	return a.x < b.x;
 }
-
-//std::vector<int> filter::algos::IDPlateRectifier::separateTextRows(const std::vector<cv::Rect>& charactersRects)
-//{
-//	std::vector<int> lines;
-//
-//	std::vector<std::pair<int, int>> deriv(charactersRects.size());
-//	std::vector<std::pair<int, int>> deriv2(charactersRects.size());
-//
-//	deriv[0].first = 0;
-//	deriv[0].second = 0;
-//
-//	int mean = 0;
-//	const double inclusionRatio = 0.9;
-//
-//	for (int i = 1; i < charactersRects.size(); i++)
-//	{
-//		//Ignore False EOL (i.e : do not consider letter perspective) Ignore Inclusion of letter in 90% of other
-//		if ((charactersRects[i - 1].y >= charactersRects[i].y && charactersRects[i - 1].y <= charactersRects[i].y + inclusionRatio * charactersRects[i].height) ||
-//			(charactersRects[i].y >= charactersRects[i - 1].y && charactersRects[i].y <= charactersRects[i - 1].y + inclusionRatio * charactersRects[i - 1].height))
-//			continue;
-//
-//		deriv[i - 1].first = abs(charactersRects[i - 1].y - charactersRects[i].y);
-//		deriv[i - 1].second = i - 1;
-//
-//		mean += deriv[i - 1].first;
-//	}
-//
-//	mean /= charactersRects.size();
-//
-//	std::sort(deriv.begin(), deriv.end(), [this](const std::pair<int, int>& a, const std::pair<int, int>& b) { return this->compByDeriv(a, b); });
-//
-//	for (int i = 0; i < deriv.size(); i++)
-//	{
-//		if (deriv[i].first > 3)
-//		{
-//			int y = charactersRects[deriv[i].second].y + charactersRects[deriv[i].second].height;
-//			lines.push_back(y);
-//
-//		}
-//	}
-//
-//	std::sort(lines.begin(), lines.end());
-//
-//	return lines;
-//}
-
-//std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::sortCharactersByRows(const cv::Mat & plateImage, const std::vector<cv::Rect>& plateCharacters, const std::vector<int>& charactersRows)
-//{
-//	const int lines = charactersRows.size();
-//	std::vector<std::vector<cv::Rect>> rows(lines);
-//
-//	// Debug
-//	cv::Mat image;
-//	if (_debug)
-//	{
-//		image = plateImage.clone();
-//		for (int i = 0; i < lines; i++)
-//		{
-//			cv::line(image, cv::Point(0, charactersRows[i]), cv::Point(image.cols - 1, charactersRows[i]), cv::Scalar(0, 0, 255));
-//		}
-//		filter::algos::IDPlate::showImage(image);
-//	}
-//
-//
-//	// For each line and the next one
-//	for (int j = 0, prevLine = 0, nextLine = charactersRows[j]; j < lines; j++)
-//	{
-//		nextLine = charactersRows[j];
-//
-//		// Debug
-//		if (_debug)
-//		{
-//			image = plateImage.clone();
-//		}
-//
-//		// For each character : if character is between the two lines add it to the correct container
-//		for (int i = 0; i < plateCharacters.size(); i++)
-//		{
-//			cv::Point rectCenter;
-//			rectCenter.x = plateCharacters[i].x + plateCharacters[i].width * 0.5;
-//			rectCenter.y = plateCharacters[i].y + plateCharacters[i].height * 0.5;
-//
-//			// Debug
-//			if (_debug)
-//			{
-//				cv::circle(image, rectCenter, 4, cv::Scalar(255, 255, 0), 4);
-//				//showImage(image);
-//			}
-//
-//			if (rectCenter.y > prevLine && rectCenter.y < nextLine)
-//			{
-//				rows[j].push_back(plateCharacters[i]);
-//			}
-//		}
-//
-//		prevLine = nextLine;
-//	}
-//
-//	return rows;
-//}
 
 std::vector<cv::Point> filter::algos::IDPlateRectifier::findCharactersBounds(const cv::Mat & image, const std::vector<std::vector<cv::Rect>>& charactersSorted)
 {
@@ -470,7 +369,8 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaTopLine(const cv
 
 	// Move a bit the on the y axis to stick on vertical line
 	pt1.x = cv::min(plateHorizontalLines.cols - 1, (int)(pt1.x + abs(xmax - xmin) / 4.0)); // 4 is 1/4 of a horizontal line
-	pt2.x = cv::max(0, (int)(pt2.x /*- abs(xmax - xmin) / 4.0*/));
+	//pt2.x = cv::max(0, (int)(pt2.x /*- abs(xmax - xmin) / 4.0*/));
+	pt2.x = cv::max(0, static_cast<int>(pt2.x));
 
 	// Debug
 	if (_debug)
@@ -595,8 +495,8 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaLeftLine(const c
 	pt2.x = xmax; pt2.y = ymax;
 
 	// Move a bit the on the y axis to stick on vertical line
-	pt1.y = cv::min(plateVerticalLines.rows - 1, (int)(pt1.y + abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
-	pt2.y = cv::max(0, (int)(pt2.y - abs(ymax - ymin) / 6.0));				// 6 is the middle of 3 lines of text
+	pt1.y = cv::min(plateVerticalLines.rows - 1, static_cast<int>(pt1.y + abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
+	pt2.y = cv::max(0, static_cast<int>(pt2.y - abs(ymax - ymin) / 6.0));				// 6 is the middle of 3 lines of text
 
 
 	// Debug
@@ -726,8 +626,8 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaRightLine(const 
 	pt2.x = xmax; pt2.y = ymax;
 
 	// Move a bit the on the y axis to stick on vertical line
-	pt1.y = cv::min(plateVerticalLines.rows - 1, (int)(pt1.y + abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
-	pt2.y = cv::max(0, (int)(pt2.y - abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
+	pt1.y = cv::min(plateVerticalLines.rows - 1, static_cast<int>(pt1.y + abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
+	pt2.y = cv::max(0, static_cast<int>(pt2.y - abs(ymax - ymin) / 6.0)); // 6 is the middle of 3 lines of text
 	ptNext.x = pt1.x;
 	ptNext.y = pt1.y;
 
@@ -821,59 +721,6 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaRightLine(const 
 	return rightCorners;
 }
 
-//cv::Point filter::algos::IDPlateRectifier::_findNextTopPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
-//{
-//	bool foundBegin = false;
-//	int begin;
-//	int end;
-//
-//	int chan = plateImage.channels();
-//
-//	cv::Mat col = plateImage.col(currPosition.x).clone();
-//	cv::Mat tCol = col.t();
-//
-//	// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
-//	//const uchar * _col = tCol.ptr<unsigned char>(0);
-//
-//	// Look in line for next white pixel
-//	for (int y = currPosition.y; y >= limit.y; y--)
-//	{
-//		// TODO: <== HERE
-//		const int channelValue = static_cast<int>(tCol.at<uchar>(0, y));
-//		//if (foundBegin == false && _col[y] == 255)	// TM: <== Weird behavior with pointers
-//		// First white pixel found case
-//		if (!foundBegin && channelValue == 255)
-//		{
-//			foundBegin = true;
-//			begin = y;
-//			continue;
-//		}
-//
-//		//if (foundBegin == true && _col[y] == 0)			// TM: <== Weird behavior with pointers
-//		// Second white pixel found case
-//		if (foundBegin && channelValue == 0)
-//		{
-//			end = cv::max(0, y - 1);
-//
-//			// Output middle of found white line
-//			cv::Point output(currPosition.x, cv::max(0, begin + (end - begin) / 2));
-//
-//			// Debug
-//
-//			//cv::Mat temp = col.clone();
-//			//cv::circle(temp, output, 4, cv::Scalar(255, 255, 0));
-//			//showImage(temp);
-//
-//			return output;
-//		}
-//	}
-//	// No white pixel found
-//	// TODO: returning -1 -1 seems to induce errors
-//	if (!foundBegin) return cv::Point(-1, -1);
-//
-//	return cv::Point(currPosition.y, 0);
-//}
-
 cv::Point filter::algos::IDPlateRectifier::_findNextTopPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
 {
 	bool foundBegin = false;
@@ -925,59 +772,6 @@ cv::Point filter::algos::IDPlateRectifier::_findNextTopPivotPoint(const cv::Mat 
 	return cv::Point(currPosition.x, begin / 2);
 }
 
-//cv::Point filter::algos::IDPlateRectifier::_findNextLeftPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
-//{
-//	bool foundBegin = false;
-//	int begin, end;
-//
-//	// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
-//	//const uchar* row = image.ptr(currPosition.y);
-//
-//	//Now look for next line by white pixel
-//	// TM: >= replaced by >
-//	for (int x = currPosition.x - 1; x > limit.x; x--)
-//	{
-//		//// TODO: <== HERE
-//		//// Debug
-//		//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(plateImage);
-//		//cv::Point currentPos(x, currPosition.y);
-//		//cv::circle(temp, currentPos, 2, cv::Scalar(0, 0, 255), 2);
-//		//IDPlateRectifier::showImage(temp);
-//
-//		const int channelValue = static_cast<int>(plateImage.at<uchar>(currPosition.y, x));
-//		//if (found_begin == false && row[x] == 255)	// TM: <== Weird behavior with pointers
-//		if (!foundBegin && channelValue == 255)
-//		{
-//			foundBegin = true;
-//			begin = x;
-//			continue;
-//		}
-//
-//		//if (foundBegin && row[x] == 0)
-//		if (foundBegin && channelValue == 0)
-//		{
-//			end = x;
-//			cv::Point output(cv::max(0, end + 1 + (begin - end) / 2), currPosition.y);
-//
-//			//// Debug
-//			//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(plateImage);
-//			//cv::circle(temp, output, 4, cv::Scalar(255, 255, 0));
-//			//IDPlateRectifier::showImage(temp);
-//			return output;
-//		}
-//	}
-//
-//	if (!foundBegin) return cv::Point(-1, -1);
-//
-//	// TM
-//	else
-//	{
-//		//cv::Point output(cv::max(0, limit.x + 1 + (begin - limit.x) / 2), currPosition.y);	// OLD
-//		cv::Point output(cv::max(0, limit.x + abs(begin - limit.x) / 2), currPosition.y);
-//		return output;
-//	}
-//}
-
 cv::Point filter::algos::IDPlateRectifier::_findNextLeftPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
 {
 	bool foundBegin = false;
@@ -1025,56 +819,6 @@ cv::Point filter::algos::IDPlateRectifier::_findNextLeftPivotPoint(const cv::Mat
 	cv::Point output(begin / 2, currPosition.y);
 	return output;
 }
-
-//cv::Point filter::algos::IDPlateRectifier::_findNextRightPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
-//{
-//	bool foundBegin = false;
-//	int begin, end;
-//
-//	// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
-//	//const uchar* row = plateImage.ptr(currPosition.y);
-//
-//	//Now look for next line by white pixel
-//	for (int x = currPosition.x + 1; x < limit.x; x++)
-//	{
-//		//// Debug
-//		//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(plateImage);
-//		//cv::Point currentPos(x, currPosition.y);
-//		//cv::circle(temp, currentPos, 2, cv::Scalar(0, 0, 255), 2);
-//		//IDPlateRectifier::showImage(temp);
-//
-//
-//		const int channelValue = static_cast<int>(plateImage.at<uchar>(currPosition.y, x));
-//		//if (found_begin == false && row[x] == 255)	// TM: <== Weird behavior with pointers
-//		if (!foundBegin && channelValue == 255)
-//		{
-//			foundBegin = true;
-//			begin = x;
-//			continue;
-//		}
-//
-//		//if (found_begin == true && row[x] == 0)
-//		if (foundBegin && channelValue == 0)
-//		{
-//			end = cv::max(0, x - 1);
-//			cv::Point output(cv::max(0, begin + (end - begin) / 2), currPosition.y);
-//			//// Debug
-//			//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(plateImage);
-//			//cv::circle(temp, output, 4, cv::Scalar(255, 255, 0));
-//			//IDPlateRectifier::showImage(temp);
-//			return output;
-//		}
-//	}
-//
-//	if (!foundBegin) return cv::Point(-1, -1);
-//
-//	//return cv::Point(-1, pt.y);
-//	else
-//	{
-//		cv::Point output(cv::max(0, limit.x + abs(limit.x - begin) / 2), currPosition.y);
-//		return output;
-//	}
-//}
 
 cv::Point filter::algos::IDPlateRectifier::_findNextRightPivotPoint(const cv::Mat & plateImage, const cv::Point & currPosition, const cv::Point & limit)
 {
@@ -1124,80 +868,6 @@ cv::Point filter::algos::IDPlateRectifier::_findNextRightPivotPoint(const cv::Ma
 	cv::Point output(begin + (plateImage.cols - 1 - begin) / 2, currPosition.y);
 	return output;
 }
-
-
-//int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
-//{
-//	const double nbSampleTheta = 60;
-//	const double nbSampleRho = 60;
-//	const double minAngle = -CV_PI / 12; // (- 15 degrees)
-//	const double maxAngle = CV_PI / 12; // ( + 15 degrees)
-//	const double rho = lineVec[0];
-//	const double strideTheta = (maxAngle - minAngle) / nbSampleTheta;
-//	const double strideRho = (rho) / nbSampleRho;
-//
-//	int sum = 0;
-//	int sumMax = 0;
-//	double tBest = 0.0;
-//
-//	cv::Point2f bestPoint;
-//
-//	// Rotate around pivot point from max angle to min angle
-//	for (double t = maxAngle; t > minAngle; t -= strideTheta)
-//	{
-//		sum = 0;
-//		double sinT = sin(t);
-//		double cosT = cos(t);
-//
-//		// Analyze each pixel value from pivot point and rotating line. The one with the largest sum of white pixel is the line we're looking for
-//		for (double r = 1; r < rho; r += strideRho)
-//		{
-//			int x = cv::max(0.0, cv::min((double)image.cols - 1, origin.x + r * cosT));
-//			int y = cv::max(0.0, cv::min((double)image.rows - 1, origin.y + r * sinT));
-//
-//			// TODO: TM: Weid behavior with pointers (using .at insteand) <= Optimize
-//			//const uchar * rows = image.ptr(y);
-//			//const int debugVAlue = rows[x];
-//			const int channelValue = static_cast<int>(image.at<uchar>(y, x));
-//			//if (rows[x] == 255)
-//			if (channelValue == 255)
-//			{
-//				sum++;
-//			}
-//		}
-//
-//		// Debug
-//		const int debugX = origin.x + rho * cosT;
-//		const int debugY = origin.y + rho * sinT;
-//		//cv::Mat searchLine = convertGrayscaleToBGR(image);
-//		//cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
-//		//cv::circle(searchLine, cv::Point2f(debugX, debugY), 3, cv::Scalar(0, 0, 255), 3);
-//		//cv::line(searchLine, origin, cv::Point2f(debugX, debugY), cv::Scalar(0, 255, 0), 2);
-//		//showImage(searchLine);
-//
-//		// Each time we find a new best line, store the angle
-//		if (sumMax < sum)
-//		{
-//			sumMax = sum;
-//			tBest = t;
-//
-//			// Debug
-//			bestPoint = cv::Point2f(debugX, debugY);
-//		}
-//	}
-//
-//	//// Debug
-//	//cv::Mat temp = convertGrayscaleToBGR(image);
-//	//cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
-//	//cv::circle(temp, bestPoint, 2, cv::Scalar(255, 0, 0), 3);
-//	//cv::line(temp, origin, bestPoint, cv::Scalar(0, 0, 255), 4);
-//	//showImage(temp);
-//
-//	// Output angle
-//	out_bestLineParameters = cv::Vec2f(rho, tBest);
-//
-//	return sumMax;
-//}
 
 int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
 {
@@ -1288,86 +958,6 @@ int filter::algos::IDPlateRectifier::findBestHorizontalLine(const cv::Mat & imag
 
 	return sumMax;
 }
-
-//int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
-//{
-//	const double nbSampleTheta = 100;
-//	const double nbSampleRho = 60;
-//	const double minAngle = CV_PI / 2 - CV_PI / 12; // (- 15 degrees)
-//	const double maxAngle = CV_PI / 2 + CV_PI / 12; // ( + 15 degrees)
-//	const double rho = lineVec[0];
-//	const double strideTheta = (maxAngle - minAngle) / nbSampleTheta;
-//	const double strideRho = (rho / nbSampleRho) < 1.0 ? 1.0 : (rho / nbSampleRho);
-//
-//	int sum;
-//	int maxSum = 0;
-//	double tBest = 0.0;
-//	cv::Point2f bestPoint;
-//
-//	for (double t = maxAngle; t > minAngle; t -= strideTheta)
-//	{
-//		sum = 0;
-//		double sinT = sin(t);
-//		double cosT = cos(t);
-//
-//		for (double r = 0.0; r < rho; r += strideRho)
-//		{
-//			int x = cv::min(image.cols - 1, (int)(origin.x + r * cosT + 0.5));
-//			x = cv::max(0, x);
-//
-//			int y = cv::min(image.rows - 1, (int)(origin.y + r * sinT + 0.5));
-//			y = cv::max(0, y);
-//
-//			// Debug
-//			if (_debug > 2)
-//			{
-//				cv::Mat searchLine = filter::algos::IDPlate::convertGray2Color(image);
-//				cv::circle(searchLine, origin, 3, cv::Scalar(255, 0, 255), 2);
-//				cv::circle(searchLine, cv::Point(x, y), 3, cv::Scalar(255, 0, 255), 2);
-//				cv::line(searchLine, origin, cv::Point(x, y), cv::Scalar(0, 255, 0, 4));
-//				filter::algos::IDPlate::showImage(searchLine);
-//			}
-//
-//			//const uchar * rows = image.ptr(y);
-//			const int channelValue = static_cast<int>(image.at<uchar>(y, x));
-//			//if (rows[x] == 255)
-//			if (channelValue == 255)
-//			{
-//				sum++;
-//			}
-//		}
-//
-//		// Debug
-//		double debugX = origin.x + rho * cosT + 0.5;
-//		double debugY = origin.y + rho * sinT + 0.5;
-//		//cv::Mat searchLine = convertGrayscaleToBGR(image);
-//		//cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
-//		//cv::circle(searchLine, cv::Point2f(debugX, debugY), 3, cv::Scalar(0, 0, 255), 3);
-//		//cv::line(searchLine, origin, cv::Point2f(debugX, debugY), cv::Scalar(0, 255, 0), 2);
-//		//showImage(searchLine);
-//
-//
-//		if (maxSum < sum)
-//		{
-//			maxSum = sum;
-//			tBest = t;
-//
-//			// Debug
-//			bestPoint = cv::Point2f(debugX, debugY);
-//		}
-//	}
-//
-//	//// Debug
-//	//cv::Mat temp = IDPlateRectifier::convertGrayscaleToBGR(image);
-//	//cv::circle(temp, origin, 2, cv::Scalar(255, 0, 0), 3);
-//	//cv::circle(temp, bestPoint, 2, cv::Scalar(255, 0, 0), 3);
-//	//cv::line(temp, origin, bestPoint, cv::Scalar(0, 0, 255), 4);
-//	//IDPlateRectifier::showImage(temp);
-//
-//	out_bestLineParameters = cv::Vec2f(rho, tBest);
-//
-//	return maxSum;
-//}
 
 int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image, const cv::Point & origin, const cv::Vec2f & lineVec, cv::Vec2f & out_bestLineParameters)
 {

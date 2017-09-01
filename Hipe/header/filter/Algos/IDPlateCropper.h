@@ -27,29 +27,30 @@ namespace filter
 				bfilterPasses = 2;
 				_debug = 0;
 			}
-			REGISTER_P(bool, useGPU);
-			REGISTER_P(int, bfilterPasses);
-			REGISTER_P(int, _debug);
+			
+			REGISTER_P(bool, useGPU);		//!< Should the GPU be used to apply the bilateral filtering or not
+			REGISTER_P(int, bfilterPasses);	//!< The desired number of times the bilateral filtering should be applied
+			REGISTER_P(int, _debug);		//!< The desired debug level. The default level is 0 (disabled). A higher value will enable more debug informations
 
 		public:
 			HipeStatus process() override;
 
 		private:
 			/**
-			 * \brief Preprocess plate image and binarize it then search for blobs. The biggest one will be the ROI with the text
-			 * \param plateImage the ID plate photo in color
-			 * \return an extracted ROI containing only the plate and its text
+			 * \brief Preprocess the plate image by binarizing it then searching for blobs. The biggest one will be the ROI englobing the text area
+			 * \param plateImage The input plate image in color
+			 * \return A cropped color image of the found ROI englobing the text area
 			 */
 			cv::Mat processPlateImage(const cv::Mat& plateImage);
 
 
-			/**
-			 * \brief Find and mask all the blobs of and image
-			 * \param plateImageBlackWhite A binary input image
-			 * \param color The color used to mask all found and processed blobs
-			 * \return The position of the biggest blob in the image
-			 */
-			cv::Point maskBlobs(cv::Mat& plateImageBlackWhite, const cv::Scalar& color);
+			///**
+			// * \brief Search for all the blobs in a image, and find the biggest one.
+			// * \param plateImageBlackWhite A binary (black and white) input image
+			// * \param color The color used to mask all found and processed blobs
+			// * \return The position of the biggest blob in the image
+			// */
+			//cv::Point maskBlobs(cv::Mat& plateImageBlackWhite, const cv::Scalar& color);
 		};
 
 		ADD_CLASS(IDPlateCropper, useGPU, bfilterPasses, _debug);

@@ -130,7 +130,17 @@ namespace filter
 			 */
 			cv::Mat applyMorphTransform(const cv::Mat& image, cv::MorphShapes morphShape, cv::MorphTypes morphType, cv::Size kernelSize);
 
-
+			/**
+			 * \brief Search all the blobs in an image and analyse them to find the biggest one.
+			 * \param binaryImage The image to analyse
+			 * \param fillColor The color to fill the found blobs in
+			 * \param threshold The theshold used to search the blobs
+			 * \param out_blobArea Output parameter. The biggest found blob's area
+			 * \param debug The debug level
+			 * \return The position of the biggest found blob as a cv::Point object
+			 */
+			cv::Point findBiggestBlobPos(cv::Mat& binaryImage, cv::Scalar fillColor, cv::Scalar biggestBlobFillColor, unsigned char threshold, float& out_blobArea, int debug = 0);
+			
 			/**
 			 * \brief Find lines (Y coordinates) on an image separating multiple groups of characters. Characters must be sorted
 			 * \param image The image on which to find the lines
@@ -251,7 +261,7 @@ namespace filter
 			 * \param image The image to show
 			 * \param waitTime The time in ms the image will be shown. If waitTime = 0 the image will be show until a key is pressed. To not wait for a key to be pressed waitTime must be < 0
 			 */
-			void showImage(const cv::Mat& image, int waitTime = 0);
+			void showImage(const cv::Mat& image, std::string name = "debug image", bool shouldDestroy = true, int waitTime = 0);
 			
 		}
 	}
