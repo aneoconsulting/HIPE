@@ -53,8 +53,6 @@ namespace filter
 			REGISTER_P(int, skip_frame);
 
 			REGISTER_P(bool, wait);
-			
-
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 

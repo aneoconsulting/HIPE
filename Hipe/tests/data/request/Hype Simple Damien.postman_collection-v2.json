@@ -1,0 +1,611 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Hype Simple Damien",
+		"_postman_id": "9c71ab5c-6ed1-7bb2-1ed5-a170178faf6d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hype test without Algos",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"AlgoName\",\n\n\"orchestrator\" : \"DefaultScheduler\"\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype test with Algos",
+			"request": {
+				"url": "192.168.6.109:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"AlgoName\",\n\"filters\" : \n[\n\t{\"filter\" :\n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"toto\" \n\t\t} \n\t},\n\t{\"filter\" :\n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"tata\",\n\t\t\t\"need\" : [\"toto\"]\n\t\t} \n\t},\t\t\n\t\t{\"filter\" :\n\t\t{ \n\t\t\t\"type\" : \"Gaussian\",\n\t\t\t\"sigma\" : 15,\n\t\t\t\"name\" : \"Gauss\",\n\t\t\t\"need\" : [\"toto\", \"tata\"]\n\t\t} \n\t},\n\t{\"filter\" : \n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"toto2\",\n\t\t\t\"need\" : [\"toto\", \"tata\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"filter\" : \n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"toto2\", \"Gauss\"],\n\t\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\results\\\\result.jpg\"\n\t\t} \n\t\t\t\n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\gitlab_aneo\\\\hipe\\\\Data\\\\Images\\\\ok.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request without algo"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype test Show Image",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{ \n\t\t\n\t\t\t\"ratio\" : 3,\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"need\" : [\"root\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RotateImage\" : \n\t\t{ \n\t\t\n\t\t\t\"angle\" : 180,\n\t\t\t\"name\" : \"rotate\",\n\t\t\t\"need\" : [\"resize\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"ShowImage\" : \n\t\t{ \n\t\t\t\"wait\" : 1,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple image from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype read file and return json",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"ResultFilter\" : \n\t\t{\n\t\t\t\"type\" : \"ResultFilter\",\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t}\n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"type\" : \"Resize\",\n\t\t\t\"ratio\" : 15.0,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"ShowImage\" : \n\t\t{\n\t\t\t\"type\" : \"ShowImage\",\n\t\t\t\"name\" : \"debug\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t}\n\t}],\n\t\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request reading a local file and return the json values"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype test Show Video",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"StreamResultFilter\" : \n\t\t{ \n\t\t\t\n\t\t\t\"port\" : 8864,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"ratio\" : 3.0,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain\\\\Data\\\\video\\\\0507_mg21_vue2.avi\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Video ",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"root\"]\n\t\t} \n\t\t\t\n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"C:\\\\Users\\\\ddubuc.ANEO\\\\Dropbox (ANEO)\\\\Slideshow Hipe\\\\video_hipe\\\\HVV2.mp4\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype test Show Video copy",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 1,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"RotateImage\" : \n\t\t{\n\t\t\t\"angle\" : 0,\n\t\t\t\"name\" : \"rotate\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t}\n\t},\n\t{\"StreamResultFilter\" : \n\t\t{ \n\t\t\t\"port\" : 8864,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain\\\\Data\\\\Images\\\\Essai_du_08Juin2016\\\\vue_1.mp4\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Stream Android to stream",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\n\t\t\t\"ratio\" : 1,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"RotateImage\" : \n\t\t{\n\t\t\t\"type\" : \"RotateImage\",\n\t\t\t\"angle\" : 270,\n\t\t\t\"name\" : \"rotate\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t}\n\t},\n\t{\"StreamResultFilter\" : \n\t\t{ \n\t\t\t\n\t\t\t\"port\" : 8864,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t\t\t\n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"STRMVID\",\n\t\t\"path\" : \"rtsp://192.168.1.12:8086\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Pattern detection",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"ResizePattern\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 10,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Akaze\" : \n\t\t{\n\t\t\t\"name\" : \"akaze\",\n\t\t\t\n\t\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"ShowImage\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\n\t\t\"type\" : \"PATTERN\",\n\t\t\"desc\" : \n\t\t\t\t{ \n\t\t\t\t\t\"SQR_CROP\" :\n\t\t\t\t\t{\n\t\t\t\t\t\t\t\"crop\" : [0, 0, 1000, 1000,  \n\t\t\t\t\t\t\t\t\t\t\t0, 0, 500, 500],\n\t\t\t\t\t\t\t\"IMGF\" : \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t \"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t\"IMGF\" : \n\t\t\t\t\t{\n\t\t\t\t\t\t \"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Pattern cropper AKAZE",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 3,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Cropper\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"cropper\",\n\t\t\t\"ratio\" : 10,\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"Akaze\" : \n\t\t{\n\t\t\t\"name\" : \"akaze\",\n\t\t\t\n\t\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\n\t\t\t\"need\" : [\"cropper\"]\n\t\t}\n\t},\n\t{\"ShowImage\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Pattern cropper LATCH (Image)",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 3,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Cropper\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"cropper\",\n\t\t\t\"wait\" : true,\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"Latch\" : \n\t\t{\n\t\t\t\"name\" : \"latch\",\n\t\t\t\n\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\"hessianThreshold\" : 50,\n\t\t\t\n\t\t\t\"need\" : [\"cropper\"]\n\t\t}\n\t},\n\t{\"ShowImage\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"wait\" : true,\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Data\\\\Images\\\\desk.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Pattern LATCH detection",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"ResizePattern\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 5,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Latch\" : \n\t\t{\n\t\t\t\"name\" : \"akaze\",\n\t\t\t\n\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"ShowImage\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\n\t\t\"type\" : \"PATTERN\",\n\t\t\"desc\" : \n\t\t\t\t{ \n\t\t\t\t\t\"SQR_CROP\" :\n\t\t\t\t\t{\n\t\t\t\t\t\t\t\"crop\" : [400, 1000, 500, 500,  \n\t\t\t\t\t\t\t\t\t\t\t0, 0, 500, 500],\n\t\t\t\t\t\t\t\"IMGF\" : \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t \"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Data\\\\Images\\\\desk.jpg\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t\"IMGF\" : \n\t\t\t\t\t{\n\t\t\t\t\t\t \"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Data\\\\Images\\\\desk.jpg\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Pattern cropper LATCH (Streaming)",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 0.6,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"RotateImage\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"rotate\",\n\t\t\t\"angle\" : 270,\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"Cropper\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"cropper\",\n\t\t\t\"wait\" : false,\n\t\t\t\"need\" : [\"rotate\"]\n\t\t}\n\t},\n\t{\"Latch\" : \n\t\t{\n\t\t\t\"name\" : \"latch\",\n\t\t\t\n\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\"hessianThreshold\" : 50,\n\t\t\t\n\t\t\t\"need\" : [\"cropper\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"ResultFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"1\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Tegra camera",
+			"request": {
+				"url": "192.168.1.25:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowCamera\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"root\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"nvcamerasrc ! video/x-raw(memory:NVMM), width=(int)1280, height=(int)720, format=(string)I420, framerate=(fraction)24/1 ! nvvidconv flip-method=2 ! video/x-raw, format=(string)I420 ! videoconvert ! video/x-raw, format=(string)BGR ! appsink\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Tegra Image",
+			"request": {
+				"url": "192.168.1.25:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"root\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"/mnt/ssd/hipe/Data/Images/OK.JPG\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple image from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Tegra Stream camera",
+			"request": {
+				"url": "192.168.1.25:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowCamera\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"StreamResultFilter\" : \n\t\t{ \n\t\t\t\n\t\t\t\"port\" : 8864,\n\t\t\t\"name\" : \"streamResultFilter\",\n\t\t\t\n\t\t\t\"cmd\" : \"appsrc ! videoconvert ! omxh264enc control-rate=2 bitrate=4000000 ! video/x-h264, stream-format=(string)byte-stream ! h264parse ! rtph264pay mtu=1400 ! udpsink host=192.168.1.17 port=8864 sync=false async=false \",\n\t\t\t\"need\" : [\"root\"]\n\t\t} \n\t\t\t\n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"nvcamerasrc ! video/x-raw(memory:NVMM), width=(int)1280, height=(int)720,format=(string)I420, framerate=(fraction)24/1 ! nvvidconv flip-method=2 ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink\",\n\t\t\n\t\t\"test\" : \"nvcamerasrc ! video/x-raw(memory:NVMM), width=(int)640, height=(int)480, format=(string)I420, framerate=(fraction)24/1 ! nvvidconv flip-method=2 ! video/x-raw, format=(string)I420 ! videoconvert ! video/x-raw, format=(string)BGR ! appsink\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show streamed Tegra Camera",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 1,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"oldpath\" : \"udpsrc port=8864 caps=application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264,payload=(int)96 ! queue ! rtph264depay ! openh264dec ! appsink sync=false\",\n\t\t\"path\" : \"udpsrc port=5000 ! application/x-rtp,media=video,clock-rate=90000,encoding-name=H264 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! timeoverlay shaded-background=true deltay=20 ! appsink sync=false\"\n\t\t\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Tegra Video",
+			"request": {
+				"url": "192.168.1.25:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowVideo\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"root\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"/mnt/ssd/hipeExternalDebug/linux64/source/build/opencv-3.2.0/samples/data/vtest.avi\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple image from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Tegra Face Detection Video",
+			"request": {
+				"url": "192.168.1.25:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowVideo\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 1,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"input\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t\t\t\n\t},\t\n\t{\"FaceDetection\" :\n\t\t{ \n\t\t\t\"skip_frame\" : 2,\n\t\t\t\"name\" : \"face\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t},\n\t{\"OverlayFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"overlays\",\n\t\t\t\"need\" : [\"resizing\", \"face\"]\n\t\t} \n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"overlays\"]\n\t\t} \n\t\t\t\n\t},\n\t\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"udpsrc port=8864 ! application/x-rtp,media=video,clock-rate=90000,encoding-name=H264 ! rtph264depay ! h264parse ! omxh264dec ! videoconvert ! timeoverlay shaded-background=true deltay=20 ! appsink sync=false\",\n\t\t\"lpath\" : \"nvcamerasrc ! video/x-raw(memory:NVMM), width=(int)640, height=(int)480, format=(string)I420, framerate=(fraction)24/1 ! nvvidconv flip-method=2 ! video/x-raw, format=(string)I420 ! videoconvert ! video/x-raw, format=(string)BGR ! appsink\"\n\t\t\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple image from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show local Stream camera copy",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowCamera\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 2,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"StreamResultFilter\" : \n\t\t{ \n\t\t\t\n\t\t\t\"port\" : 8864,\n\t\t\t\"name\" : \"streamResultFilter\",\n\t\t\t\n\t\t\t\"cmd\" : \"appsrc ! videoconvert ! openh264enc ! video/x-h264, stream-format=(string)byte-stream ! h264parse ! rtph264pay mtu=1400 ! udpsink host=192.168.1.25 port=8864 sync=false async=false \",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t\t\t\n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"0\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Pattern cropper LATCH (Video)",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\"\n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 2,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Cropper\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"cropper\",\n\t\t\t\"wait\" : false,\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"Latch\" : \n\t\t{\n\t\t\t\"name\" : \"latch\",\n\t\t\t\n\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\"hessianThreshold\" : 50,\n\t\t\t\"skip_frame\" : 2,\n\t\t\t\"need\" : [\"cropper\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"1\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Local Face Detection Video",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowVideo\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 2,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"input\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t\t\t\n\t},\t\n\t{\"FaceDetection\" :\n\t\t{ \n\t\t\t\"skip_frame\" : 2,\n\t\t\t\"name\" : \"face\",\n\t\t\t\"need\" : [\"input\"]\n\t\t} \n\t},\n\t{\"OverlayFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"overlays\",\n\t\t\t\"need\" : [\"resizing\", \"face\"]\n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 0.5,\n\t\t\t\"name\" : \"resizing2\",\n\t\t\t\"need\" : [\"overlays\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"resizing2\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"0\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple image from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Tegra Latch video",
+			"request": {
+				"url": "192.168.1.25:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowVideo\",\n\"filters\" : \n[\n\t\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\"\n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 2,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Cropper\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"cropper\",\n\t\t\t\"wait\" : false,\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"Latch\" : \n\t\t{\n\t\t\t\"name\" : \"latch\",\n\t\t\t\n\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\"hessianThreshold\" : 50,\n\t\t\t\"skip_frame\" : 2,\n\t\t\t\"need\" : [\"cropper\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"udpsrc port=8864 ! application/x-rtp,media=video,clock-rate=90000,encoding-name=H264 ! rtph264depay ! h264parse ! omxh264dec ! videoconvert ! timeoverlay shaded-background=true deltay=20 ! appsink sync=false\",\n\t\t\"lpath\" : \"nvcamerasrc ! video/x-raw(memory:NVMM), width=(int)640, height=(int)480, format=(string)I420, framerate=(fraction)24/1 ! nvvidconv flip-method=2 ! video/x-raw, format=(string)I420 ! videoconvert ! video/x-raw, format=(string)BGR ! appsink\"\n\t\t\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple image from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Local Face landmark Video copy",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowVideo\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 3,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\t\n\t{\"FaceLandmark\" :\n\t\t{ \n\t\t\t\"skip_frame\" : 2,\n\t\t\t\"name\" : \"face\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t},\n\t{\"OverlayMatFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"overlays\",\n\t\t\t\"need\" : [\"resizing\", \"face\"]\n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 0.5,\n\t\t\t\"name\" : \"resizing2\",\n\t\t\t\"need\" : [\"overlays\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"fullscreen\" : true,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"resizing2\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"0\",\n\t\t\"loop\" : true\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple image from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Demo LATCH (Video) ",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\"\n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 1,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Cropper\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"cropper\",\n\t\t\t\"wait\" : false,\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"Latch\" : \n\t\t{\n\t\t\t\"name\" : \"latch\",\n\t\t\t\n\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\"hessianThreshold\" : 50,\n\t\t\t\"skip_frame\" : 2,\n\t\t\t\"need\" : [\"cropper\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"fullscreen\" : true,\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"C:\\\\Users\\\\ddubuc.ANEO\\\\Dropbox (ANEO)\\\\Slideshow Hipe\\\\video_hipe\\\\HVV2.mp4\",\n\t\t\"loop\" : true\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show tegra Face landmark Video",
+			"request": {
+				"url": "192.168.1.25:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowVideo\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 2,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"input\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t\t\t\n\t},\t\n\t{\"FaceLandmark\" :\n\t\t{ \n\t\t\t\"skip_frame\" : 2,\n\t\t\t\"name\" : \"face\",\n\t\t\t\"need\" : [\"input\"]\n\t\t} \n\t},\n\t{\"OverlayMatFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"overlays\",\n\t\t\t\"need\" : [\"resizing\", \"face\"]\n\t\t} \n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"fullscreen\" : 1,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"overlays\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"nvcamerasrc ! video/x-raw(memory:NVMM), width=(int)640, height=(int)480, format=(string)I420, framerate=(fraction)24/1 ! nvvidconv flip-method=2 ! video/x-raw, format=(string)I420 ! videoconvert ! video/x-raw, format=(string)BGR ! appsink\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple image from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Demo killer",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"killer\",\n\n\"command\" : \n\t{\n\t\t\"type\" : \"kill\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Demo killer tegra",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"killer\",\n\n\"command\" : \n\t{\n\t\t\"type\" : \"kill\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Command Exit",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"exit\",\n\n\"command\" : \n\t{\n\t\t\"type\" : \"exit\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype FingerPrint LATCH detection",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\n\t\t\"type\" : \"PATTERN\",\n\t\t\"desc\" : \n\t\t\t\t{ \n\t\t\t\t\t\"SQR_CROP\" :\n\t\t\t\t\t{\n\t\t\t\t\t\t\t\"IMGF\" : \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t \"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\NISTSpecialDatabase4GrayScaleImagesofFIGS\\\\Pattern\\\\f0046_07.png\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t\"SEQIMGD\" : \n\t\t\t\t\t{\n\t\t\t\t\t\t \"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\NISTSpecialDatabase4GrayScaleImagesofFIGS\\\\sd04\\\\png_txt\\\\figs_0\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		}
+	]
+}
