@@ -52,13 +52,10 @@ cv::Point filter::algos::IDPlate::findBiggestBlobPos(cv::Mat& binaryImage, cv::S
 	int maxArea = -1;
 	cv::Point maxAreaPos(-1, -1);
 
-	//const int threshold = 128;
-
 	// For each pixel, if pixel color is greater than threshold, it's a blob : paint it black. The biggest found area is the whole plate
 	for (int y = 0; y < outputImage.size().height; y++)
 	{
-		//const uchar* row = outputImage.ptr<uchar>(y);
-		const uchar* row = outputImage.ptr(y);
+		const uchar* row = outputImage.ptr<uchar>(y);
 
 		for (int x = 0; x < outputImage.size().width; x++)
 		{
@@ -71,14 +68,15 @@ cv::Point filter::algos::IDPlate::findBiggestBlobPos(cv::Mat& binaryImage, cv::S
 
 				if (currArea > maxArea)
 				{
-					// Fill max area in max area color
-					//cv::floodFill(outputImage, pos, biggestBlobFillColor);
+					 // Fill max area in max area color
+					cv::floodFill(outputImage, pos, biggestBlobFillColor);
 
-					// Fill old max area in fill color
-					//if (maxAreaPos != cv::Point(-1, -1)) cv::floodFill(outputImage, maxAreaPos, fillColor);
+					 // Fill old max area in fill color
+					if (maxAreaPos != cv::Point(-1, -1)) cv::floodFill(outputImage, maxAreaPos, fillColor);
 
 					// Update max area value
 					maxArea = currArea;
+
 					// Update max area pos
 					maxAreaPos = pos;
 

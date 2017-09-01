@@ -42,15 +42,6 @@ namespace filter
 			 * \return A cropped color image of the found ROI englobing the text area
 			 */
 			cv::Mat processPlateImage(const cv::Mat& plateImage);
-
-
-			///**
-			// * \brief Search for all the blobs in a image, and find the biggest one.
-			// * \param plateImageBlackWhite A binary (black and white) input image
-			// * \param color The color used to mask all found and processed blobs
-			// * \return The position of the biggest blob in the image
-			// */
-			//cv::Point maskBlobs(cv::Mat& plateImageBlackWhite, const cv::Scalar& color);
 		};
 
 		ADD_CLASS(IDPlateCropper, useGPU, bfilterPasses, _debug);

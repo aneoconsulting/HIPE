@@ -133,7 +133,8 @@ namespace filter
 			/**
 			 * \brief Search all the blobs in an image and analyse them to find the biggest one.
 			 * \param binaryImage The image to analyse
-			 * \param fillColor The color to fill the found blobs in
+			 * \param fillColor The color to fill the found blobs in. Must be < to threshold
+			 * \param biggestBlobFillColor The color to fill the biggest found blob in. Must be < to threshold
 			 * \param threshold The theshold used to search the blobs
 			 * \param out_blobArea Output parameter. The biggest found blob's area
 			 * \param debug The debug level
