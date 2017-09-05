@@ -6,7 +6,7 @@
 #include <orchestrator/Orchestrator.h>
 #include <filter/data/Composer.h>
 #include <core/HipeException.h>
-#include "../../build/source/http/CommandManager.h"
+#include <http/CommandManager.h>
 #include "http/CommandExecuter.h"
 
 #ifdef USE_GPERFTOOLS
