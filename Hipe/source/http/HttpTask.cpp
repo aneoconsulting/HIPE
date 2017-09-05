@@ -6,6 +6,8 @@
 #include <orchestrator/Orchestrator.h>
 #include <filter/data/Composer.h>
 #include <core/HipeException.h>
+#include "../../build/source/http/CommandManager.h"
+#include "http/CommandExecuter.h"
 
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
@@ -39,20 +41,29 @@ void http::HttpTask::runTask()
 			{
 				std::string command = treeRequest.get_child("command").get<std::string>("type");
 				ptree ltreeResponse;
+
+				auto lambda = [](std::string OptionName) { return false; };
+				typedef CommandManager::function_traits<decltype(lambda)> traits;
+				traits::f_type ff = lambda;
+				CommandManager::callOption(command, CommandExecuter::kill_command_executer, &ltreeResponse);
+
+				//auto lambda2 = [this](std::string OptionName) { return false; };
+				//typedef CommandManager::function_traits<decltype(lambda2)> traits2;
+				//traits2::f_type ff1 = lambda2;
+				//CommandManager::callOption("kill", ff1);
+
+
 				if (command.find("kill") != std::string::npos || command.find("exit") != std::string::npos)
 				{
-					orchestrator::OrchestratorFactory::getInstance()->killall();
-					ltreeResponse.add("Status", "Task has been killed");
-					if(command.find("exit") != std::string::npos)
-						ltreeResponse.add("process", "Server is exiting");
-
+					/*orchestrator::OrchestratorFactory::getInstance()->killall();
+					ltreeResponse.add("Status", "Task has been killed");*/
+					/*if(command.find("exit") != std::string::npos)
+						ltreeResponse.add("process", "Server is exiting");*/
 				}
 				else
 				{
 					ltreeResponse.add("Status", command + "is unkown command");
 				}
-				
-				
 				
 				std::stringstream ldataResponse;
 				write_json(ldataResponse, ltreeResponse);
