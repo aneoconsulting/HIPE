@@ -8,6 +8,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The ShowVideo filter is used to show a video in a dedicated window
+		 */
 		class ShowVideo : public IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
@@ -15,15 +18,15 @@ namespace filter
 
 			REGISTER(ShowVideo, ()), _connexData(data::INOUT)
 			{
-				waitkey = 10;
+				waitkey = 10;			
 				fullscreen = false;
 				hasWindow = false;
 			}
 
-			REGISTER_P(int, waitkey);
-			REGISTER_P(bool, fullscreen);
+			REGISTER_P(int, waitkey);			//<! The time a frame should be shown. A null value will let the frame be shown permanently and wait for user input.
+			REGISTER_P(bool, fullscreen);		//<! should the video be played in exclusive fullscreen mode or in a dedicated window?
 
-			std::atomic<bool> hasWindow;
+			std::atomic<bool> hasWindow;		//<! [TODO] Boolean used to keep track of the video's dedicated window
 
 
 			~ShowVideo()

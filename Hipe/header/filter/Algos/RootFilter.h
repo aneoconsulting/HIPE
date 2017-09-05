@@ -8,6 +8,9 @@
 
 namespace filter {
 	namespace Algos {
+		/**
+		 * \brief The RootFilter filter is the head of graph filter. Needed by every graph as a data entry point
+		 */
 		class RootFilter : public filter::IFilter
 		{
 			//data::ConnexInput<data::Data> _connexData;
@@ -33,12 +36,22 @@ namespace filter {
 				return HipeStatus::OK;
 			}
 			
+			/**
+			 * \brief Overloaded << operator. Can be used to add data to the ConnexData port. \see ConnexData
+			 * \param element the data to add to the connector
+			 * \return A reference to the filter
+			 */
 			RootFilter &operator<<(data::Data & element)
 			{
 				_connexData.push(element); //ICI COPY constructor data bug with fields
 				return *this;
 			}
 
+			/**
+			* \brief Overloaded << operator. Can be used to add images to the ConnexData port. \see ConnexData
+			* \param element the image to add to the connector.
+			* \return A reference to the filter
+			*/
 			RootFilter &operator<<(cv::Mat & element)
 			{
 				data::ImageData image(element);

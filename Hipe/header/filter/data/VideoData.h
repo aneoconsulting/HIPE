@@ -5,6 +5,10 @@
 
 namespace filter {
 	namespace data {
+		/**
+		 * \brief VideoData is the base data type used to handle videos. 
+		 * \tparam Derived 
+		 */
 		template <typename Derived>
 		class VideoData : public IOData<Data, Derived>
 		{

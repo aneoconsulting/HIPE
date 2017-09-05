@@ -9,7 +9,7 @@ namespace filter
 			return cv::Mat::zeros(0, 0, CV_8UC1);
 		}
 
-		StreamVideoInput::StreamVideoInput(): VideoData(STRMVID)
+		StreamVideoInput::StreamVideoInput() : VideoData(STRMVID)
 		{
 		}
 
@@ -30,7 +30,7 @@ namespace filter
 		{
 		}
 
-		void copyTo(StreamVideoInput& left) 
+		void copyTo(StreamVideoInput& left)
 		{
 			throw HipeException("Not yet implemented copy of StreamVideoInput");
 		}
@@ -56,7 +56,7 @@ namespace filter
 
 			//This()._capture.reset(CaptureVideoFactory::getInstance()->getCaptureVideo(instanceName, _filePath.string()), [](CaptureVideo*) {});
 			This()._capture = data.This_const()._capture;
-			
+
 			if (This()._capture.get()->create() != OK)
 				throw HipeException("Cannot create Streaming capture");
 

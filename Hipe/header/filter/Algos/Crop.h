@@ -13,13 +13,24 @@ namespace filter
 {
 	namespace Algos
 	{
+		/**
+		 * \brief The UserData struct stores the data relative to the user mouse click input
+		 */
 		struct UserData {
-			bool clicked;
-			cv::String windowName;
-			cv::Mat img;
-			std::vector<cv::Point> areaInfos;
+			bool clicked;						//<! Does the user already clicked on the window?
+			cv::String windowName;				//<! The name of the window on which the user clicked
+			cv::Mat img;						//<! The data of the image (the one in the window) on which the user clicked
+			std::vector<cv::Point> areaInfos;	//<! The area the user selected by clickng and dragging the mouse
 		};
 
+		/**
+		 * \brief Use this method as a mouse callback to know where the user clicked and define the area he selected.
+		 * \param event The type of the mouse event that occured
+		 * \param x The x position (relative to the targeted window) where the user clicked.
+		 * \param y The y position (relative to the targeted window) where the user clicked.
+		 * \param f [TODO]
+		 * \param _userData The data relative to where the user clicked.
+		 */
 		inline void mouse_call(int event, int x, int y, int f, void* _userData){
 			auto& userData = *static_cast<UserData *>(_userData);
 
@@ -61,6 +72,13 @@ namespace filter
 			}
 		}
 
+		/**
+		 *[TODO]
+		 * \brief Handles the user mouse input on an OpenCV window, and the area (region of interest) he selects
+		 * \param imageRef The image on which the user will select areas
+		 * \param userData The structure where the user input data will be stored. \see UserData
+		 * \return The extracted image data of the region of interest the user selected.
+		 */
 		inline cv::Mat objectAreaDrawer(const Mat & imageRef, UserData & userData)
 		{
 			const char * winName = "AreaDrawer";
@@ -118,6 +136,11 @@ namespace filter
 			return  crop;
 		}
 
+		/**
+		 * \brief The Crop filter will let the user manually select (with mouse input) a region of interest in an image.
+		 *  The filter will await an image as input and will output a list of regions of interest.
+		 *  Prefer using the Cropper filter and the PatternData data type.
+		 */
 		class Crop : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageData, data::ImageArrayData> _connexData;

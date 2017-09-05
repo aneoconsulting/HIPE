@@ -15,9 +15,18 @@ namespace filter
 {
 	namespace data
 	{
+		/**
+		 * \brief Input filter used to acquire data from a stream
+		 */
 		class FILTER_EXPORT StreamVideoInput : public VideoData<StreamVideoInput>
 		{
+			/**
+			 * \brief the url (path) to the stream
+			 */
 			boost::filesystem::path _filePath;
+			/**
+			 * \brief the data of the stream
+			 */
 			std::shared_ptr<CaptureVideo> _capture;
 			
 			cv::Mat asOutput() const;
@@ -31,6 +40,10 @@ namespace filter
 
 			StreamVideoInput(const StreamVideoInput &data);
 
+			/**
+			 * \brief Constructor with stream's url as an std::string object
+			 * \param url The url to the stream
+			 */
 			StreamVideoInput(const std::string & url);
 
 			
@@ -38,8 +51,16 @@ namespace filter
 			
 			virtual ~StreamVideoInput();
 
+			/**
+			 * \brief 
+			 * \return Returns the stream's next frame or a black image if the playback ended
+			 */
 			Data newFrame();
 
+			/**
+			 * \brief 
+			 * \return Returns true if there's no data
+			 */
 			bool empty() const
 			{
 				cv::Mat data;

@@ -38,8 +38,6 @@ namespace filter
 						This->crops.clear();
 
 					This->crops.push(crop);
-
-
 				}
 			});
 		}

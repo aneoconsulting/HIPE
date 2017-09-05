@@ -15,20 +15,24 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * [TODO]
+		 * \brief The StreamResultFilter filter is used to stream the result of a graph to a distant target.
+		 */
 		class StreamResultFilter : public IFilter
 		{
 			//data::ConnexOutput<filter::data::ImageData> connData;
 			CONNECTOR_OUT(data::ImageData);
 
-			core::queue::ConcurrentQueue<filter::data::ImageData> queue;
-			struct timeval current_time;
-			int fps_avg;
-			int nb_frame;
+			core::queue::ConcurrentQueue<filter::data::ImageData> queue;	//<! [TODO] unused ?
+			struct timeval current_time;	//<! The current time
+			int fps_avg;	//<! [TODO] The average FPS at which the video is played
+			int nb_frame;	//<! [TODO]
 			
 
 			// second part of sender pipeline
-			std::stringstream uri;
-			cv::VideoWriter writer;
+			std::stringstream uri;	//<! The uri of the device on which the video will be streamed
+			cv::VideoWriter writer;	//<! [TODO]
 
 			/* int setenv(const char *name, const char *value, int overwrite) */
 			/* { */
@@ -55,9 +59,9 @@ namespace filter
 			}
 
 			
-			REGISTER_P(int, port);
+			REGISTER_P(int, port);			//<! The port on which the target device is listening
 
-			REGISTER_P(std::string, cmd);
+			REGISTER_P(std::string, cmd);	//<! The command line containing all the streaming parameters
 
 			~StreamResultFilter()
 			{
@@ -75,8 +79,16 @@ namespace filter
 			}
 
 		public:
+			/**
+			 * \brief [TODO] Computes the average fps at which the video is played
+			 * \return [TODO]
+			 */
 			HipeStatus computeFPS();
 
+			/**
+			 * \brief Get the dimensions of the video
+			 * \return Returns the dimensions of the video as a cv::Size object
+			 */
 			cv::Size getImageDimension();
 
 			HipeStatus process();

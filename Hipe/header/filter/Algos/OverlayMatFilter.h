@@ -11,6 +11,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief [TODO]
+		 */
 		class OverlayMatFilter : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;

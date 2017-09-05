@@ -7,6 +7,10 @@
 
 namespace filter {
 	
+	/**
+	 * \brief The IFilter interface is used to specialize a filter to process image based data.
+	 * [TODO]
+	 */
 	class IFilter : public filter::Model
 	{
 	protected:

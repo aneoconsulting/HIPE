@@ -10,6 +10,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The Resize filter will resize an image (downscale or upscale)
+		 */
 		class Resize : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
@@ -22,9 +25,9 @@ namespace filter
 				height = 0;
 			}
 
-			REGISTER_P(double, ratio);
-			REGISTER_P(int, width);
-			REGISTER_P(int, height);
+			REGISTER_P(double, ratio);	// The factor by which the image must be rescaled.
+			REGISTER_P(int, width);		// If a width and height is provided the image will be rescaled to these values. The width to which the image must be rescaled
+			REGISTER_P(int, height);	// If a width and height is provided the image will be rescaled to these values. The height to which the image must be rescaled
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 

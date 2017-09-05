@@ -46,13 +46,11 @@ namespace filter
 						This->shapes.clear();
 
 				This->shapes.push(data::ImageData(matShapes));
-
-
 				}
 			});
 		}
 
-		void draw_polyline(cv::Mat &img, const dlib::full_object_detection& d, const int start, const int end, bool isClosed = false)
+		void draw_polyline(cv::Mat &img, const dlib::full_object_detection& d, const int start, const int end, bool isClosed)
 		{
 			std::vector <cv::Point> points;
 			for (int i = start; i <= end; ++i)

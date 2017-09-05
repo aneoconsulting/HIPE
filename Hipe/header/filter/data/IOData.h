@@ -9,6 +9,9 @@ namespace filter
 {
 	namespace data
 	{
+		/**
+		 * \brief [TODO]
+		 */
 		class Data;
 		template <typename Base, typename Derived>	class IOData;
 
@@ -141,6 +144,11 @@ namespace filter
 			}
 		};
 
+		/**
+		 * \brief [TODO]
+		 * \tparam Base 
+		 * \tparam Derived 
+		 */
 		template <typename Base, typename Derived>
 		class IOData : public Base
 		{

@@ -9,6 +9,9 @@
 
 namespace filter {
 	namespace data {
+		/**
+		 * \brief [TODO]
+		 */
 		class OutputData : public IOData<ImageArrayData, OutputData>
 		{
 			std::string result;

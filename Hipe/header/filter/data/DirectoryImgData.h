@@ -3,8 +3,14 @@
 
 namespace filter {
 	namespace data {
+		/**
+		 * \brief DirectoryImageData is the data type used to handle a collection of images contained in a folder. Uses OpenCV.
+		 */
 		class DirectoryImgData : public IOData<ImageArrayData, DirectoryImgData>
 		{
+			/**
+			 * \brief The path to the folder containing the images
+			 */
 			std::string _directoryPath;
 		
 			DirectoryImgData() : IOData(data::IODataType::SEQIMGD)
@@ -13,6 +19,10 @@ namespace filter {
 			}
 
 		public:
+			/**
+			 * \brief 
+			 * \param directoryPath The path to where the images are located
+			 */
 			DirectoryImgData(const std::string & directoryPath) : IOData(data::IODataType::SEQIMGD)
 			{
 				Data::registerInstance(new DirectoryImgData());
@@ -51,12 +61,19 @@ namespace filter {
 
 				
 			}	
-			
+			/**
+			* \brief Get the container of the images' data
+			* \return Returns a reference to the std::vector<cv::Mat> object containing the images' data
+			*/
 			std::vector<cv::Mat> & images()
 			{
 				return This()._array;
 			}
 
+			/**
+			* \brief Get data of an image by its index in the container
+			* \return Returns a cv::Mat object containing the image' data
+			*/
 			cv::Mat image(int index)
 			{
 				return This()._array[index];

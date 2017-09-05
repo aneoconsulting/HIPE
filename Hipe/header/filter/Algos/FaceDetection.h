@@ -28,19 +28,23 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The FaceDetection filter is used to detect faces in an image or a video. Uses dlib.
+		 *  Will output a SquareCrop object containing all the found faces
+		 */
 		class FILTER_EXPORT FaceDetection : public filter::IFilter
 		{
-			int count_frame;
-			dlib::frontal_face_detector detector;
-			std::vector<dlib::rectangle> dets;
-			dlib::shape_predictor pose_model;
+			int count_frame;	//<! The number of already processed frames 
+			dlib::frontal_face_detector detector;	//<! The detector object used to find the faces in the images 
+			std::vector<dlib::rectangle> dets;		//<! The list of all the found faces
+			dlib::shape_predictor pose_model;		//<! The model (machine learning) used to identify the faces
 
-			std::atomic<bool> isStart;
-			core::queue::ConcurrentQueue<data::ImageData> imagesStack;
-			core::queue::ConcurrentQueue<data::SquareCrop> crops;
-			data::SquareCrop tosend;
+			std::atomic<bool> isStart;				//<! [TODO] Boolean used to know when the thread is running and the faces should be detected ?
+			core::queue::ConcurrentQueue<data::ImageData> imagesStack;	//<! [TODO] The queue containing the frames to process
+			core::queue::ConcurrentQueue<data::SquareCrop> crops;		//<! [TODO] The queue containing the cropped faces from the images
+			data::SquareCrop tosend;	//<! The found faces to output to the ConnexData port
 
-			boost::thread *thr_server;
+			boost::thread *thr_server;	//<! [TODO] Pointer to the face detection task
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
 			CONNECTOR(data::ImageArrayData, data::SquareCrop);
 
@@ -59,14 +63,22 @@ namespace filter
 				startDetectFace();
 			}
 
-			REGISTER_P(int, skip_frame);
+			REGISTER_P(int, skip_frame);	//<! The number of frames to skip between each detection
 
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 			
 		public:
+			/**
+			 * \brief Detects the faces in images. Runs as a separate thread.
+			 *  Fetch its images from the imagesStack queue then feed the detectFaces method.
+			 */
 			void startDetectFace();
 			
+			/**
+			 * \brief Find faces, if present, on an image.
+			 * \param image The image to process and on which we'll try to find faces.
+			 */
 			void detectFaces(const data::ImageData & image);
 
 			

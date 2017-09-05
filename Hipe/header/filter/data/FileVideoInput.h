@@ -13,11 +13,23 @@
 namespace filter
 {
 	namespace data
-	{
+	{		
+		/**
+		 * \brief FileVideoInput is the data type used to handle a video. Uses OpenCV.
+		 */
 		class FileVideoInput : public VideoData<FileVideoInput>
 		{
+			/**
+			 * \brief Path of the video
+			 */
 			boost::filesystem::path _filePath;
+			/**
+			 * \brief Handles the reading of the video's frames
+			 */
 			cv::VideoCapture _capture;
+			/**
+			 * \brief If set to true, loops the video at the end of the playback
+			 */
 			bool _loop;
 
 			cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
@@ -30,6 +42,11 @@ namespace filter
 
 		public:
 
+			/**
+			 * \brief 
+			 * \param filePath the path to the video file
+			 * \param loop Should the video loop on playback end
+			 */
 			FileVideoInput(const std::string & filePath, bool loop) : VideoData(IODataType::VIDF)
 			{
 				Data::registerInstance(new FileVideoInput());
@@ -44,6 +61,9 @@ namespace filter
 				This()._loop = data.This_const()._loop;
 			}
 
+			/**
+			 * \brief Opens a video file from its path, if valid.
+			 */
 			void openFile()
 			{
 				if (This()._capture.isOpened() && !This()._capture.grab())
@@ -74,6 +94,10 @@ namespace filter
 				}
 			}
 
+			/**
+			 * \brief Get the next frame of the video
+			 * \return Return the next frame of the video as a \see Data object, or a black one if the plaback already ended and the loop option is disabled
+			 */
 			Data newFrame()
 			{
 				openFile();
@@ -117,6 +141,12 @@ namespace filter
 				return static_cast<Data>(ImageData(frame));;
 			}
 
+
+			/**
+			 * [TODO]
+			 * \brief Checks if the FileVideo is empty.
+			 * \return  Returns true if the object doesn't contain any data or the video is not opened, false either.
+			 */
 			bool empty() const
 			{
 				return ! (This_const()._capture.isOpened());

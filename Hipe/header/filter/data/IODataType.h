@@ -11,31 +11,39 @@ namespace filter
 	{
 		// only IF(Image from file) has been implmented for now !!
 		//The hexavalue is a string representation for serialization
+		/**
+		 * \brief The multiple data types already implemented
+		 */
 		enum IODataType : hUInt64
 		{
-			ACK = 0x41434b, // this is an acknowledge packet
-			SIMG = 0x53494d47, //Simple Image from base64 data
-			IMGF = 0x494d4746, // Image from File
-			LISTIO = 0x4c495354494f,
-			SEQIMG = 0x534551494d47, // Sequence of Image from base64 data source
-			SEQIMGD = 0x534551494d4744, // Sequence of image from directory
-			VIDF = 0x56494446,
-			SEQVID = 0x534551564944, //Sequence of video from source (Not sure to implement this solution later
-			SEQVIDD = 53455156494444, //Sequence of video from directory
-			STRMVID = 0x5354524d564944, //Streaming Video from capture device 
-			STRMVIDF = 0x5354524d56494446, // Streaming video from file
+			ACK = 0x41434b,					// This is an acknowledge packet
+			SIMG = 0x53494d47,				// Simple Image from base64 data
+			IMGF = 0x494d4746,				// Image from File
+			LISTIO = 0x4c495354494f,		// List of multiple data types
+			SEQIMG = 0x534551494d47,		// Sequence of Image from base64 data source
+			SEQIMGD = 0x534551494d4744,		// Sequence of image from directory
+			VIDF = 0x56494446,				// Video from file
+			SEQVID = 0x534551564944,		// Sequence of video from source (Not sure to implement this solution later
+			SEQVIDD = 53455156494444,		// Sequence of video from directory
+			STRMVID = 0x5354524d564944,		// Streaming Video from capture device 
+			STRMVIDF = 0x5354524d56494446,	// Streaming video from file
 
-			PATTERN = 0x5041545445524e, // Pattern type with crop and data source
-			SQR_CROP = 0x5351525f43524f50, // Square crop
+			PATTERN = 0x5041545445524e,		// Pattern type with crop and data source
+			SQR_CROP = 0x5351525f43524f50,	// Square crop
 
-				TXT = 0x545854,
-				TXT_ARR = 0x5458545f415252,
+			TXT = 0x545854,
+			TXT_ARR = 0x5458545f415252,
 			NONE
 		};
 
 		class DataTypeMapper
 		{
 		public:
+			/**
+			 * \brief Returns the associated \see IODataType enum value from its corresponding name in text
+			 * \param dataTypeString The name of the requested data type
+			 * \return The data type as an \see IODataType enum value
+			 */
 			static IODataType getTypeFromString(const std::string dataTypeString)
 			{
 				//convert string to hexa long value;
@@ -47,14 +55,24 @@ namespace filter
 				}
 				return dataType;
 			}
+			/**
+			 * \brief 
+			 * \param dataType An \see IODataType enum value
+			 * \return The name as an std::string object associated with \see IODataType enum value
+			 */
 			static std::string getStringFromType(const IODataType & dataType)
 			{
 				//convert string to hexa long value;
 				std::string value = ToString(dataType);
-				
+
 				return value;
 			}
 
+			/**
+			 * \brief Checks if a data type is a streamed type one
+			 * \param dataType The queried data type
+			 * \return Returns true if the queried data type is a streaming type one
+			 */
 			static bool isStreaming(const IODataType & dataType)
 			{
 				std::string typeStr = getStringFromType(dataType);
@@ -67,6 +85,11 @@ namespace filter
 				return false;
 			}
 
+			/**
+			 * \brief Checks if a data type is an image type one
+			 * \param dataType The queried data type
+			 * \return Returns true if the queried data type is an image type one
+			 */
 			static bool isImage(const IODataType & dataType)
 			{
 				if (dataType == IODataType::LISTIO)
@@ -81,6 +104,11 @@ namespace filter
 				return false;
 			}
 
+			/**
+			 * \brief Checks if a data type is a video type one
+			 * \param dataType The queried data type
+			 * \return Returns true if the queried data type is a video type one
+			 */
 			static bool isVideo(const IODataType & dataType)
 			{
 				std::string typeStr = getStringFromType(dataType);
@@ -93,6 +121,11 @@ namespace filter
 				return false;
 			}
 
+			/**
+			 * \brief Checks if a data type is a sequence type one
+			 * \param dataType The queried data type
+			 * \return Returns true if the queried data type is a sequence type one
+			 */
 			static bool isSequence(const IODataType & dataType)
 			{
 				/*if (dataType == IODataType::LISTIO)
@@ -106,6 +139,11 @@ namespace filter
 
 				return false;
 			}
+			/**
+			 * \brief Checks if a data type is a list type one
+			 * \param dataType The queried data type
+			 * \return Returns true if the queried data type is a list type one
+			 */
 			static bool isListIo(const IODataType & dataType)
 			{
 				std::string typeStr = getStringFromType(dataType);
@@ -118,6 +156,11 @@ namespace filter
 				return false;
 			}
 
+			/**
+			 * \brief Checks if a data type is a pattern type one
+			 * \param dataType The queried data type
+			 * \return Returns true if the queried data type is a pattern type one
+			 */
 			static bool isPattern(const IODataType & dataType)
 			{
 				std::string typeStr = getStringFromType(dataType);
@@ -132,6 +175,6 @@ namespace filter
 		};
 
 
-		
+
 	}
 }

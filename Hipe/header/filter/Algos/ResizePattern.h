@@ -13,6 +13,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The ResizePattern filter is the Resize filter version adapted to PatternData objects.
+		 */
 		class ResizePattern : public filter::IFilter
 		{
 			CONNECTOR(data::PatternData, data::PatternData);
@@ -22,7 +25,7 @@ namespace filter
 
 			}
 
-			REGISTER_P(double, ratio);
+			REGISTER_P(double, ratio);	// The factor by which the image must be rescaled.
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 

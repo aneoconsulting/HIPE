@@ -12,18 +12,19 @@ namespace filter
 {
 	namespace data
 	{
+		/**
+		 * \brief PatternData is the data type used to handle an image, information on its regions of interest (\see SquareCrop), and a request image to find on those regions. Uses OpenCV. 
+		 */
 		class PatternData : public VideoData<PatternData>
 		{
 		public:
 			friend  class SquareCrop;
 
 		private:
-			SquareCrop _squareCrop;
-			Data _inputSource;
-			
-			ImageData _requestImg;
-
-			int _endOfSource;
+			SquareCrop _squareCrop;	//<! The list of all the regions of interest. A region on interest is represented by a position (its upper left corner), a width, and a height
+			Data _inputSource;		//<! The image where the regions of interest were extracted
+			ImageData _requestImg;	//<! The image to compare to the region of interest
+			int _endOfSource;		//<! End of video source flag
 
 		
 
@@ -52,8 +53,8 @@ namespace filter
 
 		
 			/**
-			* \brief A copy Constructor accepting a list of 2 Data (CROP and SOURCE)
-			* \param left the list of data
+			* \brief A copy Constructor accepting an image (ImageData). Overwrites the input source image
+			* \param inputImage The image used to overrite the input source one
 			*/
 			PatternData(ImageData &inputImage) : VideoData(IODataType::PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
 			{
@@ -117,6 +118,11 @@ namespace filter
 			}
 			
 
+			/**
+			 * \brief Overloaded ssignment operator used to copy PatternData objects.
+			 * \param left The PatternData object to use as a source for the copy
+			 * \return Returns a reference to the copied PatternData object
+			 */
 			virtual PatternData& operator=(const PatternData& left)
 			{
 				if (_This == left._This) return *this;
@@ -134,6 +140,12 @@ namespace filter
 				return *this;
 			}
 
+			/**
+			 * [TODO]
+			 * \brief Overloaded insersion operator used to copy PatternData objects.
+			 * \param left The PatternData object to use as a source for the copy
+			 * \return Returns a reference to the copied PatternData object
+			 */
 			PatternData& operator<<(const PatternData& left)
 			{
 				if (_This == left._This) return *this;
@@ -150,6 +162,11 @@ namespace filter
 				return *this;
 			}
 
+			/**
+			 * \brief Overloaded insetion operator used to overwrite the PatternData object's request image with another one
+			 * \param left The ImageData used to overwrite The PatternData's one
+			 * \return Returns a reference to the copied PatternData objet
+			 */
 			PatternData& operator<<(const ImageData& left)
 			{
 				This()._requestImg = left;
@@ -167,6 +184,11 @@ namespace filter
 				return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);
 			}
 
+			/**
+			* \brief Check if the source included in the pattern is a an image
+			* Info : This code will check if the data need a transformation or not before rootfilter push in the Orchestrator
+			* \return true if the source is an image
+			*/
 			static inline bool isImageSource(IODataType dataType)
 			{
 				return DataTypeMapper::isImage(dataType);
@@ -211,11 +233,19 @@ namespace filter
 				return This()._squareCrop.crops();
 			}
 
+			/**
+			 * \brief Get the regions of interest
+			 * \return The SquareCrop object containing all the regions of interest
+			 */
 			SquareCrop getSquareCrop() const
 			{
 				return This_const()._squareCrop;
 			}
 
+			/**
+			 * \brief Copy the data of the object to another one
+			 * \param left The PatternData object to overwrite
+			 */
 			void copyTo(PatternData& left) const
 			{
 				cv::Mat image;
@@ -228,6 +258,10 @@ namespace filter
 				
 			}
 
+			/**
+			 * \brief 
+			 * \return [TODO]
+			 */
 			Data newFrame()
 			{
 				if (isImageSource(This_const()._inputSource.getType()))
@@ -264,6 +298,10 @@ namespace filter
 				return Data();
 			}
 
+			/**
+			 * \brief Does the request image contain data ?
+			 * \return Returns true if the request image doesn't contain any data
+			 */
 			inline bool empty() const
 			{
 				if (This_const()._requestImg.empty()) return true;
@@ -272,6 +310,12 @@ namespace filter
 				return res.empty();
 			}
 
+			/**
+			 * [TODO]
+			 * \brief 
+			 * \param left
+			 * \return 
+			 */
 			PatternData& operator=(const Data& left)
 			{
 				Data::registerInstance(left);

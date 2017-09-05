@@ -8,6 +8,10 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The ShowImage filter is used to show an image. The image will be shown in a dedicated window whose name will be the same as the one given to the filter graph node in the JSON request.
+		 * The window can be automatically closed after a certain amount of time, or wait until the user do a keyboard input.
+		 */
 		class ShowImage : public IFilter
 		{
 
@@ -25,9 +29,9 @@ namespace filter
 				cv::destroyWindow(_name);
 			}
 
-			REGISTER_P(int, waitkey);
-			REGISTER_P(bool, wait);
-			REGISTER_P(int, wait_ms);
+			REGISTER_P(int, waitkey);		//<! [TODO] unused?
+			REGISTER_P(bool, wait);			//<! should we wait for the user's input to close the window?
+			REGISTER_P(int, wait_ms);		//<! The time to wait before the window is automatically closed. A negative value will let the window be permanently shown and wait for user input.
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 

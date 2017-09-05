@@ -10,29 +10,38 @@
 
 namespace filter
 {
-	
+
 	namespace data
 	{
 		class DataPortBase
 		{
-			
+
 		};
 
 		/**
-		 * \brief Data port contains the data to garentee the transition with all Ifilter and IModel
+		 * \brief Data port contains the data to guarantee the transition with all Ifilter and IModel
 		 * \tparam D the Data type to transit between 2 and more connexData
 		 */
 		class DataPort : public DataPortBase
 		{
 		public:
-			core::queue::ConcurrentQueue<Data> data;
+			core::queue::ConcurrentQueue<Data> data;	//<! The queue used to store the data
 
+			/**
+			 * \brief Alias to the pop() method. Get the port's next stored data.
+			 * \see pop()
+			 * \return Returns the port's next stored data.
+			 */
 			Data get()
 			{
 				return pop();
 			}
 
-			Data  pop()
+			/**
+			 * \brief Get the port's next stored data.
+			 * \return Returns the port's next stored data.
+			 */
+			Data pop()
 			{
 				Data value;
 				if (data.pop(value) == false)
@@ -41,51 +50,81 @@ namespace filter
 				return value;
 			}
 
+			/**
+			 * \brief Make the port reference data. The port will establish a link to the next filter in the graph and make data exchange possible.
+			 * \param dataIn The data to reference in the port.
+			 */
 			void push(Data & dataIn)
 			{
 				data.push(dataIn);
 			}
 
+			/**
+			 * \brief Check if there is data present in the port
+			 * \return Returns true if there is no data in the port
+			 */
 			inline bool empty() { return data.empty(); }
 
+			/**
+			 * \brief Get the number of stored elements in the port
+			 * \return Returns the number of stored elements in the port
+			 */
 			inline size_t size() { return data.size(); }
 		};
 
 		/**
 		 * \brief The enum direction to explain if the input data will modified (INOUT) or read only
 		 */
-		enum WayData 
+		enum WayData
 		{
-			INDATA,
-			INOUT,
-			OUTDATA,
-			NOWAY
+			INDATA,		//<! The data is only used in input. No data will be outputed
+			INOUT,		//<! The input is linked to the output and the retrived data from the port is only a reference. Working on the data will alter the output.
+			OUTDATA,	//<! The data is only used as output. There's no input data.
+			NOWAY		//<! There's no input nor output.
 		};
 
-		
+
 		/**
-		 * \brief The non template class parent for ConexxData. This class 
+		 * \brief The non template class parent for ConnexData. This class
 		 * is used to contains multiple connector with different type
-		 * 
+		 *
 		 */
 		class ConnexDataBase
 		{
 		protected:
+			/**
+			 * \brief The WayData field informs how the port should handle the data
+			 * \see WayData
+			 */
 			WayData _way;
 
 		public:
 			ConnexDataBase(WayData way) : _way(way) {}
 
+			/**
+			 * \brief Get the method how the port handles the data
+			 * \return Returns the WayData value
+			 * \see WayData
+			 */
 			WayData getWay() const
 			{
 				return _way;
 			}
 
-			virtual ConnexDataBase & getCast() 
+			/**
+			 * \brief [TODO]
+			 * \return [TODO]
+			 */
+			virtual ConnexDataBase & getCast()
 			{
 				return *this;
 			}
 
+			/**
+			 * \brief [TODO]
+			 * \param right
+			 * \return
+			 */
 			inline virtual ConnexDataBase & operator<<(ConnexDataBase &right)
 			{
 				this->getCast().operator<<(right.getCast());
@@ -93,6 +132,10 @@ namespace filter
 				return *this;
 			}
 
+			/**
+			 * \brief [TODO]
+			 * \return
+			 */
 			virtual DataPortBase &getPort()
 			{
 				throw HipeException("Cannot down cast to get Port");
@@ -118,7 +161,7 @@ namespace filter
 
 
 		/**
-		 * \brief The connector is here to connect all data by DataPort. 
+		 * \brief The connector is here to connect all data by DataPort.
 		 * \tparam Din the Input data type to accept in the IFiler Object (comming from parents)
 		 * \tparam Dout the output data type to push to the next dataPort (going t the childrens)
 		 */
@@ -126,29 +169,61 @@ namespace filter
 		class ConnexData : public ConnexDataBase
 		{
 		public:
-			
+
+			/**
+			 * \brief The Dataport object used to store the input data.
+			 * \see DataPort
+			 */
 			DataPort port;
 
+			/**
+			 * \brief Get the input port's object.
+			 * \return Returns a reference to the port
+			 */
 			virtual DataPortBase &getPort()
 			{
 				return port;
 			}
 
+			/**
+			 * \brief [TODO]
+			 */
 			std::map<ConnexDataBase *, DataPort *> portOutput;
 
+			/**
+			 * \brief Default ConnexData constructor. The WayData will be set to INDATA.
+			 */
 			ConnexData() : ConnexDataBase(INDATA)
 			{
 
 			}
 
+			/**
+			 * \brief Constructor with a WayData paremeter. The way data is used to tell how the port should handle data.
+			 * \param way The desired WayData value.
+			 * \see WayData
+			 */
 			ConnexData(WayData way) : ConnexDataBase(way)
 			{
 
 			}
+			/**
+			 * \brief Check if the port contains data.
+			 * \return Returns true if there's no data in the port.
+			 */
 			inline bool empty() { return port.empty(); }
 
+			/**
+			 * \brief Get the number of stored elements in the port
+			 * \return Returns the number of stored elements in the port
+			 */
 			inline size_t size() { return port.size(); }
 
+			/**
+			 * \brief Get the port's referenced next data.
+			 * \return Returns the port's referenced next data.
+			 * \see pop()
+			 */
 			Din get()
 			{
 				Din in = port.pop();
@@ -156,6 +231,10 @@ namespace filter
 			}
 
 
+			/**
+			 * \brief Get the port's referenced next data. If the way is INOUT, the port will keep a reference to the returned data. In that case modifying the data will affect the one on the port.
+			 * \return Returns the port's referenced next data.
+			 */
 			Din pop()
 			{
 				if (!port.empty())
@@ -172,17 +251,27 @@ namespace filter
 				throw HipeException("No more data to pop");
 			}
 
-			
 
+
+			/**
+			 * \brief [TODO]
+			 * \tparam DoutBroadCast
+			 * \param dataOutput
+			 */
 			template <class DoutBroadCast>
 			void broacast(DoutBroadCast dataOutput)
 			{
-				
+
 			}
 
+			/**
+			 * [TODO]
+			 * \brief Broadcat data to the port's output.
+			 * \param dataOutput The data to broadcast
+			 */
 			void broacast(Dout & dataOutput)
 			{
-		
+
 				for (auto& childPair : portOutput)
 				{
 					ConnexDataBase* child = childPair.first;
@@ -201,9 +290,13 @@ namespace filter
 				}
 			}
 
+			/**
+			 * \brief Send data to the port. The port will establish a link with the next filter of the graph.
+			 * \param dataOutput The data the port should reference
+			 */
 			void push(Dout dataOutput)
 			{
-				
+
 				if (_way == INOUT)
 				{
 					throw HipeException("An inout data can't push new data, relation is ONE input to ONE output");
@@ -213,6 +306,11 @@ namespace filter
 
 			}
 
+			/**
+			 * \brief [TODO]
+			 * \tparam indata
+			 * \param matrix
+			 */
 			template<class indata>
 			void push(indata matrix)
 			{
@@ -234,6 +332,14 @@ namespace filter
 				portOutput[&connexOut] = (&(connexOut.port));
 			}
 
+			/**
+			 * [TODO]
+			 * \brief  Link DataPort together to create the data graph
+			 * \tparam leftIn the type of the input
+			 * \tparam leftOut the type of the output
+			 * \param left the neighbor children where the data port is coming from
+			 * \return A reference to the ConnexData object
+			 */
 			template<class leftIn, class leftOut>
 			ConnexData<leftIn, leftOut> & operator<<(ConnexData<leftIn, leftOut> &left)
 			{
@@ -242,7 +348,13 @@ namespace filter
 				return left;
 			}
 
-			
+
+			/**
+			 * [TODO]
+			 * \brief Link DataPort together to create the data graph
+			 * \param left the neighbor children where the data port is coming from
+			 * \return A reference to the ConnexData object
+			 */
 			ConnexData<Din, Dout> & operator<<(ConnexDataBase &left)
 			{
 				portOutput[&left] = static_cast<DataPort *>(&(left.getPort()));
@@ -250,6 +362,10 @@ namespace filter
 				return *this;
 			}
 
+			/**
+			 * \brief [TODO]
+			 * \return 
+			 */
 			inline virtual ConnexData<Din, Dout> & getCast()
 			{
 				return *this;
@@ -259,8 +375,8 @@ namespace filter
 
 		};
 
-		
-		
+
+
 
 		/*template <class Din, class Dout>
 		template <class DoutBroadCast>
@@ -323,7 +439,7 @@ namespace filter
 					}
 					else
 					{
-						
+
 					}
 				}
 
@@ -337,7 +453,7 @@ namespace filter
 		/**
 		* \brief A derived class of of ConnexData. It's a specialization to restrict the object to an output connector
 		* there is only one port connexion
-		* \tparam Dout the data type to receive from parent 
+		* \tparam Dout the data type to receive from parent
 		*/
 		template <class Dout>
 		class ConnexOutput : public ConnexData<Dout, Dout> // Hard the *FIRST* input data is contained in the outputPort
@@ -366,10 +482,10 @@ namespace filter
 				throw HipeException("Can't add a port there no children down to this object");
 			}
 
-			
+
 		};
 
-		
+
 
 	}
 }

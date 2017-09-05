@@ -10,8 +10,14 @@ namespace filter
 {
 	namespace data
 	{
+		/**
+		 * \brief FileImageData is the data type used to handle an image and additonnal information. Uses OpenCV. 
+		 */
 		class FileImageData : public IOData<ImageData, FileImageData>
 		{
+			/**
+			 * \brief Path to the image
+			 */
 			boost::filesystem::path _filePath;
 
 			cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
@@ -23,11 +29,19 @@ namespace filter
 
 		public:
 
+			/**
+			 * \brief FileImageData copy constructor
+			 * \param right the FileImageData to copy
+			 */
 			FileImageData(const FileImageData & right) : IOData(IODataType::IMGF)
 			{
 				Data::registerInstance(right._This);
 			}
 
+			/**
+			 * \brief Constructor with path to image
+			 * \param filePath Complete path to the image
+			 */
 			FileImageData(const std::string & filePath) : IOData(IODataType::IMGF)
 			{
 				Data::registerInstance(new FileImageData());
@@ -46,12 +60,22 @@ namespace filter
 				
 			}
 
+			/**
+			* \brief Copy the image data of the ImageData object to another one.
+			* \param left The object where to copy the data to
+			*/
 			virtual void copyTo(ImageData& left) const
 			{
 				ImageData::copyTo(static_cast<ImageData &>(left));
 
 			}
 
+			/**
+			 * [TODO]
+			 * \brief FileImageData assignment operator
+			 * \param left The FileImageData object to get the data from
+			 * \return A reference to the object
+			 */
 			FileImageData& operator=(const FileImageData& left)
 			{
 				_This = left._This;

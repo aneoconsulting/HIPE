@@ -14,6 +14,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief K-means image segmentation. The filter will find color clusters to compress image and reduce the number of used colors. 
+		 */
 		class Kmeans : public filter::IFilter
 		{
 			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
@@ -22,8 +25,8 @@ namespace filter
 
 			}
 
-			REGISTER_P(int, attempts);
-			REGISTER_P(int, clusterCount)
+			REGISTER_P(int, attempts);		//<! The number of times the kmeans algorithm is executed using different initial labellings. The algorithm will return the labels that yield the best compactness. \see cv::kmeans
+			REGISTER_P(int, clusterCount)	//<! The number of clusters (colors) the image output image should have.
 
 		    virtual std::string resultAsString() { return std::string("TODO"); };
 			cv::Mat KmeansItt(cv::Mat myMAt, int clusterCount, int attemps);

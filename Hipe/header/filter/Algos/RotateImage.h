@@ -10,6 +10,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief THe RotateImage filter is used to rotate images around the positive Z axis and taking their center as pivot.
+		 */
 		class RotateImage : public IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
@@ -21,7 +24,7 @@ namespace filter
 				angle = 10;
 			}
 
-			REGISTER_P(double, angle);
+			REGISTER_P(double, angle); //<! The angle (in degrees) to rotate the image by
 
 			~RotateImage()
 			{

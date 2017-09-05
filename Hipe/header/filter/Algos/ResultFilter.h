@@ -9,6 +9,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief [TODO] The ResultFilter filter is the end of graph filter
+		 */
 		class ResultFilter : public filter::IFilter
 		{
 			//data::ConnexOutput<data::Data> _connexData;

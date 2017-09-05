@@ -11,6 +11,10 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The OverlayFilter filter is used contour regions of interests in an image.
+		 * The ConnexData port must contain 2 objects. The image on which the filter will draw, and the list of regions of interest (SquareCrop object)
+		 */
 		class OverlayFilter : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
