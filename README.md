@@ -35,6 +35,10 @@
 [316]: #-example-of-an-implemented-filter
 [4]: #-things-to-not-forget
 
+[cmake_steps_vid]: path "cmake steps"
+[postman_steps_vid]: path "Postman steps"
+[visual_studio_path_vid]: path "Visual Studio's PATH"
+
 How to start with HIPE
 ==================
 
@@ -42,7 +46,7 @@ How to start with HIPE
 1. [Build HIPE][1]
 	* [Requirements][11]
 	* [Project Building][12]
-	* [Environment Configuration][13]
+	* [Set up your environment][13]
 2. [How to use HIPE][2]
 	* [JSON Requests][21]
 		* [Syntax of a JSON request][211]
@@ -72,23 +76,23 @@ Here is a summary list of all the primary third party programs and libraries nee
 	-	CMake 3.4.7+
 -	Dependencies
 	-	Nvidia CUDA 8.0
-	-	OpenCV 3.1.0
 	-	HDF5
 	-	caffe
 	-	dlib
 	-	boost
 -	Windows platforms
+	-	OpenCV 3.1.0
 	-	Visual Studio 2015 Update 3 (VC140 build tools)
 -	Linux platforms
+	-	OpenCV 3.2.0
 	-	GCC 5+
 	-	Makefile
-
 
 ### [[..][11]] CMake 3.4.7+
 To build HIPE, the minimum required version of CMake is 3.4.7.
 
-CMake can be [downloaded here]( https://cmake.org/download/)
-    
+CMake can be [downloaded here]( https://cmake.org/download/)    
+
 
 ### [[..][11]] Nvidia CUDA 8.0
 Some of the required dependencies (like OpenCV) were built using CUDA. It allows HIPE to use any Nidia GPU, if present, to use its power and speed up things.    
@@ -100,7 +104,7 @@ The toolkit can be downloaded on the [Nvidia CUDA dedicated website](https://dev
 
 
 ### [[..][11]] Windows platforms
-On Windows platforms, _Visual Studio 2015 Update 3_ was used to compile the dependencies and is the main tool to work on HIPE. The project will _ONLY_ work with this version. At least, only when using the VC140 build tools.
+On Windows platforms, _Visual Studio 2015 Update 3_ was used to compile the dependencies and is the main tool to work on HIPE. The project will **_only_** work with this version. At least, only when using the VC140 build tools.
     
 If you don’t have those build tools or any Visual Studio version installed, you can find the free 2015 Community one in the [older downloads page](https://www.visualstudio.com/fr/vs/older-downloads/) on the Visual Studio website. Don't forget to install the Update 3 package.
 
@@ -124,18 +128,19 @@ To make things easier, we decided to regroup them in a package. The main goal of
 ### [[..][12]] Windows
 To build HIPE's Visual Studio project files, you must use CMake.    
 
-1.	Fill in the HIPE sources and build directories. You can chose the build directory you want, but remember that HIPE sources are located on the Hipe subdirectory.
-2.	Click on _Configure_ and select the _Visual Studio build tools (Visual Studio 14 2015 Win64)_ build tools then confirm by clicking on the _Finish_ button. The configuration will start. If not, click again on _Configure_
-3.	An error (Could not find ``HIPE_EXTERNAL`` variable) will occur. You will have to fill the ``HIPE_EXTERNAL`` field with the path of the directory where the extracted HipeExternal archive is located. The expected directory is the one where the _win64_ is located.
+1.	Fill in the HIPE sources and build directories fields. You can chose the build directory you want, but remember that HIPE sources are located on the Hipe subdirectory.
+2.	Click on _Configure_ and select the _Visual Studio build tools (Visual Studio 14 2015 Win64)_ build tools then confirm by clicking on the _Finish_ button. The configuration will start. If not, click again on _Configure_.
+3.	An error (Could not find ``HIPE_EXTERNAL`` variable) will occur. You will have to fill the ``HIPE_EXTERNAL`` field with the path of the directory where the extracted HipeExternal archive is located. The expected directory is the one where the _win64_ is.
 4.	When the configuration is done, you must click on _Generate_ to create the Visual Studio project files. The files will be generated on the selected build directory.
 
 **Note:** The default target is x64 Debug.
 
 ### [[..][12]] Linux
-**[TODO]**
+**[TODO]**    
+The steps are similar on a Linux platform but you'll have to select GCC as build tools instead of Visual Studio.
 
 
-## [[..][1]] Environment Configuration
+## [[..][1]] Set up your environment
 * [Windows][131]
 * [Linux][132]
 <br></br><br></br><br></br>
@@ -145,7 +150,7 @@ You must go through a few configuration steps before being able to start working
 
 
 ### [[..][13]] Windows
-In the Visual Studio solution, the default start up project to set is _hype_server_
+In the Visual Studio solution, the default start up project to set is _hype_server_.
 
 The compiled dependencies files (*.dll files) must be referenced in your system folder, your system’s PATH or Visual Studio's debug one. You can also copy them next to the _hype_server.exe_ executable file.
 
@@ -160,7 +165,7 @@ Here is the list of the needed dependencies. The dependencies are all coming fro
 -	HDF5
 -	Intel
 
-If you want to copy them next to the hype_server.exe binary, you will find it in the _chosen_build_directory_/target/_chosen_build_target_/
+**Note:** If you want to copy them next to the hype_server.exe binary, you will find it in the _chosen_build_directory_/target/_chosen_build_target_/
 
 where:
 
@@ -174,7 +179,7 @@ Assuming you start with an empty PATH variable you will end up with a value simi
 "PATH=%HipeExternal%/win64/boost_1_62_0/lib64-msvc-14.0;%HipeExternal%/win64/opencv/x64/vc14/bin;%HipeExternal%/win64/intel64_win/bin;%HipeExternal%/win64/ffmpeg/bin;%HipeExternal%/win64/gstreamer/1.0/x86_64/bin;%HipeExternal%/win64/liblept/bin;%HipeExternal%/win64/hdf5/bin;C:/NVIDIA/CUDA/v8.0/Toolkit/bin;%PATH%"
 ```
 
-**Note:** %HipeExternal% is not set by default. You either must replace it by the location where you extracted the HipeExternal package, or set it manually in your system's ``PATH``.
+**Note:** ``%HipeExternal%`` is not set by default. You must either replace it by the location where you extracted the HipeExternal package or set it manually in your system.    
 **Note:** The whole PATH variable **must be set on the _same_ line**!    
 **Note:** Working with this debug PATH overwrites the system’s one. To still use it you must add ``%PATH%`` at the end of the value.
 
@@ -182,11 +187,13 @@ Assuming you start with an empty PATH variable you will end up with a value simi
 ### [[..][13]] Linux
 **[TODO]**    
 You will have to refer to the steps done on Windows platforms and redo them in your chosen environment.    
-There is a slight difference in the linux hype_server binary file. It is located on the _chosen_build_directory_/_chosen_target_
+
+**Note:** There is a slight difference with the linux hype_server binary file. It is located on the _chosen_build_directory_/_chosen_target_ folder.
 
 # [[~][0]] How to use HIPE
-## [[..][2]] JSON Requests
+## [[..][2]] JSON Requests    
 * [Syntax of a JSON request][211] 
+    * [Usefulness of the request name][2111] 
 	* [ Processing chain and its filters][2112] 
 	* [Scheduler][2113] 
 	* [Linking data and supported data types][2114] 
@@ -204,7 +211,7 @@ The communication method we use to transfer data is to send them using the JSON 
 If you never worked with it, you can quickly learn the basics by reading its documentation on [the w3schools website](https://www.w3schools.com/js/js_json_intro.asp)
 
 
-### [[..][21]] Syntax of a JSON request
+### [[..][21]] Syntax of a JSON request    
 * [Usefulness of the request name][2111]
 * [ Processing chain and its filters][2112] 
 * [Scheduler][2113] 
@@ -218,31 +225,30 @@ Here is a request as an example:
 	"name": "resize",
 
 
-
-	"filters": [ {
-		"RootFilter": { 
-			"name": "root" 
-		} 
-	},
-	{
-		"Resize": {
-			"name": "resize",
-			"need": ["root"],
-			"ratio": 4
-		} 
-	},
-	{
-		"ShowImage": { 
-			"name": "show",
-			"need": ["resize"],
-			"wait": 1
+	"filters": [
+		{
+			"RootFilter": { 
+				"name": "root" 
+			} 
+		},
+		{
+			"Resize": {
+				"name": "resize",
+				"need": ["root"],
+				"ratio": 4
+			}
+		},
+		{
+			"ShowImage": { 
+				"name": "show",
+				"need": ["resize"],
+				"wait": 1
+			}
 		}
-	}],
-	
+	],
 	
 	
 	"orchestrator": "DefaultScheduler",
-	
 	
 	
 	"data": {
@@ -258,9 +264,9 @@ The body of a valid JSON request contains:
 * The scheduler symbolizing how the chain's nodes will be processed (``orchestrator`` filed)
 * The data which will be processed by the chain (``data`` field)
 
-####[[..][211]] Usefulness of the request's name
-The name of the request is the most important information on the request. As your requests graphs will grow, building then processing them will take some time. One of the key concepts of HIPE is to capitalize and reuse the largest possible things, _even requests_.    
-It is not currentyly possible to do so but in a future version you will be able to use a saved in database graph just by sending a JSON request containing its name, the desired scheduler, and the data to be processed. The filters array will not be needed anymore.
+#### [[..][211]] Usefulness of the request name
+The name _is_ the most important information on a request. As your requests graphs will grow, building then processing them will take some time. One of the key concepts of HIPE is to capitalize and reuse the more possible things, _even requests_.    
+It is not currently possible to do so but in a future version you will be able to use a saved in database graph just by sending a JSON request containing its name, the desired scheduler, and the data to be processed. The filters array will not be needed anymore.
 
 #### [[..][211]] Processing chain and its filters
 The processing chain can be seen as a graph where each node is a different _filter_ which will “do something” on its input data. So basically, a _filter_ can represent an algorithm, like one which will alter an image, or another one which will find and identify an object in a video.
@@ -291,7 +297,8 @@ For now, only the _DefaultScheduler_ model is available, where each filter will 
 
 
 #### [[..][211]] Linking data and supported data types
-HIPE can work with images, videos (or image sequences), as well as live data streams from hardware like video cameras.
+**[TODO]**    
+HIPE can work with images, videos (or image sequences), as well as live data streams acquired from hardware like video cameras or RTP (**R**eal-time **T**ransport **P**rotocol).
 
 Here is a table containing the primary data types and their corresponding identifier tags
 
@@ -310,9 +317,10 @@ The field must contain:
 * The data type containing the identifier of the data type you want to use (``type`` field)
 * The data path (``path`` field)
 
+**Note:** Those data types can also be used as output. To stream the output we use GStreamer and the ``StreamResultFilter`` filter. More information will be added to the API documentation.
 
 ### [[..][21]] Send requests to HIPE
-The tool we use to edit and send JSON requests to HIPE is Postman. It is not a prerequisite to use HIPE, so you can alternatively use any tool you want.    
+The tool we use to edit and send JSON requests to HIPE is Postman. It is not a prerequisite, so you can alternatively use any tool you want.    
 Assuming you want to use Postman, you can download it [here](https://www.getpostman.com/).    
 You will also find collections of tests requests in the ``/Hipe/tests/data/request/`` folder. They are in the Postman format but it internally uses text, so you can open them in any text editor you want to peek at their content.
 
@@ -326,25 +334,26 @@ You will also find collections of tests requests in the ``/Hipe/tests/data/reque
 
 
 ##### [[..][2121]] Import requests
-In Postman, every request must be part of a collection. To import a collection, you must simply click on the _import_ button in the upper left corner of Postman’s interface. The collection will be shown in the left side bar. If the side bar is hidden you can show it by clicking on the first button _Show/Hide Sidebar_ next to the _import_ button.
+In Postman, every request must be part of a collection. To import a collection, you must simply click on the _import_ button (1.) in the upper left corner of Postman’s interface. The collection will be shown in the left side bar. If the side bar is hidden you can show it by clicking on button _Show/Hide Sidebar_ (2.) next to the _import_ button.
 
 
 ##### [[..][2121]] Create and edit a request
-In Postman, all the opened requests are shown in different tabs. By default, if no request is already opened, a new one will be shown and it is possible to directly edit it. But, if at least one request is opened, the default empty one will be hidden and you will need to click on the plus sign button at the right of the last opened request’s tab to create a new one.   
-To be able to write the request, you must chose the ``POST`` mode instead of the ``GET`` mode. It will unlock the _Body_ tab. It is here that you will write the content of the request. You will also have to check the _raw_ button to enable text edit, then chose the _JSON (application/json)_ instead of _text_ in the orange drop down menu to enable syntax highlighting.
+In Postman, all the opened requests are shown in different tabs. By default, if no request is already opened, a new one will be shown and it is possible to directly edit it. But, if at least one request is opened, the default empty one will be hidden and you will need to click on the plus sign button at the right of the last opened request’s tab to create a new one (3.).   
+To be able to write the request, you must chose the ``POST`` mode instead of the ``GET`` mode (4.). It will unlock the _Body_ tab. It is here that you will write the content of the request. You will also have to check the _raw_ button to enable text edit, then chose the _JSON (application/json)_ instead of _text_ in the orange drop down menu to enable syntax highlighting.
 
 
 ##### [[..][2121]] Save your request
-You can save your request by clicking on the _Save_ button at the right of the request’s tab window. Remember that in Postman, every request must be linked to a collection. If no collection was already created, you will have to create a new one. You can do so by clicking on the _+ Create Collection_ button at the bottom of the opened save dialog.
+You can save your request by clicking on the _Save_ button at the right of the request’s tab window (5.). Remember that in Postman, every request must be linked to a collection. If no collection was already created, you will have to create a new one. You can do so by clicking on the _+ Create Collection_ button at the bottom of the opened save dialog.
 
 
 ##### [[..][2121]] Send a request
 HIPE’s http server listen on port 9090.    
-When used in a debug environment, you will probably deploy the server locally. In that case, the address will be localhost. If deployed on a remote environment, you will have to input the corresponding IP address.    
+When used in a debug environment, you will probably deploy the server locally. In that case, the address will be localhost. If deployed on a remote environment, you will have to input the corresponding IP address (6.).    
 A complete address will be similar to: ``localhost:9090/json``.    
-To send the request you will have to click on the blue _Send_ button. The server will then send its response when the processing will be done. The response is also in JSON format and will be shown just below the body of the sent request.
+To send the request you will have to click on the blue _Send_ button (7.). The server will then send its response when the processing will be done. The response is also in JSON format and will be shown just below the body of the sent request.
 
-**Note:** HIPE internally uses the 9090 port to listen for and send JSON requests. Il will change in the near future with the apparition of configuration files. You will be able to manually set the port you want to use.
+**Note:** HIPE internally uses the 9090 port to listen for and send JSON requests but It will change in the near future with the apparition of configuration files. You will be able to manually set the port you want to use.
+
 
 # [[~][0]] Develop with HIPE
 ## [[..][3]] Develop filters
@@ -362,7 +371,7 @@ To be interpreted as a filter a class must meet the following criteria:
 * It must implement the ``IFilter`` interface
 * Its constructor must be defined by the ``REGISTER`` macro
 * It must override the ``process()`` method
-* It must specify explicitly the awaited input and output data types
+* It must explicitly specify the awaited input and output data types
 * It must at least possess an exposed field, even if not used
 * It must be referenced by the ``ADD_CLASS`` macro
 
@@ -371,7 +380,8 @@ To be interpreted as a filter a class must meet the following criteria:
 
 
 ### [[..][31]] REGISTER macro
-It is not the developer’s task to write the constructor of each filter. It is internally done by the ``REGISTER`` macro. The macro awaits 2 parameters:
+It is not the developer’s task to write the constructor of each filter. It is internally done by the ``REGISTER`` macro.    
+The macro awaits 2 parameters:
 ```c++
 REGISTER(Constructor, params)
 {
@@ -385,7 +395,7 @@ Where:
 
 The macro will only handle the constructor’s signature. Its body, like any constructor or method must be defined within the two curly brackets following it.
  
-As an example, for a fictive filter named "FilterExample", we’ll have the following syntax
+As an example, for a fictive filter named "FilterExample", we’ll have the following syntax:
 ```c++
 REGISTER(FilterExample, ())
 {
@@ -416,7 +426,7 @@ DataIn ConnexData::pop()
 void ConnexData::push(DataOut data);
 ```
 
-Let’s take as an example a fictive filter which awaits an image in input, and will output an array of regions of interest. As the filter will only do that, we do not need to keep the input data at the end of the process method. 
+Let’s take as an example a fictive filter which awaits an image in input, and will output an array of regions of interest. As the filter will only do that, we do not need to keep _its_ input data alive at the end of _its_ process method. 
 
 Such a filter can be represented by using the following macros:
 ```c++
@@ -433,8 +443,8 @@ Here is a list of the primary data types in HIPE:
 |------	|-------------	|
 |	``ImageData``	|	an image	|
 |	``ImageArrayData``	|	images	|
-|	``PatternData``	|	image + region(s) of interest	|
-
+|	``PatternData``	|	image + region(s) of interest	|    
+<br></br>
     
 And the primary data behaviors:    
 
@@ -446,7 +456,7 @@ And the primary data behaviors:
 
 
 ### [[..][31]] Expose fields
-Any exposed field’s value can be set at runtime by a JSON request. You need to use the REGISTER_P macro to expose a parameter:
+Any exposed field’s value can be set at runtime by a JSON request. You need to use the ``REGISTER_P`` macro to expose a parameter:
 
 ```c++
 REGISTER_P(typef, params)
@@ -486,28 +496,28 @@ HIPE dynamically create a list containing all the implemented filters. To popula
 The macro awaits multiple parameters:
 
 ```c++
-ADD_CLASS(classname, …)
+ADD_CLASS(classname, ...)
 ```
 
 Where:
 
 * ``classname`` is the name of the class
-* ``…`` is the list of all the exposed fields separated by commas
+* ``...`` is the list of all the exposed fields separated by commas
 
     
-**Note:** The macro is to be used _outside_ the class’s body.    
+**Note:** The macro is to be used _outside_ the class’ body.    
 **Note:** If a parameter is defined using the ``REGISTER_P`` macro but is not added to the ``ADD_CLASS`` parameters list, it will not be exposed.    
 
 
 ### [[..][31]] Example of an implemented filter
-As an example, here is the code of the Resize filter of the prior mentionned Resize JSON request    
+As an example, here is the code of the Resize filter of the prior mentioned Resize JSON request:    
 
 ```c++
-#include <filter/tools/RegisterClass.h> // The RegisterClass.h header defines all the used macros
-#include <filter/IFilter.h> // The IFilter.h is the basis interface of every filter
-#include <core/HipeStatus.h> // The HipeStatus header contains HIPE's known return values. It is used by the process method
+#include <filter/tools/RegisterClass.h>     // The RegisterClass.h header defines all the used macros
+#include <filter/IFilter.h>                 // The IFilter.h is the basis interface of every filter
+#include <core/HipeStatus.h>                // The HipeStatus header contains HIPE's known return values. It is used by the process method
 
-#include <filter/data/ImageData.h> // The ImageData.h header contains the definitions of the images handling data classes
+#include <filter/data/ImageData.h>          // The ImageData.h header contains the definitions of the images handling data classes
 
 
 class Resize : public filter::IFilter
@@ -558,4 +568,4 @@ ADD_CLASS(Resize, ratio);
 # [[~][0]] Things to not forget
 You will find in this part the things you should always keep in mind when you will use HIPE
 
-* HIPE is target dependant. Most of the libraries where compiled in Debug and Release mode. You can't use them in a Release situation if when you built HIPE you selected the Debug target. You _will_ encounter errors.
+* HIPE is target dependent. All the libraries were compiled in Debug or Release mode. You can't use them in a Release situation if when you built HIPE you selected the Debug target. You _will_ encounter errors.
