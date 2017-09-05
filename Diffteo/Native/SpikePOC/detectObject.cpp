@@ -59,6 +59,9 @@ int CheckObjectIsPresent(Mat& queryImg, IPDesc desc, Mat & img_scene)
 		return -1;
 	}
 
+	ShowImage(img_object);
+	ShowImage(img_scene);
+
 
 	// Detect the keypoints and extract descriptors using SURF
 	int minHessian = 400;
@@ -67,6 +70,20 @@ int CheckObjectIsPresent(Mat& queryImg, IPDesc desc, Mat & img_scene)
 	Mat descriptors_object, descriptors_scene;
 	detector->detectAndCompute(img_object, Mat(), keypoints_object, descriptors_object);
 	detector->detectAndCompute(img_scene, Mat(), keypoints_scene, descriptors_scene);
+
+
+	// TM: Check descriptors validity
+	if (!descriptors_object.data || descriptors_object.empty())
+	{
+		std::cout << "no data found in object descriptor" << std::endl;
+		return -1;
+	}
+	// <= Empty
+	else if (!descriptors_scene.data || descriptors_scene.empty())
+	{
+		std::cout << "no data found in scene descriptor" << std::endl;
+		return -1;
+	}
 
 	// Matching descriptor vectors using FLANN matcher 
 	FlannBasedMatcher matcher;
@@ -113,13 +130,13 @@ int CheckObjectIsPresent(Mat& queryImg, IPDesc desc, Mat & img_scene)
 	{
 		printf("Descriptors not parallel :: suspicious\n");
 		rectangle(queryImg, desc.corner, Point(desc.corner.x + desc.width, desc.corner.y + desc.height), Scalar(0, 0, 255));
-		//ShowImage(img_matches);
+		ShowImage(img_matches);
 	}
 	if (!isOnPosition(desc, scene))
 	{
 		printf("Cannot find object in correct area\n");
 		rectangle(queryImg, desc.corner, Point(desc.corner.x + desc.width, desc.corner.y + desc.height), Scalar(255, 0, 0));
-		//ShowImage(img_matches);
+		ShowImage(img_matches);
 	}
 	//ShowImage(queryImg);
 
@@ -149,7 +166,7 @@ int CheckObjectIsPresent(Mat& queryImg, IPDesc desc, Mat & img_scene)
 		Scalar(0, 255, 0), 4);
 
 	// Show detected matches
-	// imshow("Good Matches & Object detection", img_matches); waitKey(0);
+	ShowImageName("Good Matches & Object Detection", img_matches); // TM: replaced line: imshow("Good Matches & Object detection", img_matches); waitKey(0);
 	
 	return 0;
 }

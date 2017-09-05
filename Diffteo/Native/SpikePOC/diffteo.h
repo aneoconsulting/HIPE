@@ -2,13 +2,15 @@
 #include <opencv2/core/types.hpp>
 #include "IPDesc.h"
 
-#define ShowImage(name, img)\
+#define ShowImageName(name, img)\
 	imshow(name, img);\
 	waitKey(0);\
+	destroyWindow(name);\
 
 #define ShowImage(img)\
 	imshow(#img, img);\
 	waitKey(0);\
+	destroyWindow(#img);\
 
 std::vector<IPDesc> drawShape(cv::Mat img, cv::Mat & mask, std::vector<std::vector<cv::Point> > & contours);
 

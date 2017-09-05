@@ -1,0 +1,131 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Hipe - Capitalisation",
+		"_postman_id": "e4036dfb-9418-fadb-6b88-48ce59fe75d7",
+		"description": "Requests to debug Poclain related imported projects",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ID Plate Recognition",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ID Plate\",\n\"filters\" : \n[\n  {\"RootFilter\" :\n    { \n      \"name\" : \"root\" \n    } \n  },\n  {\"Resize\" : \n    {\n      \"name\" : \"resize\",\n      \"ratio\": 4,\n      \"need\" : [\"root\"]\n    } \n  },\n  {\"ShowImage\" : \n    { \n      \"name\" : \"plate image\",\n      \"need\" : [\"resize\"],\n      \"wait\" : 1\n    }\n  },\n  {\"IDPlateCropper\" :\n    {\n      \"name\" : \"cropper\",\n      \"need\" : [\"plate image\"],\n      \"useGPU\" : false,\n      \"bfilterPasses\" : 2,\n      \"_debug\" : true\n    }\n  },\n    {\"ShowImage\" : \n    { \n      \"name\" : \"cropped plate image\",\n      \"need\" : [\"cropper\"],\n      \"wait\" : 1\n    }\n  },\n  {\"IDPlateRectifier\" :\n    {\n      \"name\" : \"rectifier\",\n      \"need\" : [\"cropped plate image\"],\n      \"rightRatio\" : 100,\n      \"leftRatio\" : 40,\n      \"_debug\" : 1\n    }\n  },\n    {\"ShowImage\" : \n    { \n      \"name\" : \"extracted plate ROI\",\n      \"need\" : [\"rectifier\"],\n      \"wait\" : 1\n    }\n  },\n  {\"IDPlateIdentifier\" :\n    {\n      \"name\" : \"identifier\",\n      \"need\" : [\"extracted plate ROI\"],\n      \"_debug\" : 4,\n      \"charMaxFillRatio\" : 0.95,\n  \t  \"dbgMinX\" : 0.05,\n\t  \"dbgMaxX\" : 0.75,\n\t  \"dbgMinLines\" : 4,\n\t  \"ratioY\" : 0.25,\n\t  \"ratioWidth\" : 1,\n\t  \"ratioHeight\" : 1\n    }\n  },\n  {\"ShowImage\" : \n    { \n      \"name\" : \"result\",\n      \"need\" : [\"identifier\"],\n      \"wait\" : 1\n    }\n  }\n],\n  \n  \"orchestrator\" : \"DefaultScheduler\",\n  \"data\" : {\n\t\"type\" : \"IMGF\",\n\t\t\t  \"path\" :\"C:\\\\workspace\\\\data\\\\images\\\\ID_Plates\\\\plaques\\\\Suite_id_ph_2__003_bis_.jpg\"\n\t\t\t}\n}"
+				},
+				"description": "Graph to extract an ID plate then recognize its characters"
+			},
+			"response": []
+		},
+		{
+			"name": "ID Plate Recognition debug preprocess",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ID Plate preprocess\",\n\"filters\" : \n[\n  {\"RootFilter\" :\n    { \n      \"name\" : \"root\" \n    } \n  },\n  {\"Resize\" : \n    {\n      \"name\" : \"resize\",\n      \"ratio\": 4,\n      \"need\" : [\"root\"]\n    } \n  },\n  {\"ShowImage\" : \n    { \n      \"name\" : \"plate image\",\n      \"need\" : [\"resize\"],\n      \"wait\" : 0\n    }\n  },\n  {\"IDPlateCropper\" :\n    {\n      \"name\" : \"cropper\",\n      \"need\" : [\"plate image\"],\n      \"useGPU\" : false,\n      \"bfilterPasses\" : 3,\n      \"_debug\" : false\n    }\n  },\n    {\"ShowImage\" : \n    { \n      \"name\" : \"cropped plate image\",\n      \"need\" : [\"cropper\"],\n      \"wait\" : 1\n    }\n  },\n  {\"IDPlateRectifier\" :\n    {\n      \"name\" : \"rectifier\",\n      \"need\" : [\"cropped plate image\"],\n      \"rightRatio\" : 100,\n      \"leftRatio\" : 40,\n      \"_debug\" : 0\n    }\n  },\n    {\"ShowImage\" : \n    { \n      \"name\" : \"extracted plate ROI\",\n      \"need\" : [\"rectifier\"],\n      \"wait\" : 0\n    }\n  },\n      {\"SaveImage\" : \n    {\n      \"name\" : \"save\",\n      \"need\" : [\"extracted plate ROI\"],\n      \"path\" : \"C:\\\\Users\\\\tmirre\\\\Desktop\\\\debug\\\\\",\n      \"filename\" : \"Suite_id_ph_1__001_\",\n      \"extension\" : \"JPG\"\n    }\n  },\n  {\"ShowImage\" : \n    { \n      \"name\" : \"result\",\n      \"need\" : [\"save\"],\n      \"wait\" : 1\n    }\n  }\n],\n  \n  \"orchestrator\" : \"DefaultScheduler\",\n  \"data\" : {\n  \t\"type\": \"LISTIO\",\n  \t\"array\" : \n\t\t[ \n\t\t\t{ \"type\" : \"IMGF\",\n\t\t\t  \"path\" :\"C:\\\\workspace\\\\data\\\\images\\\\ID_Plates\\\\Suite_id_ph_1__001_.jpg\"\n\t\t\t}\n\t\t]\n  }\n}"
+				},
+				"description": "Graph to extract an ID plate then recognize its characters"
+			},
+			"response": []
+		},
+		{
+			"name": "ID Plate Recognition debug preprocess batch",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ID Plate preprocess batch\",\n\"filters\" : \n[\n  {\"RootFilter\" :\n    { \n      \"name\" : \"root\" \n    } \n  },\n  {\"Resize\" : \n    {\n      \"name\" : \"resize\",\n      \"ratio\": 4,\n      \"need\" : [\"root\"]\n    } \n  },\n  {\"ShowImage\" : \n    { \n      \"name\" : \"plate image\",\n      \"need\" : [\"resize\"],\n      \"wait\" : 0\n    }\n  },\n  {\"IDPlateCropper\" :\n    {\n      \"name\" : \"cropper\",\n      \"need\" : [\"plate image\"],\n      \"useGPU\" : false,\n      \"bfilterPasses\" : 3,\n      \"_debug\" : false\n    }\n  },\n    {\"ShowImage\" : \n    { \n      \"name\" : \"cropped plate image\",\n      \"need\" : [\"cropper\"],\n      \"wait\" : 1\n    }\n  },\n  {\"IDPlateRectifier\" :\n    {\n      \"name\" : \"rectifier\",\n      \"need\" : [\"cropped plate image\"],\n      \"rightRatio\" : 100,\n      \"leftRatio\" : 40,\n      \"_debug\" : 0\n    }\n  },\n    {\"ShowImage\" : \n    { \n      \"name\" : \"extracted plate ROI\",\n      \"need\" : [\"rectifier\"],\n      \"wait\" : 0\n    }\n  },\n      {\"SaveImage\" : \n    {\n      \"name\" : \"save\",\n      \"need\" : [\"extracted plate ROI\"],\n      \"path\" : \"C:\\\\Users\\\\tmirre\\\\Desktop\\\\debug\\\\\",\n      \"filename\" : \"Suite_id_ph_1__001_\",\n      \"extension\" : \"JPG\"\n    }\n  },\n  {\"ShowImage\" : \n    { \n      \"name\" : \"result\",\n      \"need\" : [\"save\"],\n      \"wait\" : 1\n    }\n  }\n],\n  \n  \"orchestrator\" : \"DefaultScheduler\",\n  \"data\" : {\n  \t\"type\": \"LISTIO\",\n  \t\"array\" : \n\t\t[ \n\t\t\t{ \"type\" : \"SEQIMGD\",\n\t\t\t  \"path\" :\"C:\\\\workspace\\\\data\\\\images\\\\ID_Plates\\\\plaques\\\\\"\n\t\t\t}\n\t\t]\n  }\n}"
+				},
+				"description": "Graph to extract an ID plate then recognize its characters"
+			},
+			"response": []
+		},
+		{
+			"name": "ID Plate Recognition debug identify",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ID Plate\",\n\"filters\" : \n[\n  {\"RootFilter\" :\n    { \n      \"name\" : \"root\" \n    } \n  },\n  {\"IDPlateIdentifier\" :\n    {\n      \"name\" : \"identifier\",\n      \"need\" : [\"root\"],\n      \"_debug\" : 3,\n      \"charMaxFillRatio\" : 0.95,\n  \t  \"dbgMinX\" : 0.05,\n\t  \"dbgMaxX\" : 0.75,\n\t  \"dbgMinLines\" : 4,\n\t  \"ratioY\" : 0.25,\n\t  \"ratioWidth\" : 2.5,\n\t  \"ratioHeight\" : 0.5\n    }\n  },\n  {\"ShowImage\" : \n    { \n      \"name\" : \"result\",\n      \"need\" : [\"identifier\"],\n      \"wait\" : 1\n    }\n  }\n],\n  \n  \"orchestrator\" : \"DefaultScheduler\",\n  \"data\" : {\n  \t\"type\" : \"IMGF\",\n\t  \"path\" :\"C:\\\\workspace\\\\documents\\\\Hipe\\\\debug\\\\ID_Plates\\\\crops\\\\Suite_id_ph_3__002_.jpg\"\n  }\n}"
+				},
+				"description": "Graph to extract an ID plate then recognize its characters"
+			},
+			"response": []
+		},
+		{
+			"name": "Average Color",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"AverageColor\",\n\"filters\" : \n[\n  {\"RootFilter\" :\n    { \n      \"name\" : \"root\" \n    } \n  },\n  {\"Resize\" : \n    {\n      \"name\" : \"resize\",\n      \"ratio\": 5,\n      \"need\" : [\"root\"]\n    } \n  },\n  {\"AverageColor\" :\n    {\n      \"name\" : \"averageColor\",\n      \"need\" : [\"resize\"]\n    }\n  },\n  {\"ClosestColor\" :\n    {\n      \"name\" : \"closestColor\",\n      \"need\" : [\"averageColor\"]\n    }\n  },\n  {\"ShowImage\" : \n    { \n      \"name\" : \"result\",\n      \"need\" : [\"closestColor\"],\n      \"wait\" : 1\n    }\n  }\n],\n  \n  \"orchestrator\" : \"DefaultScheduler\",\n  \"data\" : {\n  \t\"type\": \"LISTIO\",\n  \t\"array\" : \n\t\t[ \n\t\t\t{ \"type\" : \"IMGF\",\n\t\t\t  \"path\" :\"C:\\\\workspace\\\\gitlab_aneo\\\\hipe\\\\Data\\\\Images\\\\plaques\\\\Suite_id_ph_1__001_.JPG\"\n\t\t\t}\n\t\t]\n  }\n}"
+				},
+				"description": "Graph to compute the average color of an image and to match it with a known one"
+			},
+			"response": []
+		},
+		{
+			"name": "OK/NOK",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\" : \"OK NOK\",\n\"filters\" : [{\n\t\"RootFilter\" : { \n      \"name\" : \"root\" \n    } \n  },\n  {\"PPOC\" : \n    { \n      \"name\" : \"ppoc\",\n      \"need\" : [\"root\"],\n      \"_debug\" : true\n    }\n  },\n  {\"ShowImage\" : \n    { \n      \"name\" : \"result\",\n      \"need\" : [\"ppoc\"],\n      \"wait\" : 1\n    }\n  }\n],\n  \n  \"orchestrator\" : \"DefaultScheduler\",\n  \"data\" : {\n  \t\"type\": \"LISTIO\",\n  \t\"array\" : \n\t\t[ \n\t\t\t{ \"type\" : \"IMGF\", \n\t\t\t  \"path\" :\"C:\\\\workspace\\\\gitlab_aneo\\\\Hipe\\\\Data\\\\Images\\\\OK.JPG\"\n\t\t\t}\n\t\t]\n  }\n}"
+				},
+				"description": "Graph to find the existence of a certain object in an image"
+			},
+			"response": []
+		}
+	]
+}

@@ -51,6 +51,8 @@ Mat processBackgroundFilter(Mat & img, Mat & background, Mat & mask)
 	int thresh = 85;
 
 	Mat scaledImg = extractBackground(img, background);
+	ShowImage(scaledImg);
+
 	img = scaledImg;
 
 	// Create Background Subtractor objects (MOG2 approach)
@@ -145,18 +147,28 @@ int main(int argc, char** argv)
 	}
 
 	// Set window size
-	ShowImage(query_raw); waitKey(0);
-
+	ShowImage(ref_raw);
+	ShowImage(back);
+	ShowImage(query_raw);// waitKey(0);
+	
 	Mat mask;
 
 	processBackgroundFilter(ref_raw, back, mask);
+
+	// Set window size
+	ShowImage(ref_raw);
+	ShowImage(back);
+	ShowImage(query_raw);
+	ShowImage(mask);
 
 	//TODO Missing trasformation and scaling
 	// VS : Mask has been computed using a smaller resized version of original image
 	// We must map the mask back to original image and crop around
 
 	Mat extractedObject = ref_raw.clone();
+	ShowImage(extractedObject);
 	Mat extractedQueryObject = query_raw.clone();
+	ShowImage(extractedQueryObject);
 
 	MatIterator_<char> it_mask = mask.begin<char>();
 
@@ -166,19 +178,27 @@ int main(int argc, char** argv)
 		if ((*it_mask) == (char)0)
 		{
 			(*it) = 0;
-			(*itQuery) = 0;
+			//(*itQuery) = 0;	// TM commented line
 		}
 		it_mask++;
 	}
+
+	ShowImage(extractedObject);
+	ShowImage(extractedQueryObject);
 
 	// Convert images to gray and blur them
 	Mat src_gray, query_gray, back_gray, extractedObject_gray, extractedQueryObject_gray;
 
 	convertGray(ref_raw, src_gray);
+	ShowImage(src_gray);
 	convertGray(query_raw, query_gray);
+	ShowImage(query_gray);
 	convertGray(back, back_gray);
+	ShowImage(back_gray);
 	convertGray(extractedObject, extractedObject_gray);
+	ShowImage(extractedObject_gray);
 	convertGray(extractedQueryObject, extractedQueryObject_gray);
+	ShowImage(extractedQueryObject_gray);
 
 	// Get contours of image
 	vector<vector<Point>> points = getContours(extractedObject_gray);

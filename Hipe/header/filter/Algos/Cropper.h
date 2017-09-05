@@ -150,9 +150,7 @@ namespace filter
 					
 					_task = std::make_shared<boost::thread>(boost::bind(&Cropper::windowTask, this, _cvCropperData));
 				}
-				
-				
-			
+
 			}
 
 		public:
@@ -204,12 +202,6 @@ namespace filter
 					_connexData.push(_cvCropperData->pattern);
 					_pattern = std::make_shared<data::PatternData>(_cvCropperData->pattern);
 				}
-
-				
-
-				
-				
-				
 
 				return OK;
 			}
