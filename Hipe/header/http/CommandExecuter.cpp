@@ -1,5 +1,5 @@
 #include <CommandExecuter.h>
-
+//OBSOLETE TO REMOVE OR RENAME
 bool http::CommandExecuter::kill_command_executer(std::string optionName, boost::property_tree::ptree* ltreeResponse)
 {
 	if (optionName.compare("kill") == 0) //compare if optionName == kill otherwise return false;
@@ -54,6 +54,8 @@ bool http::CommandExecuter::kill_command_executer(std::string optionName, boost:
 	 const std::string version = "version";
 	 if (version.find(optionName) == 0)
 	 {
+		 ltreeResponse->add("Version", "get version");
+
 		 return true;
 	 }
 	 return false;
