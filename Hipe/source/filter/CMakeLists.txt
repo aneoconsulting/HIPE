@@ -171,6 +171,12 @@ if (UNIX)
 	target_compile_options(filter PRIVATE -fPIC)
 endif()
 
+#Visual studio isn't abble to compile with to many option this is not the default behaviour ...
+if (WIN32)
+	target_compile_options(filter PRIVATE /bigobj)
+endif()
+
+
 set_property(TARGET filter PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")

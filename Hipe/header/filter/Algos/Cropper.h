@@ -139,7 +139,7 @@ namespace filter
 			 */
 			void windowTask(std::shared_ptr<filter::algos::Cropper::CVCropperData> cvCropperData)
 			{
-				cv::namedWindow(_name, cv::WINDOW_NORMAL);
+				cv::namedWindow(_name, CV_WINDOW_AUTOSIZE | CV_WINDOW_KEEPRATIO);
 				cv::setMouseCallback(_name, cropper_mouse_call, &_cvCropperData);
 
 				while (_cvCropperData->started) {

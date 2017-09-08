@@ -12,6 +12,7 @@
 #include <http/HttpClient.h>
 #include <orchestrator/Orchestrator.h>
 #include <core/Logger.h>
+#include "core/version.h"
 
 using namespace std;
 //Added for the json-example:
@@ -29,6 +30,7 @@ int main() {
 	core::Logger llogger = core::setClassNameAttribute("Main");
 	
 	llogger << core::Logger::Level::info << "Hello Hipe";
+	llogger << core::Logger::Level::info << "Version : " << getVersion();
 
 
 	//HTTP-server at port 8080 using 1 thread
