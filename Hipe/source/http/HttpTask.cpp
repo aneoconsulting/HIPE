@@ -8,7 +8,7 @@
 #include <core/HipeException.h>
 #include <http/CommandManager.h>
 #include "http/CommandExecuter.h"
-
+#include <core/version.h>
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
 #include <assert.h>
@@ -80,7 +80,8 @@ auto get_version(){
 		const std::string version = "version";
 		if (version.find(optionName) == 0)
 		{
-			lptree->add("Version", "get version");
+			auto v = getVersion();
+			lptree->add("Version", v);
 
 			return true;
 		}
