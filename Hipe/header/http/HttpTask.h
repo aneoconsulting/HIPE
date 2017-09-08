@@ -2,7 +2,6 @@
 #include <memory>
 #include "Response.h"
 #include "HttpServer.h"
-
 namespace http {
 	class HttpTask
 	{

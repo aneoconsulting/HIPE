@@ -6,7 +6,9 @@
 #include <orchestrator/Orchestrator.h>
 #include <filter/data/Composer.h>
 #include <core/HipeException.h>
-
+#include <http/CommandManager.h>
+#include "http/CommandExecuter.h"
+#include <core/version.h>
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
 #include <assert.h>
@@ -18,6 +20,74 @@ using namespace std;
 
 core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
 
+auto kill_command () {
+	return [](std::string optionName, boost::property_tree::ptree *lptree)-> bool
+	{
+		if (optionName.compare("kill") == 0){
+			orchestrator::OrchestratorFactory::getInstance()->killall();
+			lptree->add("Status", "Task has been killed");
+			return true;
+		}
+		return false;
+
+	};
+}
+auto exit_command() {
+	return [](std::string optionName, boost::property_tree::ptree *lptree)-> bool
+	{
+		const std::string exit = "exit";
+		if (exit.find(optionName) == 0)
+		{
+			orchestrator::OrchestratorFactory::getInstance()->killall();
+			lptree->add("Status", "Task has been killed");
+			lptree->add("process", "Server is exiting");
+			return true;
+		}
+		return false;
+	};
+}
+
+auto get_filters() {
+	return [](std::string optionName, boost::property_tree::ptree *lptree)-> bool
+	{
+		const std::string filters = "filters";
+		int i = 0;
+		if (filters.find(optionName) == 0)
+		{
+			RegisterTable & reg = RegisterTable::getInstance();
+			for (auto &name : reg.getTypeNames())
+			{
+				boost::property_tree::ptree parameters;
+				boost::property_tree::ptree child;
+				for (auto &varName : reg.getVarNames(name))
+				{
+					child.put(varName, "");
+				}
+
+				parameters.push_back(std::make_pair("", child));
+				lptree->add_child(name, parameters);
+				++i;
+			}
+			return true;
+		}
+		return false;
+	};
+}
+
+auto get_version(){
+	return [](std::string optionName, boost::property_tree::ptree *lptree)-> bool
+	{
+		const std::string version = "version";
+		if (version.find(optionName) == 0)
+		{
+			auto v = getVersion();
+			lptree->add("Version", v);
+
+			return true;
+		}
+		return false;
+	};
+}
 
 void http::HttpTask::runTask()
 {
@@ -28,7 +98,6 @@ void http::HttpTask::runTask()
 	{
 		try {
 			std::stringstream dataResponse;
-
 		
 			ptree treeRequest;
 			ptree treeResponse;
@@ -37,31 +106,23 @@ void http::HttpTask::runTask()
 			read_json(_request->content, treeRequest);
 			if (treeRequest.count("command") != 0)
 			{
-				std::string command = treeRequest.get_child("command").get<std::string>("type");
+				auto command = treeRequest.get_child("command").get<std::string>("type");
 				ptree ltreeResponse;
-				if (command.find("kill") != std::string::npos || command.find("exit") != std::string::npos)
-				{
-					orchestrator::OrchestratorFactory::getInstance()->killall();
-					ltreeResponse.add("Status", "Task has been killed");
-					if(command.find("exit") != std::string::npos)
-						ltreeResponse.add("process", "Server is exiting");
 
-				}
-				else
-				{
-					ltreeResponse.add("Status", command + "is unkown command");
-				}
 				
-				
-				
-				std::stringstream ldataResponse;
+				CommandManager::callOption(command, get_version(), &ltreeResponse);
+				CommandManager::callOption(command, kill_command(), &ltreeResponse);
+				CommandManager::callOption(command, get_filters(), &ltreeResponse);
+				CommandManager::callOption(command, exit_command(), &ltreeResponse);
+
+				stringstream ldataResponse;
 				write_json(ldataResponse, ltreeResponse);
 				*_response << "HTTP/1.1 200 OK\r\n"
 					<< "Access-Control-Allow-Origin: *\r\n"
 					<< "Content-Type: application/json\r\n"
 					<< "Content-Length: " << ldataResponse.str().length() << "\r\n\r\n"
 					<< ldataResponse.str();
-				HttpTask::logger << "HttpTask response has been sent";
+				logger << "HttpTask response has been sent";
 				HttpTask::logger << ldataResponse.str();
 
 				if (command.find("exit") != std::string::npos)
