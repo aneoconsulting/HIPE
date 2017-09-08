@@ -53,7 +53,7 @@ namespace http
 		static bool callOption(std::string optionName, L lamb, Args...args)
 		{
 			typedef CommandManager::function_traits<decltype(lamb)> traits;
-			traits::f_type ff = lamb;
+			typename traits::f_type ff = lamb;
 			return make_function(ff)(optionName, args...);
 		}
 
