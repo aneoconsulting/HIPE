@@ -53,24 +53,6 @@ void http::HttpTask::runTask()
 				typedef CommandManager::function_traits<decltype(lambda)> traits;
 				traits::f_type ff = lambda;
 				auto res = CommandManager::callOption(command, ff, &ltreeResponse);
-
-				//auto lambda2 = [this](std::string OptionName) { return false; };
-				//typedef CommandManager::function_traits<decltype(lambda2)> traits2;
-				//traits2::f_type ff1 = lambda2;
-				//CommandManager::callOption("kill", ff1);
-
-
-				//if (command.find("kill") != std::string::npos || command.find("exit") != std::string::npos)
-				//{
-				//	/*orchestrator::OrchestratorFactory::getInstance()->killall();
-				//	ltreeResponse.add("Status", "Task has been killed");*/
-				//	/*if(command.find("exit") != std::string::npos)
-				//		ltreeResponse.add("process", "Server is exiting");*/
-				//}
-				//else
-				//{
-				//	ltreeResponse.add("Status", command + "is unkown command");
-				//}
 				
 				std::stringstream ldataResponse;
 				write_json(ldataResponse, ltreeResponse);
