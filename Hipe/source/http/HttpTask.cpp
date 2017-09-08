@@ -42,10 +42,17 @@ void http::HttpTask::runTask()
 				std::string command = treeRequest.get_child("command").get<std::string>("type");
 				ptree ltreeResponse;
 
-				auto lambda = [](std::string OptionName) { return false; };
+				auto lambda = [](std::string OptionName, ptree *lptree)
+				{
+					auto res = CommandExecuter::get_filters(OptionName, lptree);
+					res = CommandExecuter::kill_command_executer(OptionName, lptree);
+					res = CommandExecuter::exit_command_executer(OptionName, lptree);
+					res = CommandExecuter::get_version(OptionName, lptree);
+					return res;
+				};
 				typedef CommandManager::function_traits<decltype(lambda)> traits;
 				traits::f_type ff = lambda;
-				CommandManager::callOption(command, CommandExecuter::kill_command_executer, &ltreeResponse);
+				auto res = CommandManager::callOption(command, ff, &ltreeResponse);
 
 				//auto lambda2 = [this](std::string OptionName) { return false; };
 				//typedef CommandManager::function_traits<decltype(lambda2)> traits2;
@@ -53,17 +60,17 @@ void http::HttpTask::runTask()
 				//CommandManager::callOption("kill", ff1);
 
 
-				if (command.find("kill") != std::string::npos || command.find("exit") != std::string::npos)
-				{
-					/*orchestrator::OrchestratorFactory::getInstance()->killall();
-					ltreeResponse.add("Status", "Task has been killed");*/
-					/*if(command.find("exit") != std::string::npos)
-						ltreeResponse.add("process", "Server is exiting");*/
-				}
-				else
-				{
-					ltreeResponse.add("Status", command + "is unkown command");
-				}
+				//if (command.find("kill") != std::string::npos || command.find("exit") != std::string::npos)
+				//{
+				//	/*orchestrator::OrchestratorFactory::getInstance()->killall();
+				//	ltreeResponse.add("Status", "Task has been killed");*/
+				//	/*if(command.find("exit") != std::string::npos)
+				//		ltreeResponse.add("process", "Server is exiting");*/
+				//}
+				//else
+				//{
+				//	ltreeResponse.add("Status", command + "is unkown command");
+				//}
 				
 				std::stringstream ldataResponse;
 				write_json(ldataResponse, ltreeResponse);

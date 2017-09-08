@@ -49,19 +49,6 @@ namespace http
 		{
 			return (typename function_traits<L>::f_type)(l);
 		}
-
-		static bool killCommand(std::string optionName, boost::property_tree::ptree & ltreeResponse)
-		{
-			if (optionName.compare("kill")) //compare if optionName == kill otherwise return false;{
-				orchestrator::OrchestratorFactory::getInstance()->killall();
-			    ltreeResponse.add("Status", "Task has been killed");
-				return true;
-			//Blah bka
-
-			return false;
-		}
-
-	public:
 		template <typename L, typename... Args>
 		static bool callOption(std::string optionName, L lamb, Args...args)
 		{

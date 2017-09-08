@@ -9,7 +9,6 @@
 #include <core/HipeException.h>
 #include <algorithm>
 #include <sstream>
-#include "RegisterTools.hpp"
 #include <filter/tools/filterMacros.h>
 #include <filter/data/IOData.h>
 #include <filter/data/IODataType.h>
