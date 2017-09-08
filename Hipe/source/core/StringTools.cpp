@@ -2,6 +2,12 @@
 #include <algorithm>
 
 
+/**
+ * \brief Convert String to hexa code
+ * \param s the string to convert
+ * \param upper_case check if it's case sensitive
+ * \return the value in a 64 bit int format
+ */
 hUInt64 ToHex(const std::string& s, bool upper_case)
 {
 

@@ -19,6 +19,9 @@ file(
     "${_src_core_inc_path}/*.h*"
 )
 
+##Get BUILD from git file
+file(STRINGS "${CMAKE_SOURCE_DIR}/BUILD_VERSION.txt" BUILD_VERSION)
+
 
 
 ##core LIBRARY
@@ -29,7 +32,7 @@ if (UNIX)
 target_compile_options(core PRIVATE -fPIC)
 endif()
 
-target_compile_definitions(core PRIVATE "-DUSE_BOOST_REGEX" "-DCORE_BUILD")
+target_compile_definitions(core PRIVATE "-DUSE_BOOST_REGEX" "-DCORE_BUILD" "-DBUILD_VERSION=${BUILD_VERSION}")
 
 include_directories(core ${Hype_INCLUDEDIR})
 target_link_libraries(core ${Boost_LIBRARIES})
