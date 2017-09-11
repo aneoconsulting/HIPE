@@ -7,7 +7,6 @@
 #include <filter/data/Composer.h>
 #include <core/HipeException.h>
 #include <http/CommandManager.h>
-#include "http/CommandExecuter.h"
 #include <core/version.h>
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
@@ -20,8 +19,8 @@ using namespace std;
 
 core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
 
-auto kill_command () {
-	return [](std::string optionName, boost::property_tree::ptree *lptree)-> bool
+std::function<bool(std::string, boost::property_tree::ptree *)> kill_command () {
+	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
 		if (optionName.compare("kill") == 0){
 			orchestrator::OrchestratorFactory::getInstance()->killall();
@@ -29,11 +28,11 @@ auto kill_command () {
 			return true;
 		}
 		return false;
-
 	};
 }
-auto exit_command() {
-	return [](std::string optionName, boost::property_tree::ptree *lptree)-> bool
+
+std::function<bool(std::string, boost::property_tree::ptree *)>  exit_command() {
+	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
 		const std::string exit = "exit";
 		if (exit.find(optionName) == 0)
@@ -47,8 +46,8 @@ auto exit_command() {
 	};
 }
 
-auto get_filters() {
-	return [](std::string optionName, boost::property_tree::ptree *lptree)-> bool
+std::function<bool(std::string, boost::property_tree::ptree *)> get_filters() {
+	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
 		const std::string filters = "filters";
 		int i = 0;
@@ -74,8 +73,8 @@ auto get_filters() {
 	};
 }
 
-auto get_version(){
-	return [](std::string optionName, boost::property_tree::ptree *lptree)-> bool
+std::function<bool(std::string, boost::property_tree::ptree *)> get_version(){
+	return [](std::string optionName, boost::property_tree::ptree *lptree)	
 	{
 		const std::string version = "version";
 		if (version.find(optionName) == 0)
@@ -109,7 +108,6 @@ void http::HttpTask::runTask()
 				auto command = treeRequest.get_child("command").get<std::string>("type");
 				ptree ltreeResponse;
 
-				
 				CommandManager::callOption(command, get_version(), &ltreeResponse);
 				CommandManager::callOption(command, kill_command(), &ltreeResponse);
 				CommandManager::callOption(command, get_filters(), &ltreeResponse);

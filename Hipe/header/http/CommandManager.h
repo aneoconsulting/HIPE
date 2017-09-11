@@ -1,8 +1,5 @@
 #pragma once
-#include <cstdlib>
-#include <tuple>
 #include <functional>
-#include <iostream>
 
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <map>
@@ -49,12 +46,13 @@ namespace http
 		{
 			return (typename function_traits<L>::f_type)(l);
 		}
-		template <typename L, typename... Args>
-		static bool callOption(std::string optionName, L lamb, Args...args)
+		template <typename... Args>
+		static bool callOption(std::string optionName, std::function<bool(std::string, Args...)> lamb, Args...args)
 		{
-			typedef CommandManager::function_traits<decltype(lamb)> traits;
+			/*typedef function_traits<decltype(lamb)> traits;
 			typename traits::f_type ff = lamb;
-			return make_function(ff)(optionName, args...);
+			return make_function(ff)(optionName, args...);*/
+			return lamb(optionName, args...);
 		}
 
 		CommandManager()
