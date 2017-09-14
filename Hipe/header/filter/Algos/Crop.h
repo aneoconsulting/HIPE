@@ -14,6 +14,7 @@ namespace filter
 	namespace Algos
 	{
 		/**
+		 * \todo
 		 * \brief The UserData struct stores the data relative to the user mouse click input
 		 */
 		struct UserData {
@@ -24,6 +25,7 @@ namespace filter
 		};
 
 		/**
+		 * \todo
 		 * \brief Use this method as a mouse callback to know where the user clicked and define the area he selected.
 		 * \param event The type of the mouse event that occured
 		 * \param x The x position (relative to the targeted window) where the user clicked.
@@ -73,7 +75,7 @@ namespace filter
 		}
 
 		/**
-		 *[TODO]
+		 * \todo
 		 * \brief Handles the user mouse input on an OpenCV window, and the area (region of interest) he selects
 		 * \param imageRef The image on which the user will select areas
 		 * \param userData The structure where the user input data will be stored. \see UserData
@@ -138,6 +140,7 @@ namespace filter
 
 		/**
 		 * \brief The Crop filter will let the user manually select (with mouse input) a region of interest in an image.
+		 * 
 		 *  The filter will await an image as input and will output a list of regions of interest.
 		 *  Prefer using the Cropper filter and the PatternData data type.
 		 */

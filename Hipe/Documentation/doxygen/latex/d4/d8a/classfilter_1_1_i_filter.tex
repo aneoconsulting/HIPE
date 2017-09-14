@@ -1,0 +1,138 @@
+\hypertarget{classfilter_1_1_i_filter}{}\section{filter\+:\+:I\+Filter Class Reference}
+\label{classfilter_1_1_i_filter}\index{filter\+::\+I\+Filter@{filter\+::\+I\+Filter}}
+
+
+The \hyperlink{classfilter_1_1_i_filter}{I\+Filter} interface is used to specialize a filter to process image based data.  
+
+
+
+
+{\ttfamily \#include $<$I\+Filter.\+h$>$}
+
+Inheritance diagram for filter\+:\+:I\+Filter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=12.000000cm]{d4/d8a/classfilter_1_1_i_filter}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_acc2eda7686fb753d4fdc76d7c7cb7fe9}\label{classfilter_1_1_i_filter_acc2eda7686fb753d4fdc76d7c7cb7fe9}} 
+{\bfseries I\+Filter} (std\+::string contructor\+Name)
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a1ba2261bc75ed3e23ec9b14fd78661de}\label{classfilter_1_1_i_filter_a1ba2261bc75ed3e23ec9b14fd78661de}} 
+virtual void {\bfseries get\+Next\+Filter} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a46f7e69f03ccf1d3227dddcb2ff5edd7}\label{classfilter_1_1_i_filter_a46f7e69f03ccf1d3227dddcb2ff5edd7}} 
+virtual void {\bfseries get\+Previous\+Filter} ()
+\item 
+virtual \hyperlink{classfilter_1_1_i_filter}{I\+Filter} $\ast$ \hyperlink{classfilter_1_1_i_filter_a97fdc1892c15c918287c83263d069147}{get\+Root\+Filter} ()
+\begin{DoxyCompactList}\small\item\em Get the Root\+Filter node (head) of the current graph. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_ab4a3bdc9a1e04edd8f1cedb2fc51b234}\label{classfilter_1_1_i_filter_ab4a3bdc9a1e04edd8f1cedb2fc51b234}} 
+virtual void {\bfseries get\+Parent} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a9c6127d9371057896377e07c73fe9de2}\label{classfilter_1_1_i_filter_a9c6127d9371057896377e07c73fe9de2}} 
+virtual void {\bfseries get\+Next\+Children} ()
+\item 
+virtual std\+::string \hyperlink{classfilter_1_1_i_filter_ab99902b060a6d9edc3452a8c9f85e37e}{result\+As\+String} ()
+\begin{DoxyCompactList}\small\item\em Get the result of the processing done by the node. This method will return information only. The actual processing is done by the process() method. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classfilter_1_1_i_filter_a3132d332ce814fda5c1a17a3e498c4fb}{add\+Dependencies} (\hyperlink{classfilter_1_1_model}{Model} $\ast$filter)
+\begin{DoxyCompactList}\small\item\em Create a parent child dependency between two filters. Every parent will be processed before its child. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a49c161e0e74bc8169a47c5832adc80bf}\label{classfilter_1_1_i_filter_a49c161e0e74bc8169a47c5832adc80bf}} 
+virtual void {\bfseries add\+Child\+Dependencies} (\hyperlink{classfilter_1_1_model}{Model} $\ast$filter)
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a342b79ca87a0a80cdc9283f791445a5d}\label{classfilter_1_1_i_filter_a342b79ca87a0a80cdc9283f791445a5d}} 
+virtual void {\bfseries add\+Dependencies\+Name} (std\+::string filter)
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_adad5caef656f6e03875e9370821af953}\label{classfilter_1_1_i_filter_adad5caef656f6e03875e9370821af953}} 
+virtual void {\bfseries add\+Child\+Dependencies\+Name} (std\+::string filter)
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a5573a79109562b2bce0ef402f016b62b}\label{classfilter_1_1_i_filter_a5573a79109562b2bce0ef402f016b62b}} 
+virtual std\+::map$<$ std\+::string, \hyperlink{classfilter_1_1_model}{Model} $\ast$ $>$ {\bfseries get\+Parents} () const
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_aa4473ecc2a050e587982915958d58591}\label{classfilter_1_1_i_filter_aa4473ecc2a050e587982915958d58591}} 
+virtual std\+::map$<$ std\+::string, \hyperlink{classfilter_1_1_model}{Model} $\ast$ $>$ {\bfseries get\+Childrens} () const
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_ae1eb446deaca10fec8882e22c401f3c3}\label{classfilter_1_1_i_filter_ae1eb446deaca10fec8882e22c401f3c3}} 
+virtual \hyperlink{classfilter_1_1_i_filter}{I\+Filter} \& {\bfseries operator$<$$<$} (\hyperlink{classfilter_1_1data_1_1_data}{data\+::\+Data} \&element)
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_aab026b67b2b7d0675c3c840a7d19a1d4}\label{classfilter_1_1_i_filter_aab026b67b2b7d0675c3c840a7d19a1d4}} 
+virtual \hyperlink{classfilter_1_1_i_filter}{I\+Filter} \& {\bfseries operator$<$$<$} (cv\+::\+Mat \&element)
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_acfdd4ae98b9915471dc7990d2d8bce62}\label{classfilter_1_1_i_filter_acfdd4ae98b9915471dc7990d2d8bce62}} 
+virtual \hyperlink{classfilter_1_1_i_filter}{I\+Filter} \& {\bfseries get\+Cast} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a9a683f58c2b38861f84a71185b7042a1}\label{classfilter_1_1_i_filter_a9a683f58c2b38861f84a71185b7042a1}} 
+virtual \hyperlink{classfilter_1_1_i_filter}{I\+Filter} \& {\bfseries operator$<$$<$} (\hyperlink{classfilter_1_1_i_filter}{I\+Filter} \&other)
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_afce54ff6662fa18ebfa5a17d6a915b87}\label{classfilter_1_1_i_filter_afce54ff6662fa18ebfa5a17d6a915b87}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a62fe91f40b01cb886e923d8073392348}\label{classfilter_1_1_i_filter_a62fe91f40b01cb886e923d8073392348}} 
+virtual Hipe\+Status {\bfseries process} ()=0
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a8fb81acc82a39393799f3d3e29861be2}\label{classfilter_1_1_i_filter_a8fb81acc82a39393799f3d3e29861be2}} 
+std\+::map$<$ std\+::string, \hyperlink{classfilter_1_1_model}{Model} $\ast$ $>$ {\bfseries \+\_\+parent\+Filters}
+\item 
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a4408ce375b706fb8e809417fccb4dbfe}\label{classfilter_1_1_i_filter_a4408ce375b706fb8e809417fccb4dbfe}} 
+std\+::map$<$ std\+::string, \hyperlink{classfilter_1_1_model}{Model} $\ast$ $>$ {\bfseries \+\_\+child\+Filters}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000027}{Todo}]\end{DoxyRefDesc}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a3132d332ce814fda5c1a17a3e498c4fb}\label{classfilter_1_1_i_filter_a3132d332ce814fda5c1a17a3e498c4fb}} 
+\index{filter\+::\+I\+Filter@{filter\+::\+I\+Filter}!add\+Dependencies@{add\+Dependencies}}
+\index{add\+Dependencies@{add\+Dependencies}!filter\+::\+I\+Filter@{filter\+::\+I\+Filter}}
+\subsubsection{\texorpdfstring{add\+Dependencies()}{addDependencies()}}
+{\footnotesize\ttfamily void filter\+::\+I\+Filter\+::add\+Dependencies (\begin{DoxyParamCaption}\item[{\hyperlink{classfilter_1_1_model}{Model} $\ast$}]{filter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em filter} & The filter to add as dependency \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classfilter_1_1_model}{filter\+::\+Model}.
+
+\mbox{\Hypertarget{classfilter_1_1_i_filter_a97fdc1892c15c918287c83263d069147}\label{classfilter_1_1_i_filter_a97fdc1892c15c918287c83263d069147}} 
+\index{filter\+::\+I\+Filter@{filter\+::\+I\+Filter}!get\+Root\+Filter@{get\+Root\+Filter}}
+\index{get\+Root\+Filter@{get\+Root\+Filter}!filter\+::\+I\+Filter@{filter\+::\+I\+Filter}}
+\subsubsection{\texorpdfstring{get\+Root\+Filter()}{getRootFilter()}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1_i_filter}{filter\+::\+I\+Filter} $\ast$ filter\+::\+I\+Filter\+::get\+Root\+Filter (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+A pointer to the Root\+Filter node of the graph 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classfilter_1_1_model}{filter\+::\+Model}.
+
+\mbox{\Hypertarget{classfilter_1_1_i_filter_ab99902b060a6d9edc3452a8c9f85e37e}\label{classfilter_1_1_i_filter_ab99902b060a6d9edc3452a8c9f85e37e}} 
+\index{filter\+::\+I\+Filter@{filter\+::\+I\+Filter}!result\+As\+String@{result\+As\+String}}
+\index{result\+As\+String@{result\+As\+String}!filter\+::\+I\+Filter@{filter\+::\+I\+Filter}}
+\subsubsection{\texorpdfstring{result\+As\+String()}{resultAsString()}}
+{\footnotesize\ttfamily virtual std\+::string filter\+::\+I\+Filter\+::result\+As\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+A string containing the result of the processing done by the filter. 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classfilter_1_1_algos_1_1_crop_a44ded08379421eb046be865a884139e8}{filter\+::\+Algos\+::\+Crop}, \hyperlink{classfilter_1_1algos_1_1_cropper_ae970d5d448587b8288aca2484f12f2fa}{filter\+::algos\+::\+Cropper}, \hyperlink{classfilter_1_1algos_1_1_latch_a24c57b8d90c89b1f95fe2f7624a9d033}{filter\+::algos\+::\+Latch}, \hyperlink{classfilter_1_1algos_1_1_stream_result_filter_acdd774d7dc6a7b807d5fc0bfe3343949}{filter\+::algos\+::\+Stream\+Result\+Filter}, \hyperlink{classfilter_1_1algos_1_1_face_detection_a11c5004107d5048de93ae81ced065a26}{filter\+::algos\+::\+Face\+Detection}, \hyperlink{classfilter_1_1algos_1_1_face_landmark_a58eca9d87717bac1696c2b008af4342a}{filter\+::algos\+::\+Face\+Landmark}, \hyperlink{classfilter_1_1algos_1_1_show_image_a752acc552a91b93b42acf0a1269b5e73}{filter\+::algos\+::\+Show\+Image}, \hyperlink{classfilter_1_1algos_1_1_show_video_a8fc9113fbd7f9648ea0997304ca91aec}{filter\+::algos\+::\+Show\+Video}, \hyperlink{classfilter_1_1algos_1_1_resize_a5f4bc6f31fd5d759f1216ce60b1358b0}{filter\+::algos\+::\+Resize}, \hyperlink{classfilter_1_1algos_1_1_akaze_afbbbf680eb0c14ea7e47dbc78169f32b}{filter\+::algos\+::\+Akaze}, \hyperlink{classfilter_1_1algos_1_1_kmeans_aed99c18aeec39add2955b2b9b3361a8a}{filter\+::algos\+::\+Kmeans}, \hyperlink{classfilter_1_1algos_1_1_rotate_image_af9aeff9c2232e6fc97708cbc41ee1fb2}{filter\+::algos\+::\+Rotate\+Image}, \hyperlink{classfilter_1_1algos_1_1_overlay_filter_ac591ab39d8e08ccfe8f96020e438958d}{filter\+::algos\+::\+Overlay\+Filter}, \hyperlink{classfilter_1_1algos_1_1_surf_ad7aae2eb2e5a5f2a0277eb5d58153833}{filter\+::algos\+::\+Surf}, \hyperlink{classfilter_1_1algos_1_1_overlay_mat_filter_a819c132897fd3a1e4f4f28378313ccdd}{filter\+::algos\+::\+Overlay\+Mat\+Filter}, \hyperlink{classfilter_1_1algos_1_1_resize_pattern_ae36ff1d98ef8f2dd32ba5b7a3a50152f}{filter\+::algos\+::\+Resize\+Pattern}, \hyperlink{classfilter_1_1algos_1_1_kill_af12b57f54905370350c6a7f291f99a6c}{filter\+::algos\+::\+Kill}, \hyperlink{classfilter_1_1algos_1_1_result_filter_a0a67e26005d8b32a69fb6e6bec80788c}{filter\+::algos\+::\+Result\+Filter}, and \hyperlink{classfilter_1_1algos_1_1_gaussian_a5f2ba86fa61807781b46fe321e435c29}{filter\+::algos\+::\+Gaussian}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/I\+Filter.\+h\item 
+source/filter/I\+Filter.\+cpp\end{DoxyCompactItemize}

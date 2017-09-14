@@ -1,0 +1,122 @@
+\hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder}{}\section{M\+E\+S\+AI\+:\+:F\+Fmpeg\+H264\+Encoder Class Reference}
+\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder}\index{M\+E\+S\+A\+I\+::\+F\+Fmpeg\+H264\+Encoder@{M\+E\+S\+A\+I\+::\+F\+Fmpeg\+H264\+Encoder}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a242e5d0e654b8f83ca033e637208d0aa}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a242e5d0e654b8f83ca033e637208d0aa}} 
+void {\bfseries set\+Callback\+Function\+Frame\+Is\+Ready} (std\+::function$<$ void()$>$ func)
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a14d986ee397f53950a1dce392c942276}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a14d986ee397f53950a1dce392c942276}} 
+void {\bfseries convert\+Image\+Mult2} (cv\+::\+Mat \&image)
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a6a84030b147c3b888e0a4748ceefd0d6}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a6a84030b147c3b888e0a4748ceefd0d6}} 
+void {\bfseries Setup\+Video} (std\+::string filename, int Width, int Height, int F\+PS, int G\+OB, int Bit\+Per\+Second)
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a5af225d104a7a503c051a1b2275c0bc5}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a5af225d104a7a503c051a1b2275c0bc5}} 
+void {\bfseries Close\+Video} ()
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a47a9fee0cf51cf294a939e3778db407d}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a47a9fee0cf51cf294a939e3778db407d}} 
+void {\bfseries Setup\+Codec} (const char $\ast$filename, int codec\+\_\+id)
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a5031f20ba6f4a948a2e1f5aab19fd223}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a5031f20ba6f4a948a2e1f5aab19fd223}} 
+void {\bfseries Close\+Codec} ()
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a31d211927f361f73ea76c8fabf955baf}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a31d211927f361f73ea76c8fabf955baf}} 
+void {\bfseries Send\+New\+Frame} (cv\+::\+Mat R\+G\+B\+Frame)
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_acc8ed78ccf68e30d30ebb62565de11c3}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_acc8ed78ccf68e30d30ebb62565de11c3}} 
+void {\bfseries Write\+Frame} (cv\+::\+Mat \&R\+G\+B\+Frame)
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_aa42834033f0fba672020bc510a9739c2}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_aa42834033f0fba672020bc510a9739c2}} 
+char {\bfseries Release\+Frame} ()
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a876d1dc5406ce3a427b4d31bba2fb163}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a876d1dc5406ce3a427b4d31bba2fb163}} 
+void {\bfseries run} ()
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a5614f1f368de7abba534e7517a493310}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a5614f1f368de7abba534e7517a493310}} 
+char {\bfseries Get\+Frame} (uint8\+\_\+t $\ast$$\ast$Frame\+Buffer, unsigned int $\ast$Frame\+Size)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ae90e54edfbbc3341fcebe8f9345d7f4b}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ae90e54edfbbc3341fcebe8f9345d7f4b}} 
+std\+::atomic$<$ bool $>$ {\bfseries quit}
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ad2da2c1360276b7cb48433f9d5c1c065}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ad2da2c1360276b7cb48433f9d5c1c065}} 
+std\+::queue$<$ cv\+::\+Mat $>$ {\bfseries inqueue}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a26fa81f02105bc7b2bdc8628d501fac4}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a26fa81f02105bc7b2bdc8628d501fac4}} 
+std\+::mutex {\bfseries inqueue\+\_\+mutex}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a74d8aa3acf32228262764dc255db4a1c}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a74d8aa3acf32228262764dc255db4a1c}} 
+std\+::queue$<$ \hyperlink{class_m_e_s_a_i_1_1_frame_structure}{Frame\+Structure} $\ast$ $>$ {\bfseries outqueue}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a1da76b5e28e09492339625ac6510964f}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a1da76b5e28e09492339625ac6510964f}} 
+std\+::mutex {\bfseries outqueue\+\_\+mutex}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a789338488d109415d654a4f13edff014}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a789338488d109415d654a4f13edff014}} 
+int {\bfseries m\+\_\+sws\+\_\+flags}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a4dda85e0b2319a0870ea72b54aa555ad}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a4dda85e0b2319a0870ea72b54aa555ad}} 
+int {\bfseries m\+\_\+\+A\+V\+I\+M\+O\+V\+\_\+\+F\+PS}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a9398ebdfb7954a953a988153758d3734}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a9398ebdfb7954a953a988153758d3734}} 
+int {\bfseries m\+\_\+\+A\+V\+I\+M\+O\+V\+\_\+\+G\+OB}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a5abcfa309a22e69a22311526499e5ff2}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a5abcfa309a22e69a22311526499e5ff2}} 
+int {\bfseries m\+\_\+\+A\+V\+I\+M\+O\+V\+\_\+\+B\+PS}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a4b3a8151e097ca670bd5f93a4785a29e}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a4b3a8151e097ca670bd5f93a4785a29e}} 
+int {\bfseries m\+\_\+frame\+\_\+count}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ad9574b5427074034b79e44e1834f40b1}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ad9574b5427074034b79e44e1834f40b1}} 
+int {\bfseries m\+\_\+\+A\+V\+I\+M\+O\+V\+\_\+\+W\+I\+D\+TH}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a4a5187b074f07f327a2d0acc8d720afe}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a4a5187b074f07f327a2d0acc8d720afe}} 
+int {\bfseries m\+\_\+\+A\+V\+I\+M\+O\+V\+\_\+\+H\+E\+I\+G\+HT}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a1624a105067ed3c169e7e1c45e95bfaa}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a1624a105067ed3c169e7e1c45e95bfaa}} 
+std\+::string {\bfseries m\+\_\+filename}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_adfdf8aec29f1caacc3f6387958185306}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_adfdf8aec29f1caacc3f6387958185306}} 
+double {\bfseries m\+\_\+video\+\_\+time}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a3b86546a32f1e83f635560aa0bd8e367}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a3b86546a32f1e83f635560aa0bd8e367}} 
+A\+V\+Codec\+Context $\ast$ {\bfseries m\+\_\+c}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ac69c24b887b561ee625c1cee18d9a6cc}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ac69c24b887b561ee625c1cee18d9a6cc}} 
+A\+V\+Stream $\ast$ {\bfseries m\+\_\+video\+\_\+st}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_acbe489bfaf6328c19d4fc1c82114f869}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_acbe489bfaf6328c19d4fc1c82114f869}} 
+A\+V\+Output\+Format $\ast$ {\bfseries m\+\_\+fmt}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a3a8bceb41fdac0a3c560342008925810}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a3a8bceb41fdac0a3c560342008925810}} 
+A\+V\+Format\+Context $\ast$ {\bfseries m\+\_\+oc}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a6eba879398eef671d835decf1ff4eff7}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a6eba879398eef671d835decf1ff4eff7}} 
+A\+V\+Codec $\ast$ {\bfseries m\+\_\+video\+\_\+codec}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a6888ab684d0740e347f3b0bb4771443f}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a6888ab684d0740e347f3b0bb4771443f}} 
+A\+V\+Frame $\ast$ {\bfseries m\+\_\+src\+\_\+picture}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a59e92e41755307d60458e22f0d30d7dd}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a59e92e41755307d60458e22f0d30d7dd}} 
+A\+V\+Frame $\ast$ {\bfseries m\+\_\+dst\+\_\+picture}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a7b92e8f2e33eed0a0a5d7f45e4716373}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a7b92e8f2e33eed0a0a5d7f45e4716373}} 
+Sws\+Context $\ast$ {\bfseries sws\+\_\+ctx}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ab9b0bc201537563c8fd57de283c05636}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_ab9b0bc201537563c8fd57de283c05636}} 
+int {\bfseries buffer\+Size}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a29f241ccd3a0e04fd1e6d3c36c2a4e06}\label{class_m_e_s_a_i_1_1_f_fmpeg_h264_encoder_a29f241ccd3a0e04fd1e6d3c36c2a4e06}} 
+std\+::function$<$ void()$>$ {\bfseries on\+Frame}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/streaming\+\_\+rtsp/F\+Fmpeg\+H264\+Encoder.\+h\item 
+source/streaming\+\_\+rtsp/F\+Fmpeg\+H264\+Encoder.\+cpp\end{DoxyCompactItemize}

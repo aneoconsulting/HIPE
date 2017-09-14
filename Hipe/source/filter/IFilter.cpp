@@ -39,18 +39,16 @@ void filter::IFilter::addDependencies(Model* _parent)
 	IFilter *parent = static_cast<IFilter *>(_parent);
 	//TODO : somewhere else the contract to do not have multiple object with same name (after Json to object is a good place to do it)
 
-	if (! (parent->_childFilters.find(this->_name) != parent->_childFilters.end() && (parent->_childFilters[this->_name] != nullptr)))
+	if (!(parent->_childFilters.find(this->_name) != parent->_childFilters.end() && (parent->_childFilters[this->_name] != nullptr)))
 	{
 		parent->_childFilters[this->_name] = this;
 		*(parent) << *(this);
 	}
-	
-	if ( ! (this->_parentFilters.find(parent->_name) != this->_parentFilters.end() && (this->_parentFilters[parent->_name] != nullptr)))
+
+	if (!(this->_parentFilters.find(parent->_name) != this->_parentFilters.end() && (this->_parentFilters[parent->_name] != nullptr)))
 	{
 		this->_parentFilters[parent->getName()] = parent;
 	}
-	
-
 }
 
 void filter::IFilter::addChildDependencies(Model* _child)

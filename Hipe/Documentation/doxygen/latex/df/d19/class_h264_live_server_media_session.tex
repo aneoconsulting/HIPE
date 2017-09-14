@@ -1,0 +1,62 @@
+\hypertarget{class_h264_live_server_media_session}{}\section{H264\+Live\+Server\+Media\+Session Class Reference}
+\label{class_h264_live_server_media_session}\index{H264\+Live\+Server\+Media\+Session@{H264\+Live\+Server\+Media\+Session}}
+Inheritance diagram for H264\+Live\+Server\+Media\+Session\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{df/d19/class_h264_live_server_media_session}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_a425e58c77868ccf7652acb31357f0f6f}\label{class_h264_live_server_media_session_a425e58c77868ccf7652acb31357f0f6f}} 
+void {\bfseries check\+For\+Aux\+S\+D\+P\+Line1} ()
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_a2837de6c0e367b8233d0d608446c7054}\label{class_h264_live_server_media_session_a2837de6c0e367b8233d0d608446c7054}} 
+void {\bfseries after\+Playing\+Dummy1} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_ac0b145c580d8a63a8fb61ba973d8e9b8}\label{class_h264_live_server_media_session_ac0b145c580d8a63a8fb61ba973d8e9b8}} 
+static \hyperlink{class_h264_live_server_media_session}{H264\+Live\+Server\+Media\+Session} $\ast$ {\bfseries create\+New} (Usage\+Environment \&env, bool reuse\+First\+Source, \hyperlink{classcore_1_1queue_1_1_concurrent_queue}{core\+::queue\+::\+Concurrent\+Queue}$<$ \hyperlink{classfilter_1_1data_1_1_data}{filter\+::data\+::\+Data} $>$ \&concurrent\+\_\+queue)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_ad5be284c8c0b5e1b479ccb87f85b644a}\label{class_h264_live_server_media_session_ad5be284c8c0b5e1b479ccb87f85b644a}} 
+{\bfseries H264\+Live\+Server\+Media\+Session} (Usage\+Environment \&env, bool reuse\+First\+Source, \hyperlink{classcore_1_1queue_1_1_concurrent_queue}{core\+::queue\+::\+Concurrent\+Queue}$<$ \hyperlink{classfilter_1_1data_1_1_data}{filter\+::data\+::\+Data} $>$ \&concurrent\+\_\+queue)
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_a436efe803a54a77a0ba8ea4420f439f3}\label{class_h264_live_server_media_session_a436efe803a54a77a0ba8ea4420f439f3}} 
+void {\bfseries set\+Done\+Flag} ()
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_a19e96a64dda50b5ee07603976089b0ef}\label{class_h264_live_server_media_session_a19e96a64dda50b5ee07603976089b0ef}} 
+virtual char const  $\ast$ {\bfseries get\+Aux\+S\+D\+P\+Line} (R\+T\+P\+Sink $\ast$rtp\+Sink, Framed\+Source $\ast$input\+Source)
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_a643871b4f55dfade6a4d71445d0f7a26}\label{class_h264_live_server_media_session_a643871b4f55dfade6a4d71445d0f7a26}} 
+virtual Framed\+Source $\ast$ {\bfseries create\+New\+Stream\+Source} (unsigned client\+Session\+Id, unsigned \&est\+Bitrate)
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_a55ae1ef4c9316ce7925683a73fc52655}\label{class_h264_live_server_media_session_a55ae1ef4c9316ce7925683a73fc52655}} 
+virtual R\+T\+P\+Sink $\ast$ {\bfseries create\+New\+R\+T\+P\+Sink} (Groupsock $\ast$rtp\+Groupsock, unsigned char rtp\+Payload\+Type\+If\+Dynamic, Framed\+Source $\ast$input\+Source)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_ac1b94afe60e2b966d99353836eee30b0}\label{class_h264_live_server_media_session_ac1b94afe60e2b966d99353836eee30b0}} 
+char $\ast$ {\bfseries f\+Aux\+S\+D\+P\+Line}
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_a75e1b4db815f141d0014c04de1d6a811}\label{class_h264_live_server_media_session_a75e1b4db815f141d0014c04de1d6a811}} 
+char {\bfseries f\+Done\+Flag}
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_ac0d59fbfc90f27eecb30cad7e9c2aa57}\label{class_h264_live_server_media_session_ac0d59fbfc90f27eecb30cad7e9c2aa57}} 
+R\+T\+P\+Sink $\ast$ {\bfseries f\+Dummy\+Sink}
+\item 
+\mbox{\Hypertarget{class_h264_live_server_media_session_a2bf1fca74e15b552e82eaa6925834512}\label{class_h264_live_server_media_session_a2bf1fca74e15b552e82eaa6925834512}} 
+\hyperlink{classcore_1_1queue_1_1_concurrent_queue}{core\+::queue\+::\+Concurrent\+Queue}$<$ \hyperlink{classfilter_1_1data_1_1_data}{filter\+::data\+::\+Data} $>$ \& {\bfseries \+\_\+concurrent\+\_\+queue}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/streaming/H264\+Live\+Server\+Media\+Session.\+h\item 
+source/streaming/H264\+Live\+Server\+Media\+Session.\+cpp\end{DoxyCompactItemize}

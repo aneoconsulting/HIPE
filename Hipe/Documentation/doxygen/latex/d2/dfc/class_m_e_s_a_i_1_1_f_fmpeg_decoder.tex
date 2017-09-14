@@ -1,0 +1,74 @@
+\hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder}{}\section{M\+E\+S\+AI\+:\+:F\+Fmpeg\+Decoder Class Reference}
+\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder}\index{M\+E\+S\+A\+I\+::\+F\+Fmpeg\+Decoder@{M\+E\+S\+A\+I\+::\+F\+Fmpeg\+Decoder}}
+Inheritance diagram for M\+E\+S\+AI\+:\+:F\+Fmpeg\+Decoder\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d2/dfc/class_m_e_s_a_i_1_1_f_fmpeg_decoder}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a7ebd1c86816d9510c993c453c2a26d90}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a7ebd1c86816d9510c993c453c2a26d90}} 
+{\bfseries F\+Fmpeg\+Decoder} (std\+::string)
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_ad7d30c2c905e1c46e12744ec39937305}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_ad7d30c2c905e1c46e12744ec39937305}} 
+virtual void {\bfseries intialize} ()
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a2b3b9e74c202fbe852d9e09ee467b175}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a2b3b9e74c202fbe852d9e09ee467b175}} 
+virtual void {\bfseries play\+Media} ()
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a8a6ac425e188fbd2ff68c5a43e0d24a6}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a8a6ac425e188fbd2ff68c5a43e0d24a6}} 
+virtual void {\bfseries finalize} ()
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_ac1da1b4a9db30b2027a1c9a9821f7b28}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_ac1da1b4a9db30b2027a1c9a9821f7b28}} 
+void {\bfseries set\+Onframe\+Callback\+Function} (std\+::function$<$ void(cv\+::\+Mat \&)$>$ func)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a573ebc8ff1e2fdb34d25dc43491ef8f5}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a573ebc8ff1e2fdb34d25dc43491ef8f5}} 
+int {\bfseries width}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a21ce7c6c31abdfdcfbb3ec19fcb7b24e}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a21ce7c6c31abdfdcfbb3ec19fcb7b24e}} 
+int {\bfseries height}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_ad727d8ba3ca73d9837d703018c335a6c}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_ad727d8ba3ca73d9837d703018c335a6c}} 
+int {\bfseries G\+OP}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a59bee3ac056dd0d6c8fdb3c6f6a6b74f}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a59bee3ac056dd0d6c8fdb3c6f6a6b74f}} 
+int {\bfseries frame\+Rate}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a0a06c5a6670dabda8d571f65101a75cd}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a0a06c5a6670dabda8d571f65101a75cd}} 
+int {\bfseries bitrate}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a17913d19b2d877998d7bba9b5801a1ad}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a17913d19b2d877998d7bba9b5801a1ad}} 
+std\+::function$<$ void(cv\+::\+Mat \&)$>$ {\bfseries on\+Frame}
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a04c74d07cfc273de1f6cc719c4560830}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a04c74d07cfc273de1f6cc719c4560830}} 
+std\+::string {\bfseries path}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_abdd6372101e492c581be900e600f4eec}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_abdd6372101e492c581be900e600f4eec}} 
+A\+V\+Codec\+Context $\ast$ {\bfseries p\+Codec\+Ctx}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a514e4015809c9fea0553b256b2b1ed47}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a514e4015809c9fea0553b256b2b1ed47}} 
+A\+V\+Format\+Context $\ast$ {\bfseries p\+Format\+Ctx}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a1ea3e6e36bf3949b1821b9801a028310}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a1ea3e6e36bf3949b1821b9801a028310}} 
+A\+V\+Frame $\ast$ {\bfseries p\+Frame\+R\+GB}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a6a1d6f5e64e0559629385f53119e7768}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a6a1d6f5e64e0559629385f53119e7768}} 
+struct Sws\+Context $\ast$ {\bfseries img\+\_\+convert\+\_\+ctx}
+\item 
+\mbox{\Hypertarget{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a825efecc65e8731d027779ee56cc633d}\label{class_m_e_s_a_i_1_1_f_fmpeg_decoder_a825efecc65e8731d027779ee56cc633d}} 
+int {\bfseries video\+Stream}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/streaming\+\_\+rtsp/F\+Fmpeg\+Decoder.\+h\item 
+source/streaming\+\_\+rtsp/F\+Fmpeg\+Decoder.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['idplatecropper',['IDPlateCropper',['../d9/d7a/classfilter_1_1algos_1_1_i_d_plate_cropper.html',1,'filter::algos']]],
+  ['idplateidentifier',['IDPlateIdentifier',['../dd/d88/classfilter_1_1_algos_1_1_i_d_plate_identifier.html',1,'filter::Algos']]],
+  ['idplaterectifier',['IDPlateRectifier',['../d5/daf/classfilter_1_1algos_1_1_i_d_plate_rectifier.html',1,'filter::algos']]],
+  ['iequal_5fto',['iequal_to',['../d8/d8a/classhttp_1_1_server_base_1_1_request_1_1iequal__to.html',1,'http::ServerBase&lt; socket_type &gt;::Request::iequal_to'],['../da/d25/classhttp_1_1_request_1_1iequal__to.html',1,'http::Request&lt; socket_type &gt;::iequal_to'],['../de/d9a/classhttp_1_1_client_base_1_1_response_1_1iequal__to.html',1,'http::ClientBase&lt; socket_type &gt;::Response::iequal_to']]],
+  ['ifilter',['IFilter',['../d4/d8a/classfilter_1_1_i_filter.html',1,'filter']]],
+  ['ihash',['ihash',['../d6/d03/classhttp_1_1_server_base_1_1_request_1_1ihash.html',1,'http::ServerBase&lt; socket_type &gt;::Request::ihash'],['../df/dd7/classhttp_1_1_request_1_1ihash.html',1,'http::Request&lt; socket_type &gt;::ihash'],['../d7/d88/classhttp_1_1_client_base_1_1_response_1_1ihash.html',1,'http::ClientBase&lt; socket_type &gt;::Response::ihash']]],
+  ['imagearraydata',['ImageArrayData',['../d6/d44/classfilter_1_1data_1_1_image_array_data.html',1,'filter::data']]],
+  ['imagedata',['ImageData',['../db/dbc/classfilter_1_1data_1_1_image_data.html',1,'filter::data']]],
+  ['invert',['Invert',['../d5/d93/classfilter_1_1algos_1_1_invert.html',1,'filter::algos']]],
+  ['invoker',['Invoker',['../d3/dca/classcore_1_1_invoker.html',1,'core']]],
+  ['invokerbase',['InvokerBase',['../d9/d1c/classcore_1_1_invoker_base.html',1,'core']]],
+  ['iodata',['IOData',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20data_2c_20derived_20_3e',['IOData&lt; Data, Derived &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20data_2c_20filevideoinput_20_3e',['IOData&lt; Data, FileVideoInput &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20data_2c_20imagearraydata_20_3e',['IOData&lt; Data, ImageArrayData &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20data_2c_20listiodata_20_3e',['IOData&lt; Data, ListIOData &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20data_2c_20patterndata_20_3e',['IOData&lt; Data, PatternData &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20data_2c_20squarecrop_20_3e',['IOData&lt; Data, SquareCrop &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20data_2c_20streamvideoinput_20_3e',['IOData&lt; Data, StreamVideoInput &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20data_2c_20textdata_20_3e',['IOData&lt; Data, TextData &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20imagearraydata_2c_20directoryimgdata_20_3e',['IOData&lt; ImageArrayData, DirectoryImgData &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20imagearraydata_2c_20imagedata_20_3e',['IOData&lt; ImageArrayData, ImageData &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20imagearraydata_2c_20outputdata_20_3e',['IOData&lt; ImageArrayData, OutputData &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['iodata_3c_20imagedata_2c_20fileimagedata_20_3e',['IOData&lt; ImageData, FileImageData &gt;',['../d0/d51/classfilter_1_1data_1_1_i_o_data.html',1,'filter::data']]],
+  ['ipdesc',['IPDesc',['../d3/d8a/classfilter_1_1algos_1_1_i_p_desc.html',1,'filter::algos']]]
+];

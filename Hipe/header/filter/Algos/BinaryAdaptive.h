@@ -13,6 +13,30 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \var BinaryAdaptive::type
+		 * The thresholding method to apply. \see cv::ThresholdTypes
+		 *
+		 * \var BinaryAdaptive::method
+		 * The adaptive thresholding algorithm to use. \see cv::AdaptiveThresholdTypes
+		 *
+		 * \var BinaryAdaptive::block
+		 * The kernel's size to use to compute the threshold. It is the number of neighbouring pixels to analyze.
+		 *
+		 * \var BinaryAdaptive::value
+		 * The value parameter is the value a pixel will take if it passes the threshold test.
+		 *
+		 * \var BinaryAdaptive::c
+		 * A constant to substract to the computed mean or weighted mean. [TODO]
+		 */
+
+		/**
+		 * \brief The BinaryAdaptive filter will convert a grayscale image to a black and white one.
+		 * 
+		 * Unlike the Binary filter, the BinaryAdaptive filter will divide the image in sub regions and dinamycally compute the optimal threshold value for each of them.
+		 * It is useful for images with variations in illumination.
+		 * \see cv::adaptiveThreshold()
+		 */
 		class BinaryAdaptive : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
@@ -35,7 +59,7 @@ namespace filter
 				cv::Mat image = data.getMat();
 				if (!image.data)
 				{
-					throw HipeException("[Error] BilateralFilter::process - No input data found.");
+					throw HipeException("[Error] BinaryAdaptive::process - No input data found.");
 				}
 
 				// Assert block size is correct (odd and >= 3)
@@ -54,6 +78,12 @@ namespace filter
 			}
 
 		private:
+			/**
+			 * \brief Converts a thresholding type inputed as a string to its int value.
+			 * \param type The type the user inputed. The type must be truncated from its "THRESH_" prefix
+			 * \return Returns the value corresponding to the inputed type
+			 * \see cv::ThresholdTypes
+			 */
 			int convertType(std::string & type)
 			{
 				std::transform(type.begin(), type.end(), type.begin(), ::toupper);
@@ -67,9 +97,15 @@ namespace filter
 				}
 				else
 				{
-					throw HipeException("[ERROR] Binary::convertType - Unknown threshold type argument: " + type + ".\nThreshold type name must not conatain the \"THRESH_\" prefix (i.e. BINARY for THRESH_BINARY).");
+					throw HipeException("[ERROR] BinaryAdaptive::convertType - Unknown threshold type argument: " + type + ".\nThreshold type name must not conatain the \"THRESH_\" prefix (i.e. BINARY for THRESH_BINARY).");
 				}
 			}
+			/**
+			 * \brief Converts a thresholding method inputed as a string to its int value.
+			 * \param method The type the user inputed. The type must be truncated from its "ADAPTIVE_THRESH_" prefix
+			 * \return Returns the value corresponding to the inputed type.
+			 * \see cv::AdaptiveThresholdTypes
+			 */
 			int convertAdaptive(std::string & method)
 			{
 				if (method == "MEAN")

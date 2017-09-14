@@ -104,7 +104,7 @@ namespace filter
 			}
 
 			/**
-			 * [TODO]
+			 * \todo
 			 * \brief ImageArrayData assignment operator
 			 * \param left The ImageArrayData oject to get the data from
 			 * \return A reference to the object

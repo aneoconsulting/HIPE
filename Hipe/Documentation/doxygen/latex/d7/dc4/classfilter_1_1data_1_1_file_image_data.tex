@@ -1,0 +1,105 @@
+\hypertarget{classfilter_1_1data_1_1_file_image_data}{}\section{filter\+:\+:data\+:\+:File\+Image\+Data Class Reference}
+\label{classfilter_1_1data_1_1_file_image_data}\index{filter\+::data\+::\+File\+Image\+Data@{filter\+::data\+::\+File\+Image\+Data}}
+
+
+\hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} is the data type used to handle an image and additonnal information. Uses Open\+CV.  
+
+
+
+
+{\ttfamily \#include $<$File\+Image\+Data.\+h$>$}
+
+Inheritance diagram for filter\+:\+:data\+:\+:File\+Image\+Data\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=7.000000cm]{d7/dc4/classfilter_1_1data_1_1_file_image_data}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classfilter_1_1data_1_1_file_image_data_aa49f9012959f0f8f8c1826be3a31fdf6}{File\+Image\+Data} (const \hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} \&right)
+\begin{DoxyCompactList}\small\item\em \hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} copy constructor. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_file_image_data_ad5fb185db36ade62bc5eb46d30b938a1}{File\+Image\+Data} (const std\+::string \&file\+Path)
+\begin{DoxyCompactList}\small\item\em Constructor with path to image. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classfilter_1_1data_1_1_file_image_data_a188f2f5ab66877f6ba553cc847cd5f07}{copy\+To} (\hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} \&left) const
+\begin{DoxyCompactList}\small\item\em Copy the image data of the \hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} object to another one. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} \& \hyperlink{classfilter_1_1data_1_1_file_image_data_abd280bc0cc3d1a1e6aa1924041a71820}{operator=} (const \hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} \&left)
+\begin{DoxyCompactList}\small\item\em \hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} assignment operator. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_file_image_data_aef2ffb7b62f14ba6312bbb21167b13f3}\label{classfilter_1_1data_1_1_file_image_data_aef2ffb7b62f14ba6312bbb21167b13f3}} 
+cv\+::\+Mat {\bfseries as\+Output} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_file_image_data_ac40a6678009c5f0745adc81ff32ea2ef}\label{classfilter_1_1data_1_1_file_image_data_ac40a6678009c5f0745adc81ff32ea2ef}} 
+boost\+::filesystem\+::path \hyperlink{classfilter_1_1data_1_1_file_image_data_ac40a6678009c5f0745adc81ff32ea2ef}{\+\_\+file\+Path}
+\begin{DoxyCompactList}\small\item\em Path to the image. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_file_image_data_aa49f9012959f0f8f8c1826be3a31fdf6}\label{classfilter_1_1data_1_1_file_image_data_aa49f9012959f0f8f8c1826be3a31fdf6}} 
+\index{filter\+::data\+::\+File\+Image\+Data@{filter\+::data\+::\+File\+Image\+Data}!File\+Image\+Data@{File\+Image\+Data}}
+\index{File\+Image\+Data@{File\+Image\+Data}!filter\+::data\+::\+File\+Image\+Data@{filter\+::data\+::\+File\+Image\+Data}}
+\subsubsection{\texorpdfstring{File\+Image\+Data()}{FileImageData()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily filter\+::data\+::\+File\+Image\+Data\+::\+File\+Image\+Data (\begin{DoxyParamCaption}\item[{const \hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} \&}]{right }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em right} & the \hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} to copy \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_file_image_data_ad5fb185db36ade62bc5eb46d30b938a1}\label{classfilter_1_1data_1_1_file_image_data_ad5fb185db36ade62bc5eb46d30b938a1}} 
+\index{filter\+::data\+::\+File\+Image\+Data@{filter\+::data\+::\+File\+Image\+Data}!File\+Image\+Data@{File\+Image\+Data}}
+\index{File\+Image\+Data@{File\+Image\+Data}!filter\+::data\+::\+File\+Image\+Data@{filter\+::data\+::\+File\+Image\+Data}}
+\subsubsection{\texorpdfstring{File\+Image\+Data()}{FileImageData()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily filter\+::data\+::\+File\+Image\+Data\+::\+File\+Image\+Data (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Path} & Complete path to the image \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_file_image_data_a188f2f5ab66877f6ba553cc847cd5f07}\label{classfilter_1_1data_1_1_file_image_data_a188f2f5ab66877f6ba553cc847cd5f07}} 
+\index{filter\+::data\+::\+File\+Image\+Data@{filter\+::data\+::\+File\+Image\+Data}!copy\+To@{copy\+To}}
+\index{copy\+To@{copy\+To}!filter\+::data\+::\+File\+Image\+Data@{filter\+::data\+::\+File\+Image\+Data}}
+\subsubsection{\texorpdfstring{copy\+To()}{copyTo()}}
+{\footnotesize\ttfamily virtual void filter\+::data\+::\+File\+Image\+Data\+::copy\+To (\begin{DoxyParamCaption}\item[{\hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} \&}]{left }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The object where to copy the data to \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classfilter_1_1data_1_1_image_data_ab035bfe80f8f6a6470046eb15fad7dfb}{filter\+::data\+::\+Image\+Data}.
+
+\mbox{\Hypertarget{classfilter_1_1data_1_1_file_image_data_abd280bc0cc3d1a1e6aa1924041a71820}\label{classfilter_1_1data_1_1_file_image_data_abd280bc0cc3d1a1e6aa1924041a71820}} 
+\index{filter\+::data\+::\+File\+Image\+Data@{filter\+::data\+::\+File\+Image\+Data}!operator=@{operator=}}
+\index{operator=@{operator=}!filter\+::data\+::\+File\+Image\+Data@{filter\+::data\+::\+File\+Image\+Data}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data}\& filter\+::data\+::\+File\+Image\+Data\+::operator= (\begin{DoxyParamCaption}\item[{const \hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000020}{Todo}]\end{DoxyRefDesc}
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The \hyperlink{classfilter_1_1data_1_1_file_image_data}{File\+Image\+Data} object to get the data from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the object 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/data/File\+Image\+Data.\+h\end{DoxyCompactItemize}

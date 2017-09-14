@@ -1,0 +1,61 @@
+\hypertarget{classcore_1_1queue_1_1_concurrent_queue}{}\section{core\+:\+:queue\+:\+:Concurrent\+Queue$<$ Data $>$ Class Template Reference}
+\label{classcore_1_1queue_1_1_concurrent_queue}\index{core\+::queue\+::\+Concurrent\+Queue$<$ Data $>$@{core\+::queue\+::\+Concurrent\+Queue$<$ Data $>$}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a972550162a81c46c7625dc058c25ab2f}\label{classcore_1_1queue_1_1_concurrent_queue_a972550162a81c46c7625dc058c25ab2f}} 
+void {\bfseries stop\+Listening} ()
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_abfda98371a9073994c95288aa2bfd8ef}\label{classcore_1_1queue_1_1_concurrent_queue_abfda98371a9073994c95288aa2bfd8ef}} 
+void {\bfseries push} (Data const \&data)
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a567a6f2dc9943cbac1d2a3d01eab8f56}\label{classcore_1_1queue_1_1_concurrent_queue_a567a6f2dc9943cbac1d2a3d01eab8f56}} 
+bool {\bfseries empty} () const
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a431d2cdda3ee09b60757fbc6601e2110}\label{classcore_1_1queue_1_1_concurrent_queue_a431d2cdda3ee09b60757fbc6601e2110}} 
+size\+\_\+t {\bfseries size} ()
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a5b351f053e24197cc75d18914976fe32}\label{classcore_1_1queue_1_1_concurrent_queue_a5b351f053e24197cc75d18914976fe32}} 
+void {\bfseries clear} ()
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a0b26fbfd4071a1bdb87f71e05ad11b8a}\label{classcore_1_1queue_1_1_concurrent_queue_a0b26fbfd4071a1bdb87f71e05ad11b8a}} 
+bool {\bfseries pop} (Data \&popped\+\_\+value)
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a85d96ade5c6e6cb79b1e36fe119ef7ba}\label{classcore_1_1queue_1_1_concurrent_queue_a85d96ade5c6e6cb79b1e36fe119ef7ba}} 
+bool {\bfseries try\+\_\+pop} (Data \&popped\+\_\+value)
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_ab20318fc7babd0835da628565e835964}\label{classcore_1_1queue_1_1_concurrent_queue_ab20318fc7babd0835da628565e835964}} 
+void {\bfseries wait\+\_\+and\+\_\+pop} (Data \&popped\+\_\+value)
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a3db1b9c9742df9f0b9a12e41da291c9c}\label{classcore_1_1queue_1_1_concurrent_queue_a3db1b9c9742df9f0b9a12e41da291c9c}} 
+bool {\bfseries waituntil\+\_\+and\+\_\+pop} (Data \&popped\+\_\+value)
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_acfe4c69c42669217b08a21cf18489731}\label{classcore_1_1queue_1_1_concurrent_queue_acfe4c69c42669217b08a21cf18489731}} 
+bool {\bfseries trypop\+\_\+until} (Data \&popped\+\_\+value, int ms)
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a27fc1149494485b229ddc820a5c760b3}\label{classcore_1_1queue_1_1_concurrent_queue_a27fc1149494485b229ddc820a5c760b3}} 
+void {\bfseries ready\+To\+Listen} ()
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a219de9530ac8efde9ef63f7b0234d2f6}\label{classcore_1_1queue_1_1_concurrent_queue_a219de9530ac8efde9ef63f7b0234d2f6}} 
+bool {\bfseries has\+Listener} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a8dd62094bc299b583458dc117e97f9b5}\label{classcore_1_1queue_1_1_concurrent_queue_a8dd62094bc299b583458dc117e97f9b5}} 
+std\+::queue$<$ Data $>$ {\bfseries the\+\_\+queue}
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a097c58c765fc7c3788731979a3ffae46}\label{classcore_1_1queue_1_1_concurrent_queue_a097c58c765fc7c3788731979a3ffae46}} 
+boost\+::mutex {\bfseries the\+\_\+mutex}
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_aa3c01e5a3d42c8b10700b8436207f103}\label{classcore_1_1queue_1_1_concurrent_queue_aa3c01e5a3d42c8b10700b8436207f103}} 
+boost\+::condition\+\_\+variable {\bfseries the\+\_\+condition\+\_\+variable}
+\item 
+\mbox{\Hypertarget{classcore_1_1queue_1_1_concurrent_queue_a5a4e86fd912a13899961d3309f414286}\label{classcore_1_1queue_1_1_concurrent_queue_a5a4e86fd912a13899961d3309f414286}} 
+std\+::atomic$<$ bool $>$ {\bfseries \+\_\+listerners}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/core/queue/Concurrent\+Queue.\+h\end{DoxyCompactItemize}

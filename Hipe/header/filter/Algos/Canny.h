@@ -12,6 +12,29 @@ namespace filter
 {
 	namespace Algos
 	{
+		/**
+		 *  \var Canny::blurKernel
+		 *  The size of the blur kernel to use. \see cv::blur()
+		 *
+		 *  \var Canny::thresh1
+		 *  The first threshold for the canny's hysteresis procedure.
+		 *
+		 *  \var Canny::thresh2
+		 *  The second threshold for the canny's hysteresis procedure.
+		 *
+		 *  \var Canny::aperture
+		 *  The aperture size for the sobel operator. \see cv::Sobel()
+		 */
+
+		 /**
+		  * \brief The Canny filter will find the edges of the objects in an image.
+		  *
+		  *  The image needs to be in grayscale. If not it will be converted at runtime.
+		  *  The filter will first blur the image (for better results), then use the canny algorithm.
+		  *  The output of the canny algorithm will help to find the contours with the OpenCV findContours function.
+		  *  \see cv::Canny()
+		  *  \see cv::findContours()
+		  */
 		class Canny : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
@@ -38,13 +61,13 @@ namespace filter
 				std::vector<std::vector<cv::Point> > contours;
 				std::vector<cv::Vec4i> hierarchy;
 
-				// Canny must be applied on grayscale image. We suppose either image is color (3 or 4 channels) or already in grayscale (1 channel)
+				// Canny must be applied on a grayscale image. We suppose either the image is in color (3 or 4 channels) or already in grayscale (1 channel)
 				const int channels = srcImg.channels();
 				if (channels == 3 || channels == 4)
 				{
 					cv::cvtColor(srcImg, gsImg, CV_BGR2GRAY);
 				}
-				// Does 1 channel always means grayscale ?
+				// [TODO] Does 1 channel always means grayscale ? Handle 2 channels images (grayscale + alpha) ?
 				else if (channels == 1)
 				{
 					std::cout << "[LOG] Canny::process - Source image is already in grayscale, image will not be converted again.";

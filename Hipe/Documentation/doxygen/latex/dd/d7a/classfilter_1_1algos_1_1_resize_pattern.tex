@@ -1,0 +1,97 @@
+\hypertarget{classfilter_1_1algos_1_1_resize_pattern}{}\section{filter\+:\+:algos\+:\+:Resize\+Pattern Class Reference}
+\label{classfilter_1_1algos_1_1_resize_pattern}\index{filter\+::algos\+::\+Resize\+Pattern@{filter\+::algos\+::\+Resize\+Pattern}}
+
+
+The \hyperlink{classfilter_1_1algos_1_1_resize_pattern}{Resize\+Pattern} filter is the \hyperlink{classfilter_1_1algos_1_1_resize}{Resize} filter version adapted to Pattern\+Data objects.  
+
+
+
+
+{\ttfamily \#include $<$Resize\+Pattern.\+h$>$}
+
+Inheritance diagram for filter\+:\+:algos\+:\+:Resize\+Pattern\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{dd/d7a/classfilter_1_1algos_1_1_resize_pattern}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_a3e82cb3ba255aad9bd48a7c61cca7685}\label{classfilter_1_1algos_1_1_resize_pattern_a3e82cb3ba255aad9bd48a7c61cca7685}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_resize_pattern}{Resize\+Pattern} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_aa9cc55ed98cd4cefe1e009ef21a4e3d9}\label{classfilter_1_1algos_1_1_resize_pattern_aa9cc55ed98cd4cefe1e009ef21a4e3d9}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_resize_pattern}{Resize\+Pattern} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_ad4535fdce81bbd45049ed04f31d093c6}\label{classfilter_1_1algos_1_1_resize_pattern_ad4535fdce81bbd45049ed04f31d093c6}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+ratio}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_afa2ed76faf488a8c5668b169755e1d97}\label{classfilter_1_1algos_1_1_resize_pattern_afa2ed76faf488a8c5668b169755e1d97}} 
+void {\bfseries set\+\_\+ratio\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_a7b5c472bef493bda63f7a2ab875f9445}\label{classfilter_1_1algos_1_1_resize_pattern_a7b5c472bef493bda63f7a2ab875f9445}} 
+void {\bfseries set\+\_\+ratio} (vartype\+\_\+\+\_\+ratio \&\+\_\+\+\_\+ratio)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_a3e4ef2370ecdd29252ed04605ebb9564}\label{classfilter_1_1algos_1_1_resize_pattern_a3e4ef2370ecdd29252ed04605ebb9564}} 
+vartype\+\_\+\+\_\+ratio {\bfseries get\+\_\+ratio} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_a1057344d04cce8873eb9a0b91e62e70d}\label{classfilter_1_1algos_1_1_resize_pattern_a1057344d04cce8873eb9a0b91e62e70d}} 
+void {\bfseries copy\+\_\+ratio} (\hyperlink{classfilter_1_1algos_1_1_resize_pattern}{mytype} $\ast$instance)
+\item 
+virtual std\+::string \hyperlink{classfilter_1_1algos_1_1_resize_pattern_ae36ff1d98ef8f2dd32ba5b7a3a50152f}{result\+As\+String} ()
+\begin{DoxyCompactList}\small\item\em Get the result of the processing done by the node. This method will return information only. The actual processing is done by the process() method. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_ac8d0b4b1dfc9149503898e7fb90b4b65}\label{classfilter_1_1algos_1_1_resize_pattern_ac8d0b4b1dfc9149503898e7fb90b4b65}} 
+Hipe\+Status {\bfseries process} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_resize_pattern_a494ee492bb4ffdb81d478c6e1fc611a5}{ratio}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_a0a0fb3c77bdedf25e791ed06ea18cf7e}\label{classfilter_1_1algos_1_1_resize_pattern_a0a0fb3c77bdedf25e791ed06ea18cf7e}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_ac4c9bb4837ef303215430b0aa81c0bc0}\label{classfilter_1_1algos_1_1_resize_pattern_ac4c9bb4837ef303215430b0aa81c0bc0}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{data\+::\+Connex\+Data}$<$ \hyperlink{classfilter_1_1data_1_1_pattern_data}{data\+::\+Pattern\+Data}, \hyperlink{classfilter_1_1data_1_1_pattern_data}{data\+::\+Pattern\+Data} $>$ {\bfseries \+\_\+connex\+Data}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_ae36ff1d98ef8f2dd32ba5b7a3a50152f}\label{classfilter_1_1algos_1_1_resize_pattern_ae36ff1d98ef8f2dd32ba5b7a3a50152f}} 
+\index{filter\+::algos\+::\+Resize\+Pattern@{filter\+::algos\+::\+Resize\+Pattern}!result\+As\+String@{result\+As\+String}}
+\index{result\+As\+String@{result\+As\+String}!filter\+::algos\+::\+Resize\+Pattern@{filter\+::algos\+::\+Resize\+Pattern}}
+\subsubsection{\texorpdfstring{result\+As\+String()}{resultAsString()}}
+{\footnotesize\ttfamily virtual std\+::string filter\+::algos\+::\+Resize\+Pattern\+::result\+As\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+A string containing the result of the processing done by the filter. 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1_i_filter_ab99902b060a6d9edc3452a8c9f85e37e}{filter\+::\+I\+Filter}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_resize_pattern_a494ee492bb4ffdb81d478c6e1fc611a5}\label{classfilter_1_1algos_1_1_resize_pattern_a494ee492bb4ffdb81d478c6e1fc611a5}} 
+\index{filter\+::algos\+::\+Resize\+Pattern@{filter\+::algos\+::\+Resize\+Pattern}!ratio@{ratio}}
+\index{ratio@{ratio}!filter\+::algos\+::\+Resize\+Pattern@{filter\+::algos\+::\+Resize\+Pattern}}
+\subsubsection{\texorpdfstring{ratio}{ratio}}
+{\footnotesize\ttfamily filter\+::algos\+::\+Resize\+Pattern\+::ratio}
+
+The factor by which the image must be rescaled. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/Resize\+Pattern.\+h\end{DoxyCompactItemize}

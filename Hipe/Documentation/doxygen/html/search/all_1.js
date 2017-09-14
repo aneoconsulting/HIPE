@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['add',['add',['../d9/d9b/classjson_1_1_json_filter_tree.html#aee36fd03a671233001426a3c6657f0f8',1,'json::JsonFilterTree::add()'],['../db/d90/classfilter_1_1data_1_1_list_i_o_data.html#a353fa855f51b511b3afa53f2dac6e0f3',1,'filter::data::ListIOData::Add()']]],
+  ['addclass',['addClass',['../de/d66/class_register_table.html#aa5d0e1a193a71f430e11cd5596e3e2d4',1,'RegisterTable']]],
+  ['adddependencies',['addDependencies',['../d4/d8a/classfilter_1_1_i_filter.html#a3132d332ce814fda5c1a17a3e498c4fb',1,'filter::IFilter']]],
+  ['addpair',['addPair',['../d0/d9d/classfilter_1_1data_1_1_square_crop.html#abb6485dde249188c27ff3b339ea93067',1,'filter::data::SquareCrop']]],
+  ['address',['address',['../df/de9/classhttp_1_1_config.html#a2828c9d246da0710621a7bbc26ecab93',1,'http::Config::address()'],['../da/d6a/classhttp_1_1_server_base_1_1_config.html#ad0398c9e6bb43163dd91f0bc84854be9',1,'http::ServerBase::Config::address()']]],
+  ['addsetter',['addSetter',['../de/d66/class_register_table.html#acae6429bdf6b5f5a54a06eb1ebcb6b36',1,'RegisterTable']]],
+  ['akaze',['Akaze',['../d8/d54/classfilter_1_1algos_1_1_akaze.html',1,'filter::algos']]],
+  ['algoexample_5f1',['AlgoExample_1',['../d1/d3e/classfilter_1_1_algos_1_1_algo_example__1.html',1,'filter::Algos']]],
+  ['angle',['angle',['../d5/d2d/classfilter_1_1algos_1_1_rotate_image.html#ae815c8d88eae42fcf231b6d5540ecbf3',1,'filter::algos::RotateImage']]],
+  ['aperture',['aperture',['../d8/de8/classfilter_1_1_algos_1_1_canny.html#a73d61bdf0d7c6cd77af2b3d5b609cfc5',1,'filter::Algos::Canny']]],
+  ['array',['Array',['../d6/d44/classfilter_1_1data_1_1_image_array_data.html#acded510f22f9c549adea6174e44dae2a',1,'filter::data::ImageArrayData']]],
+  ['array_5fconst',['Array_const',['../d6/d44/classfilter_1_1data_1_1_image_array_data.html#a5bc06808faaf76e0cbbb5944788cef79',1,'filter::data::ImageArrayData']]],
+  ['as_5fvector',['as_vector',['../de/d80/classfilter_1_1data_1_1_composer.html#a18a6b0b2a11dad44847df3eefad292a1',1,'filter::data::Composer']]],
+  ['attempts',['attempts',['../d4/db7/classfilter_1_1algos_1_1_kmeans.html#acf7a19eeb7e9e2290379094bf1d21dd9',1,'filter::algos::Kmeans']]],
+  ['averagearea',['averageArea',['../d6/db4/structfilter_1_1algos_1_1_i_d_plate_1_1_line_data.html#aa00e50f6bc1585b0629eb2ca81619ffb',1,'filter::algos::IDPlate::LineData']]],
+  ['averagecharheight',['averageCharHeight',['../d6/db4/structfilter_1_1algos_1_1_i_d_plate_1_1_line_data.html#a3c44958900b0a68c6053415cdd688b0d',1,'filter::algos::IDPlate::LineData']]],
+  ['averagecharwidth',['averageCharWidth',['../d6/db4/structfilter_1_1algos_1_1_i_d_plate_1_1_line_data.html#a8e1c5201e974a31d4e22ea3636fb6e33',1,'filter::algos::IDPlate::LineData']]],
+  ['averagecolor',['AverageColor',['../d0/d2d/classfilter_1_1algos_1_1_average_color.html',1,'filter::algos']]],
+  ['averagey',['averageY',['../d6/db4/structfilter_1_1algos_1_1_i_d_plate_1_1_line_data.html#a118538e641ee7bb9eb840c3f1808def1',1,'filter::algos::IDPlate::LineData']]]
+];

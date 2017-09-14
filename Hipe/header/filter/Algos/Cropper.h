@@ -15,46 +15,52 @@ namespace filter
 	namespace algos
 	{
 		/**
+		 * \todo
 		 * \brief Use this method as a mouse callback to know where the user clicked and define the areas he selected.
-		 * \param event The type of the mouse event that occured
-		 * \param x The x position (relative to the targeted window) where the user clicked
-		 * \param y The y position (relative to the targeted window) where the user clicked
+		 * \param event The type of the mouse event that occured.
+		 * \param x The x position (relative to the targeted window) where the user clicked.
+		 * \param y The y position (relative to the targeted window) where the user clicked.
 		 * \param f [TODO]
-		 * \param cvCropperData The struture used to store the information regarding what the user did while clicking
+		 * \param cvCropperData The struture used to store the information regarding what the user did while clicking.
 		 */
 		void cropper_mouse_call(int event, int x, int y, int f, void* cvCropperData);
 
 		/**
+		 * \todo
 		 * \brief The Cropper filter will let the user select regions of interest in an image.
-		 *  It will extract their relative data and return a PatternData object.
+		 * 
+		 *  The filter will extract the relative data of the selected regions of interest and return them as a PatternData object.
 		 *  The Cropper filter runs in a separate thread.
+		 *  
+		 *  \var Cropper::wait
+		 *  [TODO]
 		 */
 		class FILTER_EXPORT Cropper : public IFilter
 		{
 		public:
 			/**
-			 * \brief The CVCropperData class stores the data relative to where the user clicked on an OpenCV window
+			 * \brief The CVCropperData class stores the data relative to where the user clicked on an OpenCV window.
 			 */
 			class CVCropperData
 			{
 			public:
 				std::atomic<bool> clicked;			//<! Does the user clicked on the window?
 				std::atomic<bool> drawing;			//<! Does the user clicked and is dragging the mouse?
-				int index;							//<! [TODO] Index used to know the number of times the user selected a region in the image
-				cv::String windowName;				//<! The name of the window on which the user is clicking
-				std::vector<cv::Point> rectangle;	//<! [TODO] The list of the zones positions the user selected on the window
-				cv::Mat sandBoxImage;				//<! The part of the image (region of interest) extracted from the area the user selected with mouse input
-				cv::Mat sandBoxImage_backup;		//<! A backup of the sandBoxImage data
-				data::PatternData pattern;			//<! The PatternData object referencing the data of all the regions of interest the user selected
+				int index;							//<! [TODO] Index used to know the number of times the user selected a region in the image.
+				cv::String windowName;				//<! The name of the window on which the user is clicking.
+				std::vector<cv::Point> rectangle;	//<! [TODO] The list of the zones positions the user selected on the window.
+				cv::Mat sandBoxImage;				//<! The part of the image (region of interest) extracted from the area the user selected with mouse input.
+				cv::Mat sandBoxImage_backup;		//<! A backup of the sandBoxImage data.
+				data::PatternData pattern;			//<! The PatternData object referencing the data of all the regions of interest the user selected.
 				std::atomic<bool> started;			//<! [TODO] Does the user started to interact with the window?
 
 				core::queue::ConcurrentQueue<std::vector<cv::Point>> arrayCrop; //<! [TODO]
 
 			public:
 				/**
-				 * [TODO]
+				 * \todo
 				 * \brief CVCropperData constructor with PatternData parameter. Will add data to it.
-				 * \param pat PatternData object to start from
+				 * \param pat PatternData object to start from.
 				 */
 				CVCropperData(const data::PatternData & pat) : clicked(false), drawing(false), index(0), pattern(pat)
 				{
@@ -81,7 +87,7 @@ namespace filter
 				/**
 				 * \brief Overloaded insertion operator used to overwrite the CVCropperData's PatternData field's request image.
 				 * \param inputImage The image which will be used to overwrite the PatternData request image.
-				 * \return Returns a reference to the CVCropperData object
+				 * \return Returns a reference to the CVCropperData object.
 				 */
 				CVCropperData &operator<<(data::ImageData &inputImage)
 				{
@@ -93,7 +99,7 @@ namespace filter
 				/**
 				 * \brief Overloaded insertion operator used to overwrite the CVCropperData's PatternData afield's request image.
 				 * \param inputImage The image which will be used to overwrite the PatternData request image.
-				 * \return Returns a reference to the CVCropperData object
+				 * \return Returns a reference to the CVCropperData object.
 				 */
 				CVCropperData &operator<<(cv::Mat inputImage)
 				{
@@ -135,7 +141,7 @@ namespace filter
 
 			/**
 			 * \brief Wrapper method to let the user select areas in an image.
-			 * \param cvCropperData The CVCropperData object to populate from user input
+			 * \param cvCropperData The CVCropperData object to populate from user input.
 			 */
 			void windowTask(std::shared_ptr<filter::algos::Cropper::CVCropperData> cvCropperData)
 			{

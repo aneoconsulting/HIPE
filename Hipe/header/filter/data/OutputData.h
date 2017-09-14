@@ -10,6 +10,7 @@
 namespace filter {
 	namespace data {
 		/**
+		 * \todo
 		 * \brief [TODO]
 		 */
 		class OutputData : public IOData<ImageArrayData, OutputData>

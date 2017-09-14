@@ -1,0 +1,119 @@
+\hypertarget{classfilter_1_1algos_1_1_closest_color}{}\section{filter\+:\+:algos\+:\+:Closest\+Color Class Reference}
+\label{classfilter_1_1algos_1_1_closest_color}\index{filter\+::algos\+::\+Closest\+Color@{filter\+::algos\+::\+Closest\+Color}}
+
+
+The \hyperlink{classfilter_1_1algos_1_1_closest_color}{Closest\+Color} filter will find the closest known color a pixel have. The input image must only contain 1 pixel.  
+
+
+
+
+{\ttfamily \#include $<$Closest\+Color.\+h$>$}
+
+Inheritance diagram for filter\+:\+:algos\+:\+:Closest\+Color\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d1/d1c/classfilter_1_1algos_1_1_closest_color}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfilter_1_1algos_1_1_closest_color_1_1_color}{Color}
+\begin{DoxyCompactList}\small\item\em The representation of a color. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_ae0a71e75e3c30026ca08d255c3ef435d}\label{classfilter_1_1algos_1_1_closest_color_ae0a71e75e3c30026ca08d255c3ef435d}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_closest_color}{Closest\+Color} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a20d50a313d53f976513d839c5be7e141}\label{classfilter_1_1algos_1_1_closest_color_a20d50a313d53f976513d839c5be7e141}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_closest_color}{Closest\+Color} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a48b11a500ffe54615d30459590d02093}\label{classfilter_1_1algos_1_1_closest_color_a48b11a500ffe54615d30459590d02093}} 
+typedef char {\bfseries vartype\+\_\+\+\_\+unused}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_ae82a29578a1f2994255cc7f94c8075b2}\label{classfilter_1_1algos_1_1_closest_color_ae82a29578a1f2994255cc7f94c8075b2}} 
+void {\bfseries set\+\_\+unused\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a24c2bca6599de15dc554c8b986a7c0dc}\label{classfilter_1_1algos_1_1_closest_color_a24c2bca6599de15dc554c8b986a7c0dc}} 
+void {\bfseries set\+\_\+unused} (vartype\+\_\+\+\_\+unused \&\+\_\+\+\_\+unused)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a77834722f2e37856e9cc07e3ba7f3cf4}\label{classfilter_1_1algos_1_1_closest_color_a77834722f2e37856e9cc07e3ba7f3cf4}} 
+vartype\+\_\+\+\_\+unused {\bfseries get\+\_\+unused} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a8fe2e96e220281c02ec20bc6ddc96d49}\label{classfilter_1_1algos_1_1_closest_color_a8fe2e96e220281c02ec20bc6ddc96d49}} 
+void {\bfseries copy\+\_\+unused} (\hyperlink{classfilter_1_1algos_1_1_closest_color}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a82b98028ba717ac548f47013f101f34f}\label{classfilter_1_1algos_1_1_closest_color_a82b98028ba717ac548f47013f101f34f}} 
+Hipe\+Status {\bfseries process} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a3be4d2d0e5e64eeb3ea95debe8f2acf6}\label{classfilter_1_1algos_1_1_closest_color_a3be4d2d0e5e64eeb3ea95debe8f2acf6}} 
+char {\bfseries unused}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_ac519bcd4e457d573f901453ae2ce9723}\label{classfilter_1_1algos_1_1_closest_color_ac519bcd4e457d573f901453ae2ce9723}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_closest_color_ac89955e42d78860343ab1c13b6458ec7}{euclidean\+Distance} (const cv\+::\+Scalar \&query, const cv\+::\+Scalar \&ref)
+\begin{DoxyCompactList}\small\item\em Computes the euclidean distance between 2 pixels values (colors) \end{DoxyCompactList}\item 
+\hyperlink{structfilter_1_1algos_1_1_closest_color_1_1_color}{Color} \hyperlink{classfilter_1_1algos_1_1_closest_color_a30005f784dfc4d74e5ebd4f67dd85bd7}{get\+Closest\+Color} (const cv\+::\+Scalar \&query)
+\begin{DoxyCompactList}\small\item\em Find the closest known color to the inputed pixel. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a3bb040cceb1e8f799a89dae3c1339477}\label{classfilter_1_1algos_1_1_closest_color_a3bb040cceb1e8f799a89dae3c1339477}} 
+void \hyperlink{classfilter_1_1algos_1_1_closest_color_a3bb040cceb1e8f799a89dae3c1339477}{set\+Colors} ()
+\begin{DoxyCompactList}\small\item\em Populate the list of known colors. The known colors are the one we\textquotesingle{}re trying to match others to. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_adb799d7963f46519cddc77a0c26f3194}\label{classfilter_1_1algos_1_1_closest_color_adb799d7963f46519cddc77a0c26f3194}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{data\+::\+Connex\+Data}$<$ \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data}, \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data} $>$ {\bfseries \+\_\+connex\+Data}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a53824a9cc08556a65946c15cd60a55a0}\label{classfilter_1_1algos_1_1_closest_color_a53824a9cc08556a65946c15cd60a55a0}} 
+std\+::vector$<$ \hyperlink{structfilter_1_1algos_1_1_closest_color_1_1_color}{Color} $>$ {\bfseries \+\_\+colors}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_ac89955e42d78860343ab1c13b6458ec7}\label{classfilter_1_1algos_1_1_closest_color_ac89955e42d78860343ab1c13b6458ec7}} 
+\index{filter\+::algos\+::\+Closest\+Color@{filter\+::algos\+::\+Closest\+Color}!euclidean\+Distance@{euclidean\+Distance}}
+\index{euclidean\+Distance@{euclidean\+Distance}!filter\+::algos\+::\+Closest\+Color@{filter\+::algos\+::\+Closest\+Color}}
+\subsubsection{\texorpdfstring{euclidean\+Distance()}{euclideanDistance()}}
+{\footnotesize\ttfamily double filter\+::algos\+::\+Closest\+Color\+::euclidean\+Distance (\begin{DoxyParamCaption}\item[{const cv\+::\+Scalar \&}]{query,  }\item[{const cv\+::\+Scalar \&}]{ref }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em query} & The queried pixel (or pixel a) \\
+\hline
+{\em ref} & The reference pixel (or pixel b) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The computed distance 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_closest_color_a30005f784dfc4d74e5ebd4f67dd85bd7}\label{classfilter_1_1algos_1_1_closest_color_a30005f784dfc4d74e5ebd4f67dd85bd7}} 
+\index{filter\+::algos\+::\+Closest\+Color@{filter\+::algos\+::\+Closest\+Color}!get\+Closest\+Color@{get\+Closest\+Color}}
+\index{get\+Closest\+Color@{get\+Closest\+Color}!filter\+::algos\+::\+Closest\+Color@{filter\+::algos\+::\+Closest\+Color}}
+\subsubsection{\texorpdfstring{get\+Closest\+Color()}{getClosestColor()}}
+{\footnotesize\ttfamily \hyperlink{structfilter_1_1algos_1_1_closest_color_1_1_color}{Color} filter\+::algos\+::\+Closest\+Color\+::get\+Closest\+Color (\begin{DoxyParamCaption}\item[{const cv\+::\+Scalar \&}]{query }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em query} & The queried pixel \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The closest found color 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/Closest\+Color.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,30 @@
+This sample app showcases how to stream realtime video to the the browser using Lib\+Sourcey and Web\+R\+TC. Audio and video streams can be from realtime device captures or movie files encoded in any format that\textquotesingle{}s supported by Lib\+Sourcey/\+F\+Fmpeg.
+
+\subsection*{Installation}
+
+
+\begin{DoxyEnumerate}
+\item Compile Lib\+Sourcey with Web\+R\+TC support ({\ttfamily W\+I\+T\+H\+\_\+\+W\+E\+B\+R\+TC=ON}) and samples ({\ttfamily B\+U\+I\+L\+D\+\_\+\+S\+A\+M\+P\+L\+E\+S\+\_\+webrtc=ON}) enabled. See the main R\+E\+A\+D\+ME for help\+: \href{https://github.com/sourcey/libsourcey#installing-on-linux}{\tt https\+://github.\+com/sourcey/libsourcey\#installing-\/on-\/linux}
+\item Run the {\ttfamily webrtcstreamer} sample application from the {\ttfamily build} directory.
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Install and run the Node.\+js client application\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}
+cd <libsourcey>/src/webrtc/samples/webrtcstreamer/client
+npm install
+node app
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Finally, point your browser to\+: {\ttfamily \href{http://localhost:4499}{\tt http\+://localhost\+:4499}}
+\item Your should see your video and audio stream playing in the browser.
+\end{DoxyEnumerate}
+
+\subsection*{Hacking}
+
+The source code is clear and concise, let it be your guide \+:) 

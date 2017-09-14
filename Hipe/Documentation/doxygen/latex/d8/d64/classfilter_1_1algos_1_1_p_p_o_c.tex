@@ -1,0 +1,90 @@
+\hypertarget{classfilter_1_1algos_1_1_p_p_o_c}{}\section{filter\+:\+:algos\+:\+:P\+P\+OC Class Reference}
+\label{classfilter_1_1algos_1_1_p_p_o_c}\index{filter\+::algos\+::\+P\+P\+OC@{filter\+::algos\+::\+P\+P\+OC}}
+Inheritance diagram for filter\+:\+:algos\+:\+:P\+P\+OC\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d8/d64/classfilter_1_1algos_1_1_p_p_o_c}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a12efae6bd538caf48619faa45115d999}\label{classfilter_1_1algos_1_1_p_p_o_c_a12efae6bd538caf48619faa45115d999}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_p_p_o_c}{P\+P\+OC} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a201193444d9863939118a79dabe51036}\label{classfilter_1_1algos_1_1_p_p_o_c_a201193444d9863939118a79dabe51036}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_p_p_o_c}{P\+P\+OC} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a294c4fdcbfbc97b7ebfda5d655b75913}\label{classfilter_1_1algos_1_1_p_p_o_c_a294c4fdcbfbc97b7ebfda5d655b75913}} 
+typedef bool {\bfseries vartype\+\_\+\+\_\+\+\_\+debug}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_afe93c0521cf6a3c1363a4fd464c7fd56}\label{classfilter_1_1algos_1_1_p_p_o_c_afe93c0521cf6a3c1363a4fd464c7fd56}} 
+void {\bfseries set\+\_\+\+\_\+debug\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a9d2f35c10c0e6350490962254914bf9a}\label{classfilter_1_1algos_1_1_p_p_o_c_a9d2f35c10c0e6350490962254914bf9a}} 
+void {\bfseries set\+\_\+\+\_\+debug} (vartype\+\_\+\+\_\+\+\_\+debug \&\+\_\+\+\_\+\+\_\+debug)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a782f0ce399155072186cb19ef2c8e288}\label{classfilter_1_1algos_1_1_p_p_o_c_a782f0ce399155072186cb19ef2c8e288}} 
+vartype\+\_\+\+\_\+\+\_\+debug {\bfseries get\+\_\+\+\_\+debug} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_ad8495f4d30456cbae85168c0c8ad7076}\label{classfilter_1_1algos_1_1_p_p_o_c_ad8495f4d30456cbae85168c0c8ad7076}} 
+void {\bfseries copy\+\_\+\+\_\+debug} (\hyperlink{classfilter_1_1algos_1_1_p_p_o_c}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a117a9bf29e1a3a641e3e93c0b7fd7d91}\label{classfilter_1_1algos_1_1_p_p_o_c_a117a9bf29e1a3a641e3e93c0b7fd7d91}} 
+Hipe\+Status {\bfseries process} () override
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_aa6d0f0756620e74f522812cceb852eac}\label{classfilter_1_1algos_1_1_p_p_o_c_aa6d0f0756620e74f522812cceb852eac}} 
+bool {\bfseries \+\_\+debug}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_aba37bb29b72256cadda20a972678a080}\label{classfilter_1_1algos_1_1_p_p_o_c_aba37bb29b72256cadda20a972678a080}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a487599d91d43c9c2a724f833efa8d915}\label{classfilter_1_1algos_1_1_p_p_o_c_a487599d91d43c9c2a724f833efa8d915}} 
+cv\+::\+Mat {\bfseries preprocess\+Background\+Image} (const cv\+::\+Mat \&image, const cv\+::\+Mat \&background, cv\+::\+Mat \&out\+\_\+mask)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_ac81551a402b0e77af07f3cb47563b430}\label{classfilter_1_1algos_1_1_p_p_o_c_ac81551a402b0e77af07f3cb47563b430}} 
+cv\+::\+Mat \hyperlink{classfilter_1_1algos_1_1_p_p_o_c_ac81551a402b0e77af07f3cb47563b430}{match\+Image\+To\+Background} (const cv\+::\+Mat \&image, const cv\+::\+Mat \&image\+Background)
+\begin{DoxyCompactList}\small\item\em $\ast$$\ast$$\ast$ Find and apply homography to warp image onto background image $\ast$$\ast$$\ast$/ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_ac75c7aec1f4c33328240f95a89948e05}\label{classfilter_1_1algos_1_1_p_p_o_c_ac75c7aec1f4c33328240f95a89948e05}} 
+void {\bfseries find\+Object} (const cv\+::\+Mat \&reference\+Image, const cv\+::\+Mat \&query\+Image, const cv\+::\+Mat \&image\+Mask)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a04dc0fd040af169e507ae08839b18722}\label{classfilter_1_1algos_1_1_p_p_o_c_a04dc0fd040af169e507ae08839b18722}} 
+bool {\bfseries is\+Object\+Present} (const cv\+::\+Mat \&query\+Image, const \hyperlink{classfilter_1_1algos_1_1_i_p_desc}{I\+P\+Desc} \&poi)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a42f16ee849831d5fe9a8c9314c413795}\label{classfilter_1_1algos_1_1_p_p_o_c_a42f16ee849831d5fe9a8c9314c413795}} 
+std\+::vector$<$ std\+::vector$<$ cv\+::\+Point $>$ $>$ {\bfseries find\+Contours} (const cv\+::\+Mat \&image\+Grayscale)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_acccbb7ea1dcdb857a85d2d4335b66e32}\label{classfilter_1_1algos_1_1_p_p_o_c_acccbb7ea1dcdb857a85d2d4335b66e32}} 
+std\+::vector$<$ \hyperlink{classfilter_1_1algos_1_1_i_p_desc}{I\+P\+Desc} $>$ {\bfseries find\+R\+O\+Is} (cv\+::\+Mat \&out\+\_\+image, const cv\+::\+Mat \&image\+Mask, const std\+::vector$<$ std\+::vector$<$ cv\+::\+Point $>$$>$ \&contours)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_ac1c65b1e9f0c6fb3b260737d9d7f02c6}\label{classfilter_1_1algos_1_1_p_p_o_c_ac1c65b1e9f0c6fb3b260737d9d7f02c6}} 
+bool {\bfseries is\+Descriptor\+Near\+Image\+Border} (const \hyperlink{classfilter_1_1algos_1_1_i_p_desc}{I\+P\+Desc} \&descriptor, const cv\+::\+Mat \&image)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_af9bd40e1e283fe460ba82c995b5a918d}\label{classfilter_1_1algos_1_1_p_p_o_c_af9bd40e1e283fe460ba82c995b5a918d}} 
+bool {\bfseries is\+Descriptor\+Parallel} (const std\+::vector$<$ cv\+::\+Point2f $>$ \&query, const std\+::vector$<$ cv\+::\+Point2f $>$ \&roi)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a65859622bde82dd9d856ddb4efaa8df4}\label{classfilter_1_1algos_1_1_p_p_o_c_a65859622bde82dd9d856ddb4efaa8df4}} 
+bool {\bfseries is\+On\+R\+OI} (const std\+::vector$<$ cv\+::\+Point2f $>$ \&kpts\+Query, const \hyperlink{classfilter_1_1algos_1_1_i_p_desc}{I\+P\+Desc} \&poi)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_p_p_o_c_a0a064180077813f57ced4c3758de50ff}\label{classfilter_1_1algos_1_1_p_p_o_c_a0a064180077813f57ced4c3758de50ff}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{data\+::\+Connex\+Data}$<$ \hyperlink{classfilter_1_1data_1_1_image_array_data}{data\+::\+Image\+Array\+Data}, \hyperlink{classfilter_1_1data_1_1_image_array_data}{data\+::\+Image\+Array\+Data} $>$ {\bfseries \+\_\+connex\+Data}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/P\+P\+O\+C.\+h\item 
+source/filter/algos/P\+P\+O\+C.\+cpp\end{DoxyCompactItemize}

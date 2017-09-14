@@ -12,6 +12,12 @@ namespace filter
 	namespace algos
 	{
 		/**
+		 * \var OverlayMatFilter::ratio
+		 * [TODO]
+		 */
+
+		/**
+		 *\todo
 		 * \brief [TODO]
 		 */
 		class OverlayMatFilter : public filter::IFilter

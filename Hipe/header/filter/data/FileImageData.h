@@ -71,7 +71,7 @@ namespace filter
 			}
 
 			/**
-			 * [TODO]
+			 * \todo
 			 * \brief FileImageData assignment operator
 			 * \param left The FileImageData object to get the data from
 			 * \return A reference to the object

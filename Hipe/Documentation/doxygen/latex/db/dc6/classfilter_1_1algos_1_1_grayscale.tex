@@ -1,0 +1,71 @@
+\hypertarget{classfilter_1_1algos_1_1_grayscale}{}\section{filter\+:\+:algos\+:\+:Grayscale Class Reference}
+\label{classfilter_1_1algos_1_1_grayscale}\index{filter\+::algos\+::\+Grayscale@{filter\+::algos\+::\+Grayscale}}
+
+
+The \hyperlink{classfilter_1_1algos_1_1_grayscale}{Grayscale} filter will convert a color image (3 or 4 channels) to a grayscale one (1 or 2 channels).  
+
+
+
+
+{\ttfamily \#include $<$Grayscale.\+h$>$}
+
+Inheritance diagram for filter\+:\+:algos\+:\+:Grayscale\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{db/dc6/classfilter_1_1algos_1_1_grayscale}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_a2e7d023ab891781b079fbe57a4763130}\label{classfilter_1_1algos_1_1_grayscale_a2e7d023ab891781b079fbe57a4763130}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_grayscale}{Grayscale} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_a81fe6103c7c354a08eb74cad412bc397}\label{classfilter_1_1algos_1_1_grayscale_a81fe6103c7c354a08eb74cad412bc397}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_grayscale}{Grayscale} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_adcee9def3e07b6cdccc3ac07030a9c00}\label{classfilter_1_1algos_1_1_grayscale_adcee9def3e07b6cdccc3ac07030a9c00}} 
+typedef char {\bfseries vartype\+\_\+\+\_\+unused}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_aeb8a50f6427cf9ce78ebe05741c9889f}\label{classfilter_1_1algos_1_1_grayscale_aeb8a50f6427cf9ce78ebe05741c9889f}} 
+void {\bfseries set\+\_\+unused\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_a9483a55300d3607f02db9610b547b03a}\label{classfilter_1_1algos_1_1_grayscale_a9483a55300d3607f02db9610b547b03a}} 
+void {\bfseries set\+\_\+unused} (vartype\+\_\+\+\_\+unused \&\+\_\+\+\_\+unused)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_a9e7f79dd695f9f341ca145cbcac5ecf6}\label{classfilter_1_1algos_1_1_grayscale_a9e7f79dd695f9f341ca145cbcac5ecf6}} 
+vartype\+\_\+\+\_\+unused {\bfseries get\+\_\+unused} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_a27fc11c8457b08d47fc2a97106b33d17}\label{classfilter_1_1algos_1_1_grayscale_a27fc11c8457b08d47fc2a97106b33d17}} 
+void {\bfseries copy\+\_\+unused} (\hyperlink{classfilter_1_1algos_1_1_grayscale}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_aa13c408105e3b4060e9370de8672acd0}\label{classfilter_1_1algos_1_1_grayscale_aa13c408105e3b4060e9370de8672acd0}} 
+Hipe\+Status {\bfseries process} () override
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_ab0d84aad9d218a41f7cf738904fea76b}\label{classfilter_1_1algos_1_1_grayscale_ab0d84aad9d218a41f7cf738904fea76b}} 
+char {\bfseries unused}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_a62dcc9ed5004761e4a0b7162f00e7df8}\label{classfilter_1_1algos_1_1_grayscale_a62dcc9ed5004761e4a0b7162f00e7df8}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_grayscale_a608895d90327d9fceb9164f8ac480ea2}\label{classfilter_1_1algos_1_1_grayscale_a608895d90327d9fceb9164f8ac480ea2}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{data\+::\+Connex\+Data}$<$ \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data}, \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data} $>$ {\bfseries \+\_\+connex\+Data}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/Grayscale.\+h\end{DoxyCompactItemize}

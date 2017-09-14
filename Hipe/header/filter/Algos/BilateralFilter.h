@@ -13,12 +13,33 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \var BilateralFilter::d
+		 * The diameter of each pixel neighborhood to use
+		 *
+		 * \var BilateralFilter::color
+		 * The standard deviation in the color space to apply
+		 *
+		 * \var BilateralFilter::space
+		 * The standard deviation in the coordinate space (in pixel terms) to apply
+		 *
+		 * \var BilateralFilter::border
+		 * The border mode used to extrapolate pixels outside of the image. \see cv::BorderTypes
+		 */
+
+		/**
+		 * \brief The BilateralFilter filter will smooth the image with the bilateral filtering method.
+		 *  
+		 *  The smoothing method usedwill not alter the edges of the shapes.
+		 *  Mind that the filtering algorithm is performed on the CPU, each pass takes a certain amount of time.
+		 *  \see cv::bilateralFilter()
+		 */
 		class BilateralFilter : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
 			REGISTER(BilateralFilter, ()), _connexData(data::INDATA)
 			{
-				border = 4;
+				border = cv::BorderTypes::BORDER_DEFAULT;
 			}
 			REGISTER_P(int, d);
 			REGISTER_P(double, color);

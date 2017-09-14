@@ -14,6 +14,11 @@ namespace filter
 	namespace algos
 	{
 		/**
+		 * \var ResizePattern::ratio
+		 * The factor by which the image must be rescaled.
+		 */
+
+		/**
 		 * \brief The ResizePattern filter is the Resize filter version adapted to PatternData objects.
 		 */
 		class ResizePattern : public filter::IFilter
@@ -25,7 +30,7 @@ namespace filter
 
 			}
 
-			REGISTER_P(double, ratio);	// The factor by which the image must be rescaled.
+			REGISTER_P(double, ratio);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
@@ -47,7 +52,7 @@ namespace filter
 						cv::Mat res;
 						cv::resize(pattern.imageRequest().getMat(), res, size, 0.0, 0.0, cv::INTER_CUBIC);
 						pattern << res;
-						
+
 					}
 
 					{
@@ -71,7 +76,7 @@ namespace filter
 						square_crop << rects;
 						square_crop.crops(true);
 					}
-					
+
 				}
 				return OK;
 			}

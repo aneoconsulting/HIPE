@@ -143,7 +143,7 @@ namespace filter
 
 
 			/**
-			 * [TODO]
+			 * \todo
 			 * \brief Checks if the FileVideo is empty.
 			 * \return  Returns true if the object doesn't contain any data or the video is not opened, false either.
 			 */

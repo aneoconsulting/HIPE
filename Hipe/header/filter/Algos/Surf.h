@@ -11,7 +11,14 @@ namespace filter
 	namespace algos
 	{
 		/**
-		 * \brief The Surf filter is used to find keypoints on a image. Uses the SURF algorithm. The keypoints will be drawn on the image.
+		 * \var Surf::minHessian
+		 * The hessian threshold used to find keypoints with the SURF detector. Only features whose hessian is larger than hessianThreshold are retained by the detector.
+		 */
+
+		/**
+		 * \brief The Surf filter is used to find keypoints on an image.
+		 * 
+		 * It uses the SURF algorithm. The keypoints will be drawn on the image.
 		 * \see cv::xfeatures2d::SURF
 		 */
 		class Surf : public filter::IFilter
@@ -24,7 +31,7 @@ namespace filter
 
 			}
 
-			REGISTER_P(int, minHessian);	//<! The hessian threshold used to find keypoints with the SURF detector. Only features whose hessian is larger than hessianThreshold are retained by the detector.
+			REGISTER_P(int, minHessian);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
@@ -52,7 +59,7 @@ namespace filter
 			cv::Mat keypoints_SURF(cv::Mat img, int minHessian) const
 			{
 				// Create SURF Detector
-				
+
 				cv::Ptr<cv::xfeatures2d::SURF> detector = cv::xfeatures2d::SURF::create(minHessian);
 
 				// Compute keypoint
@@ -75,7 +82,7 @@ namespace filter
 
 
 
-	
+
 
 
 	//bool findObjectSURF(Mat objectMat, Mat sceneMat, int hessianValue)

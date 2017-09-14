@@ -1,0 +1,575 @@
+\hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier}{}\section{filter\+:\+:algos\+:\+:I\+D\+Plate\+Rectifier Class Reference}
+\label{classfilter_1_1algos_1_1_i_d_plate_rectifier}\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+
+
+The \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{I\+D\+Plate\+Rectifier} filter will try to extract the region of interest (where all the relative character are) of an ID plate and rework its perspective to make it easier to read.  
+
+
+
+
+{\ttfamily \#include $<$I\+D\+Plate\+Rectifier.\+h$>$}
+
+Inheritance diagram for filter\+:\+:algos\+:\+:I\+D\+Plate\+Rectifier\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d5/daf/classfilter_1_1algos_1_1_i_d_plate_rectifier}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a079119de3cda8dfa38a76d06e5ceed8a}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a079119de3cda8dfa38a76d06e5ceed8a}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{I\+D\+Plate\+Rectifier} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_acb4b673e736d6bef78b4128d6432df61}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_acb4b673e736d6bef78b4128d6432df61}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{I\+D\+Plate\+Rectifier} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a3fea99ce502904063afbb703d7f47680}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a3fea99ce502904063afbb703d7f47680}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+left\+Ratio}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a78876086c5a15b331433ad5a7643f60b}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a78876086c5a15b331433ad5a7643f60b}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+right\+Ratio}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae4fec9c71dbaa99898c9657ea38026d0}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae4fec9c71dbaa99898c9657ea38026d0}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+top\+Ratio}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ad4b3ccd17d6eda0009ed292dc0b8fa1b}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ad4b3ccd17d6eda0009ed292dc0b8fa1b}} 
+typedef int {\bfseries vartype\+\_\+\+\_\+\+\_\+debug}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a740bc26c7f66d34fb6c3d30024edc094}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a740bc26c7f66d34fb6c3d30024edc094}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+char\+Min\+X\+Bound}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a170bf9d9b6f9f4aa1dc30d0a4dfc0d03}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a170bf9d9b6f9f4aa1dc30d0a4dfc0d03}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+char\+Max\+X\+Bound}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a8877a03d0d0d064a0cdd52aa17851838}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a8877a03d0d0d064a0cdd52aa17851838}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+char\+Min\+Fill\+Ratio}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a9425e31a0a23f0db8f8d83d278d2d1da}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a9425e31a0a23f0db8f8d83d278d2d1da}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+char\+Max\+Fill\+Ratio}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae3bd3dfbdfdbe8fdddb7ae9c893c8263}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae3bd3dfbdfdbe8fdddb7ae9c893c8263}} 
+typedef int {\bfseries vartype\+\_\+\+\_\+char\+Min\+Width}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a3d4f4304844fc743bd9636010bc10369}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a3d4f4304844fc743bd9636010bc10369}} 
+typedef int {\bfseries vartype\+\_\+\+\_\+char\+Min\+Height}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_af333d7e04ec9f0060221511073c0c0d5}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_af333d7e04ec9f0060221511073c0c0d5}} 
+void {\bfseries set\+\_\+left\+Ratio\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a1391ed78b781f251f40ae126cc6ef64d}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a1391ed78b781f251f40ae126cc6ef64d}} 
+void {\bfseries set\+\_\+left\+Ratio} (vartype\+\_\+\+\_\+left\+Ratio \&\+\_\+\+\_\+left\+Ratio)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_aa31f83cc13a56ac282e6c6b1be947289}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_aa31f83cc13a56ac282e6c6b1be947289}} 
+vartype\+\_\+\+\_\+left\+Ratio {\bfseries get\+\_\+left\+Ratio} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_aafc5b3bf13465090ec2999fe03809391}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_aafc5b3bf13465090ec2999fe03809391}} 
+void {\bfseries copy\+\_\+left\+Ratio} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a60e143e15cd3531ecee93ea5aead970e}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a60e143e15cd3531ecee93ea5aead970e}} 
+void {\bfseries set\+\_\+right\+Ratio\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac02baf7a0d43a242c8becb259388096c}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac02baf7a0d43a242c8becb259388096c}} 
+void {\bfseries set\+\_\+right\+Ratio} (vartype\+\_\+\+\_\+right\+Ratio \&\+\_\+\+\_\+right\+Ratio)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a53b982db6818e2b0bacd3f7b9625f8ba}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a53b982db6818e2b0bacd3f7b9625f8ba}} 
+vartype\+\_\+\+\_\+right\+Ratio {\bfseries get\+\_\+right\+Ratio} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a202d62e46aee89bdac905dd7f92efc29}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a202d62e46aee89bdac905dd7f92efc29}} 
+void {\bfseries copy\+\_\+right\+Ratio} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab129a18577712a9cf2a95df8a140f0d9}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab129a18577712a9cf2a95df8a140f0d9}} 
+void {\bfseries set\+\_\+top\+Ratio\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a1c799ce51ae19558be8a10983be485e6}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a1c799ce51ae19558be8a10983be485e6}} 
+void {\bfseries set\+\_\+top\+Ratio} (vartype\+\_\+\+\_\+top\+Ratio \&\+\_\+\+\_\+top\+Ratio)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_af15ee32f9b540a44407c5aa1291b7dcc}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_af15ee32f9b540a44407c5aa1291b7dcc}} 
+vartype\+\_\+\+\_\+top\+Ratio {\bfseries get\+\_\+top\+Ratio} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a55ee84a1e51942c436f841f60fbe06c4}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a55ee84a1e51942c436f841f60fbe06c4}} 
+void {\bfseries copy\+\_\+top\+Ratio} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac459f684974bfcb91af137f0b2c276c2}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac459f684974bfcb91af137f0b2c276c2}} 
+void {\bfseries set\+\_\+\+\_\+debug\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a39b0fc9c3e05c9c78d7d6180a652f55a}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a39b0fc9c3e05c9c78d7d6180a652f55a}} 
+void {\bfseries set\+\_\+\+\_\+debug} (vartype\+\_\+\+\_\+\+\_\+debug \&\+\_\+\+\_\+\+\_\+debug)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac50726a9818adadd989cc689f3736fc9}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac50726a9818adadd989cc689f3736fc9}} 
+vartype\+\_\+\+\_\+\+\_\+debug {\bfseries get\+\_\+\+\_\+debug} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a7070a64d060907bf7cb9f28af8e90f88}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a7070a64d060907bf7cb9f28af8e90f88}} 
+void {\bfseries copy\+\_\+\+\_\+debug} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a56493291945485661bb0bd1537ae08c8}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a56493291945485661bb0bd1537ae08c8}} 
+void {\bfseries set\+\_\+char\+Min\+X\+Bound\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a6d575b0690db9c64d8f9f1903f878d25}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a6d575b0690db9c64d8f9f1903f878d25}} 
+void {\bfseries set\+\_\+char\+Min\+X\+Bound} (vartype\+\_\+\+\_\+char\+Min\+X\+Bound \&\+\_\+\+\_\+char\+Min\+X\+Bound)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_aee3000ee679b415735a3e735f8a7e2f7}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_aee3000ee679b415735a3e735f8a7e2f7}} 
+vartype\+\_\+\+\_\+char\+Min\+X\+Bound {\bfseries get\+\_\+char\+Min\+X\+Bound} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_aa671ae16a0efe8aaeb75ccd1ae596a76}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_aa671ae16a0efe8aaeb75ccd1ae596a76}} 
+void {\bfseries copy\+\_\+char\+Min\+X\+Bound} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac0fd3945e468fab68316dafb2b85c36c}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac0fd3945e468fab68316dafb2b85c36c}} 
+void {\bfseries set\+\_\+char\+Max\+X\+Bound\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a4089754c4ce0da7fd7dfa2dff7e0d783}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a4089754c4ce0da7fd7dfa2dff7e0d783}} 
+void {\bfseries set\+\_\+char\+Max\+X\+Bound} (vartype\+\_\+\+\_\+char\+Max\+X\+Bound \&\+\_\+\+\_\+char\+Max\+X\+Bound)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab593d358c8757f7e27c84486abd354a6}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab593d358c8757f7e27c84486abd354a6}} 
+vartype\+\_\+\+\_\+char\+Max\+X\+Bound {\bfseries get\+\_\+char\+Max\+X\+Bound} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_afc854b659fcbf6cce12a8896245f3966}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_afc854b659fcbf6cce12a8896245f3966}} 
+void {\bfseries copy\+\_\+char\+Max\+X\+Bound} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a7159161911f73305d8e60b8e333657cb}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a7159161911f73305d8e60b8e333657cb}} 
+void {\bfseries set\+\_\+char\+Min\+Fill\+Ratio\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_af39245df41a376ac4366b379f6993b46}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_af39245df41a376ac4366b379f6993b46}} 
+void {\bfseries set\+\_\+char\+Min\+Fill\+Ratio} (vartype\+\_\+\+\_\+char\+Min\+Fill\+Ratio \&\+\_\+\+\_\+char\+Min\+Fill\+Ratio)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac4766ecb98d1d366e96e18be8cf39eb7}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac4766ecb98d1d366e96e18be8cf39eb7}} 
+vartype\+\_\+\+\_\+char\+Min\+Fill\+Ratio {\bfseries get\+\_\+char\+Min\+Fill\+Ratio} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a0ad869103048e46ac0e57b072785b951}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a0ad869103048e46ac0e57b072785b951}} 
+void {\bfseries copy\+\_\+char\+Min\+Fill\+Ratio} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ad103ca4d9c5f21c32e30682b8e7c3a3f}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ad103ca4d9c5f21c32e30682b8e7c3a3f}} 
+void {\bfseries set\+\_\+char\+Max\+Fill\+Ratio\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_acb7e9e7f666c97c56c1f3a8e4c904d38}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_acb7e9e7f666c97c56c1f3a8e4c904d38}} 
+void {\bfseries set\+\_\+char\+Max\+Fill\+Ratio} (vartype\+\_\+\+\_\+char\+Max\+Fill\+Ratio \&\+\_\+\+\_\+char\+Max\+Fill\+Ratio)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae26390d97efffa0a1f86de95998193f6}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae26390d97efffa0a1f86de95998193f6}} 
+vartype\+\_\+\+\_\+char\+Max\+Fill\+Ratio {\bfseries get\+\_\+char\+Max\+Fill\+Ratio} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae73f5b1a9884fc4c4da92b8bf02eb687}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae73f5b1a9884fc4c4da92b8bf02eb687}} 
+void {\bfseries copy\+\_\+char\+Max\+Fill\+Ratio} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a2dee84a97795572ccf3e4eb35387e63e}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a2dee84a97795572ccf3e4eb35387e63e}} 
+void {\bfseries set\+\_\+char\+Min\+Width\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae9873b1b52d95fe8a315d8f02c9e613e}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ae9873b1b52d95fe8a315d8f02c9e613e}} 
+void {\bfseries set\+\_\+char\+Min\+Width} (vartype\+\_\+\+\_\+char\+Min\+Width \&\+\_\+\+\_\+char\+Min\+Width)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a0b60b63876b7a7fa19150ca80a639899}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a0b60b63876b7a7fa19150ca80a639899}} 
+vartype\+\_\+\+\_\+char\+Min\+Width {\bfseries get\+\_\+char\+Min\+Width} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a45f30581a973d0373319ff0d9bb6d31c}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a45f30581a973d0373319ff0d9bb6d31c}} 
+void {\bfseries copy\+\_\+char\+Min\+Width} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a77aa2156504d42e5a63862d9a266e8a2}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a77aa2156504d42e5a63862d9a266e8a2}} 
+void {\bfseries set\+\_\+char\+Min\+Height\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a1f15e39e4a733507f4a4df43c4b4bf97}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a1f15e39e4a733507f4a4df43c4b4bf97}} 
+void {\bfseries set\+\_\+char\+Min\+Height} (vartype\+\_\+\+\_\+char\+Min\+Height \&\+\_\+\+\_\+char\+Min\+Height)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a9d67c76ccf32d822befeffcde951bce5}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a9d67c76ccf32d822befeffcde951bce5}} 
+vartype\+\_\+\+\_\+char\+Min\+Height {\bfseries get\+\_\+char\+Min\+Height} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a62b2af1d610637869a428240fb87d729}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a62b2af1d610637869a428240fb87d729}} 
+void {\bfseries copy\+\_\+char\+Min\+Height} (\hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab281284363bd71920bde63d1cbed06d7}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab281284363bd71920bde63d1cbed06d7}} 
+Hipe\+Status {\bfseries process} () override
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a87e8568567a8a4cd0a2ba41d070fcf15}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a87e8568567a8a4cd0a2ba41d070fcf15}} 
+bool {\bfseries comp\+By\+Deriv} (const std\+::pair$<$ int, int $>$ \&a, const std\+::pair$<$ int, int $>$ \&b)
+\item 
+bool \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_af2449a3fc87c1afdb4f241b4bd5367d5}{comp\+Rect\+By\+H\+Pos} (const cv\+::\+Rect \&a, const cv\+::\+Rect \&b)
+\begin{DoxyCompactList}\small\item\em Compare 2 rects by their position on the X axis only. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a9b8cc183136dd1579a1bebdb72690bc3}{left\+Ratio}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_abd15814b354c2c540a0f7dd59d68e7fb}{right\+Ratio}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a47af5ce4c82941acdaf2b8e0df0d85d5}{top\+Ratio}
+\item 
+int \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a8572bfa44fbd8e1aa65b61f94304fd95}{\+\_\+debug}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a3c83d66fb53bbd47cc6259b2d50880e9}{char\+Min\+X\+Bound}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab9fb0880fe39383c0a23241f50ae3130}{char\+Max\+X\+Bound}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab3d1568bbd49a16ca89432ccff63d331}{char\+Min\+Fill\+Ratio}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac4f81a5a0aea81b71470d2d56cd1b363}{char\+Max\+Fill\+Ratio}
+\item 
+int \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a68f101f60d303239cc8959e5c050d511}{char\+Min\+Width}
+\item 
+int \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a16951729a23ca52f98351102fa0b334e}{char\+Min\+Height}
+\end{DoxyCompactItemize}
+\subsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_abbacdb5946b362f8353cd3c0c57be315}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_abbacdb5946b362f8353cd3c0c57be315}} 
+enum {\bfseries Search\+Direction} \{ {\bfseries UP}, 
+{\bfseries L\+E\+FT}, 
+{\bfseries R\+I\+G\+HT}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ad1ed6ad6aff33970529231ec52668020}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ad1ed6ad6aff33970529231ec52668020}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\item 
+std\+::vector$<$ cv\+::\+Point $>$ \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a93c192fad7dd4402ac189be622e11615}{find\+Characters\+Bounds} (const cv\+::\+Mat \&image, const std\+::vector$<$ std\+::vector$<$ cv\+::\+Rect $>$$>$ \&characters\+Sorted)
+\begin{DoxyCompactList}\small\item\em Compute the bounds of a rectangle englobing the most relevant text lines of an ID plate image trying to match the pattern of the lines on the image. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::vector$<$ cv\+::\+Rect $>$ $>$ \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a03f68f887de80fccf153d8896380e0c1}{find\+Longest\+Text\+Lines} (int lines\+To\+Find, const std\+::vector$<$ std\+::vector$<$ cv\+::\+Rect $>$$>$ \&text\+List)
+\begin{DoxyCompactList}\small\item\em Find the lines\+To\+Find best successive lines of rectangles (cv\+::\+Rect) in an array. \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Point $>$ \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_aa3934265c0b997b5f18752e019a6ee11}{find\+Characters\+Lines\+Bounds} (const std\+::vector$<$ std\+::vector$<$ cv\+::\+Rect $>$$>$ lines, const cv\+::\+Mat \&image=cv\+::\+Mat())
+\begin{DoxyCompactList}\small\item\em Compute the raw bounds of a rectangle englobing lines of characters (cv\+::\+Rect) \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Point $>$ \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_ad7e737a6b3e282191fcfc70277ec4a68}{find\+Plate\+Text\+Area} (const cv\+::\+Mat \&plate\+Image, const std\+::vector$<$ cv\+::\+Point $>$ \&text\+Corners)
+\begin{DoxyCompactList}\small\item\em Compute the bounds of a rectangle enblobing a zone of text trying to match the pattern of the lines on the image. \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Point $>$ \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a84c1b751693bdf6aedc2a6c5cc0cec07}{find\+Area\+Top\+Line} (const cv\+::\+Mat \&plate\+Horizontal\+Lines, const std\+::vector$<$ cv\+::\+Point $>$ \&text\+Corners)
+\begin{DoxyCompactList}\small\item\em Search the longest horizontal line on an image above a zone. \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Point $>$ \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a6db5f773619b53ace466d0d29d17f7d7}{find\+Area\+Left\+Line} (const cv\+::\+Mat \&plate\+Vertical\+Lines, const std\+::vector$<$ cv\+::\+Point $>$ \&text\+Corners)
+\begin{DoxyCompactList}\small\item\em Search the longest vertical line on an image at the left of a zone. \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Point $>$ \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a1f6a2ed33e717d5cd2266e22170add7f}{find\+Area\+Right\+Line} (const cv\+::\+Mat \&plate\+Vertical\+Lines, const std\+::vector$<$ cv\+::\+Point $>$ \&text\+Corners)
+\begin{DoxyCompactList}\small\item\em Search the longest vertical line on an image at the right of a zone. \end{DoxyCompactList}\item 
+cv\+::\+Point \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a683c24b3350df1bf7b66ea83b8560958}{\+\_\+find\+Next\+Top\+Pivot\+Point} (const cv\+::\+Mat \&plate\+Image, const cv\+::\+Point \&curr\+Position, const cv\+::\+Point \&limit)
+\begin{DoxyCompactList}\small\item\em Scan an image upwards from a point (Y axis) searching for a pivot point (white pixel) to help the search of a horizontal white line. \end{DoxyCompactList}\item 
+cv\+::\+Point \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a51c36573b499d41e0f9b5f96954e8282}{\+\_\+find\+Next\+Left\+Pivot\+Point} (const cv\+::\+Mat \&plate\+Image, const cv\+::\+Point \&curr\+Position, const cv\+::\+Point \&limit)
+\begin{DoxyCompactList}\small\item\em Scan to the left ofan image from a point (X axis) searching for a pivot point (white pixel) to help the search of a vertical white line. \end{DoxyCompactList}\item 
+cv\+::\+Point \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_a143751919389e85779ce502de8c32605}{\+\_\+find\+Next\+Right\+Pivot\+Point} (const cv\+::\+Mat \&plate\+Image, const cv\+::\+Point \&curr\+Position, const cv\+::\+Point \&limit)
+\begin{DoxyCompactList}\small\item\em Scan to the right of an image from a point (X axis) searching for a pivot point (white pixel) to help the search of a vertical white line. \end{DoxyCompactList}\item 
+int \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_aca78d032b9ca4f2f6c5fd3d193a6690f}{find\+Best\+Horizontal\+Line} (const cv\+::\+Mat \&image, const cv\+::\+Point \&origin, const cv\+::\+Vec2f \&line\+Vec, cv\+::\+Vec2f \&out\+\_\+best\+Line\+Parameters)
+\begin{DoxyCompactList}\small\item\em Search the longest white horizontal line starting from a pivot point and circling around it in an image. \end{DoxyCompactList}\item 
+int \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_af9eb8178f53bdbd05d91645ed0b0e755}{find\+Best\+Vertical\+Line} (const cv\+::\+Mat \&image, const cv\+::\+Point \&origin, const cv\+::\+Vec2f \&line\+Vec, cv\+::\+Vec2f \&out\+\_\+best\+Line\+Parameters)
+\begin{DoxyCompactList}\small\item\em Search the longest white vertical line starting from a pivot point and circling around it in an image. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a5a685dda752afd3a8adc9ff833e5bf38}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a5a685dda752afd3a8adc9ff833e5bf38}} 
+cv\+::\+Point2f {\bfseries compute\+Lines\+Intersection\+Point} (const cv\+::\+Vec4i \&a, const cv\+::\+Vec4i \&b)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a7bb036e5e1767237b0c051cbc57ad09c}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a7bb036e5e1767237b0c051cbc57ad09c}} 
+cv\+::\+Mat {\bfseries perspective\+Crop} (const cv\+::\+Mat \&plate\+Image, const std\+::vector$<$ cv\+::\+Point $>$ \&text\+Corners)
+\end{DoxyCompactItemize}
+\subsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static double \hyperlink{classfilter_1_1algos_1_1_i_d_plate_rectifier_afdcacb5df472665d8e9dc7635e3474bf}{square} (double a)
+\begin{DoxyCompactList}\small\item\em Square function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a62006521981408467e119aa2674dcf9f}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a62006521981408467e119aa2674dcf9f}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{data\+::\+Connex\+Data}$<$ \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data}, \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data} $>$ {\bfseries \+\_\+connex\+Data}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a51c36573b499d41e0f9b5f96954e8282}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a51c36573b499d41e0f9b5f96954e8282}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!\+\_\+find\+Next\+Left\+Pivot\+Point@{\+\_\+find\+Next\+Left\+Pivot\+Point}}
+\index{\+\_\+find\+Next\+Left\+Pivot\+Point@{\+\_\+find\+Next\+Left\+Pivot\+Point}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{\+\_\+find\+Next\+Left\+Pivot\+Point()}{\_findNextLeftPivotPoint()}}
+{\footnotesize\ttfamily cv\+::\+Point filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::\+\_\+find\+Next\+Left\+Pivot\+Point (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{plate\+Image,  }\item[{const cv\+::\+Point \&}]{curr\+Position,  }\item[{const cv\+::\+Point \&}]{limit }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em plate\+Image} & The preprocessed image containing only vertical white lines \\
+\hline
+{\em curr\+Position} & The position to start the search \\
+\hline
+{\em limit} & The limit position to end the search \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Te computed pivot point, or -\/1 if no white line found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a143751919389e85779ce502de8c32605}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a143751919389e85779ce502de8c32605}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!\+\_\+find\+Next\+Right\+Pivot\+Point@{\+\_\+find\+Next\+Right\+Pivot\+Point}}
+\index{\+\_\+find\+Next\+Right\+Pivot\+Point@{\+\_\+find\+Next\+Right\+Pivot\+Point}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{\+\_\+find\+Next\+Right\+Pivot\+Point()}{\_findNextRightPivotPoint()}}
+{\footnotesize\ttfamily cv\+::\+Point filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::\+\_\+find\+Next\+Right\+Pivot\+Point (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{plate\+Image,  }\item[{const cv\+::\+Point \&}]{curr\+Position,  }\item[{const cv\+::\+Point \&}]{limit }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em plate\+Image} & The preprocessed image containing only vertical white lines \\
+\hline
+{\em curr\+Position} & The position to start the search \\
+\hline
+{\em limit} & The limit position to end the search \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Te computed pivot point, or -\/1 if no white line found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a683c24b3350df1bf7b66ea83b8560958}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a683c24b3350df1bf7b66ea83b8560958}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!\+\_\+find\+Next\+Top\+Pivot\+Point@{\+\_\+find\+Next\+Top\+Pivot\+Point}}
+\index{\+\_\+find\+Next\+Top\+Pivot\+Point@{\+\_\+find\+Next\+Top\+Pivot\+Point}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{\+\_\+find\+Next\+Top\+Pivot\+Point()}{\_findNextTopPivotPoint()}}
+{\footnotesize\ttfamily cv\+::\+Point filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::\+\_\+find\+Next\+Top\+Pivot\+Point (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{plate\+Image,  }\item[{const cv\+::\+Point \&}]{curr\+Position,  }\item[{const cv\+::\+Point \&}]{limit }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em plate\+Image} & The preprocessed image containing only horizontal white lines \\
+\hline
+{\em curr\+Position} & The position to start the search \\
+\hline
+{\em limit} & The limit position to end the search \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Te computed pivot point, or -\/1 if no white line found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_af2449a3fc87c1afdb4f241b4bd5367d5}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_af2449a3fc87c1afdb4f241b4bd5367d5}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!comp\+Rect\+By\+H\+Pos@{comp\+Rect\+By\+H\+Pos}}
+\index{comp\+Rect\+By\+H\+Pos@{comp\+Rect\+By\+H\+Pos}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{comp\+Rect\+By\+H\+Pos()}{compRectByHPos()}}
+{\footnotesize\ttfamily bool filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::comp\+Rect\+By\+H\+Pos (\begin{DoxyParamCaption}\item[{const cv\+::\+Rect \&}]{a,  }\item[{const cv\+::\+Rect \&}]{b }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & The first rect \\
+\hline
+{\em b} & The second rect \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True only if first.\+x $<$ second.\+x 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a6db5f773619b53ace466d0d29d17f7d7}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a6db5f773619b53ace466d0d29d17f7d7}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!find\+Area\+Left\+Line@{find\+Area\+Left\+Line}}
+\index{find\+Area\+Left\+Line@{find\+Area\+Left\+Line}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{find\+Area\+Left\+Line()}{findAreaLeftLine()}}
+{\footnotesize\ttfamily std\+::vector$<$ cv\+::\+Point $>$ filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::find\+Area\+Left\+Line (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{plate\+Vertical\+Lines,  }\item[{const std\+::vector$<$ cv\+::\+Point $>$ \&}]{text\+Corners }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em plate\+Vertical\+Lines} & An image preprocessed to only contain its vertical lines \\
+\hline
+{\em text\+Corners} & The 4 corners delimiting the zone to look at the left of \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The 4 corners modified to take into account the found vertical line 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a1f6a2ed33e717d5cd2266e22170add7f}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a1f6a2ed33e717d5cd2266e22170add7f}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!find\+Area\+Right\+Line@{find\+Area\+Right\+Line}}
+\index{find\+Area\+Right\+Line@{find\+Area\+Right\+Line}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{find\+Area\+Right\+Line()}{findAreaRightLine()}}
+{\footnotesize\ttfamily std\+::vector$<$ cv\+::\+Point $>$ filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::find\+Area\+Right\+Line (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{plate\+Vertical\+Lines,  }\item[{const std\+::vector$<$ cv\+::\+Point $>$ \&}]{text\+Corners }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em plate\+Vertical\+Lines} & An image preprocessed to only contain its vertical lines \\
+\hline
+{\em text\+Corners} & The 4 corners delimiting the zone to look at the right of \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The 4 corners modified to take into account the found vertical line 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a84c1b751693bdf6aedc2a6c5cc0cec07}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a84c1b751693bdf6aedc2a6c5cc0cec07}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!find\+Area\+Top\+Line@{find\+Area\+Top\+Line}}
+\index{find\+Area\+Top\+Line@{find\+Area\+Top\+Line}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{find\+Area\+Top\+Line()}{findAreaTopLine()}}
+{\footnotesize\ttfamily std\+::vector$<$ cv\+::\+Point $>$ filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::find\+Area\+Top\+Line (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{plate\+Horizontal\+Lines,  }\item[{const std\+::vector$<$ cv\+::\+Point $>$ \&}]{text\+Corners }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em plate\+Horizontal\+Lines} & An image preprocessed to only contain its horizontal lines \\
+\hline
+{\em text\+Corners} & The 4 corners delimiting the zone to look above of \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The 4 corners modified to take into account the found horizontal line 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_aca78d032b9ca4f2f6c5fd3d193a6690f}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_aca78d032b9ca4f2f6c5fd3d193a6690f}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!find\+Best\+Horizontal\+Line@{find\+Best\+Horizontal\+Line}}
+\index{find\+Best\+Horizontal\+Line@{find\+Best\+Horizontal\+Line}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{find\+Best\+Horizontal\+Line()}{findBestHorizontalLine()}}
+{\footnotesize\ttfamily int filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::find\+Best\+Horizontal\+Line (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{image,  }\item[{const cv\+::\+Point \&}]{origin,  }\item[{const cv\+::\+Vec2f \&}]{line\+Vec,  }\item[{cv\+::\+Vec2f \&}]{out\+\_\+best\+Line\+Parameters }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em image} & The image to work on, preprocessed to only display horizontal white lines \\
+\hline
+{\em origin} & The pivot point used to search the line \\
+\hline
+{\em line\+Vec} & \\
+\hline
+{\em out\+\_\+best\+Line\+Parameters} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_af9eb8178f53bdbd05d91645ed0b0e755}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_af9eb8178f53bdbd05d91645ed0b0e755}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!find\+Best\+Vertical\+Line@{find\+Best\+Vertical\+Line}}
+\index{find\+Best\+Vertical\+Line@{find\+Best\+Vertical\+Line}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{find\+Best\+Vertical\+Line()}{findBestVerticalLine()}}
+{\footnotesize\ttfamily int filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::find\+Best\+Vertical\+Line (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{image,  }\item[{const cv\+::\+Point \&}]{origin,  }\item[{const cv\+::\+Vec2f \&}]{line\+Vec,  }\item[{cv\+::\+Vec2f \&}]{out\+\_\+best\+Line\+Parameters }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em image} & The image to work on, preprocessed to only display vertical white lines \\
+\hline
+{\em origin} & The pivot point used to search the line \\
+\hline
+{\em line\+Vec} & \\
+\hline
+{\em out\+\_\+best\+Line\+Parameters} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a93c192fad7dd4402ac189be622e11615}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a93c192fad7dd4402ac189be622e11615}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!find\+Characters\+Bounds@{find\+Characters\+Bounds}}
+\index{find\+Characters\+Bounds@{find\+Characters\+Bounds}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{find\+Characters\+Bounds()}{findCharactersBounds()}}
+{\footnotesize\ttfamily std\+::vector$<$ cv\+::\+Point $>$ filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::find\+Characters\+Bounds (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{image,  }\item[{const std\+::vector$<$ std\+::vector$<$ cv\+::\+Rect $>$$>$ \&}]{characters\+Sorted }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em image} & The ID plate\textquotesingle{}s image \\
+\hline
+{\em characters\+Sorted} & The sorted by position characters extracted from an ID plate image \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The 4 points matching the image lines pattern and creating the R\+OI 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_aa3934265c0b997b5f18752e019a6ee11}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_aa3934265c0b997b5f18752e019a6ee11}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!find\+Characters\+Lines\+Bounds@{find\+Characters\+Lines\+Bounds}}
+\index{find\+Characters\+Lines\+Bounds@{find\+Characters\+Lines\+Bounds}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{find\+Characters\+Lines\+Bounds()}{findCharactersLinesBounds()}}
+{\footnotesize\ttfamily std\+::vector$<$ cv\+::\+Point $>$ filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::find\+Characters\+Lines\+Bounds (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::vector$<$ cv\+::\+Rect $>$$>$}]{lines,  }\item[{const cv\+::\+Mat \&}]{image = {\ttfamily cv\+:\+:Mat()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em lines} & The lines of characters \\
+\hline
+{\em image} & For debug purpose only. The image where the characters were extracted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The 4 points creating the R\+O\+Is 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a03f68f887de80fccf153d8896380e0c1}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a03f68f887de80fccf153d8896380e0c1}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!find\+Longest\+Text\+Lines@{find\+Longest\+Text\+Lines}}
+\index{find\+Longest\+Text\+Lines@{find\+Longest\+Text\+Lines}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{find\+Longest\+Text\+Lines()}{findLongestTextLines()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::vector$<$ cv\+::\+Rect $>$ $>$ filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::find\+Longest\+Text\+Lines (\begin{DoxyParamCaption}\item[{int}]{lines\+To\+Find,  }\item[{const std\+::vector$<$ std\+::vector$<$ cv\+::\+Rect $>$$>$ \&}]{text\+List }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em lines\+To\+Find} & The number of successive lines to find \\
+\hline
+{\em text\+List} & The lines \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The extracted found lines 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ad7e737a6b3e282191fcfc70277ec4a68}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ad7e737a6b3e282191fcfc70277ec4a68}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!find\+Plate\+Text\+Area@{find\+Plate\+Text\+Area}}
+\index{find\+Plate\+Text\+Area@{find\+Plate\+Text\+Area}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{find\+Plate\+Text\+Area()}{findPlateTextArea()}}
+{\footnotesize\ttfamily std\+::vector$<$ cv\+::\+Point $>$ filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::find\+Plate\+Text\+Area (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{plate\+Image,  }\item[{const std\+::vector$<$ cv\+::\+Point $>$ \&}]{text\+Corners }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em plate\+Image} & The image to work on \\
+\hline
+{\em text\+Corners} & The 4 corners delimiting the zone of text \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The 4 points matching the image lines pattern and creating the R\+OI 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_afdcacb5df472665d8e9dc7635e3474bf}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_afdcacb5df472665d8e9dc7635e3474bf}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!square@{square}}
+\index{square@{square}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{square()}{square()}}
+{\footnotesize\ttfamily static double filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::square (\begin{DoxyParamCaption}\item[{double}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & the number to square \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the squared value of the number 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a8572bfa44fbd8e1aa65b61f94304fd95}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a8572bfa44fbd8e1aa65b61f94304fd95}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!\+\_\+debug@{\+\_\+debug}}
+\index{\+\_\+debug@{\+\_\+debug}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{\+\_\+debug}{\_debug}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::\+\_\+debug}
+
+The desired debug level. The default level is 0 (disabled). A higher value will enable more debug informations. \mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac4f81a5a0aea81b71470d2d56cd1b363}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ac4f81a5a0aea81b71470d2d56cd1b363}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!char\+Max\+Fill\+Ratio@{char\+Max\+Fill\+Ratio}}
+\index{char\+Max\+Fill\+Ratio@{char\+Max\+Fill\+Ratio}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{char\+Max\+Fill\+Ratio}{charMaxFillRatio}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::char\+Max\+Fill\+Ratio}
+
+The maximum ratio of colored pixels a character rect can contain to be accepted as a valid one. \mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab9fb0880fe39383c0a23241f50ae3130}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab9fb0880fe39383c0a23241f50ae3130}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!char\+Max\+X\+Bound@{char\+Max\+X\+Bound}}
+\index{char\+Max\+X\+Bound@{char\+Max\+X\+Bound}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{char\+Max\+X\+Bound}{charMaxXBound}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::char\+Max\+X\+Bound}
+
+The maximum position on the X axis to search for characters in the image. \mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab3d1568bbd49a16ca89432ccff63d331}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_ab3d1568bbd49a16ca89432ccff63d331}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!char\+Min\+Fill\+Ratio@{char\+Min\+Fill\+Ratio}}
+\index{char\+Min\+Fill\+Ratio@{char\+Min\+Fill\+Ratio}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{char\+Min\+Fill\+Ratio}{charMinFillRatio}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::char\+Min\+Fill\+Ratio}
+
+The minimum ratio of colored pixels a character rect must contain to be accepted as a valid one. \mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a16951729a23ca52f98351102fa0b334e}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a16951729a23ca52f98351102fa0b334e}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!char\+Min\+Height@{char\+Min\+Height}}
+\index{char\+Min\+Height@{char\+Min\+Height}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{char\+Min\+Height}{charMinHeight}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::char\+Min\+Height}
+
+The minimum height a character rect must have to be accepted as a valid one. \mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a68f101f60d303239cc8959e5c050d511}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a68f101f60d303239cc8959e5c050d511}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!char\+Min\+Width@{char\+Min\+Width}}
+\index{char\+Min\+Width@{char\+Min\+Width}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{char\+Min\+Width}{charMinWidth}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::char\+Min\+Width}
+
+The minimum width a character rect must have to be accepted as a valid one. \mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a3c83d66fb53bbd47cc6259b2d50880e9}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a3c83d66fb53bbd47cc6259b2d50880e9}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!char\+Min\+X\+Bound@{char\+Min\+X\+Bound}}
+\index{char\+Min\+X\+Bound@{char\+Min\+X\+Bound}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{char\+Min\+X\+Bound}{charMinXBound}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::char\+Min\+X\+Bound}
+
+The minimum position on the X axis to search for characters in the image. \mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a9b8cc183136dd1579a1bebdb72690bc3}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a9b8cc183136dd1579a1bebdb72690bc3}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!left\+Ratio@{left\+Ratio}}
+\index{left\+Ratio@{left\+Ratio}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{left\+Ratio}{leftRatio}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::left\+Ratio}
+
+Percentage of the image width used to extend and limit the search of the plate text area\textquotesingle{}s left vertical line. \mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_abd15814b354c2c540a0f7dd59d68e7fb}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_abd15814b354c2c540a0f7dd59d68e7fb}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!right\+Ratio@{right\+Ratio}}
+\index{right\+Ratio@{right\+Ratio}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{right\+Ratio}{rightRatio}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::right\+Ratio}
+
+Percentage of the image width used to extend and limit the search of the plate text area\textquotesingle{}s right vertical line. \mbox{\Hypertarget{classfilter_1_1algos_1_1_i_d_plate_rectifier_a47af5ce4c82941acdaf2b8e0df0d85d5}\label{classfilter_1_1algos_1_1_i_d_plate_rectifier_a47af5ce4c82941acdaf2b8e0df0d85d5}} 
+\index{filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}!top\+Ratio@{top\+Ratio}}
+\index{top\+Ratio@{top\+Ratio}!filter\+::algos\+::\+I\+D\+Plate\+Rectifier@{filter\+::algos\+::\+I\+D\+Plate\+Rectifier}}
+\subsubsection{\texorpdfstring{top\+Ratio}{topRatio}}
+{\footnotesize\ttfamily filter\+::algos\+::\+I\+D\+Plate\+Rectifier\+::top\+Ratio}
+
+Percentage of the image height used to extend and limit the search of the plate text area\textquotesingle{}s top horizontal line. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/I\+D\+Plate\+Rectifier.\+h\item 
+source/filter/algos/I\+D\+Plate\+Rectifier.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,51 @@
+\hypertarget{class_simple_web_1_1_crypto}{}\section{Simple\+Web\+:\+:Crypto Class Reference}
+\label{class_simple_web_1_1_crypto}\index{Simple\+Web\+::\+Crypto@{Simple\+Web\+::\+Crypto}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_simple_web_1_1_crypto_1_1_base64}{Base64}
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_ab40abff25234f08b7b90fc97fab39faa}\label{class_simple_web_1_1_crypto_ab40abff25234f08b7b90fc97fab39faa}} 
+static std\+::string \hyperlink{class_simple_web_1_1_crypto_ab40abff25234f08b7b90fc97fab39faa}{to\+\_\+hex\+\_\+string} (const std\+::string \&input)
+\begin{DoxyCompactList}\small\item\em Return hex string from bytes in input string. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_a0561dc11ae3cd68004bdb90e04252164}\label{class_simple_web_1_1_crypto_a0561dc11ae3cd68004bdb90e04252164}} 
+static std\+::string {\bfseries md5} (const std\+::string \&input, size\+\_\+t iterations=1)
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_a8fe52ed7463c99a9165a215831dc6127}\label{class_simple_web_1_1_crypto_a8fe52ed7463c99a9165a215831dc6127}} 
+static std\+::string {\bfseries md5} (std\+::istream \&stream, size\+\_\+t iterations=1)
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_a7c665ab1dc299e741a5e81f7cf33c523}\label{class_simple_web_1_1_crypto_a7c665ab1dc299e741a5e81f7cf33c523}} 
+static std\+::string {\bfseries sha1} (const std\+::string \&input, size\+\_\+t iterations=1)
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_a638b7c19084f34d88d696be9d9353e4e}\label{class_simple_web_1_1_crypto_a638b7c19084f34d88d696be9d9353e4e}} 
+static std\+::string {\bfseries sha1} (std\+::istream \&stream, size\+\_\+t iterations=1)
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_a85dc4f2bae2305fa6e8a34bf0f4f158d}\label{class_simple_web_1_1_crypto_a85dc4f2bae2305fa6e8a34bf0f4f158d}} 
+static std\+::string {\bfseries sha256} (const std\+::string \&input, size\+\_\+t iterations=1)
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_a09d10275fef3ec75a698af4f27c5aac3}\label{class_simple_web_1_1_crypto_a09d10275fef3ec75a698af4f27c5aac3}} 
+static std\+::string {\bfseries sha256} (std\+::istream \&stream, size\+\_\+t iterations=1)
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_adc77ea749230d6a7f299125c43966c34}\label{class_simple_web_1_1_crypto_adc77ea749230d6a7f299125c43966c34}} 
+static std\+::string {\bfseries sha512} (const std\+::string \&input, size\+\_\+t iterations=1)
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_a95b77524631a18e1fd1e2584e062d452}\label{class_simple_web_1_1_crypto_a95b77524631a18e1fd1e2584e062d452}} 
+static std\+::string {\bfseries sha512} (std\+::istream \&stream, size\+\_\+t iterations=1)
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_a53d0a191ebda80d31c291260343e38fe}\label{class_simple_web_1_1_crypto_a53d0a191ebda80d31c291260343e38fe}} 
+static std\+::string \hyperlink{class_simple_web_1_1_crypto_a53d0a191ebda80d31c291260343e38fe}{pbkdf2} (const std\+::string \&password, const std\+::string \&salt, int iterations, int key\+\_\+size)
+\begin{DoxyCompactList}\small\item\em key\+\_\+size is number of bytes of the returned key. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_simple_web_1_1_crypto_a535775900225f463e7ed14f984695865}\label{class_simple_web_1_1_crypto_a535775900225f463e7ed14f984695865}} 
+static const size\+\_\+t {\bfseries buffer\+\_\+size} =131072
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/http/crypto.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,167 @@
+\hypertarget{classfilter_1_1data_1_1_list_i_o_data}{}\section{filter\+:\+:data\+:\+:List\+I\+O\+Data Class Reference}
+\label{classfilter_1_1data_1_1_list_i_o_data}\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+
+
+\hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} is the data type to use when you have multiple types of data to handle at the same time.  
+
+
+
+
+{\ttfamily \#include $<$List\+I\+O\+Data.\+h$>$}
+
+Inheritance diagram for filter\+:\+:data\+:\+:List\+I\+O\+Data\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{db/d90/classfilter_1_1data_1_1_list_i_o_data}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classfilter_1_1data_1_1_list_i_o_data_a60486a441c50cb2e16386fdb7310c901}{List\+I\+O\+Data} (std\+::vector$<$ \hyperlink{classfilter_1_1data_1_1_data}{Data} $>$ list\+Io\+Data)
+\begin{DoxyCompactList}\small\item\em Constructor with a list of multiple. \end{DoxyCompactList}\item 
+std\+::vector$<$ \hyperlink{classfilter_1_1data_1_1_data}{Data} $>$ \hyperlink{classfilter_1_1data_1_1_list_i_o_data_a861011cdf036244dfab132bc024f8971}{get\+List\+Io\+Data} ()
+\begin{DoxyCompactList}\small\item\em Get the data. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_a38807e4e5651a03400f525cb399e84c7}\label{classfilter_1_1data_1_1_list_i_o_data_a38807e4e5651a03400f525cb399e84c7}} 
+{\bfseries List\+I\+O\+Data} (const \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \&left)
+\item 
+void \hyperlink{classfilter_1_1data_1_1_list_i_o_data_a1e56236e33f0389b74ad287a209e0829}{copy\+To} (\hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \&left) const
+\begin{DoxyCompactList}\small\item\em Copy the data of the \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} object to another one. \end{DoxyCompactList}\item 
+void \hyperlink{classfilter_1_1data_1_1_list_i_o_data_a353fa855f51b511b3afa53f2dac6e0f3}{Add} (const \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \&left, bool copy=false)
+\begin{DoxyCompactList}\small\item\em Add data coming from another \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} object. \end{DoxyCompactList}\item 
+virtual \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \& \hyperlink{classfilter_1_1data_1_1_list_i_o_data_a0c5040ca622f5eacc9bdc03bb609e5e9}{operator=} (const \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \&left)
+\begin{DoxyCompactList}\small\item\em \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} assignment operator. \end{DoxyCompactList}\item 
+virtual \hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data} \& \hyperlink{classfilter_1_1data_1_1_list_i_o_data_a99b6bad4d2a1899c099e79ef6ec9bfbb}{operator$<$$<$} (const \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \&left)
+\begin{DoxyCompactList}\small\item\em Add data coming from another \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} object. \end{DoxyCompactList}\item 
+bool \hyperlink{classfilter_1_1data_1_1_list_i_o_data_ae0c60b47c1df28e014d85c56b2de283e}{empty} () const
+\item 
+const std\+::vector$<$ \hyperlink{classfilter_1_1data_1_1_data}{Data} $>$ \& \hyperlink{classfilter_1_1data_1_1_list_i_o_data_a9f1538f3292101647fea16c372928dc7}{get\+List\+Data} () const
+\begin{DoxyCompactList}\small\item\em Get the object\textquotesingle{}s data container (const version) \end{DoxyCompactList}\item 
+void \hyperlink{classfilter_1_1data_1_1_list_i_o_data_a62e1f9fff3f1310e75ed603681397ade}{set\+List\+Data} (const std\+::vector$<$ \hyperlink{classfilter_1_1data_1_1_data}{Data} $>$ \&left)
+\begin{DoxyCompactList}\small\item\em Overwrites the data of the object with the content of a container. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_ac1f25bdaeed1a82276f352c760d6da34}\label{classfilter_1_1data_1_1_list_i_o_data_ac1f25bdaeed1a82276f352c760d6da34}} 
+std\+::vector$<$ \hyperlink{classfilter_1_1data_1_1_data}{Data} $>$ \hyperlink{classfilter_1_1data_1_1_list_i_o_data_ac1f25bdaeed1a82276f352c760d6da34}{\+\_\+list\+Io\+Data}
+\begin{DoxyCompactList}\small\item\em Container of all the data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_a60486a441c50cb2e16386fdb7310c901}\label{classfilter_1_1data_1_1_list_i_o_data_a60486a441c50cb2e16386fdb7310c901}} 
+\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}!List\+I\+O\+Data@{List\+I\+O\+Data}}
+\index{List\+I\+O\+Data@{List\+I\+O\+Data}!filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+\subsubsection{\texorpdfstring{List\+I\+O\+Data()}{ListIOData()}}
+{\footnotesize\ttfamily filter\+::data\+::\+List\+I\+O\+Data\+::\+List\+I\+O\+Data (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{classfilter_1_1data_1_1_data}{Data} $>$}]{list\+Io\+Data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classfilter_1_1data_1_1_data}{Data} objets. 
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}{Parameters}
+{\em list\+Io\+Data} & The \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classfilter_1_1data_1_1_data}{Data}. The multiple objects in the list can be of different types 
+\end{DoxySeeAlso}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_a353fa855f51b511b3afa53f2dac6e0f3}\label{classfilter_1_1data_1_1_list_i_o_data_a353fa855f51b511b3afa53f2dac6e0f3}} 
+\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}!Add@{Add}}
+\index{Add@{Add}!filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+\subsubsection{\texorpdfstring{Add()}{Add()}}
+{\footnotesize\ttfamily void filter\+::data\+::\+List\+I\+O\+Data\+::\+Add (\begin{DoxyParamCaption}\item[{const \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \&}]{left,  }\item[{bool}]{copy = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The other object to copy the data from \\
+\hline
+{\em copy} & unused \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_a1e56236e33f0389b74ad287a209e0829}\label{classfilter_1_1data_1_1_list_i_o_data_a1e56236e33f0389b74ad287a209e0829}} 
+\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}!copy\+To@{copy\+To}}
+\index{copy\+To@{copy\+To}!filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+\subsubsection{\texorpdfstring{copy\+To()}{copyTo()}}
+{\footnotesize\ttfamily void filter\+::data\+::\+List\+I\+O\+Data\+::copy\+To (\begin{DoxyParamCaption}\item[{\hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \&}]{left }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The other object where to copy the data to \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_ae0c60b47c1df28e014d85c56b2de283e}\label{classfilter_1_1data_1_1_list_i_o_data_ae0c60b47c1df28e014d85c56b2de283e}} 
+\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}!empty@{empty}}
+\index{empty@{empty}!filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+\subsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily bool filter\+::data\+::\+List\+I\+O\+Data\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+Returns true if the object doesn\textquotesingle{}t contain any data 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1data_1_1_i_o_data}{filter\+::data\+::\+I\+O\+Data$<$ Data, List\+I\+O\+Data $>$}.
+
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_a9f1538f3292101647fea16c372928dc7}\label{classfilter_1_1data_1_1_list_i_o_data_a9f1538f3292101647fea16c372928dc7}} 
+\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}!get\+List\+Data@{get\+List\+Data}}
+\index{get\+List\+Data@{get\+List\+Data}!filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+\subsubsection{\texorpdfstring{get\+List\+Data()}{getListData()}}
+{\footnotesize\ttfamily const std\+::vector$<$\hyperlink{classfilter_1_1data_1_1_data}{Data}$>$\& filter\+::data\+::\+List\+I\+O\+Data\+::get\+List\+Data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+Returns a constant reference to the object\textquotesingle{}s data container 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_a861011cdf036244dfab132bc024f8971}\label{classfilter_1_1data_1_1_list_i_o_data_a861011cdf036244dfab132bc024f8971}} 
+\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}!get\+List\+Io\+Data@{get\+List\+Io\+Data}}
+\index{get\+List\+Io\+Data@{get\+List\+Io\+Data}!filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+\subsubsection{\texorpdfstring{get\+List\+Io\+Data()}{getListIoData()}}
+{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classfilter_1_1data_1_1_data}{Data}$>$ filter\+::data\+::\+List\+I\+O\+Data\+::get\+List\+Io\+Data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+Returns the data in a std\+::vector container 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_a99b6bad4d2a1899c099e79ef6ec9bfbb}\label{classfilter_1_1data_1_1_list_i_o_data_a99b6bad4d2a1899c099e79ef6ec9bfbb}} 
+\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+\subsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}}
+{\footnotesize\ttfamily virtual \hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data}\& filter\+::data\+::\+List\+I\+O\+Data\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{const \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The other object to copy the data from \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_a0c5040ca622f5eacc9bdc03bb609e5e9}\label{classfilter_1_1data_1_1_list_i_o_data_a0c5040ca622f5eacc9bdc03bb609e5e9}} 
+\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}!operator=@{operator=}}
+\index{operator=@{operator=}!filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily virtual \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data}\& filter\+::data\+::\+List\+I\+O\+Data\+::operator= (\begin{DoxyParamCaption}\item[{const \hyperlink{classfilter_1_1data_1_1_list_i_o_data}{List\+I\+O\+Data} \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The other object to copy the data from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_list_i_o_data_a62e1f9fff3f1310e75ed603681397ade}\label{classfilter_1_1data_1_1_list_i_o_data_a62e1f9fff3f1310e75ed603681397ade}} 
+\index{filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}!set\+List\+Data@{set\+List\+Data}}
+\index{set\+List\+Data@{set\+List\+Data}!filter\+::data\+::\+List\+I\+O\+Data@{filter\+::data\+::\+List\+I\+O\+Data}}
+\subsubsection{\texorpdfstring{set\+List\+Data()}{setListData()}}
+{\footnotesize\ttfamily void filter\+::data\+::\+List\+I\+O\+Data\+::set\+List\+Data (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \hyperlink{classfilter_1_1data_1_1_data}{Data} $>$ \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The container to copy the data from \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/data/List\+I\+O\+Data.\+h\end{DoxyCompactItemize}

@@ -12,6 +12,10 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The AverageColor filter will compute the average color of an image in RGB space.
+		 *		  Note that the average color computed will be outputed as an image of 1 pixel.
+		 */
 		class AverageColor : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);

@@ -1,0 +1,305 @@
+\hypertarget{classfilter_1_1data_1_1_connex_data}{}\section{filter\+:\+:data\+:\+:Connex\+Data$<$ Din, Dout $>$ Class Template Reference}
+\label{classfilter_1_1data_1_1_connex_data}\index{filter\+::data\+::\+Connex\+Data$<$ Din, Dout $>$@{filter\+::data\+::\+Connex\+Data$<$ Din, Dout $>$}}
+
+
+The connector is here to connect all data by \hyperlink{classfilter_1_1data_1_1_data_port}{Data\+Port}.  
+
+
+
+
+{\ttfamily \#include $<$Connex\+Data.\+h$>$}
+
+Inheritance diagram for filter\+:\+:data\+:\+:Connex\+Data$<$ Din, Dout $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{dc/d36/classfilter_1_1data_1_1_connex_data}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \hyperlink{classfilter_1_1data_1_1_data_port_base}{Data\+Port\+Base} \& \hyperlink{classfilter_1_1data_1_1_connex_data_aecd47354b992800c9d9e69ad951382fb}{get\+Port} ()
+\begin{DoxyCompactList}\small\item\em Get the input port\textquotesingle{}s object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_af0e6940e300521b1ecc09c367c8960e2}\label{classfilter_1_1data_1_1_connex_data_af0e6940e300521b1ecc09c367c8960e2}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data_af0e6940e300521b1ecc09c367c8960e2}{Connex\+Data} ()
+\begin{DoxyCompactList}\small\item\em Default \hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data} constructor. The Way\+Data will be set to I\+N\+D\+A\+TA. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_connex_data_a294f855ae8f4b203c8413a32f7e0c692}{Connex\+Data} (Way\+Data way)
+\begin{DoxyCompactList}\small\item\em Constructor with a Way\+Data paremeter. The way data is used to tell how the port should handle data. \end{DoxyCompactList}\item 
+bool \hyperlink{classfilter_1_1data_1_1_connex_data_a6ae80a4f012442066057ee23dcb6c363}{empty} ()
+\begin{DoxyCompactList}\small\item\em Check if the port contains data. \end{DoxyCompactList}\item 
+size\+\_\+t \hyperlink{classfilter_1_1data_1_1_connex_data_aed293788ed40932ede5d3a30469f5cfd}{size} ()
+\begin{DoxyCompactList}\small\item\em Get the number of stored elements in the port. \end{DoxyCompactList}\item 
+Din \hyperlink{classfilter_1_1data_1_1_connex_data_aa7d702b864f00b42b325d2eb6c0a9e91}{get} ()
+\begin{DoxyCompactList}\small\item\em Get the port\textquotesingle{}s referenced next data. \end{DoxyCompactList}\item 
+Din \hyperlink{classfilter_1_1data_1_1_connex_data_a4367cfe424cefb90470098814a33e326}{pop} ()
+\begin{DoxyCompactList}\small\item\em Get the port\textquotesingle{}s referenced next data. If the way is I\+N\+O\+UT, the port will keep a reference to the returned data. In that case modifying the data will affect the one on the port. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class Dout\+Broad\+Cast $>$ }\\void \hyperlink{classfilter_1_1data_1_1_connex_data_abd05d79fd08000ff3c92e6fcc8cd41be}{broacast} (Dout\+Broad\+Cast data\+Output)
+\begin{DoxyCompactList}\small\item\em \mbox{[}T\+O\+DO\mbox{]} \end{DoxyCompactList}\item 
+void \hyperlink{classfilter_1_1data_1_1_connex_data_a16e8347560f6e429a410f21c0b9bd48d}{broacast} (Dout \&data\+Output)
+\begin{DoxyCompactList}\small\item\em Broadcat data to the port\textquotesingle{}s output. \end{DoxyCompactList}\item 
+void \hyperlink{classfilter_1_1data_1_1_connex_data_a703d8b2465a59a9c8ca79436a1ddfa2b}{push} (Dout data\+Output)
+\begin{DoxyCompactList}\small\item\em Send data to the port. The port will establish a link with the next filter of the graph. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class indata $>$ }\\void \hyperlink{classfilter_1_1data_1_1_connex_data_af5ed83082314838718aee4fbda767ff9}{push} (indata matrix)
+\begin{DoxyCompactList}\small\item\em \mbox{[}T\+O\+DO\mbox{]} \end{DoxyCompactList}\item 
+{\footnotesize template$<$class child\+Din , class child\+Dout $>$ }\\void \hyperlink{classfilter_1_1data_1_1_connex_data_a93772066f126cab918b46b285c63073a}{connect\+Output} (\hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$ child\+Din, child\+Dout $>$ \&connex\+Out)
+\begin{DoxyCompactList}\small\item\em Link \hyperlink{classfilter_1_1data_1_1_data_port}{Data\+Port} together to create the data graph. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class left\+In , class left\+Out $>$ }\\\hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$ left\+In, left\+Out $>$ \& \hyperlink{classfilter_1_1data_1_1_connex_data_af7a3a297477db6925728016cb9c8961a}{operator$<$$<$} (\hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$ left\+In, left\+Out $>$ \&left)
+\begin{DoxyCompactList}\small\item\em Link \hyperlink{classfilter_1_1data_1_1_data_port}{Data\+Port} together to create the data graph. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$ Din, Dout $>$ \& \hyperlink{classfilter_1_1data_1_1_connex_data_a4a4ad046f5772283f520189e62327376}{operator$<$$<$} (\hyperlink{classfilter_1_1data_1_1_connex_data_base}{Connex\+Data\+Base} \&left)
+\begin{DoxyCompactList}\small\item\em Link \hyperlink{classfilter_1_1data_1_1_data_port}{Data\+Port} together to create the data graph. \end{DoxyCompactList}\item 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$ Din, Dout $>$ \& \hyperlink{classfilter_1_1data_1_1_connex_data_a631260c24ddd1050c75a2732081a2d9d}{get\+Cast} ()
+\begin{DoxyCompactList}\small\item\em \mbox{[}T\+O\+DO\mbox{]} \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classfilter_1_1data_1_1_data_port}{Data\+Port} \hyperlink{classfilter_1_1data_1_1_connex_data_a607857efe30c0053b56daf6a4da7c83f}{port}
+\begin{DoxyCompactList}\small\item\em The Dataport object used to store the input data. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_aeb46b767ed5e70caa0b1b15aecf1d353}\label{classfilter_1_1data_1_1_connex_data_aeb46b767ed5e70caa0b1b15aecf1d353}} 
+std\+::map$<$ \hyperlink{classfilter_1_1data_1_1_connex_data_base}{Connex\+Data\+Base} $\ast$, \hyperlink{classfilter_1_1data_1_1_data_port}{Data\+Port} $\ast$ $>$ \hyperlink{classfilter_1_1data_1_1_connex_data_aeb46b767ed5e70caa0b1b15aecf1d353}{port\+Output}
+\begin{DoxyCompactList}\small\item\em \mbox{[}T\+O\+DO\mbox{]} \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Din, class Dout$>$\newline
+class filter\+::data\+::\+Connex\+Data$<$ Din, Dout $>$}
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Din} & the Input data type to accept in the I\+Filer Object (comming from parents) \\
+\hline
+{\em Dout} & the output data type to push to the next data\+Port (going t the childrens) \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_a294f855ae8f4b203c8413a32f7e0c692}\label{classfilter_1_1data_1_1_connex_data_a294f855ae8f4b203c8413a32f7e0c692}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!Connex\+Data@{Connex\+Data}}
+\index{Connex\+Data@{Connex\+Data}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{Connex\+Data()}{ConnexData()}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+\hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::\hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data} (\begin{DoxyParamCaption}\item[{Way\+Data}]{way }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em way} & The desired Way\+Data value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+Way\+Data 
+\end{DoxySeeAlso}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_abd05d79fd08000ff3c92e6fcc8cd41be}\label{classfilter_1_1data_1_1_connex_data_abd05d79fd08000ff3c92e6fcc8cd41be}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!broacast@{broacast}}
+\index{broacast@{broacast}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{broacast()}{broacast()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+template$<$class Dout\+Broad\+Cast $>$ \\
+void \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::broacast (\begin{DoxyParamCaption}\item[{Dout\+Broad\+Cast}]{data\+Output }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Dout\+Broad\+Cast} & \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em data\+Output} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_a16e8347560f6e429a410f21c0b9bd48d}\label{classfilter_1_1data_1_1_connex_data_a16e8347560f6e429a410f21c0b9bd48d}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!broacast@{broacast}}
+\index{broacast@{broacast}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{broacast()}{broacast()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+void \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::broacast (\begin{DoxyParamCaption}\item[{Dout \&}]{data\+Output }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{[}T\+O\+DO\mbox{]} 
+\begin{DoxyParams}{Parameters}
+{\em data\+Output} & The data to broadcast \\
+\hline
+\end{DoxyParams}
+We need to copy the data to avoid to write on image when other children can use it\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_a93772066f126cab918b46b285c63073a}\label{classfilter_1_1data_1_1_connex_data_a93772066f126cab918b46b285c63073a}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!connect\+Output@{connect\+Output}}
+\index{connect\+Output@{connect\+Output}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{connect\+Output()}{connectOutput()}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+template$<$class child\+Din , class child\+Dout $>$ \\
+void \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::connect\+Output (\begin{DoxyParamCaption}\item[{\hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$ child\+Din, child\+Dout $>$ \&}]{connex\+Out }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em child\+Din} & the type of the input \\
+\hline
+{\em child\+Dout} & the type if the output \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em connex\+Out} & the neighboor children where the data port is coming from \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_a6ae80a4f012442066057ee23dcb6c363}\label{classfilter_1_1data_1_1_connex_data_a6ae80a4f012442066057ee23dcb6c363}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!empty@{empty}}
+\index{empty@{empty}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+bool \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+Returns true if there\textquotesingle{}s no data in the port. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_aa7d702b864f00b42b325d2eb6c0a9e91}\label{classfilter_1_1data_1_1_connex_data_aa7d702b864f00b42b325d2eb6c0a9e91}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!get@{get}}
+\index{get@{get}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+Din \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::get (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+Returns the port\textquotesingle{}s referenced next data. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classfilter_1_1data_1_1_connex_data_a4367cfe424cefb90470098814a33e326}{pop()} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_a631260c24ddd1050c75a2732081a2d9d}\label{classfilter_1_1data_1_1_connex_data_a631260c24ddd1050c75a2732081a2d9d}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!get\+Cast@{get\+Cast}}
+\index{get\+Cast@{get\+Cast}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{get\+Cast()}{getCast()}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$Din, Dout$>$\& \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::get\+Cast (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1data_1_1_connex_data_base_a7c009f9bb553638dd3a0031a8f04b044}{filter\+::data\+::\+Connex\+Data\+Base}.
+
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_aecd47354b992800c9d9e69ad951382fb}\label{classfilter_1_1data_1_1_connex_data_aecd47354b992800c9d9e69ad951382fb}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!get\+Port@{get\+Port}}
+\index{get\+Port@{get\+Port}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{get\+Port()}{getPort()}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+virtual \hyperlink{classfilter_1_1data_1_1_data_port_base}{Data\+Port\+Base}\& \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::get\+Port (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+Returns a reference to the port 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1data_1_1_connex_data_base_a3cf1336815c061bc721f6b352900e6f4}{filter\+::data\+::\+Connex\+Data\+Base}.
+
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_af7a3a297477db6925728016cb9c8961a}\label{classfilter_1_1data_1_1_connex_data_af7a3a297477db6925728016cb9c8961a}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+template$<$class left\+In , class left\+Out $>$ \\
+\hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$left\+In, left\+Out$>$\& \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{\hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$ left\+In, left\+Out $>$ \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{[}T\+O\+DO\mbox{]} 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em left\+In} & the type of the input \\
+\hline
+{\em left\+Out} & the type of the output \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em left} & the neighbor children where the data port is coming from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the \hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data} object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_a4a4ad046f5772283f520189e62327376}\label{classfilter_1_1data_1_1_connex_data_a4a4ad046f5772283f520189e62327376}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+\hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data}$<$Din, Dout$>$\& \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{\hyperlink{classfilter_1_1data_1_1_connex_data_base}{Connex\+Data\+Base} \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\mbox{[}T\+O\+DO\mbox{]} 
+\begin{DoxyParams}{Parameters}
+{\em left} & the neighbor children where the data port is coming from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the \hyperlink{classfilter_1_1data_1_1_connex_data}{Connex\+Data} object 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1data_1_1_connex_data_base_a6d7080cbc59391a6c79ddc12442d6b62}{filter\+::data\+::\+Connex\+Data\+Base}.
+
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_a4367cfe424cefb90470098814a33e326}\label{classfilter_1_1data_1_1_connex_data_a4367cfe424cefb90470098814a33e326}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!pop@{pop}}
+\index{pop@{pop}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{pop()}{pop()}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+Din \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::pop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+Returns the port\textquotesingle{}s referenced next data. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_a703d8b2465a59a9c8ca79436a1ddfa2b}\label{classfilter_1_1data_1_1_connex_data_a703d8b2465a59a9c8ca79436a1ddfa2b}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!push@{push}}
+\index{push@{push}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{push()}{push()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+void \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::push (\begin{DoxyParamCaption}\item[{Dout}]{data\+Output }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\+Output} & The data the port should reference \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_af5ed83082314838718aee4fbda767ff9}\label{classfilter_1_1data_1_1_connex_data_af5ed83082314838718aee4fbda767ff9}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!push@{push}}
+\index{push@{push}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{push()}{push()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+template$<$class indata $>$ \\
+void \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::push (\begin{DoxyParamCaption}\item[{indata}]{matrix }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em indata} & \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em matrix} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_aed293788ed40932ede5d3a30469f5cfd}\label{classfilter_1_1data_1_1_connex_data_aed293788ed40932ede5d3a30469f5cfd}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!size@{size}}
+\index{size@{size}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+size\+\_\+t \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+Returns the number of stored elements in the port 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_connex_data_a607857efe30c0053b56daf6a4da7c83f}\label{classfilter_1_1data_1_1_connex_data_a607857efe30c0053b56daf6a4da7c83f}} 
+\index{filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}!port@{port}}
+\index{port@{port}!filter\+::data\+::\+Connex\+Data@{filter\+::data\+::\+Connex\+Data}}
+\subsubsection{\texorpdfstring{port}{port}}
+{\footnotesize\ttfamily template$<$class Din, class Dout$>$ \\
+\hyperlink{classfilter_1_1data_1_1_data_port}{Data\+Port} \hyperlink{classfilter_1_1data_1_1_connex_data}{filter\+::data\+::\+Connex\+Data}$<$ Din, Dout $>$\+::port}
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classfilter_1_1data_1_1_data_port}{Data\+Port} 
+\end{DoxySeeAlso}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/data/Connex\+Data.\+h\end{DoxyCompactItemize}

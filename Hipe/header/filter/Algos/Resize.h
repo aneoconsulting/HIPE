@@ -11,7 +11,17 @@ namespace filter
 	namespace algos
 	{
 		/**
-		 * \brief The Resize filter will resize an image (downscale or upscale)
+		 * \var Resize::ratio
+		 * The factor by which the image must be rescaled.
+		 *
+		 * \var Resize::width
+		 * If a width and height is provided the image will be rescaled to these values. The width to which the image must be rescaled.
+		 *
+		 * \var Resize::height
+		 * If a width and height is provided the image will be rescaled to these values. The height to which the image must be rescaled.
+		
+		/**
+		 * \brief The Resize filter will resize an image (downscale or upscale).
 		 */
 		class Resize : public filter::IFilter
 		{
@@ -25,9 +35,9 @@ namespace filter
 				height = 0;
 			}
 
-			REGISTER_P(double, ratio);	// The factor by which the image must be rescaled.
-			REGISTER_P(int, width);		// If a width and height is provided the image will be rescaled to these values. The width to which the image must be rescaled
-			REGISTER_P(int, height);	// If a width and height is provided the image will be rescaled to these values. The height to which the image must be rescaled
+			REGISTER_P(double, ratio);
+			REGISTER_P(int, width);
+			REGISTER_P(int, height);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
@@ -41,9 +51,9 @@ namespace filter
 					{
 						throw HipeException("The resize object cant resize PatternData. Please Develop ResizePatterData");
 					}
-					
+
 					//Resize all images coming from the same parent
-					for (auto &myImage : images.Array()) 
+					for (auto &myImage : images.Array())
 					{
 						if (width == 0 || height == 0)
 						{

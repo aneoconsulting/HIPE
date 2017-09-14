@@ -1,0 +1,84 @@
+\hypertarget{classorchestrator_1_1_orchestrator_factory}{}\section{orchestrator\+:\+:Orchestrator\+Factory Class Reference}
+\label{classorchestrator_1_1_orchestrator_factory}\index{orchestrator\+::\+Orchestrator\+Factory@{orchestrator\+::\+Orchestrator\+Factory}}
+Inheritance diagram for orchestrator\+:\+:Orchestrator\+Factory\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d5/dba/classorchestrator_1_1_orchestrator_factory}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a0a55e6a91416983dc301f4f3e4756b8c}\label{classorchestrator_1_1_orchestrator_factory_a0a55e6a91416983dc301f4f3e4756b8c}} 
+typedef std\+::string {\bfseries Key\+Name\+Model}
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a17c141d48d2bc53b52920328effc6060}\label{classorchestrator_1_1_orchestrator_factory_a17c141d48d2bc53b52920328effc6060}} 
+typedef std\+::string {\bfseries Key\+Name\+Orchestrator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a9745c2c9a8cd40c2bf1db641b2c0389e}\label{classorchestrator_1_1_orchestrator_factory_a9745c2c9a8cd40c2bf1db641b2c0389e}} 
+void {\bfseries add\+Model} (Key\+Name\+Model key\+\_\+name, \hyperlink{classfilter_1_1_model}{filter\+::\+Model} $\ast$model)
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a8e1e9d932622f0fb8d1a9487a48008c2}\label{classorchestrator_1_1_orchestrator_factory_a8e1e9d932622f0fb8d1a9487a48008c2}} 
+void {\bfseries add\+Model} (Key\+Name\+Model key\+\_\+name\+\_\+model, \hyperlink{classfilter_1_1_model}{filter\+::\+Model} $\ast$model, Key\+Name\+Orchestrator key\+\_\+name\+\_\+orchesta, \hyperlink{classorchestrator_1_1_orchestrator_base}{Orchestrator\+Base} $\ast$orchestrator)
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_ae19daca5fe88af7d8e85eb6fecc1ced4}\label{classorchestrator_1_1_orchestrator_factory_ae19daca5fe88af7d8e85eb6fecc1ced4}} 
+void {\bfseries add\+Model} (Key\+Name\+Model key\+\_\+name\+\_\+model, \hyperlink{classfilter_1_1_model}{filter\+::\+Model} $\ast$model, Key\+Name\+Orchestrator key\+\_\+name\+\_\+orchesta)
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a56a242741fe41bb5eef98dce57ce79e0}\label{classorchestrator_1_1_orchestrator_factory_a56a242741fe41bb5eef98dce57ce79e0}} 
+void {\bfseries add\+Orchestrator} (Key\+Name\+Model key\+\_\+name, \hyperlink{classorchestrator_1_1_orchestrator_base}{Orchestrator\+Base} $\ast$orchestrator)
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a47b8149961f526c4af00eeeddfffad20}\label{classorchestrator_1_1_orchestrator_factory_a47b8149961f526c4af00eeeddfffad20}} 
+{\footnotesize template$<$class Conductor $>$ }\\void {\bfseries add\+Orchestrator} (Key\+Name\+Model key\+\_\+name, \hyperlink{classorchestrator_1_1_conductor}{Conductor} $\ast$conductor)
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a9e763fbd37578e3f1798173affe03fc8}\label{classorchestrator_1_1_orchestrator_factory_a9e763fbd37578e3f1798173affe03fc8}} 
+\hyperlink{classfilter_1_1_model}{filter\+::\+Model} $\ast$ {\bfseries get\+Model} (const std\+::string \&model\+\_\+name)
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a013e0703fa2922221b49d64cf2d12fb6}\label{classorchestrator_1_1_orchestrator_factory_a013e0703fa2922221b49d64cf2d12fb6}} 
+\hyperlink{classorchestrator_1_1_orchestrator_base}{Orchestrator\+Base} $\ast$ {\bfseries get\+Default\+Orchestrator} ()
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a6694ec866b7e8f3388d58fe2588d1d57}\label{classorchestrator_1_1_orchestrator_factory_a6694ec866b7e8f3388d58fe2588d1d57}} 
+\hyperlink{classorchestrator_1_1_orchestrator_base}{Orchestrator\+Base} $\ast$ {\bfseries get\+Orchestrator} (const std\+::string \&model\+\_\+name)
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a0b9d2b9250dc151cba3cfb12cbee39f9}\label{classorchestrator_1_1_orchestrator_factory_a0b9d2b9250dc151cba3cfb12cbee39f9}} 
+void {\bfseries bind\+Model} (const std\+::string \&model\+Name, const std\+::string \&orchestrator\+Name)
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_afc39d75a249348ce2c1b3bb0f909de01}\label{classorchestrator_1_1_orchestrator_factory_afc39d75a249348ce2c1b3bb0f909de01}} 
+void {\bfseries process} (const std\+::string \&model\+\_\+name, \hyperlink{classfilter_1_1data_1_1_data}{filter\+::data\+::\+Data} \&data, \hyperlink{classfilter_1_1data_1_1_data}{filter\+::data\+::\+Data} \&output\+Data)
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_ab86cb72d7aae4dd1825d79e66fb9f8b4}\label{classorchestrator_1_1_orchestrator_factory_ab86cb72d7aae4dd1825d79e66fb9f8b4}} 
+void {\bfseries killall} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a0cf9e248743a85b0fc67a5eeab7d8fcc}\label{classorchestrator_1_1_orchestrator_factory_a0cf9e248743a85b0fc67a5eeab7d8fcc}} 
+static void {\bfseries start\+\_\+orchestrator} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a166fc3741c9014ec5d6828b8b5db50c6}\label{classorchestrator_1_1_orchestrator_factory_a166fc3741c9014ec5d6828b8b5db50c6}} 
+std\+::map$<$ Key\+Name\+Orchestrator, \hyperlink{classorchestrator_1_1_orchestrator_base}{Orchestrator\+Base} $\ast$ $>$ {\bfseries \+\_\+orchestrators}
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a5709b7d0210fd774303b5083a6a25388}\label{classorchestrator_1_1_orchestrator_factory_a5709b7d0210fd774303b5083a6a25388}} 
+std\+::map$<$ Key\+Name\+Model, \hyperlink{classfilter_1_1_model}{filter\+::\+Model} $\ast$ $>$ {\bfseries \+\_\+models}
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a2ab1ce6ab0029cd0059a57c0796a615c}\label{classorchestrator_1_1_orchestrator_factory_a2ab1ce6ab0029cd0059a57c0796a615c}} 
+std\+::map$<$ Key\+Name\+Orchestrator, Key\+Name\+Orchestrator $>$ {\bfseries \+\_\+model\+Store}
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classorchestrator_1_1_orchestrator_factory_a2b3bb23968c4533e8f0a294aab1a48b4}\label{classorchestrator_1_1_orchestrator_factory_a2b3bb23968c4533e8f0a294aab1a48b4}} 
+class {\bfseries Singleton$<$ Orchestrator\+Factory $>$}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/orchestrator/Orchestrator.\+h\item 
+source/orchestrator/Orchestrator.\+cpp\end{DoxyCompactItemize}

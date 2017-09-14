@@ -29,8 +29,16 @@ namespace filter
 	namespace algos
 	{
 		/**
-		 * \brief The FaceDetection filter is used to detect faces in an image or a video. Uses dlib.
-		 *  Will output a SquareCrop object containing all the found faces
+		 *  \var FaceDetection::skip_frame
+		 *  The number of frames to skip between each detection.
+		 */
+
+		/**
+		 * \todo
+		 * \brief The FaceDetection filter is used to detect faces in an image or a video.
+		 * 
+		 *  The filter uses dlib.
+		 *  It will output a SquareCrop object containing all the found faces.
 		 */
 		class FILTER_EXPORT FaceDetection : public filter::IFilter
 		{
@@ -56,32 +64,32 @@ namespace filter
 				isStart = true;
 				thr_server = nullptr;
 
-				
-			
+
+
 				dlib::deserialize("shape_predictor_68_face_landmarks.dat") >> pose_model;
 
 				startDetectFace();
 			}
 
-			REGISTER_P(int, skip_frame);	//<! The number of frames to skip between each detection
+			REGISTER_P(int, skip_frame);
 
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
-			
+
 		public:
 			/**
 			 * \brief Detects the faces in images. Runs as a separate thread.
 			 *  Fetch its images from the imagesStack queue then feed the detectFaces method.
 			 */
 			void startDetectFace();
-			
+
 			/**
 			 * \brief Find faces, if present, on an image.
 			 * \param image The image to process and on which we'll try to find faces.
 			 */
 			void detectFaces(const data::ImageData & image);
 
-			
+
 			HipeStatus process();
 
 

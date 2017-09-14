@@ -1,0 +1,43 @@
+\hypertarget{classvariant}{}\section{variant$<$ Types $>$ Class Template Reference}
+\label{classvariant}\index{variant$<$ Types $>$@{variant$<$ Types $>$}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classvariant_a8e08a93c5c54356404be69ee710ed227}\label{classvariant_a8e08a93c5c54356404be69ee710ed227}} 
+{\footnotesize template$<$typename X $>$ }\\{\bfseries variant} (const X \&v)
+\item 
+\mbox{\Hypertarget{classvariant_a623d5000d37097f14883358081320887}\label{classvariant_a623d5000d37097f14883358081320887}} 
+{\footnotesize template$<$typename X $>$ }\\void {\bfseries operator=} (const X \&v)
+\item 
+\mbox{\Hypertarget{classvariant_a3dbe94c44965616a28f9c754fa3cf746}\label{classvariant_a3dbe94c44965616a28f9c754fa3cf746}} 
+{\footnotesize template$<$typename X $>$ }\\X \& {\bfseries get} ()
+\item 
+\mbox{\Hypertarget{classvariant_a07e48e5037833d4723a09a3f8288e57a}\label{classvariant_a07e48e5037833d4723a09a3f8288e57a}} 
+{\footnotesize template$<$typename X $>$ }\\const X \& {\bfseries get} () const
+\item 
+\mbox{\Hypertarget{classvariant_afcb0946bb4f9643eac5aa0569add81ae}\label{classvariant_afcb0946bb4f9643eac5aa0569add81ae}} 
+{\footnotesize template$<$typename visitor $>$ }\\visitor\+::result\+\_\+type {\bfseries visit} (\hyperlink{structvisitor}{visitor} \&v)
+\item 
+\mbox{\Hypertarget{classvariant_ac9fc2031ac1cb2d604032f979b54ca80}\label{classvariant_ac9fc2031ac1cb2d604032f979b54ca80}} 
+int {\bfseries which} () const
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classvariant_a252b0f6cd6a7219fbdce644bee16afac}\label{classvariant_a252b0f6cd6a7219fbdce644bee16afac}} 
+{\footnotesize template$<$typename X $>$ }\\void {\bfseries init} (const X \&x)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classvariant_abbea1c647f8e1a132b8bdc3d5d24e725}\label{classvariant_abbea1c647f8e1a132b8bdc3d5d24e725}} 
+int {\bfseries tag}
+\item 
+\mbox{\Hypertarget{classvariant_a6114ca264bb2f62573981973d8a7011b}\label{classvariant_a6114ca264bb2f62573981973d8a7011b}} 
+char {\bfseries storage} \mbox{[}\hyperlink{structimpl_1_1type__info}{impl\+::type\+\_\+info}$<$ Types... $>$\+::size\mbox{]}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/tools/variant.\+hpp\end{DoxyCompactItemize}

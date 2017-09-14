@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['labelocr',['LabelOCR',['../d9/d2c/classfilter_1_1_algos_1_1_label_o_c_r.html',1,'filter::Algos']]],
+  ['latch',['Latch',['../de/d27/classfilter_1_1algos_1_1_latch.html',1,'filter::algos']]],
+  ['latchdebug',['LatchDebug',['../d1/d69/classfilter_1_1algos_1_1_latch_debug.html',1,'filter::algos']]],
+  ['leftratio',['leftRatio',['../d5/daf/classfilter_1_1algos_1_1_i_d_plate_rectifier.html#a9b8cc183136dd1579a1bebdb72690bc3',1,'filter::algos::IDPlateRectifier']]],
+  ['linedata',['LineData',['../d6/db4/structfilter_1_1algos_1_1_i_d_plate_1_1_line_data.html',1,'filter::algos::IDPlate']]],
+  ['listiodata',['ListIOData',['../db/d90/classfilter_1_1data_1_1_list_i_o_data.html',1,'filter::data::ListIOData'],['../db/d90/classfilter_1_1data_1_1_list_i_o_data.html#a60486a441c50cb2e16386fdb7310c901',1,'filter::data::ListIOData::ListIOData()']]],
+  ['livertspserver',['LiveRTSPServer',['../de/dd9/class_m_e_s_a_i_1_1_live_r_t_s_p_server.html',1,'MESAI']]],
+  ['liveservermediasubsession',['LiveServerMediaSubsession',['../dc/da6/class_m_e_s_a_i_1_1_live_server_media_subsession.html',1,'MESAI']]],
+  ['livesourcewithx264',['LiveSourceWithx264',['../dd/d5c/class_live_source_withx264.html',1,'']]],
+  ['loadimagefromfile',['loadImageFromFile',['../de/d80/classfilter_1_1data_1_1_composer.html#a77e70226b7d20b2d13995e37833ec88c',1,'filter::data::Composer']]],
+  ['loadimagesfromdirectory',['loadImagesFromDirectory',['../de/d80/classfilter_1_1data_1_1_composer.html#a4bbcdee91dffc1737fb71bb702ea521f',1,'filter::data::Composer']]],
+  ['loadlistiodata',['loadListIoData',['../de/d80/classfilter_1_1data_1_1_composer.html#abd8c9f50c61149aaa0ed8c2068afd3ff',1,'filter::data::Composer']]],
+  ['loadpatterndata',['loadPatternData',['../de/d80/classfilter_1_1data_1_1_composer.html#a6dd5029c65c516d78098ddd4cd2bd389',1,'filter::data::Composer']]],
+  ['loadsquarecrop',['loadSquareCrop',['../de/d80/classfilter_1_1data_1_1_composer.html#a2ec970442fd0b77b6bd91b4a0f6ee561',1,'filter::data::Composer']]],
+  ['loadvideofromfile',['loadVideoFromFile',['../de/d80/classfilter_1_1data_1_1_composer.html#a8f642146a9e50f97ba68afcfcdf9eb7b',1,'filter::data::Composer']]],
+  ['loadvideofromstream',['loadVideoFromStream',['../de/d80/classfilter_1_1data_1_1_composer.html#a6bdfb001ccac438b950edb1b6a14abe3',1,'filter::data::Composer']]],
+  ['logger',['Logger',['../d3/daf/classcore_1_1_logger.html',1,'core']]]
+];

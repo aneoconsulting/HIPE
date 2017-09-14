@@ -23,6 +23,30 @@ namespace filter
 {
 	namespace Algos
 	{
+		/**
+		 * \brief The IDPlateIdentifier filter will handle the detection of the character of an ID plate then their recognition with machine learning
+		 * 
+		 * \var IDPlateIdentifier::minXPos
+		 * The minimum position on the X Axis to start searching for characters.
+		 *
+		 * \var IDPlateIdentifier::maxXPos
+		 * The maximum position on the X Axis to stop searching for characters.
+		 *
+		 * \var IDPlateIdentifier::minLines
+		 * The minimum number of lines of text we can fit on the image(minimum number of lines means big character).Used to compute the minimum and maximum height a character can have.
+		 *
+		 * \var IDPlateIdentifier::ratioY
+		 * The percentage of the average characters' height. Every characters are not exactly centered on the same line. We use the ratio to search around this line.
+		 *
+		 * \var IDPlateIdentifier::ratioMinArea
+		 * The percentage of the average characters' area. Used to compute the minimum area a character can have to be valid.
+		 *
+		 * \var IDPlateIdentifier::ratioMaxArea
+		 * The percentage of the average characters' area. Used to compute the maximum area a character can have to be valid.
+		 *
+		 * \var IDPlateIdentifier::_debug
+		 * The debug level to use to print informations and show images
+		 */
 		class IDPlateIdentifier : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
@@ -40,12 +64,13 @@ namespace filter
 
 			REGISTER_P(int, _debug);
 
-			REGISTER_P(double, minXPos);		//!< The minimum position on the X Axis to start searching for characters
-			REGISTER_P(double, maxXPos);		//!< The maximum position on the X Axis to stop searching for characters
-			REGISTER_P(int, minLines);			//!< The minimum number of lines of text we can fit on the image (minimum number of lines means big character). Used to compute the minimum and maximum height a character can have
-			REGISTER_P(double, ratioY);			//!< Percentage of the average characters' height. Every characters are not exactly centered on the same line. We use the ratio to search around this line.
-			REGISTER_P(double, ratioMinArea);	//!< Percentage of the average characters' area. Used to compute the minimum area a character can have to be valid
-			REGISTER_P(double, ratioMaxArea);	//!< Percentage of the average characters' area. Used to compute the maximum area a character can have to be valid.
+
+			REGISTER_P(double, minXPos);
+			REGISTER_P(double, maxXPos);
+			REGISTER_P(int, minLines);
+			REGISTER_P(double, ratioY);
+			REGISTER_P(double, ratioMinArea);
+			REGISTER_P(double, ratioMaxArea);
 
 
 		public:

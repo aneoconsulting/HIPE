@@ -10,6 +10,7 @@ namespace filter
 	namespace algos
 	{
 		/**
+		 * \todo
 		 * \brief [TODO] The ResultFilter filter is the end of graph filter
 		 */
 		class ResultFilter : public filter::IFilter

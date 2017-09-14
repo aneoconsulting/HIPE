@@ -11,6 +11,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The Invert filter will invert the colors of an image.
+		 */
 		class Invert : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);

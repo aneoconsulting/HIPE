@@ -12,8 +12,15 @@ namespace filter
 	namespace algos
 	{
 		/**
+		 * \var OverlayFilter::ratio
+		 * [TODO]
+		 */
+
+		/**
+		 * \todo
 		 * \brief The OverlayFilter filter is used contour regions of interests in an image.
-		 * The ConnexData port must contain 2 objects. The image on which the filter will draw, and the list of regions of interest (SquareCrop object)
+		 * 
+		 * The ConnexData port must contain 2 objects. The image on which the filter will draw, and the list of regions of interest (SquareCrop object).
 		 */
 		class OverlayFilter : public filter::IFilter
 		{
@@ -22,7 +29,7 @@ namespace filter
 
 			REGISTER(OverlayFilter, ()), _connexData(data::INDATA)
 			{
-				
+
 			}
 
 			REGISTER_P(double, ratio);
@@ -36,15 +43,15 @@ namespace filter
 				{
 					throw HipeException("The Overlay missing or text data. Please be sure to link properly with parent");
 				}
-				
+
 				//while (!_connexData.empty()) // While i've parent data
 				{
 					data::Data data1 = _connexData.pop();
 					data::Data data2 = _connexData.pop();
 
-					if (data1.getType() != data::IMGF && 
-						data1.getType() != data::TXT_ARR && 
-						data1.getType() != data::TXT && 
+					if (data1.getType() != data::IMGF &&
+						data1.getType() != data::TXT_ARR &&
+						data1.getType() != data::TXT &&
 						data1.getType() != data::SQR_CROP)
 					{
 						throw HipeException("The Overlay object cant aggregate tan text ATM. Please Develop OverlayFilter");
@@ -65,7 +72,7 @@ namespace filter
 						image = static_cast<data::ImageData &>(data1);
 					if (data2.getType() == data::IMGF)
 						image = static_cast<data::ImageData &>(data2);
-					
+
 					if (data1.getType() == data::TXT || data2.getType() == data::TXT_ARR)
 						throw HipeException("Text overlay is not yet implemented");
 

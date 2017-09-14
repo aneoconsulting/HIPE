@@ -1,0 +1,100 @@
+\hypertarget{classfilter_1_1algos_1_1_rotate_image}{}\section{filter\+:\+:algos\+:\+:Rotate\+Image Class Reference}
+\label{classfilter_1_1algos_1_1_rotate_image}\index{filter\+::algos\+::\+Rotate\+Image@{filter\+::algos\+::\+Rotate\+Image}}
+
+
+The \hyperlink{classfilter_1_1algos_1_1_rotate_image}{Rotate\+Image} filter is used to rotate images around the positive Z axis and taking their center as pivot.  
+
+
+
+
+{\ttfamily \#include $<$Rotate\+Image.\+h$>$}
+
+Inheritance diagram for filter\+:\+:algos\+:\+:Rotate\+Image\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d5/d2d/classfilter_1_1algos_1_1_rotate_image}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_aa79cc9fe2ba2fc5e04a9a592399a9ef3}\label{classfilter_1_1algos_1_1_rotate_image_aa79cc9fe2ba2fc5e04a9a592399a9ef3}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_rotate_image}{Rotate\+Image} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_a07d8447abdaf852a93dc44da55539637}\label{classfilter_1_1algos_1_1_rotate_image_a07d8447abdaf852a93dc44da55539637}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_rotate_image}{Rotate\+Image} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_a36581024e18a97634bd1bd1f8243f6eb}\label{classfilter_1_1algos_1_1_rotate_image_a36581024e18a97634bd1bd1f8243f6eb}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+angle}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_a27af06c91ef34b24404f5cb50db53566}\label{classfilter_1_1algos_1_1_rotate_image_a27af06c91ef34b24404f5cb50db53566}} 
+void {\bfseries set\+\_\+angle\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_a256dc76fb763625cd2c00bd871454fe0}\label{classfilter_1_1algos_1_1_rotate_image_a256dc76fb763625cd2c00bd871454fe0}} 
+void {\bfseries set\+\_\+angle} (vartype\+\_\+\+\_\+angle \&\+\_\+\+\_\+angle)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_a473f030697ddb109556ecf12580861ba}\label{classfilter_1_1algos_1_1_rotate_image_a473f030697ddb109556ecf12580861ba}} 
+vartype\+\_\+\+\_\+angle {\bfseries get\+\_\+angle} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_ad9dfd5f332ef0dd24be69c129606b8b7}\label{classfilter_1_1algos_1_1_rotate_image_ad9dfd5f332ef0dd24be69c129606b8b7}} 
+void {\bfseries copy\+\_\+angle} (\hyperlink{classfilter_1_1algos_1_1_rotate_image}{mytype} $\ast$instance)
+\item 
+virtual std\+::string \hyperlink{classfilter_1_1algos_1_1_rotate_image_af9aeff9c2232e6fc97708cbc41ee1fb2}{result\+As\+String} ()
+\begin{DoxyCompactList}\small\item\em Get the result of the processing done by the node. This method will return information only. The actual processing is done by the process() method. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_a048ccb515c462c2b4e3bad7fbdcc621e}\label{classfilter_1_1algos_1_1_rotate_image_a048ccb515c462c2b4e3bad7fbdcc621e}} 
+Hipe\+Status {\bfseries process} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_a2c211d5f16a4cda069cab4e8ee80c0e4}\label{classfilter_1_1algos_1_1_rotate_image_a2c211d5f16a4cda069cab4e8ee80c0e4}} 
+void {\bfseries dispose} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_rotate_image_ae815c8d88eae42fcf231b6d5540ecbf3}{angle}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_abfd705eead1f8b430ef3b93e8ed924cc}\label{classfilter_1_1algos_1_1_rotate_image_abfd705eead1f8b430ef3b93e8ed924cc}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_a235f6953f2293082156df89df4c19ead}\label{classfilter_1_1algos_1_1_rotate_image_a235f6953f2293082156df89df4c19ead}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{data\+::\+Connex\+Data}$<$ \hyperlink{classfilter_1_1data_1_1_image_array_data}{data\+::\+Image\+Array\+Data}, \hyperlink{classfilter_1_1data_1_1_image_array_data}{data\+::\+Image\+Array\+Data} $>$ {\bfseries \+\_\+connex\+Data}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_af9aeff9c2232e6fc97708cbc41ee1fb2}\label{classfilter_1_1algos_1_1_rotate_image_af9aeff9c2232e6fc97708cbc41ee1fb2}} 
+\index{filter\+::algos\+::\+Rotate\+Image@{filter\+::algos\+::\+Rotate\+Image}!result\+As\+String@{result\+As\+String}}
+\index{result\+As\+String@{result\+As\+String}!filter\+::algos\+::\+Rotate\+Image@{filter\+::algos\+::\+Rotate\+Image}}
+\subsubsection{\texorpdfstring{result\+As\+String()}{resultAsString()}}
+{\footnotesize\ttfamily virtual std\+::string filter\+::algos\+::\+Rotate\+Image\+::result\+As\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+A string containing the result of the processing done by the filter. 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1_i_filter_ab99902b060a6d9edc3452a8c9f85e37e}{filter\+::\+I\+Filter}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_rotate_image_ae815c8d88eae42fcf231b6d5540ecbf3}\label{classfilter_1_1algos_1_1_rotate_image_ae815c8d88eae42fcf231b6d5540ecbf3}} 
+\index{filter\+::algos\+::\+Rotate\+Image@{filter\+::algos\+::\+Rotate\+Image}!angle@{angle}}
+\index{angle@{angle}!filter\+::algos\+::\+Rotate\+Image@{filter\+::algos\+::\+Rotate\+Image}}
+\subsubsection{\texorpdfstring{angle}{angle}}
+{\footnotesize\ttfamily filter\+::algos\+::\+Rotate\+Image\+::angle}
+
+The angle (in degrees) to rotate the image by. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/Rotate\+Image.\+h\end{DoxyCompactItemize}

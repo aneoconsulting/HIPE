@@ -1,0 +1,56 @@
+\hypertarget{classx264_encoder}{}\section{x264\+Encoder Class Reference}
+\label{classx264_encoder}\index{x264\+Encoder@{x264\+Encoder}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classx264_encoder_aa22395fa21b27adb30586027411027fd}\label{classx264_encoder_aa22395fa21b27adb30586027411027fd}} 
+void {\bfseries initilize} ()
+\item 
+\mbox{\Hypertarget{classx264_encoder_a00e1afa895a77796f6d0089196135227}\label{classx264_encoder_a00e1afa895a77796f6d0089196135227}} 
+void {\bfseries init\+Context} (cv\+::\+Size size)
+\item 
+\mbox{\Hypertarget{classx264_encoder_a17e94e83f3972dee94556fcfb158542e}\label{classx264_encoder_a17e94e83f3972dee94556fcfb158542e}} 
+void {\bfseries un\+Initilize} ()
+\item 
+\mbox{\Hypertarget{classx264_encoder_a54d371368618788bbace5bb4181d33c3}\label{classx264_encoder_a54d371368618788bbace5bb4181d33c3}} 
+void {\bfseries convert\+Image\+Mult2} (cv\+::\+Mat \&image)
+\item 
+\mbox{\Hypertarget{classx264_encoder_a859a3b4c7ffbfc4b6f0b6efe4e7bb1d5}\label{classx264_encoder_a859a3b4c7ffbfc4b6f0b6efe4e7bb1d5}} 
+void {\bfseries encode\+Frame} (cv\+::\+Mat \&image)
+\item 
+\mbox{\Hypertarget{classx264_encoder_a98cfd4bf02193f2642c92e94e53ec079}\label{classx264_encoder_a98cfd4bf02193f2642c92e94e53ec079}} 
+bool {\bfseries is\+Nals\+Available\+In\+Output\+Queue} ()
+\item 
+\mbox{\Hypertarget{classx264_encoder_a326a372408f3a33f77543d6989b3880c}\label{classx264_encoder_a326a372408f3a33f77543d6989b3880c}} 
+x264\+\_\+nal\+\_\+t {\bfseries get\+Nal\+Unit} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classx264_encoder_a629cf7670998fbdfe8c2e4435a8926d8}\label{classx264_encoder_a629cf7670998fbdfe8c2e4435a8926d8}} 
+Sws\+Context $\ast$ {\bfseries convert\+Context}
+\item 
+\mbox{\Hypertarget{classx264_encoder_ab7089dd3505a2001beb0aa2e217583e3}\label{classx264_encoder_ab7089dd3505a2001beb0aa2e217583e3}} 
+std\+::queue$<$ x264\+\_\+nal\+\_\+t $>$ {\bfseries output\+Queue}
+\item 
+\mbox{\Hypertarget{classx264_encoder_ade96f2ebacec1b3a8906f61a6a4630a3}\label{classx264_encoder_ade96f2ebacec1b3a8906f61a6a4630a3}} 
+x264\+\_\+param\+\_\+t {\bfseries parameters}
+\item 
+\mbox{\Hypertarget{classx264_encoder_af073faea7d159bf5b10fd1989729f8b4}\label{classx264_encoder_af073faea7d159bf5b10fd1989729f8b4}} 
+x264\+\_\+picture\+\_\+t {\bfseries picture\+\_\+in}
+\item 
+\mbox{\Hypertarget{classx264_encoder_a817a8a2290aaa9bdb705faec52db276b}\label{classx264_encoder_a817a8a2290aaa9bdb705faec52db276b}} 
+x264\+\_\+picture\+\_\+t {\bfseries picture\+\_\+out}
+\item 
+\mbox{\Hypertarget{classx264_encoder_a43e33f4f120d5b0eb4561e2ea9dd9892}\label{classx264_encoder_a43e33f4f120d5b0eb4561e2ea9dd9892}} 
+x264\+\_\+t $\ast$ {\bfseries encoder}
+\item 
+\mbox{\Hypertarget{classx264_encoder_a3c4985e339e4d5b2ee0f6953426be125}\label{classx264_encoder_a3c4985e339e4d5b2ee0f6953426be125}} 
+bool {\bfseries is\+Init}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/streaming/x264\+Encoder.\+h\item 
+source/streaming/x264\+Encoder.\+cpp\end{DoxyCompactItemize}

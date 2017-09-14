@@ -13,6 +13,28 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \var Blur::kernel
+		 * The size of the kernel to use (i.e. the number of neighbouring pixels to evaluate).
+		 *
+		 * \var Blur::type
+		 * The type of the blur method to use (mean, median or gaussian).
+		 *
+		 * \var Blur::sigmaX
+		 * The gaussian kernel standard deviation in the X direction. Used only by the Gaussian blur method.
+		 *
+		 * \var Blur::sigmaY
+		 * The gaussian kernel standard deviation in the Y direction. Used only by the Gaussian blur method.
+		 */
+
+		 /**
+		  * \brief The blur filter will blur an image.
+		  * 
+		  * The blur method can be normal (mean value of neighbouring pixels), use the median value instead of the mean, or use agaussian kernel. The user must input its desired method.
+		  * \see cv::blur()
+		  * \see cv::GaussianBlur()
+		  * \see cv::medianBlur()
+		  */
 		class Blur : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);

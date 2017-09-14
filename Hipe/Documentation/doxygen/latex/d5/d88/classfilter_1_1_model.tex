@@ -1,0 +1,96 @@
+\hypertarget{classfilter_1_1_model}{}\section{filter\+:\+:Model Class Reference}
+\label{classfilter_1_1_model}\index{filter\+::\+Model@{filter\+::\+Model}}
+
+
+The \hyperlink{classfilter_1_1_model}{Model} class is the foundatation of every Hipe\textquotesingle{}s filter. It\textquotesingle{}s the base class they should implement.  
+
+
+
+
+{\ttfamily \#include $<$Model.\+h$>$}
+
+Inheritance diagram for filter\+:\+:Model\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=12.000000cm]{d5/d88/classfilter_1_1_model}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a22c95602d5366b1efc41b2668e93ce6c}\label{classfilter_1_1_model_a22c95602d5366b1efc41b2668e93ce6c}} 
+const std\+::string \& {\bfseries get\+Constructor\+Name} () const
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_af658201bb4c6d6c31fb7f978ddf3a125}\label{classfilter_1_1_model_af658201bb4c6d6c31fb7f978ddf3a125}} 
+void {\bfseries set\+Level} (int level)
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_acf9da127fbef97177afae76bc31614b6}\label{classfilter_1_1_model_acf9da127fbef97177afae76bc31614b6}} 
+int {\bfseries get\+Level} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_ac03bad5af26d6d2134dea34ea441fca2}\label{classfilter_1_1_model_ac03bad5af26d6d2134dea34ea441fca2}} 
+virtual void {\bfseries clean\+Up} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_acdae85f578b397cb4e5578b254353275}\label{classfilter_1_1_model_acdae85f578b397cb4e5578b254353275}} 
+virtual void {\bfseries dispose} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_af7b7ef06cadee566c46406b3c2f99b7b}\label{classfilter_1_1_model_af7b7ef06cadee566c46406b3c2f99b7b}} 
+const std\+::string \& {\bfseries get\+Name} () const
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a96d0f4f97a80a3f43c5f4dc5803f3289}\label{classfilter_1_1_model_a96d0f4f97a80a3f43c5f4dc5803f3289}} 
+void {\bfseries set\+Name} (const std\+::string \&algo\+Name)
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a7a2eb30daf6a7ecc8805b892c1650277}\label{classfilter_1_1_model_a7a2eb30daf6a7ecc8805b892c1650277}} 
+virtual void {\bfseries add\+Dependencies} (\hyperlink{classfilter_1_1_model}{Model} $\ast$filter)=0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a45e9ae7620c9e21ed18e32441a803921}\label{classfilter_1_1_model_a45e9ae7620c9e21ed18e32441a803921}} 
+virtual void {\bfseries add\+Child\+Dependencies} (\hyperlink{classfilter_1_1_model}{Model} $\ast$filter)=0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_ab5eb860ee61443bf8fc78ae4f43dfc93}\label{classfilter_1_1_model_ab5eb860ee61443bf8fc78ae4f43dfc93}} 
+virtual void {\bfseries add\+Dependencies\+Name} (std\+::string filter)=0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a653e62cfb875ee03d4795787de5f5c0b}\label{classfilter_1_1_model_a653e62cfb875ee03d4795787de5f5c0b}} 
+virtual void {\bfseries add\+Child\+Dependencies\+Name} (std\+::string filter)=0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a7c549c1ddfdfdf745be2b8af436cfd8e}\label{classfilter_1_1_model_a7c549c1ddfdfdf745be2b8af436cfd8e}} 
+virtual std\+::map$<$ std\+::string, \hyperlink{classfilter_1_1_model}{Model} $\ast$ $>$ {\bfseries get\+Parents} () const =0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_ae1c2b299634759f1f7a737dc4cd1d8c8}\label{classfilter_1_1_model_ae1c2b299634759f1f7a737dc4cd1d8c8}} 
+virtual std\+::map$<$ std\+::string, \hyperlink{classfilter_1_1_model}{Model} $\ast$ $>$ {\bfseries get\+Childrens} () const =0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a90641dc0938876076bc168db55c39329}\label{classfilter_1_1_model_a90641dc0938876076bc168db55c39329}} 
+virtual \hyperlink{classfilter_1_1_model}{Model} $\ast$ {\bfseries get\+Root\+Filter} ()=0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_abbcca911eee1d784223c170adbb6434c}\label{classfilter_1_1_model_abbcca911eee1d784223c170adbb6434c}} 
+virtual Hipe\+Status {\bfseries process} ()=0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_adee4dae4696f6b7f79af9d5c50d31ec0}\label{classfilter_1_1_model_adee4dae4696f6b7f79af9d5c50d31ec0}} 
+virtual \hyperlink{classfilter_1_1_model}{Model} \& {\bfseries operator$<$$<$} (\hyperlink{classfilter_1_1data_1_1_data}{data\+::\+Data} \&element)=0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_ae934716132893f4881ff430255e39d51}\label{classfilter_1_1_model_ae934716132893f4881ff430255e39d51}} 
+virtual \hyperlink{classfilter_1_1_model}{Model} \& {\bfseries operator$<$$<$} (cv\+::\+Mat \&element)=0
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a1aebdbd61f6f1d6ea9924008cfa7ba43}\label{classfilter_1_1_model_a1aebdbd61f6f1d6ea9924008cfa7ba43}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()=0
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a41df617b979e043f91d365a7778c93b6}\label{classfilter_1_1_model_a41df617b979e043f91d365a7778c93b6}} 
+std\+::string {\bfseries \+\_\+name}
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_a3ef5457558b7f89a93ffc87db0e236a6}\label{classfilter_1_1_model_a3ef5457558b7f89a93ffc87db0e236a6}} 
+std\+::string {\bfseries \+\_\+constructor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1_model_ae757522e50cc86b0d476f6c4a6d9cbf6}\label{classfilter_1_1_model_ae757522e50cc86b0d476f6c4a6d9cbf6}} 
+int {\bfseries \+\_\+level}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000028}{Todo}]\end{DoxyRefDesc}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/Model.\+h\end{DoxyCompactItemize}

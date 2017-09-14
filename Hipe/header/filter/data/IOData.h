@@ -10,6 +10,7 @@ namespace filter
 	namespace data
 	{
 		/**
+		 *\todo
 		 * \brief [TODO]
 		 */
 		class Data;
@@ -145,6 +146,7 @@ namespace filter
 		};
 
 		/**
+		 * \todo
 		 * \brief [TODO]
 		 * \tparam Base 
 		 * \tparam Derived 

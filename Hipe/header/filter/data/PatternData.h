@@ -141,7 +141,7 @@ namespace filter
 			}
 
 			/**
-			 * [TODO]
+			 * \todo
 			 * \brief Overloaded insersion operator used to copy PatternData objects.
 			 * \param left The PatternData object to use as a source for the copy
 			 * \return Returns a reference to the copied PatternData object

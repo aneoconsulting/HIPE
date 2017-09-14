@@ -1,0 +1,158 @@
+\hypertarget{classfilter_1_1algos_1_1_blur}{}\section{filter\+:\+:algos\+:\+:Blur Class Reference}
+\label{classfilter_1_1algos_1_1_blur}\index{filter\+::algos\+::\+Blur@{filter\+::algos\+::\+Blur}}
+
+
+The blur filter will blur an image.  
+
+
+
+
+{\ttfamily \#include $<$Blur.\+h$>$}
+
+Inheritance diagram for filter\+:\+:algos\+:\+:Blur\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d9/d35/classfilter_1_1algos_1_1_blur}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a573165691ed9e001beff00d0a617b76e}\label{classfilter_1_1algos_1_1_blur_a573165691ed9e001beff00d0a617b76e}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_blur}{Blur} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a183ef1e2b7d99ac2d94e2829f2b06a6e}\label{classfilter_1_1algos_1_1_blur_a183ef1e2b7d99ac2d94e2829f2b06a6e}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_blur}{Blur} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a31524be6436340debec25f4f22c8039b}\label{classfilter_1_1algos_1_1_blur_a31524be6436340debec25f4f22c8039b}} 
+typedef int {\bfseries vartype\+\_\+\+\_\+kernel}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a499bc97976cac8f27bf0e14a81994a5c}\label{classfilter_1_1algos_1_1_blur_a499bc97976cac8f27bf0e14a81994a5c}} 
+typedef std\+::string {\bfseries vartype\+\_\+\+\_\+type}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a1912f92052a7094322e72e01c177ea96}\label{classfilter_1_1algos_1_1_blur_a1912f92052a7094322e72e01c177ea96}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+sigmaX}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a6dca814ffbe7e9702acfa2c5ec8754e5}\label{classfilter_1_1algos_1_1_blur_a6dca814ffbe7e9702acfa2c5ec8754e5}} 
+typedef double {\bfseries vartype\+\_\+\+\_\+sigmaY}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_ad72f11d875fd7a6f92b6fc75214de215}\label{classfilter_1_1algos_1_1_blur_ad72f11d875fd7a6f92b6fc75214de215}} 
+void {\bfseries set\+\_\+kernel\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a9345e902819ccef5d00c9fd48ed4b4da}\label{classfilter_1_1algos_1_1_blur_a9345e902819ccef5d00c9fd48ed4b4da}} 
+void {\bfseries set\+\_\+kernel} (vartype\+\_\+\+\_\+kernel \&\+\_\+\+\_\+kernel)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a678681d563c2a5db25b443d80064d51f}\label{classfilter_1_1algos_1_1_blur_a678681d563c2a5db25b443d80064d51f}} 
+vartype\+\_\+\+\_\+kernel {\bfseries get\+\_\+kernel} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_ae375ae0b8e78e641b20ecd27c356fa57}\label{classfilter_1_1algos_1_1_blur_ae375ae0b8e78e641b20ecd27c356fa57}} 
+void {\bfseries copy\+\_\+kernel} (\hyperlink{classfilter_1_1algos_1_1_blur}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a16091140cd5ed5c0812713d2b744d532}\label{classfilter_1_1algos_1_1_blur_a16091140cd5ed5c0812713d2b744d532}} 
+void {\bfseries set\+\_\+type\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_ab9ce4f25c743a49ca6f8659dee5c14c4}\label{classfilter_1_1algos_1_1_blur_ab9ce4f25c743a49ca6f8659dee5c14c4}} 
+void {\bfseries set\+\_\+type} (vartype\+\_\+\+\_\+type \&\+\_\+\+\_\+type)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a6d25c0aeaa2f58bee6385f5de4f1fc15}\label{classfilter_1_1algos_1_1_blur_a6d25c0aeaa2f58bee6385f5de4f1fc15}} 
+vartype\+\_\+\+\_\+type {\bfseries get\+\_\+type} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_acdef5b8517ff686b2425e994030249f7}\label{classfilter_1_1algos_1_1_blur_acdef5b8517ff686b2425e994030249f7}} 
+void {\bfseries copy\+\_\+type} (\hyperlink{classfilter_1_1algos_1_1_blur}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a11b9ae0b0735641b81a2601dcc255f34}\label{classfilter_1_1algos_1_1_blur_a11b9ae0b0735641b81a2601dcc255f34}} 
+void {\bfseries set\+\_\+sigma\+X\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a3583c601a8b6ce4d34edb7cc54c992d1}\label{classfilter_1_1algos_1_1_blur_a3583c601a8b6ce4d34edb7cc54c992d1}} 
+void {\bfseries set\+\_\+sigmaX} (vartype\+\_\+\+\_\+sigmaX \&\+\_\+\+\_\+sigmaX)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a0d24fac2ff3cdbc635018f15a7e6d280}\label{classfilter_1_1algos_1_1_blur_a0d24fac2ff3cdbc635018f15a7e6d280}} 
+vartype\+\_\+\+\_\+sigmaX {\bfseries get\+\_\+sigmaX} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a587a10389382fa90b6275b11a278066a}\label{classfilter_1_1algos_1_1_blur_a587a10389382fa90b6275b11a278066a}} 
+void {\bfseries copy\+\_\+sigmaX} (\hyperlink{classfilter_1_1algos_1_1_blur}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a178c7055d2d2e5a8c4a73a96df6c3030}\label{classfilter_1_1algos_1_1_blur_a178c7055d2d2e5a8c4a73a96df6c3030}} 
+void {\bfseries set\+\_\+sigma\+Y\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a7aec769d428a23c48eb24da0c9b56d44}\label{classfilter_1_1algos_1_1_blur_a7aec769d428a23c48eb24da0c9b56d44}} 
+void {\bfseries set\+\_\+sigmaY} (vartype\+\_\+\+\_\+sigmaY \&\+\_\+\+\_\+sigmaY)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a6b32b9ba3d3190a0bc1ffc9d1109924b}\label{classfilter_1_1algos_1_1_blur_a6b32b9ba3d3190a0bc1ffc9d1109924b}} 
+vartype\+\_\+\+\_\+sigmaY {\bfseries get\+\_\+sigmaY} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_aba890034e4207b9a930f0d425ff026a5}\label{classfilter_1_1algos_1_1_blur_aba890034e4207b9a930f0d425ff026a5}} 
+void {\bfseries copy\+\_\+sigmaY} (\hyperlink{classfilter_1_1algos_1_1_blur}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a3178b579095efc92d0b0e800e12e4a29}\label{classfilter_1_1algos_1_1_blur_a3178b579095efc92d0b0e800e12e4a29}} 
+Hipe\+Status {\bfseries process} () override
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classfilter_1_1algos_1_1_blur_aac3d6d8af63e5ad496fde537dc3d55aa}{kernel}
+\item 
+std\+::string \hyperlink{classfilter_1_1algos_1_1_blur_ac678a666d1d708d882222b198e9d9b10}{type}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_blur_a3b511f5fb439b9424c18141efd94b0c1}{sigmaX}
+\item 
+double \hyperlink{classfilter_1_1algos_1_1_blur_ac41e02492b5ab6ac6578176b11f013fc}{sigmaY}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_ae5174fbd08339457707b568a76618f2d}\label{classfilter_1_1algos_1_1_blur_ae5174fbd08339457707b568a76618f2d}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a5e14f95de0ecd4b9c2d7c5bb82153cc0}\label{classfilter_1_1algos_1_1_blur_a5e14f95de0ecd4b9c2d7c5bb82153cc0}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{data\+::\+Connex\+Data}$<$ \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data}, \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data} $>$ {\bfseries \+\_\+connex\+Data}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+The blur method can be normal (mean value of neighbouring pixels), use the median value instead of the mean, or use agaussian kernel. The user must input its desired method. \begin{DoxySeeAlso}{See also}
+cv\+::blur() 
+
+cv\+::\+Gaussian\+Blur() 
+
+cv\+::median\+Blur() 
+\end{DoxySeeAlso}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_aac3d6d8af63e5ad496fde537dc3d55aa}\label{classfilter_1_1algos_1_1_blur_aac3d6d8af63e5ad496fde537dc3d55aa}} 
+\index{filter\+::algos\+::\+Blur@{filter\+::algos\+::\+Blur}!kernel@{kernel}}
+\index{kernel@{kernel}!filter\+::algos\+::\+Blur@{filter\+::algos\+::\+Blur}}
+\subsubsection{\texorpdfstring{kernel}{kernel}}
+{\footnotesize\ttfamily filter\+::algos\+::\+Blur\+::kernel}
+
+The size of the kernel to use (i.\+e. the number of neighbouring pixels to evaluate). \mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_a3b511f5fb439b9424c18141efd94b0c1}\label{classfilter_1_1algos_1_1_blur_a3b511f5fb439b9424c18141efd94b0c1}} 
+\index{filter\+::algos\+::\+Blur@{filter\+::algos\+::\+Blur}!sigmaX@{sigmaX}}
+\index{sigmaX@{sigmaX}!filter\+::algos\+::\+Blur@{filter\+::algos\+::\+Blur}}
+\subsubsection{\texorpdfstring{sigmaX}{sigmaX}}
+{\footnotesize\ttfamily filter\+::algos\+::\+Blur\+::sigmaX}
+
+The gaussian kernel standard deviation in the X direction. Used only by the \hyperlink{classfilter_1_1algos_1_1_gaussian}{Gaussian} blur method. \mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_ac41e02492b5ab6ac6578176b11f013fc}\label{classfilter_1_1algos_1_1_blur_ac41e02492b5ab6ac6578176b11f013fc}} 
+\index{filter\+::algos\+::\+Blur@{filter\+::algos\+::\+Blur}!sigmaY@{sigmaY}}
+\index{sigmaY@{sigmaY}!filter\+::algos\+::\+Blur@{filter\+::algos\+::\+Blur}}
+\subsubsection{\texorpdfstring{sigmaY}{sigmaY}}
+{\footnotesize\ttfamily filter\+::algos\+::\+Blur\+::sigmaY}
+
+The gaussian kernel standard deviation in the Y direction. Used only by the \hyperlink{classfilter_1_1algos_1_1_gaussian}{Gaussian} blur method. \mbox{\Hypertarget{classfilter_1_1algos_1_1_blur_ac678a666d1d708d882222b198e9d9b10}\label{classfilter_1_1algos_1_1_blur_ac678a666d1d708d882222b198e9d9b10}} 
+\index{filter\+::algos\+::\+Blur@{filter\+::algos\+::\+Blur}!type@{type}}
+\index{type@{type}!filter\+::algos\+::\+Blur@{filter\+::algos\+::\+Blur}}
+\subsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily filter\+::algos\+::\+Blur\+::type}
+
+The type of the blur method to use (mean, median or gaussian). 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/Blur.\+h\end{DoxyCompactItemize}

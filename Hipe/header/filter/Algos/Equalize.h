@@ -11,6 +11,10 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The Equalize filter will equalize the image histogram resulting of the input image analysis. It will improve the contrast of the image.
+		 * \see cv::equalizeHist()
+		 */
 		class Equalize : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);

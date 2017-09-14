@@ -1,0 +1,90 @@
+\hypertarget{classfilter_1_1data_1_1_stream_video_input}{}\section{filter\+:\+:data\+:\+:Stream\+Video\+Input Class Reference}
+\label{classfilter_1_1data_1_1_stream_video_input}\index{filter\+::data\+::\+Stream\+Video\+Input@{filter\+::data\+::\+Stream\+Video\+Input}}
+
+
+Input filter used to acquire data from a stream.  
+
+
+
+
+{\ttfamily \#include $<$Stream\+Video\+Input.\+h$>$}
+
+Inheritance diagram for filter\+:\+:data\+:\+:Stream\+Video\+Input\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{d3/d42/classfilter_1_1data_1_1_stream_video_input}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_stream_video_input_a720d5b86a872e66c0a69a1948cde0189}\label{classfilter_1_1data_1_1_stream_video_input_a720d5b86a872e66c0a69a1948cde0189}} 
+{\bfseries Stream\+Video\+Input} (const \hyperlink{classfilter_1_1data_1_1_stream_video_input}{Stream\+Video\+Input} \&data)
+\item 
+\hyperlink{classfilter_1_1data_1_1_stream_video_input_a5e3d671ab429874556b35a5a696aa390}{Stream\+Video\+Input} (const std\+::string \&url)
+\begin{DoxyCompactList}\small\item\em Constructor with stream\textquotesingle{}s url as an std\+::string object. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_data}{Data} \hyperlink{classfilter_1_1data_1_1_stream_video_input_af2a6fc1d8d1f809684e11d156dfc8e7d}{new\+Frame} ()
+\item 
+bool \hyperlink{classfilter_1_1data_1_1_stream_video_input_ab0b4745731df53d3be6dfed959be5b7b}{empty} () const
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_stream_video_input_ac0f51ef968ee512794899285ab8ea19e}\label{classfilter_1_1data_1_1_stream_video_input_ac0f51ef968ee512794899285ab8ea19e}} 
+cv\+::\+Mat {\bfseries as\+Output} () const
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_stream_video_input_a26e904ab67ffbc27129437a7c15f6d9f}\label{classfilter_1_1data_1_1_stream_video_input_a26e904ab67ffbc27129437a7c15f6d9f}} 
+boost\+::filesystem\+::path \hyperlink{classfilter_1_1data_1_1_stream_video_input_a26e904ab67ffbc27129437a7c15f6d9f}{\+\_\+file\+Path}
+\begin{DoxyCompactList}\small\item\em the url (path) to the stream \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_stream_video_input_add7945450da53fbfbb1a751f983a30c9}\label{classfilter_1_1data_1_1_stream_video_input_add7945450da53fbfbb1a751f983a30c9}} 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_capture_video}{Capture\+Video} $>$ \hyperlink{classfilter_1_1data_1_1_stream_video_input_add7945450da53fbfbb1a751f983a30c9}{\+\_\+capture}
+\begin{DoxyCompactList}\small\item\em the data of the stream \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_stream_video_input_a5e3d671ab429874556b35a5a696aa390}\label{classfilter_1_1data_1_1_stream_video_input_a5e3d671ab429874556b35a5a696aa390}} 
+\index{filter\+::data\+::\+Stream\+Video\+Input@{filter\+::data\+::\+Stream\+Video\+Input}!Stream\+Video\+Input@{Stream\+Video\+Input}}
+\index{Stream\+Video\+Input@{Stream\+Video\+Input}!filter\+::data\+::\+Stream\+Video\+Input@{filter\+::data\+::\+Stream\+Video\+Input}}
+\subsubsection{\texorpdfstring{Stream\+Video\+Input()}{StreamVideoInput()}}
+{\footnotesize\ttfamily filter\+::data\+::\+Stream\+Video\+Input\+::\+Stream\+Video\+Input (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{url }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em url} & The url to the stream \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_stream_video_input_ab0b4745731df53d3be6dfed959be5b7b}\label{classfilter_1_1data_1_1_stream_video_input_ab0b4745731df53d3be6dfed959be5b7b}} 
+\index{filter\+::data\+::\+Stream\+Video\+Input@{filter\+::data\+::\+Stream\+Video\+Input}!empty@{empty}}
+\index{empty@{empty}!filter\+::data\+::\+Stream\+Video\+Input@{filter\+::data\+::\+Stream\+Video\+Input}}
+\subsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily bool filter\+::data\+::\+Stream\+Video\+Input\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+Returns true if there\textquotesingle{}s no data 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1data_1_1_i_o_data}{filter\+::data\+::\+I\+O\+Data$<$ Data, Stream\+Video\+Input $>$}.
+
+\mbox{\Hypertarget{classfilter_1_1data_1_1_stream_video_input_af2a6fc1d8d1f809684e11d156dfc8e7d}\label{classfilter_1_1data_1_1_stream_video_input_af2a6fc1d8d1f809684e11d156dfc8e7d}} 
+\index{filter\+::data\+::\+Stream\+Video\+Input@{filter\+::data\+::\+Stream\+Video\+Input}!new\+Frame@{new\+Frame}}
+\index{new\+Frame@{new\+Frame}!filter\+::data\+::\+Stream\+Video\+Input@{filter\+::data\+::\+Stream\+Video\+Input}}
+\subsubsection{\texorpdfstring{new\+Frame()}{newFrame()}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1data_1_1_data}{Data} filter\+::data\+::\+Stream\+Video\+Input\+::new\+Frame (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+Returns the stream\textquotesingle{}s next frame or a black image if the playback ended 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/data/Stream\+Video\+Input.\+h\item 
+source/filter/data/Stream\+Video\+Input.\+cpp\end{DoxyCompactItemize}

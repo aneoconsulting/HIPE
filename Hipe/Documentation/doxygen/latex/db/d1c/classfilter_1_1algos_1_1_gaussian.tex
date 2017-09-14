@@ -1,0 +1,68 @@
+\hypertarget{classfilter_1_1algos_1_1_gaussian}{}\section{filter\+:\+:algos\+:\+:Gaussian Class Reference}
+\label{classfilter_1_1algos_1_1_gaussian}\index{filter\+::algos\+::\+Gaussian@{filter\+::algos\+::\+Gaussian}}
+Inheritance diagram for filter\+:\+:algos\+:\+:Gaussian\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{db/d1c/classfilter_1_1algos_1_1_gaussian}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_a2134cf203279385b1d54164997248342}\label{classfilter_1_1algos_1_1_gaussian_a2134cf203279385b1d54164997248342}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_gaussian}{Gaussian} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_ab9dd3d4c5f8e0c9e4955deacc2ce1108}\label{classfilter_1_1algos_1_1_gaussian_ab9dd3d4c5f8e0c9e4955deacc2ce1108}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_gaussian}{Gaussian} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_abfc9628637474ad4930c1a9a94f332c8}\label{classfilter_1_1algos_1_1_gaussian_abfc9628637474ad4930c1a9a94f332c8}} 
+typedef int {\bfseries vartype\+\_\+\+\_\+sigma}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_ad6560679874af193ff2c27592c60dcd8}\label{classfilter_1_1algos_1_1_gaussian_ad6560679874af193ff2c27592c60dcd8}} 
+void {\bfseries set\+\_\+sigma\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_ab248437e17b0ba05f8a51797c3e15143}\label{classfilter_1_1algos_1_1_gaussian_ab248437e17b0ba05f8a51797c3e15143}} 
+void {\bfseries set\+\_\+sigma} (vartype\+\_\+\+\_\+sigma \&\+\_\+\+\_\+sigma)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_a4e009d7489028c92cdf4a7c628fd6941}\label{classfilter_1_1algos_1_1_gaussian_a4e009d7489028c92cdf4a7c628fd6941}} 
+vartype\+\_\+\+\_\+sigma {\bfseries get\+\_\+sigma} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_a8b888f2c9fe5ea129c4ffeff46097d24}\label{classfilter_1_1algos_1_1_gaussian_a8b888f2c9fe5ea129c4ffeff46097d24}} 
+void {\bfseries copy\+\_\+sigma} (\hyperlink{classfilter_1_1algos_1_1_gaussian}{mytype} $\ast$instance)
+\item 
+virtual std\+::string \hyperlink{classfilter_1_1algos_1_1_gaussian_a5f2ba86fa61807781b46fe321e435c29}{result\+As\+String} ()
+\begin{DoxyCompactList}\small\item\em Get the result of the processing done by the node. This method will return information only. The actual processing is done by the process() method. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_ae7670cd03d12db1be0183ef0f37e1ba9}\label{classfilter_1_1algos_1_1_gaussian_ae7670cd03d12db1be0183ef0f37e1ba9}} 
+Hipe\+Status {\bfseries process} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_a79118061fdbbe44108324c68af3a389d}\label{classfilter_1_1algos_1_1_gaussian_a79118061fdbbe44108324c68af3a389d}} 
+int {\bfseries sigma}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_gaussian_a5f2ba86fa61807781b46fe321e435c29}\label{classfilter_1_1algos_1_1_gaussian_a5f2ba86fa61807781b46fe321e435c29}} 
+\index{filter\+::algos\+::\+Gaussian@{filter\+::algos\+::\+Gaussian}!result\+As\+String@{result\+As\+String}}
+\index{result\+As\+String@{result\+As\+String}!filter\+::algos\+::\+Gaussian@{filter\+::algos\+::\+Gaussian}}
+\subsubsection{\texorpdfstring{result\+As\+String()}{resultAsString()}}
+{\footnotesize\ttfamily virtual std\+::string filter\+::algos\+::\+Gaussian\+::result\+As\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+A string containing the result of the processing done by the filter. 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1_i_filter_ab99902b060a6d9edc3452a8c9f85e37e}{filter\+::\+I\+Filter}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/Gaussian.\+h\end{DoxyCompactItemize}

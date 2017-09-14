@@ -1,0 +1,149 @@
+\hypertarget{classfilter_1_1algos_1_1_face_detection}{}\section{filter\+:\+:algos\+:\+:Face\+Detection Class Reference}
+\label{classfilter_1_1algos_1_1_face_detection}\index{filter\+::algos\+::\+Face\+Detection@{filter\+::algos\+::\+Face\+Detection}}
+
+
+The \hyperlink{classfilter_1_1algos_1_1_face_detection}{Face\+Detection} filter is used to detect faces in an image or a video.  
+
+
+
+
+{\ttfamily \#include $<$Face\+Detection.\+h$>$}
+
+Inheritance diagram for filter\+:\+:algos\+:\+:Face\+Detection\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{dd/dcd/classfilter_1_1algos_1_1_face_detection}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a7be5df13a28b0e659f26da0181968bf1}\label{classfilter_1_1algos_1_1_face_detection_a7be5df13a28b0e659f26da0181968bf1}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_face_detection}{Face\+Detection} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a1db68e3a857853eda1e62db6a661435e}\label{classfilter_1_1algos_1_1_face_detection_a1db68e3a857853eda1e62db6a661435e}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_face_detection}{Face\+Detection} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a9f20bce236719687bb349eb2815513f0}\label{classfilter_1_1algos_1_1_face_detection_a9f20bce236719687bb349eb2815513f0}} 
+typedef int {\bfseries vartype\+\_\+\+\_\+skip\+\_\+frame}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_af5bc7f40acdc92a682aab460105fba40}\label{classfilter_1_1algos_1_1_face_detection_af5bc7f40acdc92a682aab460105fba40}} 
+void {\bfseries set\+\_\+skip\+\_\+frame\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a98e8525066ace3ed911198993317c97e}\label{classfilter_1_1algos_1_1_face_detection_a98e8525066ace3ed911198993317c97e}} 
+void {\bfseries set\+\_\+skip\+\_\+frame} (vartype\+\_\+\+\_\+skip\+\_\+frame \&\+\_\+\+\_\+skip\+\_\+frame)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a9075cc8278dcf172d30549966e69c48b}\label{classfilter_1_1algos_1_1_face_detection_a9075cc8278dcf172d30549966e69c48b}} 
+vartype\+\_\+\+\_\+skip\+\_\+frame {\bfseries get\+\_\+skip\+\_\+frame} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a27701697a39da6e752a78ae055ab058d}\label{classfilter_1_1algos_1_1_face_detection_a27701697a39da6e752a78ae055ab058d}} 
+void {\bfseries copy\+\_\+skip\+\_\+frame} (\hyperlink{classfilter_1_1algos_1_1_face_detection}{mytype} $\ast$instance)
+\item 
+virtual std\+::string \hyperlink{classfilter_1_1algos_1_1_face_detection_a11c5004107d5048de93ae81ced065a26}{result\+As\+String} ()
+\begin{DoxyCompactList}\small\item\em Get the result of the processing done by the node. This method will return information only. The actual processing is done by the process() method. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a4fb67105560c0886b405912cd4cedb31}\label{classfilter_1_1algos_1_1_face_detection_a4fb67105560c0886b405912cd4cedb31}} 
+void \hyperlink{classfilter_1_1algos_1_1_face_detection_a4fb67105560c0886b405912cd4cedb31}{start\+Detect\+Face} ()
+\begin{DoxyCompactList}\small\item\em Detects the faces in images. Runs as a separate thread. Fetch its images from the images\+Stack queue then feed the detect\+Faces method. \end{DoxyCompactList}\item 
+void \hyperlink{classfilter_1_1algos_1_1_face_detection_a48cb8617d71a9827857e3d2d1e61b3f7}{detect\+Faces} (const \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data} \&image)
+\begin{DoxyCompactList}\small\item\em Find faces, if present, on an image. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_aef784726620f237ae8988a02a8e5b16c}\label{classfilter_1_1algos_1_1_face_detection_aef784726620f237ae8988a02a8e5b16c}} 
+Hipe\+Status {\bfseries process} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a1d26de7e9a421f68818995e1067a49c4}\label{classfilter_1_1algos_1_1_face_detection_a1d26de7e9a421f68818995e1067a49c4}} 
+virtual void {\bfseries dispose} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classfilter_1_1algos_1_1_face_detection_a2dcb3e622ff24852e0c81beea2dc7681}{skip\+\_\+frame}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a10ff45a1998523542d6b96a2ed126240}\label{classfilter_1_1algos_1_1_face_detection_a10ff45a1998523542d6b96a2ed126240}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_abfadcb02d35c53d8a3ab28954cc314af}\label{classfilter_1_1algos_1_1_face_detection_abfadcb02d35c53d8a3ab28954cc314af}} 
+int {\bfseries count\+\_\+frame}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a8b6ccde0164cf10af292783b681879f6}\label{classfilter_1_1algos_1_1_face_detection_a8b6ccde0164cf10af292783b681879f6}} 
+dlib\+::frontal\+\_\+face\+\_\+detector {\bfseries detector}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_af81d5732a898f7e0c520793fa24fe1f0}\label{classfilter_1_1algos_1_1_face_detection_af81d5732a898f7e0c520793fa24fe1f0}} 
+std\+::vector$<$ dlib\+::rectangle $>$ {\bfseries dets}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_ad3c599a6092589aeba2e419593e177d4}\label{classfilter_1_1algos_1_1_face_detection_ad3c599a6092589aeba2e419593e177d4}} 
+dlib\+::shape\+\_\+predictor {\bfseries pose\+\_\+model}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a271adfc633d2083f454174d0056a3516}\label{classfilter_1_1algos_1_1_face_detection_a271adfc633d2083f454174d0056a3516}} 
+std\+::atomic$<$ bool $>$ {\bfseries is\+Start}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a5b1238db7b8e2edb5417e8d9601467f9}\label{classfilter_1_1algos_1_1_face_detection_a5b1238db7b8e2edb5417e8d9601467f9}} 
+\hyperlink{classcore_1_1queue_1_1_concurrent_queue}{core\+::queue\+::\+Concurrent\+Queue}$<$ \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data} $>$ {\bfseries images\+Stack}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_addc2283a606d2eea3a0a62d5d403acef}\label{classfilter_1_1algos_1_1_face_detection_addc2283a606d2eea3a0a62d5d403acef}} 
+\hyperlink{classcore_1_1queue_1_1_concurrent_queue}{core\+::queue\+::\+Concurrent\+Queue}$<$ \hyperlink{classfilter_1_1data_1_1_square_crop}{data\+::\+Square\+Crop} $>$ {\bfseries crops}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a938767be5946dead5970c667b5164043}\label{classfilter_1_1algos_1_1_face_detection_a938767be5946dead5970c667b5164043}} 
+\hyperlink{classfilter_1_1data_1_1_square_crop}{data\+::\+Square\+Crop} {\bfseries tosend}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_add5efbfa77b142f82bcc00cc6a1a5d91}\label{classfilter_1_1algos_1_1_face_detection_add5efbfa77b142f82bcc00cc6a1a5d91}} 
+boost\+::thread $\ast$ {\bfseries thr\+\_\+server}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a7a24695a45fe28450274c5c179bb844a}\label{classfilter_1_1algos_1_1_face_detection_a7a24695a45fe28450274c5c179bb844a}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{data\+::\+Connex\+Data}$<$ \hyperlink{classfilter_1_1data_1_1_image_array_data}{data\+::\+Image\+Array\+Data}, \hyperlink{classfilter_1_1data_1_1_square_crop}{data\+::\+Square\+Crop} $>$ {\bfseries \+\_\+connex\+Data}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000008}{Todo}]\end{DoxyRefDesc}
+The filter uses dlib. It will output a Square\+Crop object containing all the found faces. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a48cb8617d71a9827857e3d2d1e61b3f7}\label{classfilter_1_1algos_1_1_face_detection_a48cb8617d71a9827857e3d2d1e61b3f7}} 
+\index{filter\+::algos\+::\+Face\+Detection@{filter\+::algos\+::\+Face\+Detection}!detect\+Faces@{detect\+Faces}}
+\index{detect\+Faces@{detect\+Faces}!filter\+::algos\+::\+Face\+Detection@{filter\+::algos\+::\+Face\+Detection}}
+\subsubsection{\texorpdfstring{detect\+Faces()}{detectFaces()}}
+{\footnotesize\ttfamily void filter\+::algos\+::\+Face\+Detection\+::detect\+Faces (\begin{DoxyParamCaption}\item[{const \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data} \&}]{image }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em image} & The image to process and on which we\textquotesingle{}ll try to find faces. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a11c5004107d5048de93ae81ced065a26}\label{classfilter_1_1algos_1_1_face_detection_a11c5004107d5048de93ae81ced065a26}} 
+\index{filter\+::algos\+::\+Face\+Detection@{filter\+::algos\+::\+Face\+Detection}!result\+As\+String@{result\+As\+String}}
+\index{result\+As\+String@{result\+As\+String}!filter\+::algos\+::\+Face\+Detection@{filter\+::algos\+::\+Face\+Detection}}
+\subsubsection{\texorpdfstring{result\+As\+String()}{resultAsString()}}
+{\footnotesize\ttfamily virtual std\+::string filter\+::algos\+::\+Face\+Detection\+::result\+As\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+A string containing the result of the processing done by the filter. 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1_i_filter_ab99902b060a6d9edc3452a8c9f85e37e}{filter\+::\+I\+Filter}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_face_detection_a2dcb3e622ff24852e0c81beea2dc7681}\label{classfilter_1_1algos_1_1_face_detection_a2dcb3e622ff24852e0c81beea2dc7681}} 
+\index{filter\+::algos\+::\+Face\+Detection@{filter\+::algos\+::\+Face\+Detection}!skip\+\_\+frame@{skip\+\_\+frame}}
+\index{skip\+\_\+frame@{skip\+\_\+frame}!filter\+::algos\+::\+Face\+Detection@{filter\+::algos\+::\+Face\+Detection}}
+\subsubsection{\texorpdfstring{skip\+\_\+frame}{skip\_frame}}
+{\footnotesize\ttfamily filter\+::algos\+::\+Face\+Detection\+::skip\+\_\+frame}
+
+The number of frames to skip between each detection. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/Face\+Detection.\+h\item 
+source/filter/algos/Face\+Detection.\+cpp\end{DoxyCompactItemize}

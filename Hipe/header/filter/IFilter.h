@@ -9,7 +9,7 @@ namespace filter {
 	
 	/**
 	 * \brief The IFilter interface is used to specialize a filter to process image based data.
-	 * [TODO]
+	 * \todo
 	 */
 	class IFilter : public filter::Model
 	{
@@ -36,14 +36,26 @@ namespace filter {
 
 		virtual void getPreviousFilter();
 
+		/**
+		 * \brief Get the RootFilter node (head) of the current graph
+		 * \return A pointer to the RootFilter node of the graph
+		 */
 		virtual IFilter * getRootFilter();
 
 		virtual void getParent();
 
 		virtual void getNextChildren();
 
+		/**
+		 * \brief Get the result of the processing done by the node. This method will return information only. The actual processing is done by the process() method
+		 * \return A string containing the result of the processing done by the filter.
+		 */
 		virtual std::string resultAsString() { return std::string("TODO"); };
 
+		/**
+		 * \brief Create a parent child dependency between two filters. Every parent will be processed before its child.
+		 * \param filter The filter to add as dependency
+		 */
 		virtual void addDependencies(Model *filter);
 		virtual void addChildDependencies(Model *filter);
 

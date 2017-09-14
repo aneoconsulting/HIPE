@@ -1,0 +1,126 @@
+\hypertarget{classfilter_1_1algos_1_1_akaze}{}\section{filter\+:\+:algos\+:\+:Akaze Class Reference}
+\label{classfilter_1_1algos_1_1_akaze}\index{filter\+::algos\+::\+Akaze@{filter\+::algos\+::\+Akaze}}
+
+
+The \hyperlink{classfilter_1_1algos_1_1_akaze}{Akaze} filter will find and match similarities into two images.  
+
+
+
+
+{\ttfamily \#include $<$Akaze.\+h$>$}
+
+Inheritance diagram for filter\+:\+:algos\+:\+:Akaze\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d8/d54/classfilter_1_1algos_1_1_akaze}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_af57f9d7de73fef02601ec7041083c58f}\label{classfilter_1_1algos_1_1_akaze_af57f9d7de73fef02601ec7041083c58f}} 
+typedef \hyperlink{class_proxy_functor}{Proxy\+Functor}$<$ \hyperlink{classfilter_1_1algos_1_1_akaze}{Akaze} $>$ {\bfseries \+\_\+proxy\+Functor}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a57b45af3615798e1e01d033f7898b029}\label{classfilter_1_1algos_1_1_akaze_a57b45af3615798e1e01d033f7898b029}} 
+typedef \hyperlink{classfilter_1_1algos_1_1_akaze}{Akaze} {\bfseries mytype}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a080f601c3ad170522b9ea2b854bbacf4}\label{classfilter_1_1algos_1_1_akaze_a080f601c3ad170522b9ea2b854bbacf4}} 
+typedef float {\bfseries vartype\+\_\+\+\_\+inlier\+\_\+threshold}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_aa02421e2cef90028ce64eaa091c5da9c}\label{classfilter_1_1algos_1_1_akaze_aa02421e2cef90028ce64eaa091c5da9c}} 
+typedef float {\bfseries vartype\+\_\+\+\_\+nn\+\_\+match\+\_\+ratio}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a0f01f8c215893b43be88e17add581d4f}\label{classfilter_1_1algos_1_1_akaze_a0f01f8c215893b43be88e17add581d4f}} 
+void {\bfseries set\+\_\+inlier\+\_\+threshold\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a047d4c0ab66d29be98f706a6f3916439}\label{classfilter_1_1algos_1_1_akaze_a047d4c0ab66d29be98f706a6f3916439}} 
+void {\bfseries set\+\_\+inlier\+\_\+threshold} (vartype\+\_\+\+\_\+inlier\+\_\+threshold \&\+\_\+\+\_\+inlier\+\_\+threshold)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_aaf633d4478bca96d835710ac809e8151}\label{classfilter_1_1algos_1_1_akaze_aaf633d4478bca96d835710ac809e8151}} 
+vartype\+\_\+\+\_\+inlier\+\_\+threshold {\bfseries get\+\_\+inlier\+\_\+threshold} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a75d02bc78ca516acc7bc5761a415bb68}\label{classfilter_1_1algos_1_1_akaze_a75d02bc78ca516acc7bc5761a415bb68}} 
+void {\bfseries copy\+\_\+inlier\+\_\+threshold} (\hyperlink{classfilter_1_1algos_1_1_akaze}{mytype} $\ast$instance)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a4b7c85984e45b759aa63563d8071073c}\label{classfilter_1_1algos_1_1_akaze_a4b7c85984e45b759aa63563d8071073c}} 
+void {\bfseries set\+\_\+nn\+\_\+match\+\_\+ratio\+\_\+from\+\_\+json} (boost\+::property\+\_\+tree\+::ptree \&json\+Class)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a19b9239952d34314dc5a977fc581ee01}\label{classfilter_1_1algos_1_1_akaze_a19b9239952d34314dc5a977fc581ee01}} 
+void {\bfseries set\+\_\+nn\+\_\+match\+\_\+ratio} (vartype\+\_\+\+\_\+nn\+\_\+match\+\_\+ratio \&\+\_\+\+\_\+nn\+\_\+match\+\_\+ratio)
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_af3573c50dcc82b6b32a0a4e8ed9db319}\label{classfilter_1_1algos_1_1_akaze_af3573c50dcc82b6b32a0a4e8ed9db319}} 
+vartype\+\_\+\+\_\+nn\+\_\+match\+\_\+ratio {\bfseries get\+\_\+nn\+\_\+match\+\_\+ratio} ()
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_aaa4c674944e460f7585c1e59c89786da}\label{classfilter_1_1algos_1_1_akaze_aaa4c674944e460f7585c1e59c89786da}} 
+void {\bfseries copy\+\_\+nn\+\_\+match\+\_\+ratio} (\hyperlink{classfilter_1_1algos_1_1_akaze}{mytype} $\ast$instance)
+\item 
+virtual std\+::string \hyperlink{classfilter_1_1algos_1_1_akaze_afbbbf680eb0c14ea7e47dbc78169f32b}{result\+As\+String} ()
+\begin{DoxyCompactList}\small\item\em Get the result of the processing done by the node. This method will return information only. The actual processing is done by the process() method. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a3b23c1d178f81797319dffebbbb77742}\label{classfilter_1_1algos_1_1_akaze_a3b23c1d178f81797319dffebbbb77742}} 
+Hipe\+Status {\bfseries process} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+float \hyperlink{classfilter_1_1algos_1_1_akaze_aee53a5f3f06ed8c533dc4d421115fe6a}{inlier\+\_\+threshold}
+\item 
+float \hyperlink{classfilter_1_1algos_1_1_akaze_a114bb2fea06317e4b7c5ba620dd8d3c4}{nn\+\_\+match\+\_\+ratio}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_ae85baf6c729c6e0c9a9ec88cbbb95e7b}\label{classfilter_1_1algos_1_1_akaze_ae85baf6c729c6e0c9a9ec88cbbb95e7b}} 
+virtual \hyperlink{classfilter_1_1data_1_1_connex_data_base}{data\+::\+Connex\+Data\+Base} \& {\bfseries get\+Connector} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a87f159575ac795211b9af8452bf0a1e5}\label{classfilter_1_1algos_1_1_akaze_a87f159575ac795211b9af8452bf0a1e5}} 
+\hyperlink{classfilter_1_1data_1_1_connex_data}{data\+::\+Connex\+Data}$<$ \hyperlink{classfilter_1_1data_1_1_pattern_data}{data\+::\+Pattern\+Data}, \hyperlink{classfilter_1_1data_1_1_image_data}{data\+::\+Image\+Data} $>$ {\bfseries \+\_\+connex\+Data}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000001}{Todo}]\end{DoxyRefDesc}
+The \hyperlink{classfilter_1_1algos_1_1_akaze}{Akaze} filter is used to find an object on an image in another one using keypoints and the A-\/\+Kaze algorithm. It awaits a Pattern\+Data object as input and will output an image containing the computed matching simimarities contoured. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_afbbbf680eb0c14ea7e47dbc78169f32b}\label{classfilter_1_1algos_1_1_akaze_afbbbf680eb0c14ea7e47dbc78169f32b}} 
+\index{filter\+::algos\+::\+Akaze@{filter\+::algos\+::\+Akaze}!result\+As\+String@{result\+As\+String}}
+\index{result\+As\+String@{result\+As\+String}!filter\+::algos\+::\+Akaze@{filter\+::algos\+::\+Akaze}}
+\subsubsection{\texorpdfstring{result\+As\+String()}{resultAsString()}}
+{\footnotesize\ttfamily virtual std\+::string filter\+::algos\+::\+Akaze\+::result\+As\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+A string containing the result of the processing done by the filter. 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classfilter_1_1_i_filter_ab99902b060a6d9edc3452a8c9f85e37e}{filter\+::\+I\+Filter}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_aee53a5f3f06ed8c533dc4d421115fe6a}\label{classfilter_1_1algos_1_1_akaze_aee53a5f3f06ed8c533dc4d421115fe6a}} 
+\index{filter\+::algos\+::\+Akaze@{filter\+::algos\+::\+Akaze}!inlier\+\_\+threshold@{inlier\+\_\+threshold}}
+\index{inlier\+\_\+threshold@{inlier\+\_\+threshold}!filter\+::algos\+::\+Akaze@{filter\+::algos\+::\+Akaze}}
+\subsubsection{\texorpdfstring{inlier\+\_\+threshold}{inlier\_threshold}}
+{\footnotesize\ttfamily filter\+::algos\+::\+Akaze\+::inlier\+\_\+threshold}
+
+The distance threshold used to identify the inliers.\mbox{[}T\+O\+DO\mbox{]} \mbox{\Hypertarget{classfilter_1_1algos_1_1_akaze_a114bb2fea06317e4b7c5ba620dd8d3c4}\label{classfilter_1_1algos_1_1_akaze_a114bb2fea06317e4b7c5ba620dd8d3c4}} 
+\index{filter\+::algos\+::\+Akaze@{filter\+::algos\+::\+Akaze}!nn\+\_\+match\+\_\+ratio@{nn\+\_\+match\+\_\+ratio}}
+\index{nn\+\_\+match\+\_\+ratio@{nn\+\_\+match\+\_\+ratio}!filter\+::algos\+::\+Akaze@{filter\+::algos\+::\+Akaze}}
+\subsubsection{\texorpdfstring{nn\+\_\+match\+\_\+ratio}{nn\_match\_ratio}}
+{\footnotesize\ttfamily filter\+::algos\+::\+Akaze\+::nn\+\_\+match\+\_\+ratio}
+
+The ratio used to match the nearests neighbors. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/\+Algos/Akaze.\+h\item 
+source/filter/algos/Akaze.\+cpp\end{DoxyCompactItemize}

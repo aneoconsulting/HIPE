@@ -11,7 +11,12 @@ namespace filter
 	namespace algos
 	{
 		/**
-		 * \brief THe RotateImage filter is used to rotate images around the positive Z axis and taking their center as pivot.
+		 * \var RotateImage::angle
+		 * The angle (in degrees) to rotate the image by.
+		 */
+
+		/**
+		 * \brief The RotateImage filter is used to rotate images around the positive Z axis and taking their center as pivot.
 		 */
 		class RotateImage : public IFilter
 		{
@@ -20,15 +25,15 @@ namespace filter
 
 			REGISTER(RotateImage, ()), _connexData(data::INOUT)
 			{
-				
+
 				angle = 10;
 			}
 
-			REGISTER_P(double, angle); //<! The angle (in degrees) to rotate the image by
+			REGISTER_P(double, angle);
 
 			~RotateImage()
 			{
-				
+
 			}
 
 			virtual std::string resultAsString()

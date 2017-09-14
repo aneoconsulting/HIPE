@@ -11,12 +11,26 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 *  \var EqualizeAdaptive::clip
+		 *  The clipping (contrast) limit. The maximum contranst a bin can have. If it is superior it will be clipped and distribued equally to the surrounding ones.
+		 *
+		 *  \var EqualizeAdaptive::kernel
+		 *  The size each subdivision should have.
+		 */
+
+		/**
+		 * \brief The EqualizeAdaptive filter will equalize the image histogram resulting of the input image analysis. It will improve the contrast of the image.
+		 * 
+		 * Instead of doing it on the whole image like the Equalize filter, it will subdivide it in multiple parts and work on them separately. 
+		 * \see cv::CLAHE
+		 */
 		class EqualizeAdaptive : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
 			REGISTER(EqualizeAdaptive, ()), _connexData(data::INDATA)
 			{
-				clip = 2.0;
+				clip = 40.0;
 				kernel = 8;
 			}
 			REGISTER_P(double, clip);

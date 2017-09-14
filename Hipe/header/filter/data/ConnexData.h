@@ -13,12 +13,17 @@ namespace filter
 
 	namespace data
 	{
+		/**
+		 * \todo
+		 * \brief 
+		 */
 		class DataPortBase
 		{
 
 		};
 
 		/**
+		 * \todo
 		 * \brief Data port contains the data to guarantee the transition with all Ifilter and IModel
 		 * \tparam D the Data type to transit between 2 and more connexData
 		 */

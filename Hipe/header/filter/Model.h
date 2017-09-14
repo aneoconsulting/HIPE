@@ -9,7 +9,7 @@ namespace filter
 {
 	/**
 	 * \brief The Model class is the foundatation of every Hipe's filter. It's the base class they should implement.
-	 * [TODO]
+	 * \todo
 	 */
 	class Model
 	{

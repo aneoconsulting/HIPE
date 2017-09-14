@@ -18,6 +18,42 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \var IDPlateRectifier::leftRatio
+		 * Percentage of the image width used to extend and limit the search of the plate text area's left vertical line.
+		 *
+		 * \var IDPlateRectifier::rightRatio
+		 * Percentage of the image width used to extend and limit the search of the plate text area's right vertical line.
+		 *
+		 * \var IDPlateRectifier::topRatio
+		 * Percentage of the image height used to extend and limit the search of the plate text area's top horizontal line.
+		 *
+		 * \var IDPlateRectifier::_debug
+		 * The desired debug level. The default level is 0 (disabled). A higher value will enable more debug informations.
+		 *
+		 * \var IDPlateRectifier::charMinXBound
+		 * The minimum position on the X axis to search for characters in the image.
+		 *
+		 * \var IDPlateRectifier::charMaxXBound
+		 * The maximum position on the X axis to search for characters in the image.
+		 *
+		 * \var IDPlateRectifier::charMinFillRatio
+		 * The minimum ratio of colored pixels a character rect must contain to be accepted as a valid one.
+		 *
+		 * \var IDPlateRectifier::charMaxFillRatio
+		 * The maximum ratio of colored pixels a character rect can contain to be accepted as a valid one.
+		 *
+		 * \var IDPlateRectifier::charMinWidth
+		 * The minimum width a character rect must have to be accepted as a valid one.
+		 *
+		 * \var IDPlateRectifier::charMinHeight
+		 * The minimum height a character rect must have to be accepted as a valid one.
+		 */
+
+		/**
+		 * \brief The IDPlateRectifier filter will try to extract the region of interest (where all the relative character are)
+		 *        of an ID plate and rework its perspective to make it easier to read.
+		 */
 		class IDPlateRectifier : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
@@ -35,16 +71,16 @@ namespace filter
 				charMinWidth = 8;
 				charMinHeight = 20;
 			}
-			REGISTER_P(double, leftRatio);			//!< Percentage of the image width used to extend and limit the search of the plate text area's left vertical line.
-			REGISTER_P(double, rightRatio);			//!< Percentage of the image width used to extend and limit the search of the plate text area's right vertical line.
-			REGISTER_P(double, topRatio);			//!< Percentage of the image height used to extend and limit the search of the plate text area's top horizontal line.
-			REGISTER_P(int, _debug);				//!< The desired debug level. The default level is 0 (disabled). A higher value will enable more debug informations
-			REGISTER_P(double, charMinXBound);		//!< The minimum position on the X axis to search for characters in the image
-			REGISTER_P(double, charMaxXBound);		//!< The maximum position on the X axis to search for characters in the image
-			REGISTER_P(double, charMinFillRatio);	//!< The minimum ratio of colored pixels a character rect must contain to be accepted as a valid one
-			REGISTER_P(double, charMaxFillRatio);	//!< The maximum ratio of colored pixels a character rect can contain to be accepted as a valid one
-			REGISTER_P(int, charMinWidth);			//!< The minimum width a character rect must have to be accepted as a valid one
-			REGISTER_P(int, charMinHeight);			//!< The minimum height a character rect must have to be accepted as a valid one
+			REGISTER_P(double, leftRatio);
+			REGISTER_P(double, rightRatio);
+			REGISTER_P(double, topRatio);
+			REGISTER_P(int, _debug);
+			REGISTER_P(double, charMinXBound);
+			REGISTER_P(double, charMaxXBound);
+			REGISTER_P(double, charMinFillRatio);
+			REGISTER_P(double, charMaxFillRatio);
+			REGISTER_P(int, charMinWidth);
+			REGISTER_P(int, charMinHeight);
 
 		public:
 			HipeStatus process() override;

@@ -1,0 +1,45 @@
+The Symple video chat demo is an example of how to use the Symple for instant messaging and Web\+R\+TC signaling in about 100 lines of Java\+Script. External projects used are Angular\+JS, Bootstrap, Node.\+js and Express.
+
+See this blog post for more information about the demo\+: \href{http://sourcey.com/symple-webrtc-video-chat-demo}{\tt http\+://sourcey.\+com/symple-\/webrtc-\/video-\/chat-\/demo}
+
+\subsection*{What is Symple?}
+
+Symple is a unrestrictive real-\/time messaging and presence protocol.
+
+The protocol itself is semantically similar to X\+M\+PP, except that it is much more flexible and economical due to the use of J\+S\+ON instead of X\+ML for encoding messages.
+
+Symple currently has client implementations in \href{https://github.com/sourcey/symple-client}{\tt Java\+Script}, \href{https://github.com/sourcey/symple-client-ruby}{\tt Ruby} and \href{https://github.com/sourcey/libsourcey/tree/master/src/symple}{\tt C++}, which make it ideal for a wide range of messaging requirements, such as building real-\/time games and applications which run in the web browser, desktop, and mobile phone.
+
+\subsection*{Usage}
+
+
+\begin{DoxyEnumerate}
+\item Install dependencies\+: {\ttfamily npm install}
+\item Fire up the server\+: {\ttfamily node app}
+\item And point your browser to\+: {\ttfamily \href{http://localhost:4500}{\tt http\+://localhost\+:4500}}
+\end{DoxyEnumerate}
+
+\subsection*{Hacking}
+
+Some key options are specified in the main H\+T\+ML file located at {\ttfamily index.\+ejs}
+
+{\bfseries C\+L\+I\+E\+N\+T\+\_\+\+O\+P\+T\+I\+O\+NS} This is the options hash for the Symple client. This is where you specify the server U\+RL and Peer object. Note that we have disabled \textquotesingle{}websocket\textquotesingle{} transport by default, but you will probably want to re-\/enable it in production.
+
+{\bfseries W\+E\+B\+R\+T\+C\+\_\+\+C\+O\+N\+F\+IG} This is the Peer\+Connection options hash. In production you will want to specify some T\+U\+RN servers so as to ensure the p2p connection succeeds in all network topologies.
+
+Other than that all relevant Java\+Script is located in {\ttfamily public/js/app.\+js} and {\ttfamily public/js/helpers.\+js}. Enjoy!
+
+\subsection*{Contributing}
+
+
+\begin{DoxyEnumerate}
+\item Fork it
+\item Create your feature branch ({\ttfamily git checkout -\/b my-\/new-\/feature})
+\item Commit your changes ({\ttfamily git commit -\/am \textquotesingle{}Add some feature\textquotesingle{}})
+\item Push to the branch ({\ttfamily git push origin my-\/new-\/feature})
+\item Create new Pull Request
+\end{DoxyEnumerate}
+
+\subsection*{Contact}
+
+For more information please check out the Symple homepage\+: \href{http://sourcey.com/symple/}{\tt http\+://sourcey.\+com/symple/} If you have a bug or an issue then please use the Github issue tracker\+: \href{https://github.com/sourcey/symple-client/issues}{\tt https\+://github.\+com/sourcey/symple-\/client/issues} 

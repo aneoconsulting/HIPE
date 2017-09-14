@@ -1,0 +1,154 @@
+\hypertarget{classhttp_1_1_server_base}{}\section{http\+:\+:Server\+Base$<$ socket\+\_\+type $>$ Class Template Reference}
+\label{classhttp_1_1_server_base}\index{http\+::\+Server\+Base$<$ socket\+\_\+type $>$@{http\+::\+Server\+Base$<$ socket\+\_\+type $>$}}
+Inheritance diagram for http\+:\+:Server\+Base$<$ socket\+\_\+type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d3/d7a/classhttp_1_1_server_base}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classhttp_1_1_server_base_1_1_config}{Config}
+\item 
+class \hyperlink{classhttp_1_1_server_base_1_1_content}{Content}
+\item 
+class \hyperlink{classhttp_1_1_server_base_1_1_request}{Request}
+\item 
+class \hyperlink{classhttp_1_1_server_base_1_1_response}{Response}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a9f6aa2e83c81771e961db18f7d9ddd73}\label{classhttp_1_1_server_base_a9f6aa2e83c81771e961db18f7d9ddd73}} 
+virtual void {\bfseries start} ()
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a72dafc55c0920e3dd793fc04cf99e599}\label{classhttp_1_1_server_base_a72dafc55c0920e3dd793fc04cf99e599}} 
+void {\bfseries stop} ()
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a32abca1505e7b45637c2a37d9c4289b1}\label{classhttp_1_1_server_base_a32abca1505e7b45637c2a37d9c4289b1}} 
+void \hyperlink{classhttp_1_1_server_base_a32abca1505e7b45637c2a37d9c4289b1}{send} (const std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_response}{Response} $>$ \&response, const std\+::function$<$ void(const boost\+::system\+::error\+\_\+code \&)$>$ \&callback=nullptr) const
+\begin{DoxyCompactList}\small\item\em Use this function if you need to recursively send parts of a longer message. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a9f6aa2e83c81771e961db18f7d9ddd73}\label{classhttp_1_1_server_base_a9f6aa2e83c81771e961db18f7d9ddd73}} 
+virtual void {\bfseries start} ()
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a72dafc55c0920e3dd793fc04cf99e599}\label{classhttp_1_1_server_base_a72dafc55c0920e3dd793fc04cf99e599}} 
+void {\bfseries stop} ()
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a6abea557f4b23197982804fb9b3e0141}\label{classhttp_1_1_server_base_a6abea557f4b23197982804fb9b3e0141}} 
+void \hyperlink{classhttp_1_1_server_base_a6abea557f4b23197982804fb9b3e0141}{send} (const std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_response}{Response}$<$ socket\+\_\+type $>$$>$ \&response, const std\+::function$<$ void(const boost\+::system\+::error\+\_\+code \&)$>$ \&callback=nullptr) const
+\begin{DoxyCompactList}\small\item\em Use this function if you need to recursively send parts of a longer message. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a23e58069408006f0825fd8177bcf43c2}\label{classhttp_1_1_server_base_a23e58069408006f0825fd8177bcf43c2}} 
+std\+::thread {\bfseries run} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a3de3bc83a8f6493784ee6a8dcd3f462c}\label{classhttp_1_1_server_base_a3de3bc83a8f6493784ee6a8dcd3f462c}} 
+\hyperlink{classhttp_1_1_server_base_1_1_config}{Config} \hyperlink{classhttp_1_1_server_base_a3de3bc83a8f6493784ee6a8dcd3f462c}{config}
+\begin{DoxyCompactList}\small\item\em Set before calling start(). \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a2850b0140e9a076919665fe7609d0d01}\label{classhttp_1_1_server_base_a2850b0140e9a076919665fe7609d0d01}} 
+std\+::unordered\+\_\+map$<$ std\+::string, std\+::unordered\+\_\+map$<$ std\+::string, std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ typename \hyperlink{classhttp_1_1_server_base}{Server\+Base}$<$ socket\+\_\+type $>$\+::\hyperlink{classhttp_1_1_server_base_1_1_response}{Response} $>$, std\+::shared\+\_\+ptr$<$ typename \hyperlink{classhttp_1_1_server_base}{Server\+Base}$<$ socket\+\_\+type $>$\+::\hyperlink{classhttp_1_1_server_base_1_1_request}{Request} $>$)$>$ $>$ $>$ {\bfseries resource}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a657b6923feeeb6cbe2041e9b93d76441}\label{classhttp_1_1_server_base_a657b6923feeeb6cbe2041e9b93d76441}} 
+std\+::unordered\+\_\+map$<$ std\+::string, std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ typename \hyperlink{classhttp_1_1_server_base}{Server\+Base}$<$ socket\+\_\+type $>$\+::\hyperlink{classhttp_1_1_server_base_1_1_response}{Response} $>$, std\+::shared\+\_\+ptr$<$ typename \hyperlink{classhttp_1_1_server_base}{Server\+Base}$<$ socket\+\_\+type $>$\+::\hyperlink{classhttp_1_1_server_base_1_1_request}{Request} $>$)$>$ $>$ {\bfseries default\+\_\+resource}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_adb62a957b8e39c5cab516faac94add97}\label{classhttp_1_1_server_base_adb62a957b8e39c5cab516faac94add97}} 
+std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ typename \hyperlink{classhttp_1_1_server_base}{Server\+Base}$<$ socket\+\_\+type $>$\+::\hyperlink{classhttp_1_1_server_base_1_1_request}{Request} $>$, const boost\+::system\+::error\+\_\+code \&)$>$ {\bfseries on\+\_\+error}
+\item 
+std\+::shared\+\_\+ptr$<$ boost\+::asio\+::io\+\_\+service $>$ \hyperlink{classhttp_1_1_server_base_a89757fd47a78aa8686df56b4ca78bdd1}{io\+\_\+service}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_acc93479e120746948d50964397d8d859}\label{classhttp_1_1_server_base_acc93479e120746948d50964397d8d859}} 
+std\+::unordered\+\_\+map$<$ std\+::string, std\+::unordered\+\_\+map$<$ std\+::string, std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_response}{Response}$<$ socket\+\_\+type $>$$>$, std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request}$<$ socket\+\_\+type $>$$>$) $>$ $>$ $>$ {\bfseries resource}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_af48f0ef80212ddfbc94860cc6fc26e95}\label{classhttp_1_1_server_base_af48f0ef80212ddfbc94860cc6fc26e95}} 
+std\+::unordered\+\_\+map$<$ std\+::string, std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_response}{Response}$<$ socket\+\_\+type $>$$>$, std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request}$<$ socket\+\_\+type $>$$>$) $>$ $>$ {\bfseries default\+\_\+resource}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_ab07e3aa1546694c35e53b4ab94c184b8}\label{classhttp_1_1_server_base_ab07e3aa1546694c35e53b4ab94c184b8}} 
+std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request}$<$ socket\+\_\+type $>$$>$, const boost\+::system\+::error\+\_\+code \&)$>$ {\bfseries on\+\_\+error}
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a29d14258f3e8863548793a50416a36af}\label{classhttp_1_1_server_base_a29d14258f3e8863548793a50416a36af}} 
+{\bfseries Server\+Base} (unsigned short port, size\+\_\+t num\+\_\+threads, long timeout\+\_\+request, long timeout\+\_\+send\+\_\+or\+\_\+receive)
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_aa00dabdeb36dad9d15a07dc5bb30bb34}\label{classhttp_1_1_server_base_aa00dabdeb36dad9d15a07dc5bb30bb34}} 
+virtual void {\bfseries accept} ()=0
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a34f54d33cbbe7a1bfefc11752b5aeb49}\label{classhttp_1_1_server_base_a34f54d33cbbe7a1bfefc11752b5aeb49}} 
+std\+::shared\+\_\+ptr$<$ boost\+::asio\+::deadline\+\_\+timer $>$ {\bfseries get\+\_\+timeout\+\_\+timer} (const std\+::shared\+\_\+ptr$<$ socket\+\_\+type $>$ \&socket, long seconds)
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_ae023912f61f873ee1a4bf952b96a6279}\label{classhttp_1_1_server_base_ae023912f61f873ee1a4bf952b96a6279}} 
+void {\bfseries read\+\_\+request\+\_\+and\+\_\+content} (const std\+::shared\+\_\+ptr$<$ socket\+\_\+type $>$ \&socket)
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a6e3b9e402ff2c4f7f22aa64b951bdf67}\label{classhttp_1_1_server_base_a6e3b9e402ff2c4f7f22aa64b951bdf67}} 
+bool {\bfseries parse\+\_\+request} (const std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request} $>$ \&request) const
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_acff420b5de9a2ea2dd4b908229b02ed2}\label{classhttp_1_1_server_base_acff420b5de9a2ea2dd4b908229b02ed2}} 
+void {\bfseries find\+\_\+resource} (const std\+::shared\+\_\+ptr$<$ socket\+\_\+type $>$ \&socket, const std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request} $>$ \&request)
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a53a013e501552ecabbed0ad59b08f813}\label{classhttp_1_1_server_base_a53a013e501552ecabbed0ad59b08f813}} 
+void {\bfseries write\+\_\+response} (const std\+::shared\+\_\+ptr$<$ socket\+\_\+type $>$ \&socket, const std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request} $>$ \&request, std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ typename \hyperlink{classhttp_1_1_server_base}{Server\+Base}$<$ socket\+\_\+type $>$\+::\hyperlink{classhttp_1_1_server_base_1_1_response}{Response} $>$, std\+::shared\+\_\+ptr$<$ typename \hyperlink{classhttp_1_1_server_base}{Server\+Base}$<$ socket\+\_\+type $>$\+::\hyperlink{classhttp_1_1_server_base_1_1_request}{Request} $>$)$>$ \&resource\+\_\+function)
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a29d14258f3e8863548793a50416a36af}\label{classhttp_1_1_server_base_a29d14258f3e8863548793a50416a36af}} 
+{\bfseries Server\+Base} (unsigned short port, size\+\_\+t num\+\_\+threads, long timeout\+\_\+request, long timeout\+\_\+send\+\_\+or\+\_\+receive)
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_aa00dabdeb36dad9d15a07dc5bb30bb34}\label{classhttp_1_1_server_base_aa00dabdeb36dad9d15a07dc5bb30bb34}} 
+virtual void {\bfseries accept} ()=0
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a34f54d33cbbe7a1bfefc11752b5aeb49}\label{classhttp_1_1_server_base_a34f54d33cbbe7a1bfefc11752b5aeb49}} 
+std\+::shared\+\_\+ptr$<$ boost\+::asio\+::deadline\+\_\+timer $>$ {\bfseries get\+\_\+timeout\+\_\+timer} (const std\+::shared\+\_\+ptr$<$ socket\+\_\+type $>$ \&socket, long seconds)
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_ae023912f61f873ee1a4bf952b96a6279}\label{classhttp_1_1_server_base_ae023912f61f873ee1a4bf952b96a6279}} 
+void {\bfseries read\+\_\+request\+\_\+and\+\_\+content} (const std\+::shared\+\_\+ptr$<$ socket\+\_\+type $>$ \&socket)
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a1bee7bab9610b998f5b5c61491bddfd3}\label{classhttp_1_1_server_base_a1bee7bab9610b998f5b5c61491bddfd3}} 
+bool {\bfseries parse\+\_\+request} (const std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request}$<$ socket\+\_\+type $>$$>$ \&request) const
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_af9e30675529edb8377870a2af74d121f}\label{classhttp_1_1_server_base_af9e30675529edb8377870a2af74d121f}} 
+void {\bfseries find\+\_\+resource} (const std\+::shared\+\_\+ptr$<$ socket\+\_\+type $>$ \&socket, const std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request}$<$ socket\+\_\+type $>$$>$ \&request)
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_aa78183e68edbf228e2cf8ac00494e7ba}\label{classhttp_1_1_server_base_aa78183e68edbf228e2cf8ac00494e7ba}} 
+void {\bfseries write\+\_\+response} (const std\+::shared\+\_\+ptr$<$ socket\+\_\+type $>$ \&socket, const std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request}$<$ socket\+\_\+type $>$$>$ \&request, std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_response}{Response}$<$ socket\+\_\+type $>$$>$, std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request}$<$ socket\+\_\+type $>$$>$)$>$ \&resource\+\_\+function)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a7585af4bf75049f0118958736eb28395}\label{classhttp_1_1_server_base_a7585af4bf75049f0118958736eb28395}} 
+std\+::unique\+\_\+ptr$<$ boost\+::asio\+::ip\+::tcp\+::acceptor $>$ {\bfseries acceptor}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_aa7913c14bf3a3deb5047db61c300f149}\label{classhttp_1_1_server_base_aa7913c14bf3a3deb5047db61c300f149}} 
+std\+::vector$<$ std\+::thread $>$ {\bfseries threads}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_aea137d71c0f9f31e7c5cc47e0932c22b}\label{classhttp_1_1_server_base_aea137d71c0f9f31e7c5cc47e0932c22b}} 
+long {\bfseries timeout\+\_\+request}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_aabaf31180e0ef8b124281a3a28780d25}\label{classhttp_1_1_server_base_aabaf31180e0ef8b124281a3a28780d25}} 
+long {\bfseries timeout\+\_\+content}
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_ab3bd30db0791c2286f67dcb8365c1cb3}\label{classhttp_1_1_server_base_ab3bd30db0791c2286f67dcb8365c1cb3}} 
+std\+::vector$<$ std\+::pair$<$ std\+::string, std\+::vector$<$ std\+::pair$<$ R\+E\+G\+E\+X\+\_\+\+N\+S\+::regex, std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ typename \hyperlink{classhttp_1_1_server_base}{Server\+Base}$<$ socket\+\_\+type $>$\+::\hyperlink{classhttp_1_1_server_base_1_1_response}{Response} $>$, std\+::shared\+\_\+ptr$<$ typename \hyperlink{classhttp_1_1_server_base}{Server\+Base}$<$ socket\+\_\+type $>$\+::\hyperlink{classhttp_1_1_server_base_1_1_request}{Request} $>$)$>$ $>$ $>$ $>$ $>$ {\bfseries opt\+\_\+resource}
+\item 
+\mbox{\Hypertarget{classhttp_1_1_server_base_a518f7995bd211ab69afa7fb8bd3d8c28}\label{classhttp_1_1_server_base_a518f7995bd211ab69afa7fb8bd3d8c28}} 
+std\+::vector$<$ std\+::pair$<$ std\+::string, std\+::vector$<$ std\+::pair$<$ std \+::regex, std\+::function$<$ void(std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_response}{Response}$<$ socket\+\_\+type $>$$>$, std\+::shared\+\_\+ptr$<$ \hyperlink{classhttp_1_1_server_base_1_1_request}{Request}$<$ socket\+\_\+type $>$$>$) $>$ $>$ $>$ $>$ $>$ {\bfseries opt\+\_\+resource}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classhttp_1_1_server_base_a89757fd47a78aa8686df56b4ca78bdd1}\label{classhttp_1_1_server_base_a89757fd47a78aa8686df56b4ca78bdd1}} 
+\index{http\+::\+Server\+Base@{http\+::\+Server\+Base}!io\+\_\+service@{io\+\_\+service}}
+\index{io\+\_\+service@{io\+\_\+service}!http\+::\+Server\+Base@{http\+::\+Server\+Base}}
+\subsubsection{\texorpdfstring{io\+\_\+service}{io\_service}}
+{\footnotesize\ttfamily template$<$class socket\+\_\+type$>$ \\
+std\+::shared\+\_\+ptr$<$ boost\+::asio\+::io\+\_\+service $>$ \hyperlink{classhttp_1_1_server_base}{http\+::\+Server\+Base}$<$ socket\+\_\+type $>$\+::io\+\_\+service}
+
+If you have your own boost\+::asio\+::io\+\_\+service, store its pointer here before running start(). You might also want to set config.\+num\+\_\+threads to 0. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/http/Http\+Server.\+hpp\item 
+header/http/Server.\+h\end{DoxyCompactItemize}

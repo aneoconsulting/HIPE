@@ -11,6 +11,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The Grayscale filter will convert a color image (3 or 4 channels) to a grayscale one (1 or 2 channels).
+		 */
 		class Grayscale : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);

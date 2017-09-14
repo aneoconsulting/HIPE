@@ -16,7 +16,15 @@ namespace filter
 	namespace algos
 	{
 		/**
-		 * [TODO]
+		 * \var StreamResultFilter::port
+		 * The port on which the target device is listening.
+		 *
+		 * \var StreamResultFilter::cmd
+		 * The command line containing all the streaming parameters.
+		 */
+
+		/**
+		 * \todo
 		 * \brief The StreamResultFilter filter is used to stream the result of a graph to a distant target.
 		 */
 		class StreamResultFilter : public IFilter
@@ -24,14 +32,14 @@ namespace filter
 			//data::ConnexOutput<filter::data::ImageData> connData;
 			CONNECTOR_OUT(data::ImageData);
 
-			core::queue::ConcurrentQueue<filter::data::ImageData> queue;	//<! [TODO] unused ?
-			struct timeval current_time;	//<! The current time
-			int fps_avg;	//<! [TODO] The average FPS at which the video is played
+			core::queue::ConcurrentQueue<filter::data::ImageData> queue;	//<! [TODO] unused?
+			struct timeval current_time;									//<! The current time.
+			int fps_avg;	//<! [TODO] The average FPS at which the video is played.
 			int nb_frame;	//<! [TODO]
-			
+
 
 			// second part of sender pipeline
-			std::stringstream uri;	//<! The uri of the device on which the video will be streamed
+			std::stringstream uri;	//<! The uri of the device on which the video will be streamed.
 			cv::VideoWriter writer;	//<! [TODO]
 
 			/* int setenv(const char *name, const char *value, int overwrite) */
@@ -52,16 +60,16 @@ namespace filter
 				current_time.tv_usec = 0;
 				fps_avg = 0;
 				nb_frame = 0;
-				
+
 				//setenv("GST_DEBUG", "cat:level...", 1);
 				uri << "appsrc ! videoconvert ! x264enc ! rtph264pay config-interval=10 pt=96 ! udpsink host=192.168.1.255 auto-multicast=true port=";
-				
+
 			}
 
-			
-			REGISTER_P(int, port);			//<! The port on which the target device is listening
 
-			REGISTER_P(std::string, cmd);	//<! The command line containing all the streaming parameters
+			REGISTER_P(int, port);
+
+			REGISTER_P(std::string, cmd);
 
 			~StreamResultFilter()
 			{
@@ -75,19 +83,19 @@ namespace filter
 
 			void StreamVideo()
 			{
-				
+
 			}
 
 		public:
 			/**
-			 * \brief [TODO] Computes the average fps at which the video is played
+			 * \brief [TODO] Computes the average fps at which the video is played.
 			 * \return [TODO]
 			 */
 			HipeStatus computeFPS();
 
 			/**
-			 * \brief Get the dimensions of the video
-			 * \return Returns the dimensions of the video as a cv::Size object
+			 * \brief Get the dimensions of the video.
+			 * \return Returns the dimensions of the video as a cv::Size object.
 			 */
 			cv::Size getImageDimension();
 
@@ -95,8 +103,8 @@ namespace filter
 
 			/*virtual void cleanUp()
 			{
-				
-				
+
+
 			}*/
 
 			void dispose()
@@ -106,7 +114,7 @@ namespace filter
 				nb_frame = 0;
 			}
 		};
-		
+
 		ADD_CLASS(StreamResultFilter, cmd, port);
 
 	}

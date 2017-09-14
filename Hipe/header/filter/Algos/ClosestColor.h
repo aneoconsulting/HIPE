@@ -10,6 +10,9 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		 * \brief The ClosestColor filter will find the closest known color a pixel have. The input image must only contain 1 pixel.
+		 */
 		class ClosestColor : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
@@ -44,16 +47,25 @@ namespace filter
 			}
 
 		private:
+			/**
+			 * \brief The representation of a color
+			 */
 			struct Color
 			{
-				cv::Scalar value;
-				std::string name;
+				cv::Scalar value;	//<! The RBG values of the color
+				std::string name;	//<! The name of the color
 			};
 
 		private:
-			std::vector<Color> _colors;
+			std::vector<Color> _colors;		//<! The list of all referenced colors
 
 		private:
+			/**
+			 * \brief Computes the euclidean distance between 2 pixels values (colors)
+			 * \param query The queried pixel (or pixel a)
+			 * \param ref  The reference pixel (or pixel b)
+			 * \return The computed distance
+			 */
 			double euclideanDistance(const cv::Scalar& query, const cv::Scalar& ref)
 			{
 				double eucl_dist = 0;
@@ -62,6 +74,11 @@ namespace filter
 				return eucl_dist;
 			}
 
+			/**
+			 * \brief Find the closest known color to the inputed pixel
+			 * \param query The queried pixel
+			 * \return The closest found color
+			 */
 			Color getClosestColor(const cv::Scalar& query)
 			{
 				Color closestColor = _colors[0];
@@ -101,8 +118,14 @@ namespace filter
 				//}
 			}
 
+			/**
+			 * \brief Populate the list of known colors. The known colors are the one we're trying to match others to.
+			 */
 			void setColors()
 			{
+				// Known colors must be set here
+				_colors.clear();
+
 				Color color;
 
 				color.name = "dark blue";

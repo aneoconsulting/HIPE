@@ -1,0 +1,220 @@
+\hypertarget{classfilter_1_1data_1_1_square_crop}{}\section{filter\+:\+:data\+:\+:Square\+Crop Class Reference}
+\label{classfilter_1_1data_1_1_square_crop}\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+
+
+\hyperlink{classfilter_1_1data_1_1_square_crop}{Square\+Crop} is the data type used to handle an image and information on its regions of interest.  
+
+
+
+
+{\ttfamily \#include $<$Square\+Crop.\+h$>$}
+
+Inheritance diagram for filter\+:\+:data\+:\+:Square\+Crop\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{d0/d9d/classfilter_1_1data_1_1_square_crop}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classfilter_1_1data_1_1_square_crop_a66d0d5077685230e0749532539e0461e}{Square\+Crop} (\hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} picture, std\+::vector$<$ cv\+::\+Rect $>$ square\+Cop)
+\item 
+\hyperlink{classfilter_1_1data_1_1_square_crop_af1b851ed583e9c5fff2fc8021d289584}{Square\+Crop} (\hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} picture, std\+::vector$<$ int $>$ square\+Crop)
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_ae4a956a412d9e6da42ca92fa2e03446c}\label{classfilter_1_1data_1_1_square_crop_ae4a956a412d9e6da42ca92fa2e03446c}} 
+{\bfseries Square\+Crop} (const \hyperlink{classfilter_1_1data_1_1_square_crop}{Square\+Crop} \&left)
+\item 
+std\+::vector$<$ cv\+::\+Rect $>$ \hyperlink{classfilter_1_1data_1_1_square_crop_ac0a29b6c8ac9a87cb14c8a19a89eb359}{get\+Square\+Crop} () const
+\item 
+\hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} \hyperlink{classfilter_1_1data_1_1_square_crop_a97b9cd82a00fb0d4a314f95010726344}{get\+Picture} () const
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_ac214a1d5f138d55f97e6d380c9d5a766}\label{classfilter_1_1data_1_1_square_crop_ac214a1d5f138d55f97e6d380c9d5a766}} 
+virtual \hyperlink{classfilter_1_1data_1_1_square_crop}{Square\+Crop} \& {\bfseries operator=} (const \hyperlink{classfilter_1_1data_1_1_square_crop}{Square\+Crop} \&left)
+\item 
+\hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data} \& \hyperlink{classfilter_1_1data_1_1_square_crop_a8a0a3376eebb769ac09bd31a9bf12113}{operator$<$$<$} (const std\+::vector$<$ int $>$ \&left)
+\begin{DoxyCompactList}\small\item\em Add one or multiple regions of interest to the object. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data} \& \hyperlink{classfilter_1_1data_1_1_square_crop_a8c860c4f607cd352f102345e103d2d2a}{operator$<$$<$} (const std\+::vector$<$ cv\+::\+Rect $>$ \&left)
+\begin{DoxyCompactList}\small\item\em Add one or multiple regions of interest to the object. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data} \& \hyperlink{classfilter_1_1data_1_1_square_crop_abb6485dde249188c27ff3b339ea93067}{add\+Pair} (const std\+::vector$<$ cv\+::\+Point $>$ \&left\+Crop, const \hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} \&left\+Image)
+\begin{DoxyCompactList}\small\item\em Add one or multiple regions of interest to the object, and an image. The image will overwrite the one already in the object. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data} \& \hyperlink{classfilter_1_1data_1_1_square_crop_a648729bc989b528bad91ea86154ceee7}{operator$<$$<$} (const std\+::vector$<$ cv\+::\+Point $>$ \&left)
+\begin{DoxyCompactList}\small\item\em Add one or multiple regions of interest to the object. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data} \& \hyperlink{classfilter_1_1data_1_1_square_crop_abbe28f7fc483ae4ceec244cf9d4da4dc}{operator$<$$<$} (const \hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} \&left)
+\begin{DoxyCompactList}\small\item\em Overwrites the current image with a new one. \end{DoxyCompactList}\item 
+\hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data} \& \hyperlink{classfilter_1_1data_1_1_square_crop_a44a6de24b7f945d007c294a959a9a576}{operator$<$$<$} (const cv\+::\+Mat left)
+\begin{DoxyCompactList}\small\item\em Overwrites the current image with a new one. \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Mat $>$ \& \hyperlink{classfilter_1_1data_1_1_square_crop_a066e7ca77734e652eed3943b448db2b6}{crops} (bool force\+Refresh=false)
+\begin{DoxyCompactList}\small\item\em The function patterns generate an array of cv\+::\+Mat with all the crop representing a sub-\/matrix of the pattern image. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a4080c81615750c09cfe328e2ee6d6650}\label{classfilter_1_1data_1_1_square_crop_a4080c81615750c09cfe328e2ee6d6650}} 
+{\bfseries Square\+Crop} (\hyperlink{classfilter_1_1data_1_1_i_o_data_1_1___protection}{I\+O\+Data\+::\+\_\+\+Protection} priv)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a67bc98d8d4c0afb55f5c00be4d0c8ce0}\label{classfilter_1_1data_1_1_square_crop_a67bc98d8d4c0afb55f5c00be4d0c8ce0}} 
+std\+::vector$<$ cv\+::\+Rect $>$ \hyperlink{classfilter_1_1data_1_1_square_crop_a67bc98d8d4c0afb55f5c00be4d0c8ce0}{\+\_\+square\+Crop}
+\begin{DoxyCompactList}\small\item\em the list of crop represented by Rectangle and where Rectangle is X,Y the coordiante in the \+\_\+picture and width,height the dimension of the rectangle \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a8981b1d69a0bee1cee55f8ec2f15e0b2}\label{classfilter_1_1data_1_1_square_crop_a8981b1d69a0bee1cee55f8ec2f15e0b2}} 
+\hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} \hyperlink{classfilter_1_1data_1_1_square_crop_a8981b1d69a0bee1cee55f8ec2f15e0b2}{\+\_\+picture}
+\begin{DoxyCompactList}\small\item\em The image to find the crops. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a3824caa3a560ec08ebd8f96d0a6c3abc}\label{classfilter_1_1data_1_1_square_crop_a3824caa3a560ec08ebd8f96d0a6c3abc}} 
+std\+::vector$<$ cv\+::\+Mat $>$ \hyperlink{classfilter_1_1data_1_1_square_crop_a3824caa3a560ec08ebd8f96d0a6c3abc}{\+\_\+crop\+Cache}
+\begin{DoxyCompactList}\small\item\em This is a cache list of submatrix cropped and generated by the list of \+\_\+square\+Crop it will be populate by crops when the number of submatrix differ from the number crops. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a66d0d5077685230e0749532539e0461e}\label{classfilter_1_1data_1_1_square_crop_a66d0d5077685230e0749532539e0461e}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!Square\+Crop@{Square\+Crop}}
+\index{Square\+Crop@{Square\+Crop}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{Square\+Crop()}{SquareCrop()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily filter\+::data\+::\+Square\+Crop\+::\+Square\+Crop (\begin{DoxyParamCaption}\item[{\hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data}}]{picture,  }\item[{std\+::vector$<$ cv\+::\+Rect $>$}]{square\+Cop }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em picture} & The image from where the regions of interest come \\
+\hline
+{\em square\+Cop} & The list of the regions of interest linked to the \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+picture image 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_af1b851ed583e9c5fff2fc8021d289584}\label{classfilter_1_1data_1_1_square_crop_af1b851ed583e9c5fff2fc8021d289584}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!Square\+Crop@{Square\+Crop}}
+\index{Square\+Crop@{Square\+Crop}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{Square\+Crop()}{SquareCrop()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily filter\+::data\+::\+Square\+Crop\+::\+Square\+Crop (\begin{DoxyParamCaption}\item[{\hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data}}]{picture,  }\item[{std\+::vector$<$ int $>$}]{square\+Crop }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em picture} & The image from where the regions of interest come \\
+\hline
+{\em square\+Crop} & The region of interest (position on x, y then width and height) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_abb6485dde249188c27ff3b339ea93067}\label{classfilter_1_1data_1_1_square_crop_abb6485dde249188c27ff3b339ea93067}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!add\+Pair@{add\+Pair}}
+\index{add\+Pair@{add\+Pair}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{add\+Pair()}{addPair()}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data}\& filter\+::data\+::\+Square\+Crop\+::add\+Pair (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cv\+::\+Point $>$ \&}]{left\+Crop,  }\item[{const \hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} \&}]{left\+Image }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left\+Crop} & The list of R\+O\+I(s) to add. A R\+OI is defined by two points (upper left and bottom right corners). Uses Open\+CV cv\+::\+Point \\
+\hline
+{\em left\+Image} & The image from which the R\+O\+I(s) come(s). The image will overwrite the one already in the object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a066e7ca77734e652eed3943b448db2b6}\label{classfilter_1_1data_1_1_square_crop_a066e7ca77734e652eed3943b448db2b6}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!crops@{crops}}
+\index{crops@{crops}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{crops()}{crops()}}
+{\footnotesize\ttfamily std\+::vector$<$cv\+::\+Mat$>$\& filter\+::data\+::\+Square\+Crop\+::crops (\begin{DoxyParamCaption}\item[{bool}]{force\+Refresh = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+\hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} containing the source to challenge the pattern image 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a97b9cd82a00fb0d4a314f95010726344}\label{classfilter_1_1data_1_1_square_crop_a97b9cd82a00fb0d4a314f95010726344}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!get\+Picture@{get\+Picture}}
+\index{get\+Picture@{get\+Picture}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{get\+Picture()}{getPicture()}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} filter\+::data\+::\+Square\+Crop\+::get\+Picture (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+Returns the \hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} object containing the source image where the regions of interest are located 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_ac0a29b6c8ac9a87cb14c8a19a89eb359}\label{classfilter_1_1data_1_1_square_crop_ac0a29b6c8ac9a87cb14c8a19a89eb359}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!get\+Square\+Crop@{get\+Square\+Crop}}
+\index{get\+Square\+Crop@{get\+Square\+Crop}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{get\+Square\+Crop()}{getSquareCrop()}}
+{\footnotesize\ttfamily std\+::vector$<$cv\+::\+Rect$>$ filter\+::data\+::\+Square\+Crop\+::get\+Square\+Crop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+Returns the std\+::vector$<$cv\+::\+Rect$>$ containing all the regions of interest 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a8a0a3376eebb769ac09bd31a9bf12113}\label{classfilter_1_1data_1_1_square_crop_a8a0a3376eebb769ac09bd31a9bf12113}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data}\& filter\+::data\+::\+Square\+Crop\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ int $>$ \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & the R\+O\+I(s) position(s) on the image\+: x, y, width, height \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a8c860c4f607cd352f102345e103d2d2a}\label{classfilter_1_1data_1_1_square_crop_a8c860c4f607cd352f102345e103d2d2a}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data}\& filter\+::data\+::\+Square\+Crop\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cv\+::\+Rect $>$ \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The list of the R\+O\+I(s) to add \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a648729bc989b528bad91ea86154ceee7}\label{classfilter_1_1data_1_1_square_crop_a648729bc989b528bad91ea86154ceee7}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data}\& filter\+::data\+::\+Square\+Crop\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ cv\+::\+Point $>$ \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The list of R\+O\+I(s) to add. A R\+OI is defined by two points (upper left and bottom right corners). Uses Open\+CV cv\+::\+Point \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_abbe28f7fc483ae4ceec244cf9d4da4dc}\label{classfilter_1_1data_1_1_square_crop_abbe28f7fc483ae4ceec244cf9d4da4dc}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data}\& filter\+::data\+::\+Square\+Crop\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{const \hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} \&}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The \hyperlink{classfilter_1_1data_1_1_image_data}{Image\+Data} object to overwrite the current one with \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfilter_1_1data_1_1_square_crop_a44a6de24b7f945d007c294a959a9a576}\label{classfilter_1_1data_1_1_square_crop_a44a6de24b7f945d007c294a959a9a576}} 
+\index{filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!filter\+::data\+::\+Square\+Crop@{filter\+::data\+::\+Square\+Crop}}
+\subsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily \hyperlink{classfilter_1_1data_1_1_i_o_data}{I\+O\+Data}\& filter\+::data\+::\+Square\+Crop\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat}]{left }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The image to overwrite the current one with \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the object 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/filter/data/Square\+Crop.\+h\end{DoxyCompactItemize}
