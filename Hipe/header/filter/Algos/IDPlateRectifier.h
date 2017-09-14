@@ -12,7 +12,7 @@
 
 #include <vector>
 
-#include "filter/Algos/IDPlate/IDPlateTools.h"
+#include "filter/algos/IDPlate/IDPlateTools.h"
 
 namespace filter
 {

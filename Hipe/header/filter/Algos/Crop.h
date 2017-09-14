@@ -11,7 +11,7 @@ using namespace std;
 
 namespace filter
 {
-	namespace Algos
+	namespace algos
 	{
 		/**
 		 * \todo

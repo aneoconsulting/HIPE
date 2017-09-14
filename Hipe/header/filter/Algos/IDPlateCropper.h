@@ -10,7 +10,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/cudaimgproc.hpp>
 
-#include "filter/Algos/IDPlate/IDPlateTools.h"
+#include "filter/algos/IDPlate/IDPlateTools.h"
 
 
 namespace filter

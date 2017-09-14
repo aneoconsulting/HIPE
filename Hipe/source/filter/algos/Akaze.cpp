@@ -1,4 +1,4 @@
-#include <filter/Algos/Akaze.h>
+#include <filter/algos/Akaze.h>
 
 
 namespace filter

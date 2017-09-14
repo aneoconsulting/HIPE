@@ -1,4 +1,4 @@
-#include <filter/Algos/StreamResultFilter.h>
+#include <filter/algos/StreamResultFilter.h>
 #include <boost/proto/transform/arg.hpp>
 
 

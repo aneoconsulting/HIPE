@@ -10,7 +10,7 @@
 
 namespace filter
 {
-	namespace Algos
+	namespace algos
 	{
 		/**
 		 *  \var Canny::blurKernel

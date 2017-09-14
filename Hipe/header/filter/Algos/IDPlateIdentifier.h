@@ -16,12 +16,12 @@
 #include <opencv2/cudaimgproc.hpp>
 #include <opencv2/text.hpp>
 
-#include "filter/Algos/IDPlate/IDPlateTools.h"
+#include "filter/algos/IDPlate/IDPlateTools.h"
 
 
 namespace filter
 {
-	namespace Algos
+	namespace algos
 	{
 		/**
 		 * \brief The IDPlateIdentifier filter will handle the detection of the character of an ID plate then their recognition with machine learning

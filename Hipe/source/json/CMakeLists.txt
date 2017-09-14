@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.7.1)
 
 
-include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 set(Hype_INCLUDEDIR "../../header/")
 
 set(_src_json_path ${CMAKE_CURRENT_SOURCE_DIR})

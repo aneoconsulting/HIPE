@@ -7,7 +7,7 @@
 
 
 namespace filter {
-	namespace Algos {
+	namespace algos {
 		/**
 		 * \brief The RootFilter filter is the head of graph filter. Needed by every graph as a data entry point.
 		 */

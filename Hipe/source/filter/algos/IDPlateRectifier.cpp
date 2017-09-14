@@ -1,4 +1,4 @@
-#include <filter/Algos/IDPlateRectifier.h>
+#include <filter/algos/IDPlateRectifier.h>
 
 
 HipeStatus filter::algos::IDPlateRectifier::process()

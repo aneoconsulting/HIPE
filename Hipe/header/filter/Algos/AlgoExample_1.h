@@ -1,7 +1,7 @@
 #include <filter/IFilter.h>
 
 namespace filter {
-	namespace Algos {
+	namespace algos {
 		class AlgoExample_1 : filter::IFilter
 		{
 		};

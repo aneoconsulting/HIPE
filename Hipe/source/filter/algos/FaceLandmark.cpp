@@ -1,4 +1,4 @@
-#include <filter/Algos/FaceLandmark.h>
+#include <filter/algos/FaceLandmark.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <dlib/image_processing/frontal_face_detector.h>
 

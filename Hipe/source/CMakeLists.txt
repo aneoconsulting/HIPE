@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
 
 
 if (USE_DLIB)

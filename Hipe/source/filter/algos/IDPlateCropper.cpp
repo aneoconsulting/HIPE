@@ -1,4 +1,4 @@
-#include <filter/Algos/IDPlateCropper.h>
+#include <filter/algos/IDPlateCropper.h>
 
 HipeStatus filter::algos::IDPlateCropper::process()
 {

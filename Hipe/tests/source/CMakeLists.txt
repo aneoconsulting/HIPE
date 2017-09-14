@@ -1,10 +1,10 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-include("${CMAKE_SOURCE_DIR}/OwnerConfigPath.cmake")
-include("${CMAKE_SOURCE_DIR}/live_config.cmake")
-include("${CMAKE_SOURCE_DIR}/ffmpeg_config.cmake")
-include("${CMAKE_SOURCE_DIR}/x264_config.cmake")
-include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/x264_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 set(Hype_INCLUDEDIR "../../header/")
 
 set(_src_unit_test_path ${CMAKE_CURRENT_SOURCE_DIR})

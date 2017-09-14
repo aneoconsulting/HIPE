@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.7.1)
 
 
-#include("${CMAKE_SOURCE_DIR}/boost_config.cmake")
-include("${CMAKE_SOURCE_DIR}/ffmpeg_config.cmake")
+#include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 
 
 find_package(OpenCV REQUIRED)

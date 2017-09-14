@@ -1,5 +1,5 @@
-#include <filter/Algos/Cropper.h>
-#include "Algos/Crop.h"
+#include <filter/algos/Cropper.h>
+#include "algos/Crop.h"
 
 namespace filter
 {

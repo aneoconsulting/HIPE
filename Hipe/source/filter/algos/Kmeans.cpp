@@ -1,4 +1,4 @@
-#include <filter/Algos/Kmeans.h>
+#include <filter/algos/Kmeans.h>
 namespace filter
 {
 	namespace algos

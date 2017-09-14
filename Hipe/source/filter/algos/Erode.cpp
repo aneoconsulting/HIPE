@@ -1,4 +1,4 @@
-#include <filter/Algos/Erode.h>
+#include <filter/algos/Erode.h>
 
 int filter::algos::Erode::convertMorphType(const std::string & name)
 {

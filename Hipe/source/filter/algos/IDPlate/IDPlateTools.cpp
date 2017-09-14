@@ -1,4 +1,4 @@
-#include <filter/Algos/IDPlate/IDPlateTools.h>
+#include <filter/algos/IDPlate/IDPlateTools.h>
 
 
 cv::Mat filter::algos::IDPlate::applyBilateralFiltering(const cv::Mat & plateImage, int iterations, int diameter, double sigmaColor, double sigmaSpace, bool debug, bool useGPU)

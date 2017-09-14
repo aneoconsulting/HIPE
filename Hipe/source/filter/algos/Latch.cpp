@@ -1,4 +1,4 @@
-#include <filter/Algos/Latch.h>
+#include <filter/algos/Latch.h>
 
 namespace filter
 {

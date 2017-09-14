@@ -1,6 +1,6 @@
-#include <filter/Algos/IDPlateIdentifier.h>
+#include <filter/algos/IDPlateIdentifier.h>
 
-HipeStatus filter::Algos::IDPlateIdentifier::process()
+HipeStatus filter::algos::IDPlateIdentifier::process()
 {
 	data::ImageData data = _connexData.pop();
 	cv::Mat image = data.getMat();
@@ -42,7 +42,7 @@ HipeStatus filter::Algos::IDPlateIdentifier::process()
 	return OK;
 }
 
-cv::Mat filter::Algos::IDPlateIdentifier::preprocessImage(const cv::Mat & plateImage)
+cv::Mat filter::algos::IDPlateIdentifier::preprocessImage(const cv::Mat & plateImage)
 {
 	cv::Mat image = plateImage.clone();
 
@@ -73,15 +73,15 @@ cv::Mat filter::Algos::IDPlateIdentifier::preprocessImage(const cv::Mat & plateI
 	return image;
 }
 
-cv::Mat filter::Algos::IDPlateIdentifier::cropROI(const cv::Mat& image, const cv::Rect& roi)
+cv::Mat filter::algos::IDPlateIdentifier::cropROI(const cv::Mat& image, const cv::Rect& roi)
 {
 	if (!(roi.x > 0 && roi.x + roi.width <= image.cols - 1) || !(roi.y > 0 && roi.y + roi.height <= image.rows - 1))
-		throw HipeException("[ERROR] filter::Algos::IDPlateIdentifier::cropROI - crop region is out of image bounds");
+		throw HipeException("[ERROR] filter::algos::IDPlateIdentifier::cropROI - crop region is out of image bounds");
 
 	return image(roi).clone();
 }
 
-std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::cropROIs(const cv::Mat& image, const std::vector<cv::Rect>& rois)
+std::vector<cv::Mat> filter::algos::IDPlateIdentifier::cropROIs(const cv::Mat& image, const std::vector<cv::Rect>& rois)
 {
 	std::vector<cv::Mat> output;
 	for (auto & roi : rois)
@@ -92,7 +92,7 @@ std::vector<cv::Mat> filter::Algos::IDPlateIdentifier::cropROIs(const cv::Mat& i
 	return output;
 }
 
-cv::Mat filter::Algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels)
+cv::Mat filter::algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels)
 {
 	cv::Mat output = plateImage.clone();
 
@@ -127,23 +127,23 @@ cv::Mat filter::Algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plat
 	return output;
 }
 
-filter::Algos::LabelOCR::LabelOCR()
+filter::algos::LabelOCR::LabelOCR()
 {
 	init();
 	_debug = 0;
 }
 
-filter::Algos::LabelOCR::LabelOCR(int debugLevel)
+filter::algos::LabelOCR::LabelOCR(int debugLevel)
 	: _debug(debugLevel)
 {
 	init();
 }
 
-filter::Algos::LabelOCR::~LabelOCR()
+filter::algos::LabelOCR::~LabelOCR()
 {
 }
 
-void filter::Algos::LabelOCR::preProcess(const cv::Mat & InputImage, cv::Mat & binImage, int debugLevel)
+void filter::algos::LabelOCR::preProcess(const cv::Mat & InputImage, cv::Mat & binImage, int debugLevel)
 {
 	// Color segmentation
 	cv::Mat midImage = quantizeImage(InputImage, 2);
@@ -157,7 +157,7 @@ void filter::Algos::LabelOCR::preProcess(const cv::Mat & InputImage, cv::Mat & b
 	binImage = binarizeImage(midImageGrayscale);
 }
 
-std::vector<std::string> filter::Algos::LabelOCR::runRecognition(const std::vector<cv::Mat>& labelsImages, int labelType)
+std::vector<std::string> filter::algos::LabelOCR::runRecognition(const std::vector<cv::Mat>& labelsImages, int labelType)
 {
 	std::vector<std::string> output;
 	const int minConfidence = 30;
@@ -182,12 +182,12 @@ std::vector<std::string> filter::Algos::LabelOCR::runRecognition(const std::vect
 	return (output);
 }
 
-void filter::Algos::LabelOCR::init()
+void filter::algos::LabelOCR::init()
 {
 	tesseOCR_ = cv::text::OCRTesseract::create(NULL, "eng", "ABCDEFHIJKLMNOPQRSTUVWXYZ0123456789-Code", 3, 7);
 }
 
-std::string filter::Algos::LabelOCR::runPrediction(const cv::Mat & labelImage, int minConfidence, int imageIndex)
+std::string filter::algos::LabelOCR::runPrediction(const cv::Mat & labelImage, int minConfidence, int imageIndex)
 {
 	cv::Mat image = labelImage.clone();
 
@@ -231,7 +231,7 @@ std::string filter::Algos::LabelOCR::runPrediction(const cv::Mat & labelImage, i
 	return text;
 }
 
-cv::Mat filter::Algos::LabelOCR::quantizeImage(const cv::Mat & image, int clusters, int maxIterations)
+cv::Mat filter::algos::LabelOCR::quantizeImage(const cv::Mat & image, int clusters, int maxIterations)
 {
 	// K-Means Segmentation on pixels values
 	cv::Mat samples(image.rows * image.cols, 3, CV_32F);
@@ -259,7 +259,7 @@ cv::Mat filter::Algos::LabelOCR::quantizeImage(const cv::Mat & image, int cluste
 	return output;
 }
 
-cv::Mat filter::Algos::LabelOCR::binarizeImage(const cv::Mat & image)
+cv::Mat filter::algos::LabelOCR::binarizeImage(const cv::Mat & image)
 {
 	// Output black and white image regarding a threshold
 	cv::Mat output;
@@ -267,7 +267,7 @@ cv::Mat filter::Algos::LabelOCR::binarizeImage(const cv::Mat & image)
 	return output;
 }
 
-cv::Mat filter::Algos::LabelOCR::enlargeCharacter(const cv::Mat & character, int margin)
+cv::Mat filter::algos::LabelOCR::enlargeCharacter(const cv::Mat & character, int margin)
 {
 	// Enlarge character crop
 	// Bigger matrix
