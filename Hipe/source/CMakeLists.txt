@@ -29,7 +29,7 @@ add_subdirectory(core)
 add_subdirectory(filter)
 add_subdirectory(streaming)
 add_subdirectory(http)
-add_subdirectory(hype_server)
+add_subdirectory(hipe_server)
 add_subdirectory(orchestrator)
 add_subdirectory(json)
 #add_subdirectory(ffmpegRecorder)
@@ -47,6 +47,6 @@ add_dependencies(streaming streaming_rtsp)
 add_dependencies(http filter)
 
 add_dependencies(orchestrator core filter http json)
-add_dependencies(hype_server core http orchestrator json streaming)
+add_dependencies(hipe_server core http orchestrator json streaming)
 
 

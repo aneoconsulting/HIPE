@@ -10,7 +10,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/libuv_config.cmake")
 
 find_package(OpenCV REQUIRED)
 
-set(Hype_INCLUDEDIR "../../header/")
+set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_webrtcstreamer_path ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "Get source path = ${_src_webrtcstreamer_path}" ) 
@@ -52,7 +52,7 @@ foreach(_source IN ITEMS ${_header_list})
     source_group("header\\${_group_path}" FILES "${_source}")
 endforeach()
 
-include_directories(webrtcstreamer ${Hype_INCLUDEDIR})
+include_directories(webrtcstreamer ${Hipe_INCLUDEDIR})
 include_directories(webrtcstreamer ${sourcey_INCLUDEDIR})
 include_directories(webrtcstreamer ${webrtc_INCLUDEDIR})
 include_directories(webrtcstreamer ${FFmpeg_INCLUDEDIR})

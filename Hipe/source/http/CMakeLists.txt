@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.7.1)
 
 
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-set(Hype_INCLUDEDIR "../../header/")
+set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_http_path ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "Get source path = ${_src_http_path}" ) 
@@ -26,7 +26,7 @@ file(
 add_library(http STATIC ${_source_list} ${_header_list})
 
 target_compile_definitions(http PRIVATE "-DUSE_BOOST_REGEX" "-DHTTP_BUILD")
-include_directories(http ${Hype_INCLUDEDIR})
+include_directories(http ${Hipe_INCLUDEDIR})
 target_link_libraries(http ${Boost_LIBRARIES})
 target_link_libraries(http ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(http filter)
