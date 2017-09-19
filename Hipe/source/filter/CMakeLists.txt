@@ -40,7 +40,7 @@ if (USE_DLIB)
     
 endif()
 
-set(Hype_INCLUDEDIR "../../header/")
+set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_filter_path ${CMAKE_CURRENT_SOURCE_DIR})
 file(
@@ -111,7 +111,7 @@ find_package( OpenCV REQUIRED )
 #    )
 	
 #INCLUDE_DIRECTORIES(filter ${CUDA_INCLUDE_DIRS})
-include_directories(filter ${Hype_INCLUDEDIR})
+include_directories(filter ${Hipe_INCLUDEDIR})
 include_directories(filter ${OpenCV_INCLUDE_DIRS} )
 include_directories(filter ${Live_INCLUDEDIR} )
 include_directories(filter ${Dlib_INCLUDEDIR} )

@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.7.1)
 
 include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-set(Hype_INCLUDEDIR "../../header/")
+set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_core_path ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "Get source path = ${_src_core_path}" ) 
@@ -34,7 +34,7 @@ endif()
 
 target_compile_definitions(core PRIVATE "-DUSE_BOOST_REGEX" "-DCORE_BUILD" "-DBUILD_VERSION=${BUILD_VERSION}")
 
-include_directories(core ${Hype_INCLUDEDIR})
+include_directories(core ${Hipe_INCLUDEDIR})
 target_link_libraries(core ${Boost_LIBRARIES})
 target_link_libraries(core ${CMAKE_THREAD_LIBS_INIT})
 

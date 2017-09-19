@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.7.1)
 
 
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-set(Hype_INCLUDEDIR "../../header/")
+set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_orchestrator_path ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "Get source path = ${_src_orchestrator_path}" ) 
@@ -26,7 +26,7 @@ file(
 add_library(orchestrator STATIC ${_source_list} ${_header_list})
 
 target_compile_definitions(orchestrator PRIVATE "-DUSE_BOOST_REGEX" "-DORCHESTRATOR_BUILD")
-include_directories(orchestrator ${Hype_INCLUDEDIR})
+include_directories(orchestrator ${Hipe_INCLUDEDIR})
 target_link_libraries(orchestrator ${Boost_LIBRARIES})
 target_link_libraries(orchestrator ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(orchestrator filter)
