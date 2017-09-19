@@ -33,6 +33,10 @@ endif()
 
 ##hipe_server LIBRARY
 add_executable(hipe_server ${_source_list} ${_header_list})
+if(UNIX)
+	set_target_properties(hipe_server PROPERTIES SUFFIX ".bin")
+endif(UNIX)
+
 target_compile_definitions(hipe_server PRIVATE "-DUSE_BOOST_REGEX")
 
 
