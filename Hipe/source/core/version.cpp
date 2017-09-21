@@ -14,3 +14,18 @@ std::string getVersion()
 
 	return stream.str();
 }
+
+std::string getVersionHashed()
+{
+	std::string version = getVersion();
+	std::string versionHashed;
+
+	for (char c : version)
+	{
+		if (isdigit(c))	versionHashed += c;
+	}
+
+	//return std::regex_replace(getVersion(), std::regex(R"([^0-9])"), "");
+	return versionHashed;
+
+}

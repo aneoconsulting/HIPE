@@ -19,10 +19,10 @@ using namespace std;
 
 core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
 
-std::function<bool(std::string, boost::property_tree::ptree *)> kill_command () {
+std::function<bool(std::string, boost::property_tree::ptree *)> kill_command() {
 	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
-		if (optionName.compare("kill") == 0){
+		if (optionName.compare("kill") == 0) {
 			orchestrator::OrchestratorFactory::getInstance()->killall();
 			lptree->add("Status", "Task has been killed");
 			return true;
@@ -73,8 +73,8 @@ std::function<bool(std::string, boost::property_tree::ptree *)> get_filters() {
 	};
 }
 
-std::function<bool(std::string, boost::property_tree::ptree *)> get_version(){
-	return [](std::string optionName, boost::property_tree::ptree *lptree)	
+std::function<bool(std::string, boost::property_tree::ptree *)> get_version() {
+	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
 		const std::string version = "version";
 		if (version.find(optionName) == 0)
@@ -88,16 +88,31 @@ std::function<bool(std::string, boost::property_tree::ptree *)> get_version(){
 	};
 }
 
+std::function<bool(std::string, boost::property_tree::ptree *)> get_versionHashed() {
+	return [](std::string optionName, boost::property_tree::ptree *lptree)
+	{
+		const std::string version = "hash";
+		if (version.find(optionName) == 0)
+		{
+			auto v = getVersionHashed();
+			lptree->add("hash", v);
+
+			return true;
+		}
+		return false;
+	};
+}
+
 void http::HttpTask::runTask()
 {
-	#ifdef USE_GPERFTOOLS
-	static int iteration_leak=0;
+#ifdef USE_GPERFTOOLS
+	static int iteration_leak = 0;
 	HeapLeakChecker heap_checker("HttpTask");
-	#endif
+#endif
 	{
 		try {
 			std::stringstream dataResponse;
-		
+
 			ptree treeRequest;
 			ptree treeResponse;
 			ptree treeResponseInfo;
@@ -109,6 +124,7 @@ void http::HttpTask::runTask()
 				ptree ltreeResponse;
 
 				CommandManager::callOption(command, get_version(), &ltreeResponse);
+				CommandManager::callOption(command, get_versionHashed(), &ltreeResponse);
 				CommandManager::callOption(command, kill_command(), &ltreeResponse);
 				CommandManager::callOption(command, get_filters(), &ltreeResponse);
 				CommandManager::callOption(command, exit_command(), &ltreeResponse);
@@ -159,7 +175,7 @@ void http::HttpTask::runTask()
 			if (treeRequest.count("data") != 0)
 			{
 				filter::data::Data data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
-			
+
 				if (data.getType() == filter::data::IODataType::LISTIO)
 				{
 					filter::data::ListIOData & list_io_data = static_cast<filter::data::ListIOData&>(data);
@@ -172,18 +188,18 @@ void http::HttpTask::runTask()
 
 				//after the process execution Data should be an OutputData type
 				filter::data::OutputData & output_data = static_cast<filter::data::OutputData &>(outputData);
-			
-			
+
+
 				treeResponse.add_child("dataResponse", output_data.resultAsJson());
 			}
 			write_json(dataResponse, treeResponse);
-		
+
 
 			*_response << "HTTP/1.1 200 OK\r\n"
-						<< "Access-Control-Allow-Origin: *\r\n"
-					   << "Content-Type: application/json\r\n"
-					   << "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
-					   << dataResponse.str();
+				<< "Access-Control-Allow-Origin: *\r\n"
+				<< "Content-Type: application/json\r\n"
+				<< "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
+				<< dataResponse.str();
 			HttpTask::logger << "HttpTask response has been sent";
 			HttpTask::logger << dataResponse.str();
 		}
@@ -193,7 +209,7 @@ void http::HttpTask::runTask()
 			std::stringstream dataResponse;
 			write_json(dataResponse, treeResponse);
 			*_response << "HTTP/1.1 200 OK\r\n"
-			<< "Access-Control-Allow-Origin: *\r\n"
+				<< "Access-Control-Allow-Origin: *\r\n"
 				<< "Content-Type: application/json\r\n"
 				<< "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
 				<< dataResponse.str();
@@ -217,7 +233,7 @@ void http::HttpTask::runTask()
 	{
 		if (!heap_checker.NoLeaks()) assert(NULL == "heap memory leak");
 	}
-			
+
 #endif
-	
+
 }
