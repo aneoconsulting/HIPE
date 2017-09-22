@@ -324,10 +324,12 @@ namespace orchestrator
 				{
 					if (filter == nullptr) continue;
 					
-					if (filter->getConstructorName().find("ResultFilter") != std::string::npos)
+					if (filter->getConstructorName().find("OutputRawData") != std::string::npos)
 					{
 						filter::data::ConnexDataBase & outRes = filter->getConnector();
-						outputData = (static_cast<filter::data::DataPort &>(outRes.getPort())).pop();
+						filter::data::OutputData & outData = static_cast<filter::data::OutputData&>(outputData);
+
+						outData = (static_cast<filter::data::DataPort &>(outRes.getPort())).pop();
 						
 					}
 					filter->process();
