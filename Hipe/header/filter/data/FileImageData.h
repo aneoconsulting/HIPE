@@ -5,13 +5,14 @@
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <boost/filesystem/path.hpp>
+#include <core/base64.h>
 
 namespace filter
 {
 	namespace data
 	{
 		/**
-		 * \brief FileImageData is the data type used to handle an image and additonnal information. Uses OpenCV. 
+		 * \brief FileImageData is the data type used to handle an image and additonnal information. Uses OpenCV.
 		 */
 		class FileImageData : public IOData<ImageData, FileImageData>
 		{
@@ -24,7 +25,7 @@ namespace filter
 		private:
 			FileImageData() : IOData(IODataType::IMGF)
 			{
-				
+
 			}
 
 		public:
@@ -52,13 +53,142 @@ namespace filter
 				if (mat.empty())
 				{
 					std::stringstream strbuild;
-					strbuild  << "Cannot open file : " << filePath;
+					strbuild << "Cannot open file : " << filePath;
 
 					throw HipeException(strbuild.str());
 				}
 				This()._array.push_back(mat);
-				
+
 			}
+
+			/**
+			* \brief Constructor with raw data of image
+			* \param data raw data in base64 of the image image
+			*/
+			FileImageData(const std::string & base64Data, const std::string & format, int width, int height, int channels) : IOData(IODataType::IMGF)
+			{
+				// Decode base64
+				const std::string decoded = base64_decode(base64Data);
+				std::vector<uchar> dataDecoded;
+
+				// Create cv::Mat object from received image parameters
+				cv::Mat image = cv::Mat(height, width, CV_8UC3);
+
+				// Handle different data formats
+				// Nothing to do with raw
+				if (format == "RAW")
+				{
+					// Put data from string in array to match OpenCV required data type
+					dataDecoded = std::vector<uchar>(decoded.begin(), decoded.end());
+				}
+				// Uncompressed case
+				else if (format == "JPG" || format == "PNG")
+				{
+					throw HipeException("Compressed images from base64 data not yet handled");
+				}
+				else
+				{
+					throw HipeException("unknown base64 data compression format");
+				}
+
+
+				// Construct FileImageData object
+				Data::registerInstance(new FileImageData());
+				This()._filePath = "RAW";
+				This()._type = IMGF;
+
+				// Handle non continuous matrices (will most probably never occur)
+				int lwidth = width;
+				int lheight = height;
+				if (image.isContinuous())
+				{
+					lwidth *= lheight;
+					lheight = 1;
+				}
+
+				// Don't forget channels!
+				lwidth *= channels;
+
+				// copy data to matrix
+				for (int y = 0; y < lheight; ++y)
+				{
+					uchar* row = image.ptr<uchar>(y);
+					for (int x = 0; x < lwidth; ++x)
+					{
+						row[x] = dataDecoded[y * lwidth + x];
+					}
+				}
+
+				if (image.empty())
+				{
+					throw HipeException("Could not create image from base64 data");
+				}
+
+				This()._array.push_back(image);
+			}
+
+			//FileImageData(const std::string & dataBase64, bool compressed, std::string compressionType) : IOData(IODataType::IMGF)
+			//{
+			//	// Decode base64
+			//	const std::string decoded = base64_decode(dataBase64);
+
+			//	// Extract header infos
+			//	const unsigned int headerLength = 4;
+			//	unsigned int headerParamIdx = 0;
+
+			//	const int width = decoded[headerParamIdx++ * sizeof(int)];
+			//	const int height = decoded[headerParamIdx++ * sizeof(int)];
+			//	const int type = decoded[headerParamIdx++ * sizeof(int)];
+			//	const int channels = decoded[headerParamIdx++ * sizeof(int)];
+
+			//	// Create image from decoded data
+			//	if (compressed)
+			//	{
+			//		throw HipeException("Compressed images from base64 data not yet handled");
+			//	}
+			//	// Uncompressed case
+			//	else
+			//	{
+			//		// Put data from string in array to match OpenCV required data type
+			//		std::vector<uchar> dataDecoded(decoded.begin() + headerParamIdx * sizeof(int), decoded.end());
+
+			//		// Construct FileImageData object
+			//		Data::registerInstance(new FileImageData());
+			//		This()._filePath = "RAW";
+			//		This()._type = IMGF;
+
+			//		// Create cv::Mat object from received image parameters
+			//		cv::Mat image = cv::Mat(height, width, CV_8UC3);
+
+			//		// Handle non continuous matrices (will most probably never occur)
+			//		int lwidth = width;
+			//		int lheight = height;
+			//		if (image.isContinuous())
+			//		{
+			//			lwidth *= lheight;
+			//			lheight = 1;
+			//		}
+
+			//		// Don't forget channels!
+			//		lwidth *= channels;
+
+			//		// copy data to matrix
+			//		for (int y = 0; y < lheight; ++y)
+			//		{
+			//			uchar* row = image.ptr<uchar>(y);
+			//			for (int x = 0; x < lwidth; ++x)
+			//			{
+			//				row[x] = dataDecoded[y * lwidth + x];
+			//			}
+			//		}
+
+			//		if (image.empty())
+			//		{
+			//			throw HipeException("Could not create image from base64 data");
+			//		}
+			//		This()._array.push_back(image);
+			//	}
+			//}
 
 			/**
 			* \brief Copy the image data of the ImageData object to another one.
