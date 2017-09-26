@@ -40,7 +40,7 @@ namespace filter {
 			OutputData& operator=(const Data& left)
 			{
 				if (left.getType() != IODataType::IMGF) throw HipeException("[ERROR] OutputData::operator= - data not of type IMGF");
-				
+
 				if (!_This) { _This.reset(); }
 				Data::registerInstance(new OutputData());
 				_type = IMGF;
@@ -79,16 +79,21 @@ namespace filter {
 					src = m;
 				}
 
-				// Create header
-				int type = m.type();
-				int channels = m.channels();
-				std::vector<uchar> data(4 * sizeof(int));
-				memcpy(&data[0 * sizeof(int)], reinterpret_cast<uchar*>(&src.rows), sizeof(int));
-				memcpy(&data[1 * sizeof(int)], reinterpret_cast<uchar*>(&src.cols), sizeof(int));
-				memcpy(&data[2 * sizeof(int)], reinterpret_cast<uchar*>(&type), sizeof(int));
-				memcpy(&data[3 * sizeof(int)], reinterpret_cast<uchar*>(&channels), sizeof(int));
+				//// Create header
+				//int type = m.type();
+				//int channels = m.channels();
+
+				//std::vector<uchar> data(4 * sizeof(int));
+				//memcpy(&data[0 * sizeof(int)], reinterpret_cast<uchar*>(&src.rows), sizeof(int));
+				//memcpy(&data[1 * sizeof(int)], reinterpret_cast<uchar*>(&src.cols), sizeof(int));
+				//memcpy(&data[2 * sizeof(int)], reinterpret_cast<uchar*>(&type), sizeof(int));
+				//memcpy(&data[3 * sizeof(int)], reinterpret_cast<uchar*>(&channels), sizeof(int));
 
 				// Add image data
+				//data.insert(data.end(), src.datastart, src.dataend);
+
+				//TMI TODO: Optimize
+				std::vector<uchar> data;
 				data.insert(data.end(), src.datastart, src.dataend);
 
 				// Encode
@@ -113,14 +118,32 @@ namespace filter {
 
 				for (auto &input : Array())
 				{
-					std::string type = DataTypeMapper::getStringFromType(This().getType());
+					std::stringstream typeKey;
+					typeKey << "type_" << data_index;
 
-					std::stringstream key;
-					key << "data_" << data_index;
+					std::stringstream dataKey;
+					dataKey << "data_" << data_index;
 
+					std::stringstream widthKey;
+					widthKey << "width_" << data_index;
 
-					outputTree.add<std::string>("type", type);
-					outputTree.add<std::string>(key.str(), mat2str(input));
+					std::stringstream heightKey;
+					heightKey << "height_" << data_index;
+
+					std::stringstream channelsKey;
+					channelsKey << "channels_" << data_index;
+
+					std::stringstream formatKey;
+					formatKey << "format_" << data_index;
+
+					std::string typeValue = DataTypeMapper::getStringFromType(This().getType());
+
+					outputTree.add<std::string>(typeKey.str(), typeValue);
+					outputTree.add<std::string>(formatKey.str(), "RAW");
+					outputTree.add<int>(widthKey.str(), input.cols);
+					outputTree.add<int>(heightKey.str(), input.rows);
+					outputTree.add<int>(channelsKey.str(), input.channels());
+					outputTree.add<std::string>(dataKey.str(), mat2str(input));
 
 					data_index++;
 				}
