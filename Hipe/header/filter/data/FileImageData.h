@@ -69,7 +69,7 @@ namespace filter
 			{
 				// Decode base64
 				const std::string decoded = base64_decode(base64Data);
-				
+
 				// Put data from string in array to match OpenCV required data type
 				std::vector<uchar> dataDecoded = std::vector<uchar>(decoded.begin(), decoded.end());
 
@@ -84,18 +84,18 @@ namespace filter
 					dataDecoded.clear();
 					dataDecoded.insert(dataDecoded.begin(), dataDecodedMat.datastart, dataDecodedMat.dataend);
 				}
-				else if( format == "RAW")
+				else if (format == "RAW")
 				{
 					// For now nothing more to do with RAW format
 				}
-				else 
+				else
 				{
 					throw HipeException("unknown base64 data compression format");
 				}
 
 
 				// Create cv::Mat object from received image parameters
-				cv::Mat image = cv::Mat(height, width, CV_8UC3);
+				cv::Mat image = cv::Mat(height, width, getCV8UTypeFromChannels(channels));
 
 				// Construct FileImageData object
 				Data::registerInstance(new FileImageData());
@@ -157,7 +157,30 @@ namespace filter
 
 				return *this;
 			}
-
+		private:
+			/**
+			 * \brief Get the OpenCV data type corresponding to the image channels count needed to create a cv::Mat object (assuming the data type used is an unsigned char (8U))
+			 * \param channels the image channels count
+			 * \return the OpenCV value corresponding to a CV_8UCX image where x is the number of channels
+			 */
+			int getCV8UTypeFromChannels(int channels)
+			{
+				switch (channels)
+				{
+				case 1:
+					return CV_8UC1;
+				case 2:
+					return CV_8UC2;
+				case 3:
+					return CV_8UC3;
+				case 4:
+					return CV_8UC4;
+				default:
+					std::stringstream errorMessage;
+					errorMessage << "ERROR - filter::data::FileImageData: Channels count (" << channels << ") not handled.";
+					throw HipeException(errorMessage.str());
+				}
+			}
 		};
 	}
 }
