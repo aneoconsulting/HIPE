@@ -219,42 +219,8 @@ namespace filter
 				switch (ioDataType)
 				{
 				case IODataType::IMGF:
-				{
-					// Two cases image from path and base64 raw data
-					//// Raw case
-					//bool shouldThrow = false;
-					//if (filter::data::Composer::checkJsonFieldExist(dataNode, "raw", shouldThrow))
-					//{
-					//	// Is the image compressed ?
-					//	bool compressed = false;
-					//	std::string compression = "none";
-					//	if (filter::data::Composer::checkJsonFieldExist(dataNode, "compressed", shouldThrow))
-					//	{
-					//		compressed = dataNode.get<bool>("compressed");
-					//		// If the image is compressed, what is its compression?
-					//		if (compressed && filter::data::Composer::checkJsonFieldExist(dataNode, "compression", shouldThrow))
-					//		{
-					//			compression = dataNode.get<std::string>("compression");
-					//		}
-					//	}
-
-					//	return loadImageFromRawData(dataNode.get<std::string>("raw"), compressed, compression);
-					//}
-					if (filter::data::Composer::checkJsonFieldExist(dataNode, "data", false))
-					{
-						filter::data::Composer::checkJsonFieldExist(dataNode, "data");
-						filter::data::Composer::checkJsonFieldExist(dataNode, "format");
-						filter::data::Composer::checkJsonFieldExist(dataNode, "channels");
-						filter::data::Composer::checkJsonFieldExist(dataNode, "width");
-						filter::data::Composer::checkJsonFieldExist(dataNode, "height");
-
-
-						return loadImageFromRawData(dataNode.get<std::string>("data"), dataNode.get<std::string>("format"), dataNode.get<int>("width"), dataNode.get<int>("height"), dataNode.get<int>("channels"));
-					}
-					// Path case
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
 					return loadImageFromFile(dataNode.get<std::string>("path"));
-				}
 				case IODataType::VIDF:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
 					return loadVideoFromFile(dataNode);
@@ -268,13 +234,19 @@ namespace filter
 					filter::data::Composer::checkJsonFieldExist(dataNode, "array");
 					return loadListIoData(dataNode);
 				case IODataType::PATTERN:
-
 					filter::data::Composer::checkJsonFieldExist(dataNode, "desc");
 					return loadPatternData(dataNode);
 				case IODataType::SQR_CROP:
-
 					filter::data::Composer::checkJsonFieldExist(dataNode, "IMGF");
 					return loadSquareCrop(dataNode);
+				case IODataType::IMGB64:
+					filter::data::Composer::checkJsonFieldExist(dataNode, "data");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "format");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "channels");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "width");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "height");
+
+					return loadImageFromRawData(dataNode.get<std::string>("data"), dataNode.get<std::string>("format"), dataNode.get<int>("width"), dataNode.get<int>("height"), dataNode.get<int>("channels"));
 				case IODataType::NONE:
 				default:
 					throw HipeException("Cannot found the data type requested");

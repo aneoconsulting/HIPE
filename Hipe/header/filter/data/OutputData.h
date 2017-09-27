@@ -79,22 +79,7 @@ namespace filter {
 					src = m;
 				}
 
-				//// Create header
-				//int type = m.type();
-				//int channels = m.channels();
-
-				//std::vector<uchar> data(4 * sizeof(int));
-				//memcpy(&data[0 * sizeof(int)], reinterpret_cast<uchar*>(&src.rows), sizeof(int));
-				//memcpy(&data[1 * sizeof(int)], reinterpret_cast<uchar*>(&src.cols), sizeof(int));
-				//memcpy(&data[2 * sizeof(int)], reinterpret_cast<uchar*>(&type), sizeof(int));
-				//memcpy(&data[3 * sizeof(int)], reinterpret_cast<uchar*>(&channels), sizeof(int));
-
-				// Add image data
-				//data.insert(data.end(), src.datastart, src.dataend);
-
-				//TMI TODO: Optimize
-				std::vector<uchar> data;
-				data.insert(data.end(), src.datastart, src.dataend);
+				std::vector<uchar> data(src.datastart, src.dataend);
 
 				// Encode
 				return base64_encode(data.data(), data.size());
@@ -105,6 +90,7 @@ namespace filter {
 				boost::property_tree::ptree resultTree;
 				boost::property_tree::ptree outputTree;
 
+				// Case where there's no output data to process
 				if (!_This)
 				{
 					outputTree.add<std::string>("info", "NO Data as response");
@@ -116,8 +102,10 @@ namespace filter {
 
 				int data_index = 0;
 
+				// For each image output its data in base64
 				for (auto &input : Array())
 				{
+					// In addition to the base64 data, we add relevent information to the output
 					std::stringstream typeKey;
 					typeKey << "type_" << data_index;
 

@@ -79,10 +79,12 @@ namespace filter
 					cv::Mat dataDecodedMat(1, dataDecoded.size(), CV_8UC1, dataDecoded.data());
 					dataDecodedMat = cv::imdecode(dataDecodedMat, cv::IMREAD_UNCHANGED);
 
+					if (!dataDecodedMat.data) throw HipeException("filter::data::FileImageData::FileImageData: Couldn't decode base64 image data. Either data is corrupted, or format (" + format + ") is wrong");
+
 					dataDecoded.clear();
 					dataDecoded.insert(dataDecoded.begin(), dataDecodedMat.datastart, dataDecodedMat.dataend);
 				}
-				if( format == "RAW")
+				else if( format == "RAW")
 				{
 					// For now nothing more to do with RAW format
 				}

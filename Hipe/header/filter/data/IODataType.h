@@ -31,6 +31,8 @@ namespace filter
 			PATTERN = 0x5041545445524e,		// Pattern type with crop and data source
 			SQR_CROP = 0x5351525f43524f50,	// Square crop
 
+			IMGB64 = 0x494d47423634,		// Image from base64 data
+
 			TXT = 0x545854,
 			TXT_ARR = 0x5458545f415252,
 			NONE
@@ -56,7 +58,7 @@ namespace filter
 				return dataType;
 			}
 			/**
-			 * \brief 
+			 * \brief
 			 * \param dataType An \see IODataType enum value
 			 * \return The name as an std::string object associated with \see IODataType enum value
 			 */
@@ -168,6 +170,23 @@ namespace filter
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
 				if (typeStr.find("pattern") != std::string::npos)
+					return true;
+
+				return false;
+			}
+
+			/**
+			 * \brief Checks if a data type is a base64 one
+			 * \param dataType The queried data type
+			 * \return Returns true if the queried data type is a base64 one
+			 */
+			static bool isBase64(const IODataType & dataType)
+			{
+				std::string typeStr = getStringFromType(dataType);
+
+				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+
+				if (typeStr.find("base64") != std::string::npos)
 					return true;
 
 				return false;
