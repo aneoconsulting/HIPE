@@ -187,14 +187,10 @@ void http::HttpTask::runTask()
 				orchestrator::OrchestratorFactory::getInstance()->process(json_filter_tree->getName(), data, outputData);
 
 				//after the process execution Data should be an OutputData type
-				//filter::data::OutputData outData;
-				//outData = outputData;
 				filter::data::OutputData & output_data = static_cast<filter::data::OutputData &>(outputData);
 
 
 				treeResponse.add_child("dataResponse", output_data.resultAsJson());
-
-				//treeResponse.add_child("dataResponse", outData.resultAsJson());
 			}
 			write_json(dataResponse, treeResponse);
 
