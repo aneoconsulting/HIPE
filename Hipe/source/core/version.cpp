@@ -16,15 +16,6 @@ std::string getVersion()
 	return stream.str();
 }
 
-std::string getHash()
-{
-	auto version = getVersion();
-	version.erase(std::remove(version.begin(), version.end(), '.'), version.end());
-	version.erase(std::remove(version.begin(), version.end(), '_'), version.end());
-	version.erase(std::remove(version.begin(), version.end(), '-'), version.end());
-	return version;
-}
-
 std::string getVersionHashed()
 {
 	std::string version = getVersion();

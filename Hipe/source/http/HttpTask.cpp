@@ -144,7 +144,7 @@ void http::HttpTask::runTask()
 				commandFound |= CommandManager::callOption(command, kill_command(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, get_filters(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, exit_command(), &ltreeResponse);
-				commandFound |= CommandManager::callOption(command, get_hash_version(), &ltreeResponse);
+				commandFound |= CommandManager::callOption(command, get_versionHashed(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, get_commands_help(), &ltreeResponse);
 				if(!commandFound)
 				{
