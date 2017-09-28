@@ -3,7 +3,6 @@
 #include <sstream>  
 #include <algorithm>
 
-
 std::string getVersion()
 {
 	std::stringstream stream;
@@ -16,6 +15,7 @@ std::string getVersion()
 	return stream.str();
 }
 
+<<<<<<< HEAD
 std::string getHash()
 {
 	auto version = getVersion();
@@ -24,7 +24,7 @@ std::string getHash()
 	version.erase(std::remove(version.begin(), version.end(), '-'), version.end());
 	return version;
 }
-
+=======
 std::string getVersionHashed()
 {
 	std::string version = getVersion();
@@ -39,3 +39,4 @@ std::string getVersionHashed()
 	return versionHashed;
 
 }
+>>>>>>> aed235d42cd0fcd711aa0264a9d6478df9284763

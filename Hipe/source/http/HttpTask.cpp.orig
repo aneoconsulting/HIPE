@@ -88,14 +88,23 @@ std::function<bool(std::string, boost::property_tree::ptree *)> get_version() {
 	};
 }
 
+<<<<<<< HEAD
+std::function<bool(std::string, boost::property_tree::ptree *)> get_hash_version() {
+=======
 std::function<bool(std::string, boost::property_tree::ptree *)> get_versionHashed() {
+>>>>>>> aed235d42cd0fcd711aa0264a9d6478df9284763
 	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
 		const std::string version = "hash";
 		if (version.find(optionName) == 0)
 		{
+<<<<<<< HEAD
+			auto v = getHash();
+			lptree->add("HashVersion", v);
+=======
 			auto v = getVersionHashed();
 			lptree->add("hash", v);
+>>>>>>> aed235d42cd0fcd711aa0264a9d6478df9284763
 
 			return true;
 		}
@@ -103,6 +112,7 @@ std::function<bool(std::string, boost::property_tree::ptree *)> get_versionHashe
 	};
 }
 
+<<<<<<< HEAD
 std::function<bool(std::string, boost::property_tree::ptree*)> get_commands_help() {
 
 	return [](std::string OptionName, boost::property_tree::ptree* lptree)
@@ -120,6 +130,8 @@ std::function<bool(std::string, boost::property_tree::ptree*)> get_commands_help
 	};
 }
 
+=======
+>>>>>>> aed235d42cd0fcd711aa0264a9d6478df9284763
 void http::HttpTask::runTask()
 {
 #ifdef USE_GPERFTOOLS
@@ -140,6 +152,7 @@ void http::HttpTask::runTask()
 				auto command = treeRequest.get_child("command").get<std::string>("type");
 				ptree ltreeResponse;
 
+<<<<<<< HEAD
 				auto commandFound = CommandManager::callOption(command, get_version(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, kill_command(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, get_filters(), &ltreeResponse);
@@ -150,6 +163,14 @@ void http::HttpTask::runTask()
 				{
 					ltreeResponse.add(command, " command not found");
 				}
+=======
+				CommandManager::callOption(command, get_version(), &ltreeResponse);
+				CommandManager::callOption(command, get_versionHashed(), &ltreeResponse);
+				CommandManager::callOption(command, kill_command(), &ltreeResponse);
+				CommandManager::callOption(command, get_filters(), &ltreeResponse);
+				CommandManager::callOption(command, exit_command(), &ltreeResponse);
+
+>>>>>>> aed235d42cd0fcd711aa0264a9d6478df9284763
 				stringstream ldataResponse;
 				write_json(ldataResponse, ltreeResponse);
 				*_response << "HTTP/1.1 200 OK\r\n"

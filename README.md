@@ -9,7 +9,7 @@
 [12]: #-project-building
 [121]: #-windows
 [122]: #-linux
-[13]: #-environment-configuration
+[13]: #-set-up-your-environment
 [131]: #-windows-1
 [132]: #-linux-1
 [2]: #-how-to-use-hipe
@@ -176,7 +176,7 @@ If you want to use Visual Studio’s debug path, you can add them by completing 
 
 Assuming you start with an empty PATH variable you will end up with a value similar to the following one:
 ```
-"PATH=%HipeExternal%/win64/boost_1_62_0/lib64-msvc-14.0;%HipeExternal%/win64/opencv/x64/vc14/bin;%HipeExternal%/win64/intel64_win/bin;%HipeExternal%/win64/ffmpeg/bin;%HipeExternal%/win64/gstreamer/1.0/x86_64/bin;%HipeExternal%/win64/liblept/bin;%HipeExternal%/win64/hdf5/bin;C:/NVIDIA/CUDA/v8.0/Toolkit/bin;%PATH%"
+PATH=%HipeExternal%/win64/boost_1_62_0/lib64-msvc-14.0;%HipeExternal%/win64/opencv/x64/vc14/bin;%HipeExternal%/win64/intel64_win/bin;%HipeExternal%/win64/ffmpeg/bin;%HipeExternal%/win64/gstreamer/1.0/x86_64/bin;%HipeExternal%/win64/liblept/bin;%HipeExternal%/win64/hdf5/bin;C:/NVIDIA/CUDA/v8.0/Toolkit/bin;%PATH%
 ```
 
 **Note:** ``%HipeExternal%`` is not set by default. You must either replace it by the location where you extracted the HipeExternal package or set it manually in your system.    

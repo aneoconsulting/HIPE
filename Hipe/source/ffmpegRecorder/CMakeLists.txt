@@ -7,7 +7,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 
 find_package(OpenCV REQUIRED)
 
-set(Hype_INCLUDEDIR "../../header/")
+set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_ffmpegRecorder_path ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "Get source path = ${_src_ffmpegRecorder_path}" ) 
@@ -49,7 +49,7 @@ foreach(_source IN ITEMS ${_header_list})
     source_group("header\\${_group_path}" FILES "${_source}")
 endforeach()
 
-include_directories(ffmpegRecorder ${Hype_INCLUDEDIR})
+include_directories(ffmpegRecorder ${Hipe_INCLUDEDIR})
 include_directories(ffmpegRecorder ${FFmpeg_INCLUDEDIR})
 include_directories(ffmpegRecorder ${OpenCV_INCLUDE_DIRS} )
 include_directories(ffmpegRecorder ${_src_ffmpegRecorder_inc_path})

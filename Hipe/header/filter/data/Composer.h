@@ -30,10 +30,10 @@ namespace filter
 		public:
 			/**
 			 * \brief [TODO]
-			 * \tparam T 
-			 * \param pt 
-			 * \param key 
-			 * \return 
+			 * \tparam T
+			 * \param pt
+			 * \param key
+			 * \return
 			 */
 			template <typename T>
 			static std::vector<T> as_vector(boost::property_tree::ptree const& pt, boost::property_tree::ptree::key_type const& key)
@@ -44,22 +44,27 @@ namespace filter
 				return r;
 			}
 
+			//TMI
 			/**
 			 * \brief Checks if a json node contains a certain key
 			 * \param jsonNode The node to query
 			 * \param key The key to find
 			 */
-			static inline void checkJsonFieldExist(const boost::property_tree::ptree& jsonNode, std::string key)
+			static inline bool checkJsonFieldExist(const boost::property_tree::ptree& jsonNode, std::string key, bool throwException = true)
 			{
 				if (jsonNode.count(key) == 0)
 				{
-					throw HipeException("Cannot find field json request. Requested field is : " + key);
+					if (throwException) throw HipeException("Cannot find field json request. Requested field is : " + key);
+
+					return false;
 				}
+
+				return true;
 			}
 
 			/**
 			 * [TODO]
-			 * \brief Wrapper function to load an image, from its path, as a FileImageData object. 
+			 * \brief Wrapper function to load an image, from its path, as a FileImageData object.
 			 * \param strPath The path to the image
 			 * \return the loaded image in a FileImage object (casted to the type Data)
 			 */
@@ -69,8 +74,22 @@ namespace filter
 			}
 
 			/**
+			 * \todo
 			 * [TODO]
-			 * \brief Wrapper function to load multiples image, from the path to their directory, as a DirectoryImgData object. 
+			 * \brief Wrapper function to load an image, from its base64 raw data, as a FileImageData object.
+			 * \param rawData the raw data of the image in base64 format. The first part must be a header containg information on the properties of the image
+			 * \param compressed is the image compressed (like in jpg)?
+			 * \param compression the format used to compress the image (like jpg)
+			 * \return the loaded image in a FileImage object (casted to the type Data)
+			 */
+			static Data loadImageFromRawData(const std::string & rawData, const std::string & format, int width, int height, int channels)
+			{
+				return static_cast<Data>(FileImageData(rawData, format, width, height, channels));
+			}
+
+			/**
+			 * [TODO]
+			 * \brief Wrapper function to load multiples image, from the path to their directory, as a DirectoryImgData object.
 			 * \param strPath The images' directory's path
 			 * \return the loaded images in a DirectoryImgData object (casted to the type Data)
 			 */
@@ -78,6 +97,8 @@ namespace filter
 			{
 				return static_cast<Data>(DirectoryImgData(strPath));
 			}
+
+
 
 			/**
 			 * [TODO]
@@ -98,7 +119,7 @@ namespace filter
 
 			/**
 			 * [TODO]
-			 * \brief Wrapper function to open a stream, from its uri, as a StreamVideoInput object 
+			 * \brief Wrapper function to open a stream, from its uri, as a StreamVideoInput object
 			 * \param path the uri to the stream
 			 * \return The opened stream in a StreamVideoInput object (casted to the type Data)
 			 */
@@ -106,7 +127,7 @@ namespace filter
 			{
 				return static_cast<Data>(StreamVideoInput(path));
 			}
-			 
+
 			/**
 			 * [TODO]
 			 * \brief Wrapper function to load a list of data (LISTIO) as a ListIOData object
@@ -116,16 +137,16 @@ namespace filter
 			static Data loadListIoData(const boost::property_tree::ptree& dataNode)
 			{
 				std::vector<Data> res;
-				
+
 				auto child = dataNode.get_child("array");
 				for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 				{
 					auto iodata = getDataFromComposer(itarray->second);
 					res.push_back(iodata);
 				}
-							
+
 				return static_cast<Data>(ListIOData(res));
-				
+
 			}
 
 			/**
@@ -141,7 +162,7 @@ namespace filter
 				for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 				{
 					const std::string dataType = itarray->first;
-					
+
 					auto data = getDataFromComposer(dataType, itarray->second);
 
 					res.push_back(data);
@@ -161,11 +182,11 @@ namespace filter
 			{
 				std::vector<Data> res;
 				std::vector<int> pts;
-				
+
 				auto pcitureJson = cropTree.get_child("IMGF");
 				Data data_from_composer = getDataFromComposer("IMGF", pcitureJson);
 				ImageData picture(static_cast<const ImageData &>(data_from_composer));
-				
+
 
 				if (cropTree.count("crop") != 0)
 				{
@@ -184,7 +205,7 @@ namespace filter
 				return squareCrop;
 			}
 
-			
+
 			/**
 			 * [TODO]
 			 * \brief Extract the data from a json tree node and load it to its corresponding type
@@ -213,13 +234,19 @@ namespace filter
 					filter::data::Composer::checkJsonFieldExist(dataNode, "array");
 					return loadListIoData(dataNode);
 				case IODataType::PATTERN:
-					
 					filter::data::Composer::checkJsonFieldExist(dataNode, "desc");
 					return loadPatternData(dataNode);
 				case IODataType::SQR_CROP:
-					
 					filter::data::Composer::checkJsonFieldExist(dataNode, "IMGF");
 					return loadSquareCrop(dataNode);
+				case IODataType::IMGB64:
+					filter::data::Composer::checkJsonFieldExist(dataNode, "data");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "format");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "channels");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "width");
+					filter::data::Composer::checkJsonFieldExist(dataNode, "height");
+
+					return loadImageFromRawData(dataNode.get<std::string>("data"), dataNode.get<std::string>("format"), dataNode.get<int>("width"), dataNode.get<int>("height"), dataNode.get<int>("channels"));
 				case IODataType::NONE:
 				default:
 					throw HipeException("Cannot found the data type requested");
@@ -239,7 +266,6 @@ namespace filter
 
 				return getDataFromComposer(datatype, dataNode);
 			}
-
 		};
 	}
 }

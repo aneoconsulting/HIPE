@@ -5,7 +5,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 
-set(Hype_INCLUDEDIR "../../header/")
+set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_streaming_rtsp_path ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "Get source path = ${_src_streaming_rtsp_path}" ) 
@@ -62,10 +62,10 @@ foreach(_source IN ITEMS ${_header_list})
     source_group("header\\${_group_path}" FILES "${_source}")
 endforeach()
 
-include_directories(streaming_rtsp ${Hype_INCLUDEDIR})
+include_directories(streaming_rtsp ${Hipe_INCLUDEDIR})
 include_directories(streaming_rtsp ${OpenCV_INCLUDE_DIRS} )
 include_directories(streaming_rtsp ${FFmpeg_INCLUDEDIR} )
-include_directories(hype_server ${Live_INCLUDEDIR})
+include_directories(hipe_server ${Live_INCLUDEDIR})
 include_directories(streaming_rtsp ${_src_streaming_rtsp_inc_path})
 
 

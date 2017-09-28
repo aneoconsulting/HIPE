@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.7.1)
 
 
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-set(Hype_INCLUDEDIR "../../header/")
+set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_json_path ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "Get source path = ${_src_json_path}" ) 
@@ -26,7 +26,7 @@ file(
 add_library(json STATIC ${_source_list} ${_header_list})
 
 target_compile_definitions(json PRIVATE "-DUSE_BOOST_REGEX" "-DJSON_BUILD")
-include_directories(json ${Hype_INCLUDEDIR})
+include_directories(json ${Hipe_INCLUDEDIR})
 target_link_libraries(json ${Boost_LIBRARIES})
 target_link_libraries(json ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(json filter)
