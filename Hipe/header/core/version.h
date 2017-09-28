@@ -16,4 +16,5 @@
 #include <string>
 #include <core/core_export.h>
 
-std::string getVersion();
+std::string getVersion(); 
+std::string getHash();

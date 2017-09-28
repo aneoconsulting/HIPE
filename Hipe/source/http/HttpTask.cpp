@@ -88,6 +88,38 @@ std::function<bool(std::string, boost::property_tree::ptree *)> get_version(){
 	};
 }
 
+std::function<bool(std::string, boost::property_tree::ptree *)> get_hash_version() {
+	return [](std::string optionName, boost::property_tree::ptree *lptree)
+	{
+		const std::string version = "hash";
+		if (version.find(optionName) == 0)
+		{
+			auto v = getHash();
+			lptree->add("HashVersion", v);
+
+			return true;
+		}
+		return false;
+	};
+}
+
+std::function<bool(std::string, boost::property_tree::ptree*)> get_commands_help() {
+
+	return [](std::string OptionName, boost::property_tree::ptree* lptree)
+	{
+		const std::string help = "Help";
+		if (help.find(OptionName)==0) {
+			lptree->add("Version", " returns the running app version number");
+			lptree->add("Hash",    " returns the running app hashed version number ");
+			lptree->add("exit",    " stop the request");
+			lptree->add("kill",    " kills the current request");
+			lptree->add("filters", " get all existing filters in the current version");
+			return true;
+		}
+		return false;
+	};
+}
+
 void http::HttpTask::runTask()
 {
 	#ifdef USE_GPERFTOOLS
@@ -108,11 +140,16 @@ void http::HttpTask::runTask()
 				auto command = treeRequest.get_child("command").get<std::string>("type");
 				ptree ltreeResponse;
 
-				CommandManager::callOption(command, get_version(), &ltreeResponse);
-				CommandManager::callOption(command, kill_command(), &ltreeResponse);
-				CommandManager::callOption(command, get_filters(), &ltreeResponse);
-				CommandManager::callOption(command, exit_command(), &ltreeResponse);
-
+				auto commandFound = CommandManager::callOption(command, get_version(), &ltreeResponse);
+				commandFound |= CommandManager::callOption(command, kill_command(), &ltreeResponse);
+				commandFound |= CommandManager::callOption(command, get_filters(), &ltreeResponse);
+				commandFound |= CommandManager::callOption(command, exit_command(), &ltreeResponse);
+				commandFound |= CommandManager::callOption(command, get_hash_version(), &ltreeResponse);
+				commandFound |= CommandManager::callOption(command, get_commands_help(), &ltreeResponse);
+				if(!commandFound)
+				{
+					ltreeResponse.add(command, " command not found");
+				}
 				stringstream ldataResponse;
 				write_json(ldataResponse, ltreeResponse);
 				*_response << "HTTP/1.1 200 OK\r\n"
