@@ -11,11 +11,11 @@ namespace filter
 		/**
 		 * \brief The OutputRawData filter will output the data comming from an image in base64
 		 */
-		class OutputRawData : public filter::IFilter
+		class OutputRawDataFilter : public filter::IFilter
 		{
 			CONNECTOR_OUT(data::OutputData);
 
-			REGISTER(OutputRawData, ())
+			REGISTER(OutputRawDataFilter, ())
 			{
 
 			}
@@ -38,6 +38,6 @@ namespace filter
 
 		};
 
-		ADD_CLASS(OutputRawData, unused);
+		ADD_CLASS(OutputRawDataFilter, unused);
 	}
 }

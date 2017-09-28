@@ -15,11 +15,11 @@ namespace filter
 		/**
 		 * \brief The OutputRawData filter will output the data comming from an image in base64
 		 */
-		class OutputRawDataCompressed : public filter::IFilter
+		class OutputRawDataEncodedFilter : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
 
-			REGISTER(OutputRawDataCompressed, ()), _connexData(data::INOUT)
+			REGISTER(OutputRawDataEncodedFilter, ()), _connexData(data::INOUT)
 			{
 				type = "";
 				quality = -1;
@@ -137,6 +137,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(OutputRawDataCompressed, type, quality);
+		ADD_CLASS(OutputRawDataEncodedFilter, type, quality);
 	}
 }
