@@ -14,11 +14,11 @@ namespace filter
 {
 	namespace algos
 	{
-		class SaveImage : public IFilter
+		class OutputImage : public IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
 
-			REGISTER(SaveImage, ()), _connexData(data::INOUT)
+			REGISTER(OutputImage, ()), _connexData(data::INOUT)
 			{
 				path = "";
 				filename = "";
@@ -45,15 +45,13 @@ namespace filter
 				time_t currTime = std::time(nullptr);
 				time = std::localtime(&currTime);
 
-				std::ostringstream oss;
-				oss << std::put_time(time, "%d%m%Y_%H%M%S");
-				std::string date = oss.str();
+				// Full filename
+				std::ostringstream completeFilename;
+				completeFilename << path << std::put_time(time, "%d%m%Y_%H%M%S") << "_" << filename << "." << extension;
 
-				// Get full filename
-				std::string completeFilename = path + date + "_" + filename + "." + extension;
-
+				
 				// Write image
-				if(!cv::imwrite(completeFilename, image))
+				if(!cv::imwrite(completeFilename.str(), image))
 				{
 					throw HipeException("[ERROR]: SaveImage::process - Couldn't write image to file. Check path, extension and quality flag.");
 				}
@@ -61,6 +59,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(SaveImage, path, filename, extension);
+		ADD_CLASS(OutputImage, path, filename, extension);
 	}
 }

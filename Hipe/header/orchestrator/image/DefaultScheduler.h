@@ -327,9 +327,9 @@ namespace orchestrator
 					if (filter->getConstructorName().find("OutputRawDataFilter") != std::string::npos)
 					{
 						filter::data::ConnexDataBase & outRes = filter->getConnector();
-						filter::data::OutputData & outData = static_cast<filter::data::OutputData&>(outputData);
-
-						outData = (static_cast<filter::data::DataPort &>(outRes.getPort())).pop();
+						filter::data::OutputData outData;
+						outData = static_cast<filter::data::DataPort &>(outRes.getPort()).pop();
+						outputData = outData;
 						
 					}
 					filter->process();

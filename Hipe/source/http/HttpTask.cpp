@@ -108,7 +108,7 @@ std::function<bool(std::string, boost::property_tree::ptree*)> get_commands_help
 	return [](std::string OptionName, boost::property_tree::ptree* lptree)
 	{
 		const std::string help = "Help";
-		if (help.find(OptionName)==0) {
+		if (help.find(OptionName) == 0) {
 			lptree->add("Version", " returns the running app version number");
 			lptree->add("Hash",    " returns the running app hashed version number ");
 			lptree->add("exit",    " stop the request");
@@ -208,10 +208,14 @@ void http::HttpTask::runTask()
 				orchestrator::OrchestratorFactory::getInstance()->process(json_filter_tree->getName(), data, outputData);
 
 				//after the process execution Data should be an OutputData type
-				filter::data::OutputData & output_data = static_cast<filter::data::OutputData &>(outputData);
+				if (outputData.getType() == filter::data::IMGB64)
+				{
+					filter::data::OutputData output_data;
+					output_data = outputData;;
 
 
-				treeResponse.add_child("dataResponse", output_data.resultAsJson());
+					treeResponse.add_child("dataResponse", output_data.resultAsJson());
+				}
 			}
 			write_json(dataResponse, treeResponse);
 
