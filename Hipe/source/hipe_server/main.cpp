@@ -14,9 +14,12 @@
 #include <core/Logger.h>
 #include "core/version.h"
 
+#include <hipe_server/Configuration.h>
+
 using namespace std;
 //Added for the json-example:
 using namespace boost::property_tree;
+
 
 typedef http::Client<http::HTTP> HttpClient;
 
@@ -24,25 +27,28 @@ typedef http::Client<http::HTTP> HttpClient;
 void default_resource_send(const http::HttpServer &server, const shared_ptr<http::Response<http::HTTP>> &response,
 	const shared_ptr<ifstream> &ifs);
 
-int main() {
+int main(int argc, char* argv[]) {
 	core::Logger::init();
-
 	core::Logger llogger = core::setClassNameAttribute("Main");
-	
+
+	// Default values and command line configuration
+	hipe_server::Configuration config;
+	if (config.setConfigFromCommandLine(argc, argv) == 1)
+		return 0;
+
+
 	llogger << core::Logger::Level::info << "Hello Hipe";
 	llogger << core::Logger::Level::info << "Version : " << getVersion();
-
 
 	//HTTP-server at port 8080 using 1 thread
 	//Unless you do more heavy non-threaded processing in the resources,
 	//1 thread is usually faster than several threads
-	//HttpServer server(8080, 1);
-	http::HttpServer server(9090, 1);
+	http::HttpServer server(config.configuration.port, 1);
 
 	orchestrator::OrchestratorFactory::start_orchestrator();
 
 	std::thread thread;
-	int port = http::start_http_server(9090, server, thread);
+	int port = http::start_http_server(config.configuration.port, server, thread);
 
 	//Add resources using path-regex and method-string, and an anonymous function
 	//POST-example for the path /string, responds the posted string
@@ -72,7 +78,7 @@ int main() {
 
 			ptree pairs = pt.get_child("filter");
 			string name = pt.get<string>("firstName") + " " + pt.get<string>("lastName") + " " + pairs.get<string>("name");
-			
+
 
 			*response << "HTTP/1.1 200 OK\r\n"
 				<< "Content-Type: application/json\r\n"
@@ -189,7 +195,7 @@ void default_resource_send(const http::HttpServer &server, const shared_ptr<http
 	//read and send 128 KB at a time
 	static vector<char> buffer(131072); // Safe when server is running on one thread
 	streamsize read_length;
-	if ((read_length = ifs->read(&buffer[0], buffer.size()).gcount())>0) {
+	if ((read_length = ifs->read(&buffer[0], buffer.size()).gcount()) > 0) {
 		response->write(&buffer[0], read_length);
 		if (read_length == static_cast<streamsize>(buffer.size())) {
 			server.send(response, [&server, response, ifs](const boost::system::error_code &ec) {

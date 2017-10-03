@@ -28,7 +28,7 @@ namespace http {
 		Server(unsigned short port, size_t num_threads = 1, long timeout_request = 5, long timeout_content = 300) :
 			ServerBase<HTTP>::ServerBase(port, num_threads, timeout_request, timeout_content)
 		{
-			logger << "Start Http Server on port";
+			logger << "Start Http Server on port " + std::to_string(port);
 		}
 		
 
