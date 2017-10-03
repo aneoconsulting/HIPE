@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <core/base64.h>
 #include <filter/data/ImageArrayData.h>
+#include "ImageEncodedData.h"
 
 namespace filter {
 	namespace data {
@@ -13,10 +14,11 @@ namespace filter {
 		 * \todo
 		 * \brief [TODO]
 		 */
-		class OutputData : public IOData<ImageArrayData, OutputData>
+		class OutputData : public IOData<Data, OutputData>
 		{
 			std::string result;
-
+			Data input;
+			//std::shared_ptr<Data> input;
 		public:
 			std::string getResult() const
 			{
@@ -29,7 +31,7 @@ namespace filter {
 			}
 
 
-			OutputData() : IOData(IODataType::IMGF)
+			OutputData() : IOData(IODataType::IMGB64)
 			{
 			}
 
@@ -39,13 +41,24 @@ namespace filter {
 
 			OutputData& operator=(const Data& left)
 			{
-				if (left.getType() != IODataType::IMGF) throw HipeException("[ERROR] OutputData::operator= - data not of type IMGF");
+				if (left.getType() == IODataType::IMGB64)
+				{
+					IOData::operator=(left);
 
-				if (!_This) { _This.reset(); }
+					return *this;
+				}
+
+				if (left.getType() != IODataType::IMGF && left.getType() != IODataType::IMGENC) throw HipeException("[ERROR] OutputData::operator= - data not of type IMGF");
+
+				if (_This)
+				{
+					_This.reset();
+				}
+
 				Data::registerInstance(new OutputData());
-				_type = IMGF;
 				_decorate = true;
-				This()._array = (static_cast<const ImageArrayData &>((left)).This_const().Array_const());
+				input = left;
+				This().input = left;
 
 				return *this;
 			}
@@ -97,13 +110,20 @@ namespace filter {
 					resultTree.add_child("DataResult", outputTree);
 					return resultTree;
 				}
-
+				if (This().input.getType() != IMGF && This().input.getType() != IMGENC)
+				{
+					outputTree.add<std::string>("ERROR", "Previous filter give wrong data type");
+					resultTree.add_child("DataResult", outputTree);
+					return resultTree;
+				}
 				This().result.clear();
 
 				int data_index = 0;
 
 				// For each image output its data in base64
-				for (auto &input : Array())
+				ImageArrayData & imgdata = static_cast<ImageArrayData &>(This().input);
+
+				for (auto &mat : imgdata.This_const().Array_const())
 				{
 					// In addition to the base64 data, we add relevent information to the output
 					std::stringstream typeKey;
@@ -127,11 +147,26 @@ namespace filter {
 					std::string typeValue = DataTypeMapper::getStringFromType(This().getType());
 
 					outputTree.add<std::string>(typeKey.str(), typeValue);
-					outputTree.add<std::string>(formatKey.str(), "RAW");
-					outputTree.add<int>(widthKey.str(), input.cols);
-					outputTree.add<int>(heightKey.str(), input.rows);
-					outputTree.add<int>(channelsKey.str(), input.channels());
-					outputTree.add<std::string>(dataKey.str(), mat2str(input));
+
+					if (imgdata.getType() == IMGF)
+					{
+						outputTree.add<std::string>(formatKey.str(), "RAW");
+						outputTree.add<int>(widthKey.str(), mat.cols);
+						outputTree.add<int>(heightKey.str(), mat.rows);
+						outputTree.add<int>(channelsKey.str(), mat.channels());
+
+					}
+					else if (imgdata.getType() == IMGENC)
+					{
+						ImageEncodedData & imgEncData = static_cast<ImageEncodedData&>(This().input);
+
+						outputTree.add<std::string>(formatKey.str(), imgEncData.getCompression());
+						outputTree.add<int>(widthKey.str(), imgEncData.getWidth());
+						outputTree.add<int>(heightKey.str(), imgEncData.getHeight());
+						outputTree.add<int>(channelsKey.str(), imgEncData.getChannelsCount());
+					}
+
+					outputTree.add<std::string>(dataKey.str(), mat2str(mat));
 
 					data_index++;
 				}
@@ -147,10 +182,9 @@ namespace filter {
 			{
 				if (IOData::getType() != left.getType())
 					throw HipeException("Cannot left argument in a ImageData");
-				if (left.Array_const().size() > 1)
-					throw HipeException("Number of images inside the source doesn't correspond to a ImageData");
 
-				ImageArrayData::copyTo(static_cast<ImageArrayData &>(left));
+
+				left.This().input = This_const().input;
 			}
 
 		};

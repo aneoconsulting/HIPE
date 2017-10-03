@@ -32,6 +32,7 @@ namespace filter
 			SQR_CROP = 0x5351525f43524f50,	// Square crop
 
 			IMGB64 = 0x494d47423634,		// Image from base64 data
+			IMGENC = 0x494d474544415441,	// Image encoded (jpg, png...) data
 
 			TXT = 0x545854,
 			TXT_ARR = 0x5458545f415252,
