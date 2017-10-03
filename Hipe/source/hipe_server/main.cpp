@@ -16,8 +16,6 @@
 
 #include <hipe_server/Configuration.h>
 
-#include <direct.h>
-
 using namespace std;
 //Added for the json-example:
 using namespace boost::property_tree;
@@ -35,7 +33,7 @@ int main(int argc, char* argv[]) {
 
 	// Default values configuration file and command line configuration
 	hipe_server::Configuration config;
-	//config.setConfigFromFile("C:/workspace/hipe-group/hipe-issues/Hipe/build/target/Debug/config.json");
+	config.setConfigFromFile("./config.json");
 	if (config.setConfigFromCommandLine(argc, argv) == 1)
 		return 0;
 
