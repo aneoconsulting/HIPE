@@ -1,7 +1,8 @@
 #include <hipe_server/Configuration.h>
-//#include <boost/property_tree/ptree.hpp>
-//#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 #include <boost/program_options.hpp>
+#include <core/HipeException.h>
 
 
 namespace bpo = boost::program_options;
@@ -20,13 +21,13 @@ namespace hipe_server
 		this->port = 8080;
 	}
 
-	Configuration::Configuration() /*: configFilePath("UNNASSIGNED")*/
+	Configuration::Configuration()
 	{
 	}
 
-	//Configuration::Configuration(const std::string& configFilePath) : configFilePath(configFilePath)
-	//{
-	//}
+	Configuration::Configuration(const std::string& configFilePath) : configFilePath(configFilePath)
+	{
+	}
 
 	int Configuration::setConfigFromCommandLine(int argc, char* argv[])
 	{
@@ -39,7 +40,7 @@ namespace hipe_server
 		// Configuration
 		bpo::options_description configCat("Configuration");
 		configCat.add_options()
-			("port,p", bpo::value<unsigned short>(&this->configuration.port)->default_value(8080), "Sets the port the server should be listening on")
+			("port,p", bpo::value<unsigned short>(&this->configuration.port)->default_value(this->configuration.port), "Sets the port the server should be listening on")
 			;
 
 		// Regroup all sub catagories
@@ -79,49 +80,65 @@ namespace hipe_server
 
 			return 1;
 		}
+		return 0;
+	}
 
-		configLogger << "port set to " + std::to_string(this->configuration.port);
+	int Configuration::setConfigFromFile()
+	{
+		boost::property_tree::ptree configPtree;
+		try
+		{
+			boost::property_tree::read_json(this->configFilePath, configPtree);
+		}
+		catch (const std::exception& e)
+		{
+			this->configLogger << "Couldn't find configuration file.";
+			return 1;
+		}
+
+
+		if (configPtree.count("http") != 0)
+		{
+			auto httpNode = configPtree.get_child("http");
+			configuration.port = getValue<unsigned short>(httpNode, "port");
+		}
 
 		return 0;
 	}
 
+	int Configuration::setConfigFromFile(const std::string& filePath)
+	{
+		this->configFilePath = filePath;
+		return setConfigFromFile();
+	}
 
-	//std::string Configuration::getConfigFilePath()
-	//{
-	//	return this->configFilePath;
-	//}
-
-	//std::string Configuration::getConfigFileName()
-	//{
-	//	std::size_t pos = this->configFilePath.find_last_of("/\\");
-	//	return configFilePath.substr(pos + 1);
-	//}
-
-	//std::string Configuration::getConfigFileDir()
-	//{
-	//	std::size_t pos = this->configFilePath.find_last_of("/\\");
-	//	return configFilePath.substr(0, pos);
-	//}
+	void Configuration::displayConfig() const
+	{
+		configLogger << "port set to " + std::to_string(this->configuration.port);
+	}
 
 
-	//void Configuration::updateConfiguration()
-	//{
-	//	boost::property_tree::ptree ptree;
-	//	boost::property_tree::read_json(filePath, ptree);
-	//
-	//	if (ptree.count("http") != 0)
-	//	{
-	//		auto httpNode = ptree.get_child("http");
-	//		configuration.port = getValue<int>(httpNode, "port");
-	//
-	//	}
-	//	std::cout << "test" << std::endl;
-	//}
+	std::string Configuration::getConfigFilePath() const
+	{
+		return this->configFilePath;
+	}
 
-	//template <class T>
-	//T Configuration::getValue(boost::property_tree::ptree node, std::string elem)
-	//{
-	//	if (node.count(elem) != 0) return node.get<T>(elem);
-	//	return T();
-	//}
+	std::string Configuration::getConfigFileName() const
+	{
+		std::size_t pos = this->configFilePath.find_last_of("/\\");
+		return configFilePath.substr(pos + 1);
+	}
+
+	std::string Configuration::getConfigFileDir() const
+	{
+		std::size_t pos = this->configFilePath.find_last_of("/\\");
+		return configFilePath.substr(0, pos);
+	}
+
+	template <class T>
+	T Configuration::getValue(boost::property_tree::ptree node, std::string elem) const
+	{
+		if (node.count(elem) != 0) return node.get<T>(elem);
+		return T();
+	}
 }

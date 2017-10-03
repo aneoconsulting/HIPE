@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 #include <core/Logger.h>
+#include <boost/property_tree/ptree_fwd.hpp>
+
 namespace hipe_server
 {
 	class ConfigurationParameters
@@ -22,32 +24,34 @@ namespace hipe_server
 	class Configuration
 	{
 	public:
-		static core::Logger configLogger;
-
 		ConfigurationParameters configuration;
 
 
 	private:
-		//std::string configFilePath;
+		std::string configFilePath;
+		static core::Logger configLogger;
 
 
 	public:
 		Configuration();
-		//Configuration(const std::string& configFilePath);
+		Configuration(const std::string& configFilePath);
 
 		int setConfigFromCommandLine(int argc, char* argv[]);
 
+		int setConfigFromFile();
+		int setConfigFromFile(const std::string & filePath);
 
-		//std::string getConfigFilePath();
-		//std::string getConfigFileName();
-		//std::string getConfigFileDir();
+		void displayConfig() const;
+
+		std::string getConfigFilePath() const;
+		std::string getConfigFileName() const;
+		std::string getConfigFileDir() const;
 
 
 	private:
 
-
-		//void updateConfiguration();
-		//template<class T>
-		//T getValue(boost::property_tree::ptree node, std::string elem);
+		void updateConfiguration();
+		template<class T>
+		T getValue(boost::property_tree::ptree node, std::string elem) const;
 	};
 }

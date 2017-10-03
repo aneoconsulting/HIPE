@@ -16,6 +16,8 @@
 
 #include <hipe_server/Configuration.h>
 
+#include <direct.h>
+
 using namespace std;
 //Added for the json-example:
 using namespace boost::property_tree;
@@ -31,11 +33,13 @@ int main(int argc, char* argv[]) {
 	core::Logger::init();
 	core::Logger llogger = core::setClassNameAttribute("Main");
 
-	// Default values and command line configuration
+	// Default values configuration file and command line configuration
 	hipe_server::Configuration config;
+	//config.setConfigFromFile("C:/workspace/hipe-group/hipe-issues/Hipe/build/target/Debug/config.json");
 	if (config.setConfigFromCommandLine(argc, argv) == 1)
 		return 0;
 
+	config.displayConfig();
 
 	llogger << core::Logger::Level::info << "Hello Hipe";
 	llogger << core::Logger::Level::info << "Version : " << getVersion();
