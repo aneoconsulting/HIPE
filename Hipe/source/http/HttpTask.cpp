@@ -22,7 +22,7 @@ core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
 std::function<bool(std::string, boost::property_tree::ptree *)> kill_command() {
 	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
-		if (optionName.compare("kill") == 0) {
+		if (optionName.compare("Kill") == 0) {
 			orchestrator::OrchestratorFactory::getInstance()->killall();
 			lptree->add("Status", "Task has been killed");
 			return true;
@@ -34,7 +34,7 @@ std::function<bool(std::string, boost::property_tree::ptree *)> kill_command() {
 std::function<bool(std::string, boost::property_tree::ptree *)>  exit_command() {
 	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
-		const std::string exit = "exit";
+		const std::string exit = "Exit";
 		if (exit.find(optionName) == 0)
 		{
 			orchestrator::OrchestratorFactory::getInstance()->killall();
@@ -49,7 +49,7 @@ std::function<bool(std::string, boost::property_tree::ptree *)>  exit_command() 
 std::function<bool(std::string, boost::property_tree::ptree *)> get_filters() {
 	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
-		const std::string filters = "filters";
+		const std::string filters = "Filters";
 		int i = 0;
 		if (filters.find(optionName) == 0)
 		{
@@ -76,7 +76,7 @@ std::function<bool(std::string, boost::property_tree::ptree *)> get_filters() {
 std::function<bool(std::string, boost::property_tree::ptree *)> get_version() {
 	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
-		const std::string version = "version";
+		const std::string version = "Version";
 		if (version.find(optionName) == 0)
 		{
 			auto v = getVersion();
@@ -91,11 +91,11 @@ std::function<bool(std::string, boost::property_tree::ptree *)> get_version() {
 std::function<bool(std::string, boost::property_tree::ptree *)> get_versionHashed() {
 	return [](std::string optionName, boost::property_tree::ptree *lptree)
 	{
-		const std::string version = "hash";
+		const std::string version = "Hash";
 		if (version.find(optionName) == 0)
 		{
 			auto v = getVersionHashed();
-			lptree->add("hash", v);
+			lptree->add("Hash", v);
 
 			return true;
 		}
@@ -111,9 +111,9 @@ std::function<bool(std::string, boost::property_tree::ptree*)> get_commands_help
 		if (help.find(OptionName) == 0) {
 			lptree->add("Version", " returns the running app version number");
 			lptree->add("Hash",    " returns the running app hashed version number ");
-			lptree->add("exit",    " stop the request");
-			lptree->add("kill",    " kills the current request");
-			lptree->add("filters", " get all existing filters in the current version");
+			lptree->add("Exit",    " stop the request");
+			lptree->add("Kill",    " kills the current request");
+			lptree->add("Filters", " get all existing filters in the current version");
 			return true;
 		}
 		return false;
