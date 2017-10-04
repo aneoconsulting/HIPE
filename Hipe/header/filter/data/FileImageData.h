@@ -78,6 +78,10 @@ namespace filter
 				{
 					cv::Mat dataDecodedMat(1, dataDecoded.size(), CV_8UC1, dataDecoded.data());
 					dataDecodedMat = cv::imdecode(dataDecodedMat, cv::IMREAD_UNCHANGED);
+					
+					width = dataDecodedMat.cols;
+					height = dataDecodedMat.rows;
+					channels = dataDecodedMat.channels();
 
 					if (!dataDecodedMat.data) throw HipeException("filter::data::FileImageData::FileImageData: Couldn't decode base64 image data. Either data is corrupted, or format (" + format + ") is wrong");
 
