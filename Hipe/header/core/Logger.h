@@ -58,10 +58,7 @@ namespace core
 		}
 
 		static void init();
-	
-	
 		
 	};
-
 	Logger setClassNameAttribute(const std::string& classNameIn);
 }

@@ -8,6 +8,7 @@
 #include <core/HipeException.h>
 #include <http/CommandManager.h>
 #include <core/version.h>
+#include "JsonTree.h"
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
 #include <assert.h>
@@ -120,7 +121,7 @@ std::function<bool(std::string, boost::property_tree::ptree*)> get_commands_help
 	};
 }
 
-void http::HttpTask::runTask()
+void http::HttpTask::runTask() const
 {
 #ifdef USE_GPERFTOOLS
 	static int iteration_leak = 0;
@@ -129,17 +130,16 @@ void http::HttpTask::runTask()
 	{
 		try {
 			std::stringstream dataResponse;
-
-			ptree treeRequest;
-			ptree treeResponse;
-			ptree treeResponseInfo;
-
-			read_json(_request->content, treeRequest);
-			if (treeRequest.count("command") != 0)
+			auto treeRequest = new JsonTree;
+			//ptree treeRequest;
+			auto treeResponse = new JsonTree;
+			auto treeResponseInfo = new JsonTree;
+			//treeRequest->read_json(static_cast<basic_istream<char>>(_request->content));
+			read_json(_request->content, treeRequest->get_json_ptree());
+			if (treeRequest->count("command") != 0)
 			{
-				auto command = treeRequest.get_child("command").get<std::string>("type");
+				auto command = treeRequest->get_child("command").get("type");
 				ptree ltreeResponse;
-
 				auto commandFound = CommandManager::callOption(command, get_version(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, kill_command(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, get_filters(), &ltreeResponse);
@@ -148,6 +148,8 @@ void http::HttpTask::runTask()
 				commandFound |= CommandManager::callOption(command, get_commands_help(), &ltreeResponse);
 				if(!commandFound)
 				{
+					logger << "command "<< command <<" not found", command;
+
 					ltreeResponse.add(command, " command not found");
 				}
 				stringstream ldataResponse;
@@ -159,7 +161,6 @@ void http::HttpTask::runTask()
 					<< ldataResponse.str();
 				logger << "HttpTask response has been sent";
 				HttpTask::logger << ldataResponse.str();
-
 				if (command.find("exit") != std::string::npos)
 				{
 					exit(0);
@@ -169,13 +170,13 @@ void http::HttpTask::runTask()
 			}
 
 			HttpTask::logger << "Check if algorithm need to be built";
-			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);
-			treeResponseInfo.add("Algorithm", dataResponse.str());
+			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest->get_json_ptree());
+			treeResponseInfo->Add("Algorithm", dataResponse.str());
 			dataResponse.str(std::string());
 
 			HttpTask::logger << "Check if orchestrator need to be built";
-			auto orchestrator = json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest);
-			treeResponseInfo.add("Orchestrator", dataResponse.str());
+			auto orchestrator = json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest->get_json_ptree());
+			treeResponseInfo->Add("Orchestrator", dataResponse.str());
 			dataResponse.str(std::string());
 
 			stringstream strlog;
@@ -185,17 +186,17 @@ void http::HttpTask::runTask()
 			HttpTask::logger << strlog.str();
 
 			orchestrator::OrchestratorFactory::getInstance()->bindModel(json_filter_tree->getName(), orchestrator);
-			treeResponseInfo.add("Binding", "OK");
-			treeResponse.add_child("Status", treeResponseInfo);
+			treeResponseInfo->Add("Binding", "OK");
+			treeResponse->AddChild("Status", *treeResponseInfo);
 
 			std::stringstream status;
-			write_json(status, treeResponseInfo);
+			write_json(status, treeResponseInfo->get_json_ptree());
 			HttpTask::logger << "Response info :\n" << status.str();
 
 			//Check if data is present
-			if (treeRequest.count("data") != 0)
+			if (treeRequest->count("data") != 0)
 			{
-				filter::data::Data data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
+				filter::data::Data data = filter::data::Composer::getDataFromComposer(treeRequest->get_child("data").get_json_ptree());
 
 				if (data.getType() == filter::data::IODataType::LISTIO)
 				{
@@ -212,12 +213,12 @@ void http::HttpTask::runTask()
 				{
 					filter::data::OutputData output_data;
 					output_data = outputData;;
+					auto outpd = output_data.resultAsJson();
 
-
-					treeResponse.add_child("dataResponse", output_data.resultAsJson());
+					treeResponse->AddChild("dataResponse",outpd);
 				}
 			}
-			write_json(dataResponse, treeResponse);
+			write_json(dataResponse, treeResponse->get_json_ptree());
 
 
 			*_response << "HTTP/1.1 200 OK\r\n"
