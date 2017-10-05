@@ -56,7 +56,15 @@ namespace http
 		return jsonPtree;
 	}
 
+	json::JsonFilterTree *JsonTree::builAlgorithme(std::stringstream &stream)
+	{
+		return json::JsonBuilder::buildAlgorithm(stream, jsonPtree);
+	}
 
+	std::string JsonTree::getOrBuildOrchestrator(std::stringstream &stream)
+	{
+		return json::JsonBuilder::getOrBuildOrchestrator(stream, jsonPtree);
+	}
 	JsonTree::JsonTree(boost::property_tree::ptree ptree)
 	{
 		jsonPtree = ptree;

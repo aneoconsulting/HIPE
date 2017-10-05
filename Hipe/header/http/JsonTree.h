@@ -2,6 +2,8 @@
 #include <http/AbstractJsonTree.h>
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <json/JsonFilterNode/JsonFilterTree.h>
+#include <json/JsonBuilder.h>
 
 namespace http
 {
@@ -21,6 +23,8 @@ namespace http
 		///Add top layer for ptree method...
 		std::string get(std::string path);
 		boost::property_tree::ptree &get_json_ptree();
+		json::JsonFilterTree *builAlgorithme(std::stringstream &stream);
+		std::string getOrBuildOrchestrator(std::stringstream &stream);
 	private:
 		JsonTree(boost::property_tree::ptree ptree);
 	};

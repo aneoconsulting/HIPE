@@ -170,12 +170,12 @@ void http::HttpTask::runTask() const
 			}
 
 			HttpTask::logger << "Check if algorithm need to be built";
-			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest->get_json_ptree());
+			auto json_filter_tree = treeRequest->builAlgorithme(dataResponse);//json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest->get_json_ptree());
 			treeResponseInfo->Add("Algorithm", dataResponse.str());
 			dataResponse.str(std::string());
 
 			HttpTask::logger << "Check if orchestrator need to be built";
-			auto orchestrator = json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest->get_json_ptree());
+			auto orchestrator = treeRequest->getOrBuildOrchestrator(dataResponse);//json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest->get_json_ptree());
 			treeResponseInfo->Add("Orchestrator", dataResponse.str());
 			dataResponse.str(std::string());
 
