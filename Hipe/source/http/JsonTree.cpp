@@ -1,6 +1,6 @@
 #include <http/JsonTree.h>
 
-	
+
 namespace http
 {
 	JsonTree::JsonTree()
@@ -82,16 +82,6 @@ namespace http
 	boost::property_tree::ptree& JsonTree::get_json_ptree()
 	{
 		return jsonPtree;
-	}
-
-	json::JsonFilterTree *JsonTree::builAlgorithme(std::stringstream &stream)
-	{
-		return json::JsonBuilder::buildAlgorithm(stream, jsonPtree);
-	}
-
-	std::string JsonTree::getOrBuildOrchestrator(std::stringstream &stream)
-	{
-		return json::JsonBuilder::getOrBuildOrchestrator(stream, jsonPtree);
 	}
 
 	JsonTree& JsonTree::put(std::string key, std::string value)
