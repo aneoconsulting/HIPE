@@ -66,16 +66,16 @@ namespace http
 		return jsonPtree.end();
 	}
 
-	std::string JsonTree::get(std::string path)
+	std::string JsonTree::get(std::string path) const
 	{
 		return jsonPtree.get<std::string>(path);
 	}
 
-	bool JsonTree::getBool(std::string path) 
+	bool JsonTree::getBool(std::string path) const
 	{
 		return jsonPtree.get<bool>(path);
 	}
-	bool JsonTree::getInt(std::string path)
+	bool JsonTree::getInt(std::string path) const
 	{
 		return jsonPtree.get<int>(path);
 	}
