@@ -18,6 +18,7 @@ namespace http
 		JsonTree();
 		virtual ~JsonTree();
 		JsonTree & Add(std::string key, std::string value) ;
+		JsonTree & AddInt(std::string key, int value) ;
 		JsonTree & AddChild(std::string key, JsonTree & value) ;
 		JsonTree & AddChild(std::string key, boost::property_tree::ptree & value) ;
 		void read_json(std::istream stream);

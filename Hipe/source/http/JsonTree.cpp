@@ -17,6 +17,12 @@ namespace http
 		return *this;
 	}
 
+	JsonTree& JsonTree::AddInt(std::string key, int value)
+	{
+		jsonPtree.add<int>(key, value);
+		return *this;
+	}
+
 	JsonTree& JsonTree::AddChild(std::string key, JsonTree& value)
 	{
 		jsonPtree.add_child(key, value.jsonPtree);

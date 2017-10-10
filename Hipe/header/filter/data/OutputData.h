@@ -1,12 +1,11 @@
 #pragma once
 
 #include <filter/data/IOData.h>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
 #include <opencv2/opencv.hpp>
 #include <core/base64.h>
 #include <filter/data/ImageArrayData.h>
 #include "ImageEncodedData.h"
+#include <http/JsonTree.h>
 
 namespace filter {
 	namespace data {
@@ -98,22 +97,22 @@ namespace filter {
 				return base64_encode(data.data(), data.size());
 			}
 
-			boost::property_tree::ptree resultAsJson()
+			http::JsonTree resultAsJson()
 			{
-				boost::property_tree::ptree resultTree;
-				boost::property_tree::ptree outputTree;
+				http::JsonTree resultTree;
+				http::JsonTree outputTree;
 
 				// Case where there's no output data to process
 				if (!_This)
 				{
-					outputTree.add<std::string>("info", "NO Data as response");
-					resultTree.add_child("DataResult", outputTree);
+					outputTree.Add("info", "NO Data as response");
+					resultTree.AddChild("DataResult", outputTree);
 					return resultTree;
 				}
 				if (This().input.getType() != IMGF && This().input.getType() != IMGENC)
 				{
-					outputTree.add<std::string>("ERROR", "Previous filter give wrong data type");
-					resultTree.add_child("DataResult", outputTree);
+					outputTree.Add("ERROR", "Previous filter give wrong data type");
+					resultTree.AddChild("DataResult", outputTree);
 					return resultTree;
 				}
 				This().result.clear();
@@ -122,7 +121,6 @@ namespace filter {
 
 				// For each image output its data in base64
 				ImageArrayData & imgdata = static_cast<ImageArrayData &>(This().input);
-
 				for (auto &mat : imgdata.This_const().Array_const())
 				{
 					// In addition to the base64 data, we add relevent information to the output
@@ -146,36 +144,31 @@ namespace filter {
 
 					std::string typeValue = DataTypeMapper::getStringFromType(This().getType());
 
-					outputTree.add<std::string>(typeKey.str(), typeValue);
+					outputTree.Add(typeKey.str(), typeValue);
 
 					if (imgdata.getType() == IMGF)
 					{
-						outputTree.add<std::string>(formatKey.str(), "RAW");
-						outputTree.add<int>(widthKey.str(), mat.cols);
-						outputTree.add<int>(heightKey.str(), mat.rows);
-						outputTree.add<int>(channelsKey.str(), mat.channels());
-
+						outputTree.Add(formatKey.str(), "RAW");
+						outputTree.AddInt(widthKey.str(), mat.cols);
+						outputTree.AddInt(heightKey.str(), mat.rows);
+						outputTree.AddInt(channelsKey.str(), mat.channels());
 					}
 					else if (imgdata.getType() == IMGENC)
 					{
 						ImageEncodedData & imgEncData = static_cast<ImageEncodedData&>(This().input);
-
-						outputTree.add<std::string>(formatKey.str(), imgEncData.getCompression());
-						outputTree.add<int>(widthKey.str(), imgEncData.getWidth());
-						outputTree.add<int>(heightKey.str(), imgEncData.getHeight());
-						outputTree.add<int>(channelsKey.str(), imgEncData.getChannelsCount());
+						outputTree.Add(formatKey.str(), imgEncData.getCompression());
+						outputTree.AddInt(widthKey.str(), imgEncData.getWidth());
+						outputTree.AddInt(heightKey.str(), imgEncData.getHeight());
+						outputTree.AddInt(channelsKey.str(), imgEncData.getChannelsCount());
 					}
 
-					outputTree.add<std::string>(dataKey.str(), mat2str(mat));
-
+					outputTree.Add(dataKey.str(), mat2str(mat));
 					data_index++;
 				}
 
 				std::stringstream output;
-
-				resultTree.add_child("DataResult", outputTree);
-
-				return resultTree;
+				resultTree.AddChild("DataResult", outputTree);
+			    return resultTree;
 			}
 
 			virtual void copyTo(OutputData& left) const
