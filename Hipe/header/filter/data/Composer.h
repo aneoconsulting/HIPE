@@ -234,13 +234,23 @@ namespace filter
 					filter::data::Composer::checkJsonFieldExist(dataNode, "IMGF");
 					return loadSquareCrop(dataNode);
 				case IODataType::IMGB64:
+				{
 					filter::data::Composer::checkJsonFieldExist(dataNode, "data");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "format");
-					filter::data::Composer::checkJsonFieldExist(dataNode, "channels");
-					filter::data::Composer::checkJsonFieldExist(dataNode, "width");
-					filter::data::Composer::checkJsonFieldExist(dataNode, "height");
+					std::string format = dataNode.get<std::string>("format");
+					std::transform(format.begin(), format.end(), format.begin(), ::toupper);
+					
+					// width, height, and channels are stored in encoded data
+					if (!(format == "JPG" || format == "PNG"))
+					{
+						filter::data::Composer::checkJsonFieldExist(dataNode, "channels");
+						filter::data::Composer::checkJsonFieldExist(dataNode, "width");
+						filter::data::Composer::checkJsonFieldExist(dataNode, "height");
 
 					return loadImageFromRawData(dataNode.get("data"), dataNode.get("format"), dataNode.getInt("width"), dataNode.getInt("height"), dataNode.getInt("channels"));
+					}
+					return loadImageFromRawData(dataNode.get<std::string>("data"), dataNode.get<std::string>("format"), 0, 0, 0);
+				}
 				case IODataType::NONE:
 				default:
 					throw HipeException("Cannot found the data type requested");

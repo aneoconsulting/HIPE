@@ -23,7 +23,7 @@ core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
 std::function<bool(std::string, http::JsonTree *)> kill_command() {
 	return [](std::string optionName, http::JsonTree *lptree)
 	{
-		if (optionName.compare("kill") == 0) {
+		if (optionName.compare("Kill") == 0) {
 			orchestrator::OrchestratorFactory::getInstance()->killall();
 			lptree->Add("Status", "Task has been killed");
 			return true;
@@ -35,7 +35,7 @@ std::function<bool(std::string, http::JsonTree *)> kill_command() {
 std::function<bool(std::string, http::JsonTree *)>  exit_command() {
 	return [](std::string optionName, http::JsonTree *lptree)
 	{
-		const std::string exit = "exit";
+		const std::string exit = "Exit";
 		if (exit.find(optionName) == 0)
 		{
 			orchestrator::OrchestratorFactory::getInstance()->killall();
@@ -50,7 +50,7 @@ std::function<bool(std::string, http::JsonTree *)>  exit_command() {
 std::function<bool(std::string, http::JsonTree *)> get_filters() {
 	return [](std::string optionName, http::JsonTree *lptree)
 	{
-		const std::string filters = "filters";
+		const std::string filters = "Filters";
 		int i = 0;
 		if (filters.find(optionName) == 0)
 		{
@@ -77,7 +77,7 @@ std::function<bool(std::string, http::JsonTree *)> get_filters() {
 std::function<bool(std::string, http::JsonTree *)> get_version() {
 	return [](std::string optionName, http::JsonTree *lptree)
 	{
-		const std::string version = "version";
+		const std::string version = "Version";
 		if (version.find(optionName) == 0)
 		{
 			auto v = getVersion();
@@ -92,11 +92,12 @@ std::function<bool(std::string, http::JsonTree *)> get_version() {
 std::function<bool(std::string, http::JsonTree *)> get_versionHashed() {
 	return [](std::string optionName, http::JsonTree *lptree)
 	{
-		const std::string version = "hash";
+		const std::string version = "Hash";
 		if (version.find(optionName) == 0)
 		{
 			auto v = getVersionHashed();
 			lptree->Add("hash", v);
+			lptree->add("Hash", v);
 
 			return true;
 		}
