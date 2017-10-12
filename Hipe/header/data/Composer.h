@@ -134,44 +134,14 @@ namespace filter
 			 * \param the data node from the json request tree to query containing all the data
 			 * \return the loaded data in a ListIOData object (casted to the type Data)
 			 */
-			static Data loadListIoData(const boost::property_tree::ptree& dataNode)
-			{
-				std::vector<Data> res;
-
-				auto child = dataNode.get_child("array");
-				for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
-				{
-					auto iodata = getDataFromComposer(itarray->second);
-					res.push_back(iodata);
-				}
-
-				return static_cast<Data>(ListIOData(res));
-
-			}
-
+			static Data loadListIoData(const boost::property_tree::ptree& dataNode);
 			/**
 			 * [TODO]
 			 * \brief Wrapper function to load the data from a pattern (PATTERN) as a PatternData object
 			 * \param dataNode The data node from the json request tree to query containing all the data
 			 * \return the loaded data in a PatternData oject (casted to the type Data)
 			 */
-			static Data loadPatternData(const boost::property_tree::ptree& dataNode)
-			{
-				std::vector<Data> res;
-				auto child = dataNode.get_child("desc");
-				for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
-				{
-					const std::string dataType = itarray->first;
-
-					auto data = getDataFromComposer(dataType, itarray->second);
-
-					res.push_back(data);
-				}
-				data::PatternData pattern(res);
-
-				return static_cast<Data>(pattern);
-			}
-
+			static Data loadPatternData(const boost::property_tree::ptree& dataNode);
 			/**
 			 * [TODO]
 			 * \brief Wrapper function to load the data from a [TODO] as a SquareCrop object
@@ -269,13 +239,8 @@ namespace filter
 			 * \param dataNode The node to query
 			 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 			 */
-			static Data getDataFromComposer(const boost::property_tree::ptree& dataNode)
-			{
-				filter::data::Composer::checkJsonFieldExist(dataNode, "type");
-				auto datatype = dataNode.get<std::string>("type");
-
-				return getDataFromComposer(datatype, dataNode);
-			}
+			static Data getDataFromComposer(const boost::property_tree::ptree& dataNode);
+			
 		};
 	}
 }
