@@ -96,9 +96,7 @@ std::function<bool(std::string, http::JsonTree *)> get_versionHashed() {
 		if (version.find(optionName) == 0)
 		{
 			auto v = getVersionHashed();
-			lptree->Add("hash", v);
-			lptree->add("Hash", v);
-
+			lptree->Add("Hash", v);
 			return true;
 		}
 		return false;
@@ -113,9 +111,9 @@ std::function<bool(std::string, http::JsonTree *)> get_commands_help() {
 		if (help.find(OptionName) == 0) {
 			lptree->Add("Version", " returns the running app version number");
 			lptree->Add("Hash",    " returns the running app hashed version number ");
-			lptree->Add("exit",    " stop the request");
-			lptree->Add("kill",    " kills the current request");
-			lptree->Add("filters", " get all existing filters in the current version");
+			lptree->Add("Exit",    " stop the request");
+			lptree->Add("Kill",    " kills the current request");
+			lptree->Add("Filters", " get all existing filters in the current version");
 			return true;
 		}
 		return false;

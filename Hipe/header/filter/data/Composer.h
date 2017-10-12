@@ -237,7 +237,7 @@ namespace filter
 				{
 					filter::data::Composer::checkJsonFieldExist(dataNode, "data");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "format");
-					std::string format = dataNode.get<std::string>("format");
+					std::string format = dataNode.get("format");
 					std::transform(format.begin(), format.end(), format.begin(), ::toupper);
 					
 					// width, height, and channels are stored in encoded data
@@ -249,7 +249,7 @@ namespace filter
 
 					return loadImageFromRawData(dataNode.get("data"), dataNode.get("format"), dataNode.getInt("width"), dataNode.getInt("height"), dataNode.getInt("channels"));
 					}
-					return loadImageFromRawData(dataNode.get<std::string>("data"), dataNode.get<std::string>("format"), 0, 0, 0);
+					return loadImageFromRawData(dataNode.get("data"), dataNode.get("format"), 0, 0, 0);
 				}
 				case IODataType::NONE:
 				default:
