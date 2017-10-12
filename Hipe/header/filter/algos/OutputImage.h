@@ -4,7 +4,7 @@
 #include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
 
-#include <filter/data/ImageData.h>
+#include <data/ImageData.h>
 
 #include <iomanip>
 #include <ctime>

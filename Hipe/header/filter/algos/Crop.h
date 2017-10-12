@@ -1,8 +1,8 @@
 #pragma once
 #include <filter/IFilter.h>
 #include <filter/tools/RegisterClass.h>
-#include <filter/data/ImageData.h>
-#include <filter/data/ImageArrayData.h>
+#include <data/ImageData.h>
+#include <data/ImageArrayData.h>
 #include <core/HipeStatus.h>
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"

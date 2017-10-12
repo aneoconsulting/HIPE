@@ -26,24 +26,23 @@ if(UNIX)
 endif()
 
 add_subdirectory(core)
+add_subdirectory(data)
 add_subdirectory(filter)
 add_subdirectory(streaming)
 add_subdirectory(http)
 add_subdirectory(hipe_server)
 add_subdirectory(orchestrator)
 add_subdirectory(json)
-#add_subdirectory(ffmpegRecorder)
 add_subdirectory(streaming_rtsp)
 
-#add_subdirectory(webrtcrecorder)
-#add_subdirectory(webrtcstreamer)
+
 
 
 add_dependencies(filter core)
 add_dependencies(filter streaming)
+add_dependencies(filter data)
 add_dependencies(streaming streaming_rtsp)
-#add_dependencies(streaming webrtcrecorder)
-#add_dependencies(streaming webrtcstreamer)
+
 add_dependencies(http filter)
 
 add_dependencies(orchestrator core filter http json)

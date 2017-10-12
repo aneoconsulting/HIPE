@@ -6,7 +6,7 @@
 #include <core/HipeException.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-#include <filter/data/PatternData.h>
+#include <data/PatternData.h>
 
 
 namespace filter

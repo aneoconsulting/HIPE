@@ -1,4 +1,4 @@
-#include <filter/data/ImageArrayData.h>
+#include <data/ImageArrayData.h>
 #include <boost/log/utility/setup/file.hpp>
 
 namespace filter {

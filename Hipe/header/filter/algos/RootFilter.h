@@ -3,7 +3,7 @@
 #include <filter/IFilter.h>
 #include <filter/tools/RegisterTable.h>
 #include <core/HipeException.h>
-#include <filter/data/ConnexData.h>
+#include <data/ConnexData.h>
 
 
 namespace filter {

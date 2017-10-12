@@ -1,4 +1,6 @@
-#include <filter/data/StreamVideoInput.h>
+#include <data/StreamVideoInput.h>
+#include <opencv2/core/cvdef.h>
+#include <data/IOData.h>
 
 namespace filter
 {

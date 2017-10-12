@@ -3,8 +3,8 @@
 #include <core/HipeException.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-#include <filter/data/ImageData.h>
-#include <filter/data/SquareCrop.h>
+#include <data/ImageData.h>
+#include <data/SquareCrop.h>
 
 
 namespace filter

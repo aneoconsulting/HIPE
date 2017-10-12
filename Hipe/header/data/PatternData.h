@@ -1,12 +1,12 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/mat.hpp>
-#include <filter/data/IODataType.h>
-#include <filter/data/IOData.h>
-#include <filter/data/ListIOData.h>
-#include <filter/data/ImageData.h>
-#include <filter/data/SquareCrop.h>
-#include <filter/data/VideoData.h>
+#include <data/IODataType.h>
+#include <data/IOData.h>
+#include <data/ListIOData.h>
+#include <data/ImageData.h>
+#include <data/SquareCrop.h>
+#include <data/VideoData.h>
 
 namespace filter
 {

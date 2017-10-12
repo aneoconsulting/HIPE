@@ -3,7 +3,7 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 
-#include <filter/data/ImageData.h>
+#include <data/ImageData.h>
 
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -26,15 +26,15 @@ namespace filter
 		 *  The aperture size for the sobel operator. \see cv::Sobel()
 		 */
 
-		 /**
-		  * \brief The Canny filter will find the edges of the objects in an image.
-		  *
-		  *  The image needs to be in grayscale. If not it will be converted at runtime.
-		  *  The filter will first blur the image (for better results), then use the canny algorithm.
-		  *  The output of the canny algorithm will help to find the contours with the OpenCV findContours function.
-		  *  \see cv::Canny()
-		  *  \see cv::findContours()
-		  */
+		/**
+		 * \brief The Canny filter will find the edges of the objects in an image.
+		 *
+		 *  The image needs to be in grayscale. If not it will be converted at runtime.
+		 *  The filter will first blur the image (for better results), then use the canny algorithm.
+		 *  The output of the canny algorithm will help to find the contours with the OpenCV findContours function.
+		 *  \see cv::Canny()
+		 *  \see cv::findContours()
+		 */
 		class Canny : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
@@ -43,6 +43,7 @@ namespace filter
 				blurKernel = 0;
 				aperture = 3;
 			}
+
 			REGISTER_P(int, blurKernel);
 			REGISTER_P(double, thresh1);
 			REGISTER_P(double, thresh2);
@@ -58,7 +59,7 @@ namespace filter
 				}
 
 				cv::Mat gsImg, canny;
-				std::vector<std::vector<cv::Point> > contours;
+				std::vector<std::vector<cv::Point>> contours;
 				std::vector<cv::Vec4i> hierarchy;
 
 				// Canny must be applied on a grayscale image. We suppose either the image is in color (3 or 4 channels) or already in grayscale (1 channel)
@@ -106,7 +107,6 @@ namespace filter
 				cv::Mat contoursImage = cv::Mat::zeros(srcImg.size(), CV_8UC1);
 				for (size_t i = 0; i < contours.size(); ++i)
 				{
-
 					cv::drawContours(contoursImage, contours, static_cast<int>(i), color, contourThickness, lineType, hierarchy, 0, cv::Point(0, 0));
 				}
 
@@ -115,6 +115,7 @@ namespace filter
 				return OK;
 			}
 		};
-		ADD_CLASS(Canny, blurKernel, thresh1, thresh2, aperture);
+
+		ADD_CLASS(Canny, blurKernel, thresh1, thresh2, aperture) ;
 	};
 };

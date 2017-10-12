@@ -1,6 +1,6 @@
 #pragma once
-#include <filter/data/IOData.h>
-#include <filter/data/ImageData.h>
+#include <data/IOData.h>
+#include <data/ImageData.h>
 
 namespace filter
 {

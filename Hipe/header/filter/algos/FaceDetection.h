@@ -15,7 +15,7 @@
 
 #include <dlib/image_processing/render_face_detections.h>
 #include <dlib/image_processing.h>
-#include <filter/data/SquareCrop.h>
+#include <data/SquareCrop.h>
 #include <filter/filter_export.h>
 
 namespace filter {

@@ -6,7 +6,7 @@
 #include "core/HipeException.h"
 #include "IOData.h"
 #include <core/queue/ConcurrentQueue.h>
-#include <filter/data/IOData.h>
+#include <data/IOData.h>
 
 namespace filter
 {

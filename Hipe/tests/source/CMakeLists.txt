@@ -65,6 +65,7 @@ endif()
 
 
 target_link_libraries(unit_test core)
+target_link_libraries(unit_test data)
 target_link_libraries(unit_test filter)
 target_link_libraries(unit_test http)
 target_link_libraries(unit_test json)

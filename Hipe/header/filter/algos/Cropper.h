@@ -7,7 +7,7 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
-#include <filter/data/PatternData.h>
+#include <data/PatternData.h>
 #include "core/queue/ConcurrentQueue.h"
 
 namespace filter

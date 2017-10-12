@@ -3,7 +3,7 @@
 #include <stack>
 #include <core/Invoker.h>
 #include <filter/tools/filterMacros.h>
-#include <filter/data/FileImageData.h>
+#include <data/FileImageData.h>
 #include <filter/IFilter.h>
 #include <filter/Model.h>
 #include <filter/filter_export.h>

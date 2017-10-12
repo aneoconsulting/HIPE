@@ -4,16 +4,16 @@
 
 #include <core/HipeException.h>
 
-#include <filter/data/IOData.h>
-#include <filter/data/IODataType.h>
+#include <data/IOData.h>
+#include <data/IODataType.h>
 
-#include <filter/data/FileImageData.h>
-#include <filter/data/FileVideoInput.h>
-#include <filter/data/StreamVideoInput.h>
-#include <filter/data/DirectoryImgData.h>
-#include <filter/data/ListIOData.h>
-#include <filter/data/SquareCrop.h>
-#include <filter/data/PatternData.h>
+#include <data/FileImageData.h>
+#include <data/FileVideoInput.h>
+#include <data/StreamVideoInput.h>
+#include <data/DirectoryImgData.h>
+#include <data/ListIOData.h>
+#include <data/SquareCrop.h>
+#include <data/PatternData.h>
 
 namespace filter
 {

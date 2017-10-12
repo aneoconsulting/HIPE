@@ -3,7 +3,7 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 
-#include <filter/data/ImageData.h>
+#include <data/ImageData.h>
 
 #include <opencv2/core.hpp>
 #include <opencv2/core/cuda.hpp>

@@ -7,7 +7,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <streaming/Streaming.h>
 #include <filter/tools/filterMacros.h>
-#include <filter/data/ImageData.h>
+#include <data/ImageData.h>
 #include <string>
 
 

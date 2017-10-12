@@ -2,7 +2,7 @@
 #include <filter/tools/RegisterClass.h>
 #include <core/HipeStatus.h>
 
-#include <filter/data/ImageData.h>
+#include <data/ImageData.h>
 
 #include <vector>
 #include <string>

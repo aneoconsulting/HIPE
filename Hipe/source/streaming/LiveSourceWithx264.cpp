@@ -1,10 +1,10 @@
 #include "LiveSourceWithx264.h"
 #include <core/misc.h>
 #include <core/queue/ConcurrentQueue.h>
-#include <filter/data/IOData.h>
+#include <data/IOData.h>
 #include <UsageEnvironment.hh>
 #include <FramedSource.hh>
-#include "filter/data/ImageArrayData.h"
+#include "data/ImageArrayData.h"
 
 
 LiveSourceWithx264* LiveSourceWithx264::createNew(UsageEnvironment& env, core::queue::ConcurrentQueue<filter::data::Data> & concurrent_queue)

@@ -10,8 +10,8 @@
 #include <algorithm>
 #include <sstream>
 #include <filter/tools/filterMacros.h>
-#include <filter/data/IOData.h>
-#include <filter/data/IODataType.h>
+#include <data/IOData.h>
+#include <data/IODataType.h>
 #include <filter/filter_export.h>
 #include <filter/Model.h>
 

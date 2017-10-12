@@ -65,11 +65,8 @@ FILE(GLOB_RECURSE inFiles
 	
 set(_includes "#pragma once\n")
 foreach(_source IN ITEMS ${inFiles})
-    #get_filename_component(_source_path "${_source}" PATH)
-    #file(RELATIVE_PATH _source_path_rel "${_src_filter_inc_path}" "${_source_path}")
 	message(STATUS "file are : ${_source}")
 	set(_includes "${_includes}#include <filter/${_source}>\n")
-    #string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
     
 endforeach()
 
@@ -95,22 +92,10 @@ FILE(TO_NATIVE_PATH "${header_ref}" os_ref_header_path)
 FILE(TO_NATIVE_PATH "${header_ref}_test" os_ref_header_path_test)
 
 
-##Include OpenCV 
-#SET(OpenCV_DIR "C:\\workspace\\ANEO\\Project\\HipeExternal\\win64\\opencv\\install_64bits")
 message(STATUS "Variable path for OpenCV [${OpenCV_DIR}]")
 
 find_package( OpenCV REQUIRED )
 
-#find_package(CUDA QUIET REQUIRED)
-
-# Pass options to NVCC
-#set(
-#    CUDA_NVCC_FLAGS
-#    ${CUDA_NVCC_FLAGS};
-#    -O3 -gencode arch=compute_35,code=sm_35
-#    )
-	
-#INCLUDE_DIRECTORIES(filter ${CUDA_INCLUDE_DIRS})
 include_directories(filter ${Hipe_INCLUDEDIR})
 include_directories(filter ${OpenCV_INCLUDE_DIRS} )
 include_directories(filter ${Live_INCLUDEDIR} )
@@ -137,13 +122,6 @@ if (WIN32)
 		COMMENT "Generate reference file"
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos
 	)
-	#ADD_CUSTOM_TARGET(reference
-	#	COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}"
-	#	COMMAND cmd /c echo ^// Algorithm header to reference  >> "${os_ref_header_path}"
-	#	COMMAND cmd /c "${script_path}" "filter/algos" >> "${os_ref_header_path}"
-	#	COMMENT "Generate reference file"
-	#	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos
-	#)
 
 
 endif (WIN32)
@@ -201,10 +179,6 @@ if (USE_DLIB)
   
 endif()
 
-#target_link_libraries(filter ${CUDA_LIB_DIRS}/x64)
-
-#add_dependencies(filter reference)
-
 
 foreach(_source IN ITEMS ${_source_list})
 	
@@ -238,8 +212,6 @@ if(WIN32) #TODO: Is MSYS true when MSVC is true?
     target_link_libraries(filter ws2_32 wsock32)
    
 endif()
-
-#TODO ^ is there something like that to do on Linux ?
 
 
 install(TARGETS filter DESTINATION ../../target/)

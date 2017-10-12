@@ -1,10 +1,10 @@
 #pragma once
-#include <filter/data/FileVideoInput.h>
-#include <filter/data/ListIOData.h>
-#include <filter/data/StreamVideoInput.h>
+#include <data/FileVideoInput.h>
+#include <data/ListIOData.h>
+#include <data/StreamVideoInput.h>
 #include <boost/thread/thread.hpp>
-#include "filter/data/ListIOData.h"
-#include <filter/data/PatternData.h>
+#include "data/ListIOData.h"
+#include <data/PatternData.h>
 #include <orchestrator/TaskInfo.h>
 
 

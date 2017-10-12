@@ -5,7 +5,7 @@
 #include <FramedSource.hh>
 #include <core/queue/ConcurrentQueue.h>
  
-#include <filter/data/IOData.h>
+#include <data/IOData.h>
 
 class LiveSourceWithx264 :public FramedSource
 {

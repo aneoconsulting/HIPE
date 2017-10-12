@@ -1,8 +1,8 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/mat.hpp>
-#include <filter/data/IODataType.h>
-#include <filter/data/IOData.h>
+#include <data/IODataType.h>
+#include <data/IOData.h>
 
 namespace filter
 {

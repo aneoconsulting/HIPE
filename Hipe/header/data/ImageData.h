@@ -1,8 +1,8 @@
 #pragma once
-#include <filter/data/IODataType.h>
+#include <data/IODataType.h>
 
-#include <filter/data/IOData.h>
-#include <filter/data/ImageArrayData.h>
+#include <data/IOData.h>
+#include <data/ImageArrayData.h>
 
 namespace filter {
 	namespace data {

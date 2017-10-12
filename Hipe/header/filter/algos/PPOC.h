@@ -5,8 +5,8 @@
 
 #include <vector>
 
-#include <filter/data/ImageData.h>
-#include <filter/data/ImageArrayData.h>
+#include <data/ImageData.h>
+#include <data/ImageArrayData.h>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>

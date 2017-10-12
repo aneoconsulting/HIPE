@@ -2,12 +2,12 @@
 #include <filter/tools/RegisterClass.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-#include <filter/data/ImageData.h>
-#include <filter/data/OutputData.h>
+#include <data/ImageData.h>
+#include <data/OutputData.h>
 
 #include <core/base64.h>
 #include <sstream>
-#include <filter/data/ImageEncodedData.h>
+#include <data/ImageEncodedData.h>
 
 namespace filter
 {

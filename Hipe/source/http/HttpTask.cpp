@@ -4,10 +4,11 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <json/JsonBuilder.h>
 #include <orchestrator/Orchestrator.h>
-#include <filter/data/Composer.h>
+#include <data/Composer.h>
 #include <core/HipeException.h>
 #include <http/CommandManager.h>
 #include <core/version.h>
+#include "core/Localenv.h"
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
 #include <assert.h>
@@ -168,7 +169,10 @@ void http::HttpTask::runTask()
 				return;
 			}
 
+
 			HttpTask::logger << "Check if algorithm need to be built";
+			HttpTask::logger << "Port To listen task was " << core::getLocalEnv().getValue("http_port");
+
 			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);
 			treeResponseInfo.add("Algorithm", dataResponse.str());
 			dataResponse.str(std::string());

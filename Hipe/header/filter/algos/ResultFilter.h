@@ -2,7 +2,7 @@
 #include <filter/tools/RegisterClass.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-#include <filter/data/OutputData.h>
+#include <data/OutputData.h>
 #include "data/ConnexData.h"
 
 namespace filter

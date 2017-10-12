@@ -3,7 +3,7 @@
 #include <core/HipeException.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-#include <filter/data/ImageArrayData.h>
+#include <data/ImageArrayData.h>
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 

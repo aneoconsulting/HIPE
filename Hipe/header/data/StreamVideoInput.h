@@ -5,9 +5,9 @@
 
 #include <opencv2/opencv.hpp>
 #include <boost/filesystem/path.hpp>
-#include <filter/data/VideoData.h>
+#include <data/VideoData.h>
 #include <streaming/CaptureVideo.h>
-#include <filter/filter_export.h>
+#include <data/data_export.h>
 #include "ImageData.h"
 
 
@@ -18,7 +18,7 @@ namespace filter
 		/**
 		 * \brief Input filter used to acquire data from a stream
 		 */
-		class FILTER_EXPORT StreamVideoInput : public VideoData<StreamVideoInput>
+		class DATA_EXPORT StreamVideoInput : public VideoData<StreamVideoInput>
 		{
 			/**
 			 * \brief the url (path) to the stream

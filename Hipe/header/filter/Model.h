@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 #include <core/HipeStatus.h>
-#include <filter/data/IOData.h>
-#include <filter/data/DataAccess.h>
-#include <filter/data/ConnexData.h>
+#include <data/IOData.h>
+#include <data/DataAccess.h>
+#include <data/ConnexData.h>
 
 namespace filter
 {

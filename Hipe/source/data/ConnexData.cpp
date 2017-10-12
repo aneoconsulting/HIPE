@@ -1,4 +1,4 @@
-#include <filter/data/ConnexData.h>
+#include <data/ConnexData.h>
 #include "core/HipeException.h"
 
 namespace filter

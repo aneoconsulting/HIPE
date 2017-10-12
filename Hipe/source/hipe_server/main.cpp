@@ -15,6 +15,7 @@
 #include "core/version.h"
 
 #include <hipe_server/Configuration.h>
+#include "core/Localenv.h"
 
 using namespace std;
 //Added for the json-example:
@@ -45,6 +46,11 @@ int main(int argc, char* argv[]) {
 	//HTTP-server at port 8080 using 1 thread
 	//Unless you do more heavy non-threaded processing in the resources,
 	//1 thread is usually faster than several threads
+	std::stringstream buildstring;
+	buildstring << config.configuration.port;
+
+	core::getLocalEnv().setValue("http_port", buildstring.str());
+
 	http::HttpServer server(config.configuration.port, 1);
 
 	orchestrator::OrchestratorFactory::start_orchestrator();

@@ -76,11 +76,14 @@ include_directories(hipe_server ${_src_hipe_server_inc_path})
 message(STATUS "Live LIBRARIES : ${Live_LIBRARIES}")
 
 target_link_libraries(hipe_server core)
-
+target_link_libraries(hipe_server data)
 target_link_libraries(hipe_server http)
 target_link_libraries(hipe_server json)
 target_link_libraries(hipe_server orchestrator)
 target_link_libraries(hipe_server streaming)
+
+
+
 
 if (USE_DLIB)
 	if (WIN32)

@@ -1,7 +1,7 @@
 #pragma once
-#include <filter/data/IODataType.h>
-#include <filter/filter_export.h>
-#include <filter/data/IOData.h>
+#include <data/IODataType.h>
+#include <data/data_export.h>
+#include <data/IOData.h>
 
 namespace filter {
 	namespace data {

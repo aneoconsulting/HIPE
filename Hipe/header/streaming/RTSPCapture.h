@@ -16,7 +16,7 @@ extern "C"
 #include <iostream>
 
 #include <opencv2/core/mat.hpp>
-#include <filter/data/DirectoryImgData.h>
+#include <data/DirectoryImgData.h>
 #include <boost/thread/thread.hpp>
 #include <core/queue/ConcurrentQueue.h>
 #include "CaptureVideo.h"

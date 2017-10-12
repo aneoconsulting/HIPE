@@ -3,8 +3,8 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
-#include <filter/data/ConnexData.h>
-#include <filter/data/ImageData.h>
+#include <data/ConnexData.h>
+#include <data/ImageData.h>
 
 namespace filter
 {

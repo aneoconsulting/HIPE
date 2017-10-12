@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include <filter/data/ImageData.h>
-#include <filter/data/IODataType.h>
+#include <data/ImageData.h>
+#include <data/IODataType.h>
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <boost/filesystem/path.hpp>

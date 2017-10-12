@@ -1,11 +1,11 @@
 #pragma once
 
-#include <filter/data/IOData.h>
+#include <data/IOData.h>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <opencv2/opencv.hpp>
 #include <core/base64.h>
-#include <filter/data/ImageArrayData.h>
+#include <data/ImageArrayData.h>
 #include "ImageEncodedData.h"
 
 namespace filter {
