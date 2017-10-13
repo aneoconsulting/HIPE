@@ -4,7 +4,7 @@ namespace filter
 {
 	namespace data
 	{
-		Data Composer::loadListIoData(http::JsonTree& dataNode)
+		Data Composer::loadListIoData(core::JsonTree& dataNode)
 		{
 			std::vector<Data> res;
 
@@ -18,7 +18,7 @@ namespace filter
 			return static_cast<Data>(ListIOData(res));
 		}
 
-		Data Composer::loadPatternData(http::JsonTree& dataNode)
+		Data Composer::loadPatternData(core::JsonTree& dataNode)
 		{
 			std::vector<Data> res;
 			auto child = dataNode.allchildren("desc");
@@ -39,7 +39,7 @@ namespace filter
 		 * \param dataNode The node to query
 		 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 		 */
-		Data Composer::getDataFromComposer(http::JsonTree& dataNode)
+		Data Composer::getDataFromComposer(core::JsonTree& dataNode)
 		{
 			filter::data::Composer::checkJsonFieldExist(dataNode, "type");
 			auto datatype = dataNode.get("type");

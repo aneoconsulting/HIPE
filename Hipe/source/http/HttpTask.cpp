@@ -8,7 +8,6 @@
 #include <http/CommandManager.h>
 #include <core/version.h>
 #include "core/Localenv.h"
-#include "JsonTree.h"
 #include "json/JsonBuilder.h"
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
@@ -21,8 +20,8 @@ using namespace std;
 
 core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
 
-std::function<bool(std::string, http::JsonTree *)> kill_command() {
-	return [](std::string optionName, http::JsonTree *lptree)
+std::function<bool(std::string, core::JsonTree *)> kill_command() {
+	return [](std::string optionName, core::JsonTree *lptree)
 	{
 		if (optionName.compare("Kill") == 0) {
 			orchestrator::OrchestratorFactory::getInstance()->killall();
@@ -33,8 +32,8 @@ std::function<bool(std::string, http::JsonTree *)> kill_command() {
 	};
 }
 
-std::function<bool(std::string, http::JsonTree *)>  exit_command() {
-	return [](std::string optionName, http::JsonTree *lptree)
+std::function<bool(std::string, core::JsonTree *)>  exit_command() {
+	return [](std::string optionName, core::JsonTree *lptree)
 	{
 		const std::string exit = "Exit";
 		if (exit.find(optionName) == 0)
@@ -48,8 +47,8 @@ std::function<bool(std::string, http::JsonTree *)>  exit_command() {
 	};
 }
 
-std::function<bool(std::string, http::JsonTree *)> get_filters() {
-	return [](std::string optionName, http::JsonTree *lptree)
+std::function<bool(std::string, core::JsonTree *)> get_filters() {
+	return [](std::string optionName, core::JsonTree *lptree)
 	{
 		const std::string filters = "Filters";
 		int i = 0;
@@ -58,8 +57,8 @@ std::function<bool(std::string, http::JsonTree *)> get_filters() {
 			RegisterTable& reg = RegisterTable::getInstance();
 			for (auto &name : reg.getTypeNames())
 			{
-				auto parameters = new http::JsonTree;
-				auto child = new http::JsonTree;
+				auto parameters = new core::JsonTree;
+				auto child = new core::JsonTree;
 				for (auto &varName : reg.getVarNames(name))
 				{
 					child->put(varName, "");
@@ -75,8 +74,8 @@ std::function<bool(std::string, http::JsonTree *)> get_filters() {
 	};
 }
 
-std::function<bool(std::string, http::JsonTree *)> get_version() {
-	return [](std::string optionName, http::JsonTree *lptree)
+std::function<bool(std::string, core::JsonTree *)> get_version() {
+	return [](std::string optionName, core::JsonTree *lptree)
 	{
 		const std::string version = "Version";
 		if (version.find(optionName) == 0)
@@ -90,8 +89,8 @@ std::function<bool(std::string, http::JsonTree *)> get_version() {
 	};
 }
 
-std::function<bool(std::string, http::JsonTree *)> get_versionHashed() {
-	return [](std::string optionName, http::JsonTree *lptree)
+std::function<bool(std::string, core::JsonTree *)> get_versionHashed() {
+	return [](std::string optionName, core::JsonTree *lptree)
 	{
 		const std::string version = "Hash";
 		if (version.find(optionName) == 0)
@@ -104,9 +103,9 @@ std::function<bool(std::string, http::JsonTree *)> get_versionHashed() {
 	};
 }
 
-std::function<bool(std::string, http::JsonTree *)> get_commands_help() {
+std::function<bool(std::string, core::JsonTree *)> get_commands_help() {
 
-	return [](std::string OptionName, http::JsonTree * lptree)
+	return [](std::string OptionName, core::JsonTree * lptree)
 	{
 		const std::string help = "Help";
 		if (help.find(OptionName) == 0) {
@@ -130,15 +129,15 @@ void http::HttpTask::runTask() const
 	{
 		try {
 			std::stringstream dataResponse;
-			JsonTree treeRequest;// = new JsonTree;
-			JsonTree treeResponse;// = new JsonTree;
-			JsonTree treeResponseInfo;// = new JsonTree;
+			core::JsonTree treeRequest;// = new JsonTree;
+			core::JsonTree treeResponse;// = new JsonTree;
+			core::JsonTree treeResponseInfo;// = new JsonTree;
 			//treeRequest->read_json(static_cast<basic_istream<char>>(_request->content));
 			read_json(_request->content, treeRequest.get_json_ptree());
 			if (treeRequest.count("command") != 0)
 			{
 				auto command = treeRequest.get_child("command").get("type");
-				JsonTree  ltreeResponse;// = new JsonTree;
+				core::JsonTree  ltreeResponse;// = new JsonTree;
 				auto commandFound = CommandManager::callOption(command, get_version(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, kill_command(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, get_filters(),& ltreeResponse);
@@ -172,12 +171,12 @@ void http::HttpTask::runTask() const
 			HttpTask::logger << "Check if algorithm need to be built";
 			HttpTask::logger << "Port To listen task was " << core::getLocalEnv().getValue("http_port");
 
-			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);//json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest->get_json_ptree());
+			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);//core::JsonBuilder::buildAlgorithm(dataResponse, treeRequest->get_json_ptree());
 			treeResponseInfo.Add("Algorithm", dataResponse.str());
 			dataResponse.str(std::string());
 
 			HttpTask::logger << "Check if orchestrator need to be built";
-			auto orchestrator = json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest);//json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest->get_json_ptree());
+			auto orchestrator = json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest);//core::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest->get_json_ptree());
 			treeResponseInfo.Add("Orchestrator", dataResponse.str());
 			dataResponse.str(std::string());
 
@@ -226,7 +225,7 @@ void http::HttpTask::runTask() const
 			HttpTask::logger << dataResponse.str();
 		}
 		catch (std::exception& e) {
-			auto treeResponse = new JsonTree;
+			auto treeResponse = new json:JsonTree;
 			treeResponse->Add("Status", e.what());
 			std::stringstream dataResponse;
 			write_json(dataResponse, treeResponse->get_json_ptree());
@@ -238,7 +237,7 @@ void http::HttpTask::runTask() const
 		}
 
 		catch (HipeException& e) {
-			auto treeResponse = new JsonTree;
+			auto treeResponse = new core::JsonTree;
 			treeResponse->Add("Status", e.what());
 			std::stringstream dataResponse;
 			write_json(dataResponse, treeResponse->get_json_ptree());

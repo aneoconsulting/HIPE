@@ -1,7 +1,7 @@
-#include <http/JsonTree.h>
+#include "JsonTree.h"
 
 
-namespace http
+namespace core
 {
 	JsonTree::JsonTree()
 	{
@@ -40,7 +40,7 @@ namespace http
 		boost::property_tree::read_json(stream, jsonPtree);
 	}
 
-	size_t JsonTree::count(std::string key)
+	size_t JsonTree::count(std::string key) const
 	{
 		return jsonPtree.count(key);
 	}

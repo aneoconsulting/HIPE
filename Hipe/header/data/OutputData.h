@@ -5,7 +5,7 @@
 #include <core/base64.h>
 #include <data/ImageArrayData.h>
 #include "ImageEncodedData.h"
-#include <http/JsonTree.h>
+#include <core/JsonTree.h>
 
 namespace filter {
 	namespace data {
@@ -97,10 +97,10 @@ namespace filter {
 				return base64_encode(data.data(), data.size());
 			}
 
-			http::JsonTree resultAsJson()
+			core::JsonTree resultAsJson()
 			{
-				http::JsonTree resultTree;
-				http::JsonTree outputTree;
+				core::JsonTree resultTree;
+				core::JsonTree outputTree;
 
 				// Case where there's no output data to process
 				if (!_This)

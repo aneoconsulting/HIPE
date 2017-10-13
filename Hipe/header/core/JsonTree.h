@@ -3,7 +3,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <json/JsonFilterNode/JsonFilterTree.h>
 
-namespace http
+namespace core
 {
 
 	typedef boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>>::iterator ptreeiterator;
@@ -20,7 +20,7 @@ namespace http
 		JsonTree & AddChild(std::string key, JsonTree & value) ;
 		JsonTree & AddChild(std::string key, boost::property_tree::ptree & value) ;
 		void read_json(std::istream stream);
-		size_t count(std::string);
+		size_t count(std::string) const;
 		JsonTree &get_child(const char* str);
 		ptreeiterator begin();
 		ptreeiterator end();
