@@ -4,31 +4,28 @@ namespace filter
 {
 	namespace data
 	{
-		Data Composer::loadListIoData(const boost::property_tree::ptree& dataNode)
+		Data Composer::loadListIoData(http::JsonTree& dataNode)
 		{
 			std::vector<Data> res;
 
-			auto child = dataNode.get_child("array");
+			auto child = dataNode.allchildren("array");
 			for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 			{
-				auto iodata = getDataFromComposer(itarray->second);
+				auto iodata = getDataFromComposer(*itarray->second);
 				res.push_back(iodata);
 			}
 
 			return static_cast<Data>(ListIOData(res));
-
 		}
 
-		Data Composer::loadPatternData(const boost::property_tree::ptree& dataNode)
+		Data Composer::loadPatternData(http::JsonTree& dataNode)
 		{
 			std::vector<Data> res;
-			auto child = dataNode.get_child("desc");
+			auto child = dataNode.allchildren("desc");
 			for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 			{
 				const std::string dataType = itarray->first;
-
-				auto data = getDataFromComposer(dataType, itarray->second);
-
+				auto data = getDataFromComposer(dataType, *itarray->second);
 				res.push_back(data);
 			}
 			data::PatternData pattern(res);
@@ -42,14 +39,12 @@ namespace filter
 		 * \param dataNode The node to query
 		 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 		 */
-		Data Composer::getDataFromComposer(const boost::property_tree::ptree& dataNode)
+		Data Composer::getDataFromComposer(http::JsonTree& dataNode)
 		{
 			filter::data::Composer::checkJsonFieldExist(dataNode, "type");
-			auto datatype = dataNode.get<std::string>("type");
+			auto datatype = dataNode.get("type");
 
 			return getDataFromComposer(datatype, dataNode);
-		}
-
-
+		}		
 	}
 }

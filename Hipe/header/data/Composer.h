@@ -130,14 +130,14 @@ namespace filter
 			 * \param the data node from the json request tree to query containing all the data
 			 * \return the loaded data in a ListIOData object (casted to the type Data)
 			 */
-			static Data loadListIoData(http::JsonTree& dataNode)
+			static Data loadListIoData(http::JsonTree& dataNode);
 			/**
 			 * [TODO]
 			 * \brief Wrapper function to load the data from a pattern (PATTERN) as a PatternData object
 			 * \param dataNode The data node from the json request tree to query containing all the data
 			 * \return the loaded data in a PatternData oject (casted to the type Data)
 			 */
-			static Data loadPatternData(http::JsonTree& dataNode)
+			static Data loadPatternData(http::JsonTree& dataNode);
 			/**
 			 * [TODO]
 			 * \brief Wrapper function to load the data from a [TODO] as a SquareCrop object
@@ -235,7 +235,7 @@ namespace filter
 			 * \param dataNode The node to query
 			 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 			 */
-			static Data getDataFromComposer(http::JsonTree& dataNode)
+			static Data getDataFromComposer(http::JsonTree& dataNode);
 			
 		};
 	}
