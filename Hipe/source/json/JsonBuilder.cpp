@@ -4,23 +4,21 @@
 namespace json
 {
 
-	json::JsonFilterTree * JsonBuilder::buildAlgorithm(std::stringstream& dataResponse, boost::property_tree::ptree & treeRequest)
+	json::JsonFilterTree * JsonBuilder::buildAlgorithm(std::stringstream& dataResponse, http::JsonTree & treeRequest)
 	{
 		std::string OK = "Request OK";
 
 		if (treeRequest.count("name") == 0)
 			throw HipeException("The algorithm name is not found in the Json. Please inform the field \"name\" : \"name of algorithm\"");
 
-		std::string algoName = treeRequest.get<std::string>("name");
+		std::string algoName = treeRequest.get("name");
 
 
 
 		if (treeRequest.count("filters") == 0)
 			return static_cast<json::JsonFilterTree *>(orchestrator::OrchestratorFactory::getInstance()->getModel(algoName));
 
-		boost::property_tree::ptree filters = treeRequest.get_child("filters");
-
-		//std::string name = pt.get<string>("firstName") + " " + pt.get<std::string>("lastName") + " " + pairs.get<std::string>("name");
+		http::JsonTree filters = treeRequest.get_child("filters");
 
 		json::JsonFilterTree * tree = new JsonFilterTree();;
 		tree->setName(algoName);

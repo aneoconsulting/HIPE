@@ -16,7 +16,7 @@ namespace http {
 			_response(response), _request(request)
 		{};
 
-		void runTask();
+		void runTask() const;
 
 	};
 }

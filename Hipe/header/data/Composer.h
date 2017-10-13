@@ -1,12 +1,7 @@
 #pragma once
-
-#include <boost/property_tree/ptree.hpp>
-
 #include <core/HipeException.h>
-
 #include <data/IOData.h>
 #include <data/IODataType.h>
-
 #include <data/FileImageData.h>
 #include <data/FileVideoInput.h>
 #include <data/StreamVideoInput.h>
@@ -14,6 +9,7 @@
 #include <data/ListIOData.h>
 #include <data/SquareCrop.h>
 #include <data/PatternData.h>
+#include <http/JsonTree.h>
 
 namespace filter
 {
@@ -36,7 +32,7 @@ namespace filter
 			 * \return
 			 */
 			template <typename T>
-			static std::vector<T> as_vector(boost::property_tree::ptree const& pt, boost::property_tree::ptree::key_type const& key)
+			static std::vector<T> as_vector(http::JsonTree & pt, const char* key)
 			{
 				std::vector<T> r;
 				for (auto& item : pt.get_child(key))
@@ -50,7 +46,7 @@ namespace filter
 			 * \param jsonNode The node to query
 			 * \param key The key to find
 			 */
-			static inline bool checkJsonFieldExist(const boost::property_tree::ptree& jsonNode, std::string key, bool throwException = true)
+			static inline bool checkJsonFieldExist(http::JsonTree& jsonNode, std::string key, bool throwException = true)
 			{
 				if (jsonNode.count(key) == 0)
 				{
@@ -106,13 +102,13 @@ namespace filter
 			 * \param dataNode The data node from the json request tree containing the video to load
 			 * \return The loaded video in a FileVideoInput object (casted to the type Data)
 			 */
-			static Data loadVideoFromFile(const boost::property_tree::ptree& dataNode)
+			static Data loadVideoFromFile(http::JsonTree& dataNode)
 			{
-				std::string path = dataNode.get<std::string>("path");
+				std::string path = dataNode.get("path");
 				bool loop = false;
 				if (dataNode.count("loop") != 0)
 				{
-					loop = dataNode.get<bool>("loop");
+					loop = dataNode.getBool("loop");
 				}
 				return static_cast<Data>(FileVideoInput(path, loop));
 			}
@@ -134,21 +130,21 @@ namespace filter
 			 * \param the data node from the json request tree to query containing all the data
 			 * \return the loaded data in a ListIOData object (casted to the type Data)
 			 */
-			static Data loadListIoData(const boost::property_tree::ptree& dataNode);
+			static Data loadListIoData(http::JsonTree& dataNode)
 			/**
 			 * [TODO]
 			 * \brief Wrapper function to load the data from a pattern (PATTERN) as a PatternData object
 			 * \param dataNode The data node from the json request tree to query containing all the data
 			 * \return the loaded data in a PatternData oject (casted to the type Data)
 			 */
-			static Data loadPatternData(const boost::property_tree::ptree& dataNode);
+			static Data loadPatternData(http::JsonTree& dataNode)
 			/**
 			 * [TODO]
 			 * \brief Wrapper function to load the data from a [TODO] as a SquareCrop object
 			 * \param cropTree The data note from the json request tree to query containing all the data
 			 * \return the loaded data in a SquareCrop object (casted to the type Data)
 			 */
-			static Data loadSquareCrop(const boost::property_tree::ptree& cropTree)
+			static Data loadSquareCrop(http::JsonTree& cropTree)
 			{
 				std::vector<Data> res;
 				std::vector<int> pts;
@@ -183,23 +179,23 @@ namespace filter
 			 * \param dataNode The node containing the data
 			 * \return the loaded data in its corresponding type (casted to the type Data)
 			 */
-			static Data getDataFromComposer(const std::string datatype, const boost::property_tree::ptree& dataNode)
+			static Data getDataFromComposer(const std::string datatype,http::JsonTree& dataNode)
 			{
 				IODataType ioDataType = DataTypeMapper::getTypeFromString(datatype);
 				switch (ioDataType)
 				{
 				case IODataType::IMGF:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
-					return loadImageFromFile(dataNode.get<std::string>("path"));
+					return loadImageFromFile(dataNode.get("path"));
 				case IODataType::VIDF:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
 					return loadVideoFromFile(dataNode);
 				case IODataType::SEQIMGD:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
-					return loadImagesFromDirectory(dataNode.get<std::string>("path"));
+					return loadImagesFromDirectory(dataNode.get("path"));
 				case IODataType::STRMVID:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "path");
-					return loadVideoFromStream(dataNode.get<std::string>("path"));
+					return loadVideoFromStream(dataNode.get("path"));
 				case IODataType::LISTIO:
 					filter::data::Composer::checkJsonFieldExist(dataNode, "array");
 					return loadListIoData(dataNode);
@@ -213,7 +209,7 @@ namespace filter
 				{
 					filter::data::Composer::checkJsonFieldExist(dataNode, "data");
 					filter::data::Composer::checkJsonFieldExist(dataNode, "format");
-					std::string format = dataNode.get<std::string>("format");
+					std::string format = dataNode.get("format");
 					std::transform(format.begin(), format.end(), format.begin(), ::toupper);
 					
 					// width, height, and channels are stored in encoded data
@@ -223,9 +219,9 @@ namespace filter
 						filter::data::Composer::checkJsonFieldExist(dataNode, "width");
 						filter::data::Composer::checkJsonFieldExist(dataNode, "height");
 
-						return loadImageFromRawData(dataNode.get<std::string>("data"), dataNode.get<std::string>("format"), dataNode.get<int>("width"), dataNode.get<int>("height"), dataNode.get<int>("channels"));
+					return loadImageFromRawData(dataNode.get("data"), dataNode.get("format"), dataNode.getInt("width"), dataNode.getInt("height"), dataNode.getInt("channels"));
 					}
-					return loadImageFromRawData(dataNode.get<std::string>("data"), dataNode.get<std::string>("format"), 0, 0, 0);
+					return loadImageFromRawData(dataNode.get("data"), dataNode.get("format"), 0, 0, 0);
 				}
 				case IODataType::NONE:
 				default:
@@ -239,7 +235,7 @@ namespace filter
 			 * \param dataNode The node to query
 			 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 			 */
-			static Data getDataFromComposer(const boost::property_tree::ptree& dataNode);
+			static Data getDataFromComposer(http::JsonTree& dataNode)
 			
 		};
 	}

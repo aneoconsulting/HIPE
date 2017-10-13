@@ -1,14 +1,9 @@
 #pragma once
 #include <functional>
-
-#include <boost/property_tree/ptree_fwd.hpp>
 #include <map>
-#include "orchestrator/Orchestrator.h"
 
 namespace http
 {
-	typedef void (*pfunc)(std::string, boost::property_tree::ptree);
-
 	class CommandManager
 	{
 	public:

@@ -1,8 +1,5 @@
 //Added for the json-example
 #define BOOST_SPIRIT_THREADSAFE
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-
 //Added for the default_resource example
 #include <fstream>
 #include <vector>
@@ -19,7 +16,6 @@
 
 using namespace std;
 //Added for the json-example:
-using namespace boost::property_tree;
 
 
 typedef http::Client<http::HTTP> HttpClient;
