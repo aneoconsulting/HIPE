@@ -206,14 +206,14 @@ void http::HttpTask::runTask() const
 			{
 				auto data = orchestrator::Composer::getDataFromComposer(treeRequest.get_child("data"));
 				//Start processing Algorithm with data
-				filter::data::Data outputData;
+				data::Data outputData;
 
 				orchestrator::OrchestratorFactory::getInstance()->process(json_filter_tree->getName(), data, outputData);
 
 				//after the process execution Data should be an OutputData type
-				if (outputData.getType() == filter::data::IMGB64)
+				if (outputData.getType() == data::IMGB64)
 				{
-					filter::data::OutputData output_data;
+					data::OutputData output_data;
 					output_data = outputData;
 					auto outpd = output_data.resultAsJson();
 

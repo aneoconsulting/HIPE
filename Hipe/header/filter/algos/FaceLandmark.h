@@ -20,11 +20,10 @@
 #include <data/SquareCrop.h>
 #include <filter/filter_export.h>
 
-namespace filter {
-	namespace data {
-		class ImageData;
-	}
+namespace data {
+	class ImageData;
 }
+
 
 namespace filter
 {
