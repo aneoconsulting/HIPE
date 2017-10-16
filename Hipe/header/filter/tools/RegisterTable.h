@@ -27,7 +27,7 @@ class FILTER_EXPORT RegisterTable
 	std::map<std::string, std::map<std::string, core::InvokerBase>> setterTable;
 
 
-	std::map<filter::data::IODataType, std::map<std::string, core::InvokerBase>> _IODataTable;
+	std::map<data::IODataType, std::map<std::string, core::InvokerBase>> _IODataTable;
 
 	std::map<filter::Model *, std::string> reverse;
 

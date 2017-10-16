@@ -91,10 +91,10 @@ HipeStatus filter::algos::PPOC::process()
 		findObject(referenceImage, query, mask);
 	}
 
-	_connexData.push(filter::data::ImageData(referenceImage));
-	_connexData.push(filter::data::ImageData(background));
+	_connexData.push(data::ImageData(referenceImage));
+	_connexData.push(data::ImageData(background));
 	for (auto & query : queries)
-		_connexData.push(filter::data::ImageData(query));
+		_connexData.push(data::ImageData(query));
 
 	return OK;
 }

@@ -77,7 +77,7 @@ namespace filter
 
 			//std::shared_ptr<TaskContainer> task_container = Streaming::getInstance()->getStreaming(port, size.height, size.width, fps_avg);
 
-			//filter::data::IOData copy(_data, true);
+			//data::IOData copy(_data, true);
 			//if (task_container->isActive()) // next iteration the streamer will be ready and active
 			//{
 			//	data::ImageData image_data = _connexData.pop();

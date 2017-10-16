@@ -29,10 +29,10 @@ namespace filter
 		 */
 		class StreamResultFilter : public IFilter
 		{
-			//data::ConnexOutput<filter::data::ImageData> connData;
+			//data::ConnexOutput<data::ImageData> connData;
 			CONNECTOR_OUT(data::ImageData);
 
-			core::queue::ConcurrentQueue<filter::data::ImageData> queue;	//<! [TODO] unused?
+			core::queue::ConcurrentQueue<data::ImageData> queue;	//<! [TODO] unused?
 			struct timeval current_time;									//<! The current time.
 			int fps_avg;	//<! [TODO] The average FPS at which the video is played.
 			int nb_frame;	//<! [TODO]

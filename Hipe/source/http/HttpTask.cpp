@@ -199,22 +199,22 @@ void http::HttpTask::runTask()
 			//Check if data is present
 			if (treeRequest.count("data") != 0)
 			{
-				filter::data::Data data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
+				data::Data data = data::Composer::getDataFromComposer(treeRequest.get_child("data"));
 
-				if (data.getType() == filter::data::IODataType::LISTIO)
+				if (data.getType() == data::IODataType::LISTIO)
 				{
-					filter::data::ListIOData & list_io_data = static_cast<filter::data::ListIOData&>(data);
+					data::ListIOData & list_io_data = static_cast<data::ListIOData&>(data);
 				}
 
 				//Start processing Algorithm with data
-				filter::data::Data outputData;
+				data::Data outputData;
 
 				orchestrator::OrchestratorFactory::getInstance()->process(json_filter_tree->getName(), data, outputData);
 
 				//after the process execution Data should be an OutputData type
-				if (outputData.getType() == filter::data::IMGB64)
+				if (outputData.getType() == data::IMGB64)
 				{
-					filter::data::OutputData output_data;
+					data::OutputData output_data;
 					output_data = outputData;;
 
 

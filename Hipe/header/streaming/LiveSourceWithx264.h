@@ -10,10 +10,10 @@
 class LiveSourceWithx264 :public FramedSource
 {
 public:
-	static LiveSourceWithx264* createNew(UsageEnvironment& env, core::queue::ConcurrentQueue<filter::data::Data> & concurrent_queue);
+	static LiveSourceWithx264* createNew(UsageEnvironment& env, core::queue::ConcurrentQueue<data::Data> & concurrent_queue);
 	static EventTriggerId eventTriggerId;
 protected:
-	LiveSourceWithx264(UsageEnvironment& env, core::queue::ConcurrentQueue<filter::data::Data> & concurrent_queue);
+	LiveSourceWithx264(UsageEnvironment& env, core::queue::ConcurrentQueue<data::Data> & concurrent_queue);
 	virtual ~LiveSourceWithx264(void);
 private:
 	virtual void doGetNextFrame();
@@ -25,7 +25,7 @@ private:
 	timeval currentTime;
 	// videoCaptureDevice is my BGR data source. You can have according to your need
 	//cv::VideoCapture videoCaptureDevice;
-	core::queue::ConcurrentQueue<filter::data::Data> & _concurrent_queue;
+	core::queue::ConcurrentQueue<data::Data> & _concurrent_queue;
 
 	cv::Mat rawImage;
 	// Remember the x264 encoder wrapper we wrote in the start
