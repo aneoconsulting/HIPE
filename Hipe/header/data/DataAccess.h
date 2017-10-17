@@ -1,6 +1,8 @@
 #pragma once 
 #include <core/HipeNativeTypes.h>
 
+#include <data/data_export.h>
+
 enum DataAccess : hUInt64
 {
 	COPY = 0x434f5059,

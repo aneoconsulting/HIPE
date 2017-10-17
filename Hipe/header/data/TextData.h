@@ -5,6 +5,7 @@
 #include <data/IOData.h>
 #include <data/ImageData.h>
 
+#include <data/data_export.h>
 
 namespace data
 {
@@ -24,7 +25,6 @@ namespace data
 		{
 			Data::registerInstance(new TextData());
 
-
 			This()._type = TXT;
 		}
 
@@ -33,7 +33,6 @@ namespace data
 			Data::registerInstance(new TextData());
 
 			This()._type = TXT;
-
 		}
 
 		TextData(const TextData& left) : IOData(left.getType())
@@ -41,7 +40,5 @@ namespace data
 			Data::registerInstance(left._This);
 
 		}
-
-
 	};
 }

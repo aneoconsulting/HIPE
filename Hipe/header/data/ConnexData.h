@@ -7,73 +7,12 @@
 #include "IOData.h"
 #include <core/queue/ConcurrentQueue.h>
 #include <data/IOData.h>
+#include <data/DataPort.h>
+
+#include <data/data_export.h>
 
 namespace data
 {
-	/**
-	 * \todo
-	 * \brief
-	 */
-	class DataPortBase
-	{
-
-	};
-
-	/**
-	 * \todo
-	 * \brief Data port contains the data to guarantee the transition with all Ifilter and IModel
-	 * \tparam D the Data type to transit between 2 and more connexData
-	 */
-	class DataPort : public DataPortBase
-	{
-	public:
-		core::queue::ConcurrentQueue<Data> data;	//<! The queue used to store the data
-
-		/**
-		 * \brief Alias to the pop() method. Get the port's next stored data.
-		 * \see pop()
-		 * \return Returns the port's next stored data.
-		 */
-		Data get()
-		{
-			return pop();
-		}
-
-		/**
-		 * \brief Get the port's next stored data.
-		 * \return Returns the port's next stored data.
-		 */
-		Data pop()
-		{
-			Data value;
-			if (data.pop(value) == false)
-				throw HipeException("No more data to pop from the dataPort");
-
-			return value;
-		}
-
-		/**
-		 * \brief Make the port reference data. The port will establish a link to the next filter in the graph and make data exchange possible.
-		 * \param dataIn The data to reference in the port.
-		 */
-		void push(Data & dataIn)
-		{
-			data.push(dataIn);
-		}
-
-		/**
-		 * \brief Check if there is data present in the port
-		 * \return Returns true if there is no data in the port
-		 */
-		inline bool empty() { return data.empty(); }
-
-		/**
-		 * \brief Get the number of stored elements in the port
-		 * \return Returns the number of stored elements in the port
-		 */
-		inline size_t size() { return data.size(); }
-	};
-
 	/**
 	 * \brief The enum direction to explain if the input data will modified (INOUT) or read only
 	 */
@@ -85,13 +24,26 @@ namespace data
 		NOWAY		//<! There's no input nor output.
 	};
 
+	template <class MyClass>
+	class CopyObject
+	{
+	public:
+		static MyClass copy(MyClass & left)
+		{
+			MyClass & instance = left;
+			//TODO For Opencv operator= isn't a copy specialize the copy to avoid the reference
+			// and call left.copyTo(instance);
+
+			return instance;
+		}
+	};
 
 	/**
 	 * \brief The non template class parent for ConnexData. This class
 	 * is used to contains multiple connector with different type
 	 *
 	 */
-	class ConnexDataBase
+	class DATA_EXPORT ConnexDataBase
 	{
 	protected:
 		/**
@@ -108,31 +60,20 @@ namespace data
 		 * \return Returns the WayData value
 		 * \see WayData
 		 */
-		WayData getWay() const
-		{
-			return _way;
-		}
+		inline WayData getWay() const;
 
 		/**
 		 * \brief [TODO]
 		 * \return [TODO]
 		 */
-		virtual ConnexDataBase & getCast()
-		{
-			return *this;
-		}
+		inline virtual ConnexDataBase& getCast();
 
 		/**
 		 * \brief [TODO]
 		 * \param right
 		 * \return
 		 */
-		inline virtual ConnexDataBase & operator<<(ConnexDataBase &right)
-		{
-			this->getCast().operator<<(right.getCast());
-
-			return *this;
-		}
+		inline virtual ConnexDataBase& operator<<(ConnexDataBase& right);
 
 		/**
 		 * \brief [TODO]
@@ -143,24 +84,6 @@ namespace data
 			throw HipeException("Cannot down cast to get Port");
 		}
 	};
-
-	template <class MyClass>
-	class CopyObject
-	{
-	public:
-		static MyClass copy(MyClass & left)
-		{
-			MyClass & instance = left;
-			//TODO For Opencv operator= isn't a copy specialize the copy to avoid the reference
-			// and call left.copyTo(instance);
-
-			return instance;
-		}
-
-
-	};
-
-
 
 	/**
 	 * \brief The connector is here to connect all data by DataPort.
@@ -182,7 +105,7 @@ namespace data
 		 * \brief Get the input port's object.
 		 * \return Returns a reference to the port
 		 */
-		virtual DataPortBase &getPort()
+		inline virtual DataPortBase &getPort()
 		{
 			return port;
 		}
@@ -232,17 +155,17 @@ namespace data
 			return in;
 		}
 
-
 		/**
 		 * \brief Get the port's referenced next data. If the way is INOUT, the port will keep a reference to the returned data. In that case modifying the data will affect the one on the port.
 		 * \return Returns the port's referenced next data.
 		 */
-		Din pop()
+		virtual Din pop()
 		{
 			if (!port.empty())
 			{
 				const Data & popped = port.pop();
 				Din in = popped;
+
 				if (_way == INOUT)
 				{
 					broacast(in);
@@ -305,7 +228,6 @@ namespace data
 			}
 
 			broacast(dataOutput);
-
 		}
 
 		/**
@@ -318,7 +240,6 @@ namespace data
 		{
 			Dout caps(matrix);
 			push(caps);
-
 		}
 
 		/**
@@ -350,7 +271,6 @@ namespace data
 			return left;
 		}
 
-
 		/**
 		 * [TODO]
 		 * \brief Link DataPort together to create the data graph
@@ -372,12 +292,7 @@ namespace data
 		{
 			return *this;
 		}
-
-
-
 	};
-
-
 
 
 	/*template <class Din, class Dout>
@@ -444,11 +359,8 @@ namespace data
 
 				}
 			}
-
 			throw HipeException("No more data to pop");
 		}
-
-
 	};
 
 

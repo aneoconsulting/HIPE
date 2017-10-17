@@ -4,6 +4,7 @@
 #include <core/HipeException.h>
 #include <algorithm>
 
+#include <data/data_export.h>
 
 namespace data
 {
@@ -37,7 +38,7 @@ namespace data
 		NONE
 	};
 
-	class DataTypeMapper
+	class DATA_EXPORT DataTypeMapper
 	{
 	public:
 		/**
@@ -45,150 +46,62 @@ namespace data
 		 * \param dataTypeString The name of the requested data type
 		 * \return The data type as an \see IODataType enum value
 		 */
-		static IODataType getTypeFromString(const std::string dataTypeString)
-		{
-			//convert string to hexa long value;
-			hUInt64 value = ToHex(dataTypeString);
-			IODataType dataType = static_cast<IODataType>(value);
-			if (value < 0L || dataType < 0L)
-			{
-				throw HipeException(dataTypeString + " : Bad data type. Cannot find the corresponding type");
-			}
-			return dataType;
-		}
+		static IODataType getTypeFromString(const std::string dataTypeString);
+
 		/**
 		 * \brief
 		 * \param dataType An \see IODataType enum value
 		 * \return The name as an std::string object associated with \see IODataType enum value
 		 */
-		static std::string getStringFromType(const IODataType & dataType)
-		{
-			//convert string to hexa long value;
-			std::string value = ToString(dataType);
-
-			return value;
-		}
+		static std::string getStringFromType(const IODataType& dataType);
 
 		/**
 		 * \brief Checks if a data type is a streamed type one
 		 * \param dataType The queried data type
 		 * \return Returns true if the queried data type is a streaming type one
 		 */
-		static bool isStreaming(const IODataType & dataType)
-		{
-			std::string typeStr = getStringFromType(dataType);
-
-			std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
-
-			if (typeStr.find("strm") != std::string::npos)
-				return true;
-
-			return false;
-		}
+		static bool isStreaming(const IODataType& dataType);
 
 		/**
 		 * \brief Checks if a data type is an image type one
 		 * \param dataType The queried data type
 		 * \return Returns true if the queried data type is an image type one
 		 */
-		static bool isImage(const IODataType & dataType)
-		{
-			if (dataType == IODataType::LISTIO)
-				return true;
-			std::string typeStr = getStringFromType(dataType);
-
-			std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
-
-			if (typeStr.find("img") != std::string::npos)
-				return true;
-
-			return false;
-		}
+		static bool isImage(const IODataType& dataType);
 
 		/**
 		 * \brief Checks if a data type is a video type one
 		 * \param dataType The queried data type
 		 * \return Returns true if the queried data type is a video type one
 		 */
-		static bool isVideo(const IODataType & dataType)
-		{
-			std::string typeStr = getStringFromType(dataType);
-
-			std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
-
-			if (typeStr.find("vid") != std::string::npos && typeStr.find("strm") == std::string::npos)
-				return true;
-
-			return false;
-		}
+		static bool isVideo(const IODataType& dataType);
 
 		/**
 		 * \brief Checks if a data type is a sequence type one
 		 * \param dataType The queried data type
 		 * \return Returns true if the queried data type is a sequence type one
 		 */
-		static bool isSequence(const IODataType & dataType)
-		{
-			/*if (dataType == IODataType::LISTIO)
-				return true;*/
-			std::string typeStr = getStringFromType(dataType);
+		static bool isSequence(const IODataType& dataType);
 
-			std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
-
-			if (typeStr.find("seq") != std::string::npos)
-				return true;
-
-			return false;
-		}
 		/**
 		 * \brief Checks if a data type is a list type one
 		 * \param dataType The queried data type
 		 * \return Returns true if the queried data type is a list type one
 		 */
-		static bool isListIo(const IODataType & dataType)
-		{
-			std::string typeStr = getStringFromType(dataType);
-
-			std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
-
-			if (typeStr.find("lis") != std::string::npos)
-				return true;
-
-			return false;
-		}
+		static bool isListIo(const IODataType& dataType);
 
 		/**
 		 * \brief Checks if a data type is a pattern type one
 		 * \param dataType The queried data type
 		 * \return Returns true if the queried data type is a pattern type one
 		 */
-		static bool isPattern(const IODataType & dataType)
-		{
-			std::string typeStr = getStringFromType(dataType);
-
-			std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
-
-			if (typeStr.find("pattern") != std::string::npos)
-				return true;
-
-			return false;
-		}
+		static bool isPattern(const IODataType& dataType);
 
 		/**
 		 * \brief Checks if a data type is a base64 one
 		 * \param dataType The queried data type
 		 * \return Returns true if the queried data type is a base64 one
 		 */
-		static bool isBase64(const IODataType & dataType)
-		{
-			std::string typeStr = getStringFromType(dataType);
-
-			std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
-
-			if (typeStr.find("base64") != std::string::npos)
-				return true;
-
-			return false;
-		}
+		static bool isBase64(const IODataType& dataType);
 	};
 }

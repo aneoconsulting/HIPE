@@ -4,6 +4,8 @@
 #include <data/IODataType.h>
 #include <data/IOData.h>
 
+#include <data/data_export.h>
+
 namespace data
 {
 	/**
@@ -39,7 +41,7 @@ namespace data
 		 * \brief Get the data
 		 * \return Returns the data in a std::vector container
 		 */
-		std::vector<Data> getListIoData() { return This()._listIoData; }
+		inline std::vector<Data> getListIoData();
 
 		ListIOData(const ListIOData& left) : IOData(left)
 		{
@@ -50,91 +52,44 @@ namespace data
 		* \brief Copy the data of the ListIOData object to another one
 		* \param left The other object where to copy the data to
 		*/
-		void copyTo(ListIOData& left) const
-		{
-			left.This()._listIoData.clear();
-
-			left.Add(*this, true);
-		}
+		void copyTo(ListIOData& left) const;
 
 		/**
 		 * \brief Add data coming from another ListIOData object
 		 * \param left The other object to copy the data from
 		 * \param copy unused
 		 */
-		void Add(const ListIOData& left, bool copy = false)
-		{
-			for (Data data : left._listIoData)
-			{
-				Data cur_data;
-				data.copyTo(cur_data);
-
-				This()._listIoData.push_back(cur_data);
-			}
-		}
+		void Add(const ListIOData& left, bool copy = false);
 
 		/**
 		 * \brief ListIOData assignment operator
 		 * \param left The other object to copy the data from
 		 * \return A reference to the object
 		 */
-		virtual ListIOData& operator=(const ListIOData& left)
-		{
-			if (this == &left) return *this;
-			if (!_This) Data::registerInstance(new ListIOData());
-
-			This()._type = left._type;
-			This()._listIoData.clear();
-
-			for (auto& iodata : left._listIoData)
-			{
-				This()._listIoData.push_back(iodata);
-			}
-			return *this;
-		}
+		virtual ListIOData& operator=(const ListIOData& left);
 
 		/**
 		* \brief Add data coming from another ListIOData object
 		* \param left The other object to copy the data from
 		*/
-		virtual IOData& operator<<(const ListIOData& left)
-		{
-			if (_type != left._type)
-				throw HipeException("Cannot add data because types are different");
-
-			for (auto& data : left._listIoData)
-			{
-				This()._listIoData.push_back(data);
-			}
-
-			return *this;
-		}
+		virtual IOData& operator<<(const ListIOData& left);
 
 		/**
 		 * \brief
 		 * \return Returns true if the object doesn't contain any data
 		 */
-		inline bool empty() const
-		{
-			return This_const()._listIoData.empty();
-		}
+		inline bool empty() const;
 
 		/**
 		 * \brief Get the object's data container (const version)
 		 * \return Returns a constant reference to the object's data container
 		 */
-		const std::vector<Data> & getListData() const
-		{
-			return This_const()._listIoData;
-		}
+		inline const std::vector<Data>& getListData() const;
 
 		/**
 		 * \brief Overwrites the data of the object with the content of a container
 		 * \param left The container to copy the data from
 		 */
-		void setListData(const std::vector<Data> &left)
-		{
-			This()._listIoData = left;
-		}
+		inline void setListData(const std::vector<Data>& left);
 	};
 }

@@ -45,8 +45,6 @@ namespace data
 		StreamVideoInput(const std::string & url);
 
 
-
-
 		virtual ~StreamVideoInput();
 
 		/**
@@ -59,10 +57,6 @@ namespace data
 		 * \brief
 		 * \return Returns true if there's no data
 		 */
-		bool empty() const
-		{
-			cv::Mat data;
-			return This_const()._capture.get()->read(data) != OK;;
-		}
+		bool empty() const;
 	};
 }

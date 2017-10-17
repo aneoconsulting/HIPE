@@ -15,6 +15,8 @@
 #include <data/SquareCrop.h>
 #include <data/PatternData.h>
 
+#include <data/data_export.h>
+
 namespace data
 {
 	std::shared_ptr<ListIOData> ret;
@@ -48,17 +50,7 @@ namespace data
 		 * \param jsonNode The node to query
 		 * \param key The key to find
 		 */
-		static inline bool checkJsonFieldExist(const boost::property_tree::ptree& jsonNode, std::string key, bool throwException = true)
-		{
-			if (jsonNode.count(key) == 0)
-			{
-				if (throwException) throw HipeException("Cannot find field json request. Requested field is : " + key);
-
-				return false;
-			}
-
-			return true;
-		}
+		static inline bool checkJsonFieldExist(const boost::property_tree::ptree& jsonNode, std::string key, bool throwException = true);
 
 		/**
 		 * [TODO]
@@ -66,10 +58,7 @@ namespace data
 		 * \param strPath The path to the image
 		 * \return the loaded image in a FileImage object (casted to the type Data)
 		 */
-		static Data loadImageFromFile(std::string strPath)
-		{
-			return static_cast<Data>(FileImageData(strPath));
-		}
+		static inline Data loadImageFromFile(std::string strPath);
 
 		/**
 		 * \todo
@@ -80,10 +69,7 @@ namespace data
 		 * \param compression the format used to compress the image (like jpg)
 		 * \return the loaded image in a FileImage object (casted to the type Data)
 		 */
-		static Data loadImageFromRawData(const std::string & rawData, const std::string & format, int width, int height, int channels)
-		{
-			return static_cast<Data>(FileImageData(rawData, format, width, height, channels));
-		}
+		static inline Data loadImageFromRawData(const std::string& rawData, const std::string& format, int width, int height, int channels);
 
 		/**
 		 * [TODO]
@@ -91,12 +77,7 @@ namespace data
 		 * \param strPath The images' directory's path
 		 * \return the loaded images in a DirectoryImgData object (casted to the type Data)
 		 */
-		static Data loadImagesFromDirectory(std::string strPath)
-		{
-			return static_cast<Data>(DirectoryImgData(strPath));
-		}
-
-
+		static inline Data loadImagesFromDirectory(std::string strPath);
 
 		/**
 		 * [TODO]
@@ -104,16 +85,7 @@ namespace data
 		 * \param dataNode The data node from the json request tree containing the video to load
 		 * \return The loaded video in a FileVideoInput object (casted to the type Data)
 		 */
-		static Data loadVideoFromFile(const boost::property_tree::ptree& dataNode)
-		{
-			std::string path = dataNode.get<std::string>("path");
-			bool loop = false;
-			if (dataNode.count("loop") != 0)
-			{
-				loop = dataNode.get<bool>("loop");
-			}
-			return static_cast<Data>(FileVideoInput(path, loop));
-		}
+		static Data loadVideoFromFile(const boost::property_tree::ptree& dataNode);
 
 		/**
 		 * [TODO]
@@ -121,7 +93,7 @@ namespace data
 		 * \param path the uri to the stream
 		 * \return The opened stream in a StreamVideoInput object (casted to the type Data)
 		 */
-		static Data loadVideoFromStream(const std::string & path)
+		static inline Data loadVideoFromStream(const std::string & path)
 		{
 			return static_cast<Data>(StreamVideoInput(path));
 		}
@@ -146,33 +118,7 @@ namespace data
 		 * \param cropTree The data note from the json request tree to query containing all the data
 		 * \return the loaded data in a SquareCrop object (casted to the type Data)
 		 */
-		static Data loadSquareCrop(const boost::property_tree::ptree& cropTree)
-		{
-			std::vector<Data> res;
-			std::vector<int> pts;
-
-			auto pcitureJson = cropTree.get_child("IMGF");
-			Data data_from_composer = getDataFromComposer("IMGF", pcitureJson);
-			ImageData picture(static_cast<const ImageData &>(data_from_composer));
-
-
-			if (cropTree.count("crop") != 0)
-			{
-				pts = as_vector<int>(cropTree, "crop");
-			}
-			else
-			{
-				const cv::Mat & cropImage = picture.getMat();
-
-				//Then the image itself is the crop
-				pts.push_back(0); pts.push_back(0);
-				pts.push_back(cropImage.cols); pts.push_back(cropImage.rows);
-			}
-			data::SquareCrop squareCrop(picture, pts);
-
-			return squareCrop;
-		}
-
+		static Data loadSquareCrop(const boost::property_tree::ptree& cropTree);
 
 		/**
 		 * [TODO]
@@ -181,55 +127,7 @@ namespace data
 		 * \param dataNode The node containing the data
 		 * \return the loaded data in its corresponding type (casted to the type Data)
 		 */
-		static Data getDataFromComposer(const std::string datatype, const boost::property_tree::ptree& dataNode)
-		{
-			IODataType ioDataType = DataTypeMapper::getTypeFromString(datatype);
-			switch (ioDataType)
-			{
-			case IODataType::IMGF:
-				data::Composer::checkJsonFieldExist(dataNode, "path");
-				return loadImageFromFile(dataNode.get<std::string>("path"));
-			case IODataType::VIDF:
-				data::Composer::checkJsonFieldExist(dataNode, "path");
-				return loadVideoFromFile(dataNode);
-			case IODataType::SEQIMGD:
-				data::Composer::checkJsonFieldExist(dataNode, "path");
-				return loadImagesFromDirectory(dataNode.get<std::string>("path"));
-			case IODataType::STRMVID:
-				data::Composer::checkJsonFieldExist(dataNode, "path");
-				return loadVideoFromStream(dataNode.get<std::string>("path"));
-			case IODataType::LISTIO:
-				data::Composer::checkJsonFieldExist(dataNode, "array");
-				return loadListIoData(dataNode);
-			case IODataType::PATTERN:
-				data::Composer::checkJsonFieldExist(dataNode, "desc");
-				return loadPatternData(dataNode);
-			case IODataType::SQR_CROP:
-				data::Composer::checkJsonFieldExist(dataNode, "IMGF");
-				return loadSquareCrop(dataNode);
-			case IODataType::IMGB64:
-			{
-				data::Composer::checkJsonFieldExist(dataNode, "data");
-				data::Composer::checkJsonFieldExist(dataNode, "format");
-				std::string format = dataNode.get<std::string>("format");
-				std::transform(format.begin(), format.end(), format.begin(), ::toupper);
-
-				// width, height, and channels are stored in encoded data
-				if (!(format == "JPG" || format == "PNG"))
-				{
-					data::Composer::checkJsonFieldExist(dataNode, "channels");
-					data::Composer::checkJsonFieldExist(dataNode, "width");
-					data::Composer::checkJsonFieldExist(dataNode, "height");
-
-					return loadImageFromRawData(dataNode.get<std::string>("data"), dataNode.get<std::string>("format"), dataNode.get<int>("width"), dataNode.get<int>("height"), dataNode.get<int>("channels"));
-				}
-				return loadImageFromRawData(dataNode.get<std::string>("data"), dataNode.get<std::string>("format"), 0, 0, 0);
-			}
-			case IODataType::NONE:
-			default:
-				throw HipeException("Cannot found the data type requested");
-			}
-		}
+		static Data getDataFromComposer(const std::string datatype, const boost::property_tree::ptree& dataNode);
 
 		/**
 		 * [TODO]
@@ -238,6 +136,5 @@ namespace data
 		 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 		 */
 		static Data getDataFromComposer(const boost::property_tree::ptree& dataNode);
-
 	};
 }

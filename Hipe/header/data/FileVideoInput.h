@@ -1,8 +1,5 @@
 #pragma once
 
-
-#pragma once
-
 #include <data/ImageData.h>
 #include <data/IODataType.h>
 #include <string>
@@ -10,12 +7,14 @@
 #include <boost/filesystem/path.hpp>
 #include "VideoData.h"
 
+#include <data/data_export.h>
+
 namespace data
 {
 	/**
 	 * \brief FileVideoInput is the data type used to handle a video. Uses OpenCV.
 	 */
-	class FileVideoInput : public VideoData<FileVideoInput>
+	class DATA_EXPORT FileVideoInput : public VideoData<FileVideoInput>
 	{
 		/**
 		 * \brief Path of the video
@@ -30,7 +29,7 @@ namespace data
 		 */
 		bool _loop;
 
-		cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
+		inline cv::Mat asOutput();
 
 	private:
 		FileVideoInput() : VideoData(IODataType::VIDF)
@@ -39,7 +38,6 @@ namespace data
 		}
 
 	public:
-
 		/**
 		 * \brief
 		 * \param filePath the path to the video file
@@ -62,93 +60,19 @@ namespace data
 		/**
 		 * \brief Opens a video file from its path, if valid.
 		 */
-		void openFile()
-		{
-			if (This()._capture.isOpened() && !This()._capture.grab())
-			{
-				This()._capture.open(This()._filePath.string());
-				This()._capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
-				This()._capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
-			}
-
-			if (!This()._capture.isOpened())
-			{
-
-				if (std::isdigit(This()._filePath.string().c_str()[0]))
-				{
-					This()._capture.open(atoi(This()._filePath.string().c_str()));
-					This()._capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
-					This()._capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
-				}
-				else
-					This()._capture.open(This()._filePath.string());
-
-				if (!This()._capture.isOpened())
-				{
-					std::stringstream str;
-					str << "Cannot open video : " << This()._filePath.string();
-					throw HipeException(str.str());
-				}
-			}
-		}
+		void openFile();
 
 		/**
 		 * \brief Get the next frame of the video
 		 * \return Return the next frame of the video as a \see Data object, or a black one if the plaback already ended and the loop option is disabled
 		 */
-		Data newFrame()
-		{
-			openFile();
-
-			bool OK = This()._capture.grab();
-			if (!OK)
-			{
-				if (This()._loop)
-				{
-					openFile();
-				}
-				else
-				{
-					return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
-				}
-			}
-
-
-			cv::Mat frame;
-
-			This()._capture.read(frame);
-			int retry = 150;
-			while (frame.rows <= 0 && frame.cols <= 0 && retry >= 0)
-			{
-				if (This()._loop && !This()._capture.grab())
-				{
-
-					openFile();
-				}
-
-				if (!(This()._loop) && (!This()._capture.isOpened() || !This()._capture.grab()))
-				{
-					return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
-				}
-
-				This()._capture.read(frame);
-				if (This()._loop)
-					retry--;
-			}
-
-			return static_cast<Data>(ImageData(frame));;
-		}
-
+		Data newFrame();
 
 		/**
 		 * \todo
 		 * \brief Checks if the FileVideo is empty.
 		 * \return  Returns true if the object doesn't contain any data or the video is not opened, false either.
 		 */
-		bool empty() const
-		{
-			return !(This_const()._capture.isOpened());
-		}
-
+		inline bool empty() const;
 	};
 }

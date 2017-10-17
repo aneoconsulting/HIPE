@@ -2,12 +2,14 @@
 #include <data/IOData.h>
 #include <data/ImageData.h>
 
+#include <data/data_export.h>
+
 namespace data
 {
 	/**
 	 * \brief ImageEncodedData is the data type used to handle encoded (as jpg, png, ...) image data. Uses OpenCV.
 	 */
-	class ImageEncodedData : public IOData<ImageData, ImageEncodedData>
+	class DATA_EXPORT ImageEncodedData : public IOData<ImageData, ImageEncodedData>
 	{
 	public:
 		using IOData::IOData;
@@ -26,6 +28,7 @@ namespace data
 
 		ImageEncodedData(IODataType dataType) : IOData(dataType)
 		{
+
 		}
 
 	public:
@@ -98,45 +101,14 @@ namespace data
 		}*/
 
 
+		ImageEncodedData& operator=(const ImageEncodedData& left);
 
-		ImageEncodedData& operator=(const ImageEncodedData& left)
-		{
-			Data::registerInstance(left);
-			This()._type = left.This_const().getType();
-			This()._decorate = left.This_const().getDecorate();
-			This()._channels = left.This_const().getChannelsCount();
-			This()._width = left.This_const().getWidth();
-			This()._height = left.This_const().getHeight();
-			This()._compression = left.This_const().getCompression();
+		inline int getChannelsCount() const;
 
-			_type = left.This_const().getType();
-			_decorate = left.This_const().getDecorate();
-			_channels = left.This_const().getChannelsCount();
-			_width = left.This_const().getWidth();
-			_height = left.This_const().getHeight();
-			_compression = getCompression();
+		inline int getWidth() const;
 
-			return *this;
-		}
+		inline int getHeight() const;
 
-		int getChannelsCount() const
-		{
-			return This_const()._channels;
-		}
-
-		int getWidth() const
-		{
-			return This_const()._width;
-		}
-
-		int getHeight() const
-		{
-			return This_const()._height;
-		}
-
-		std::string getCompression() const
-		{
-			return This_const()._compression;
-		}
+		inline std::string getCompression() const;
 	};
 }
