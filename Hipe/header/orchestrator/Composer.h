@@ -12,6 +12,7 @@
 #include <json/JsonTree.h>
 
 namespace orchestrator
+
 {
 	/*std::shared_ptr<filter::data::ListIOData> ret;*/
 
@@ -45,16 +46,6 @@ namespace orchestrator
 		 * \param key The key to find
 		 */
 		static bool checkJsonFieldExist(json::JsonTree& jsonNode, std::string key, bool throwException = true)
-		{
-			if (jsonNode.count(key) == 0)
-			{
-				if (throwException) throw HipeException("Cannot find field json request. Requested field is : " + key);
-
-				return false;
-			}
-
-			return true;
-		}
 
 		/**
 		 * [TODO]
@@ -62,10 +53,7 @@ namespace orchestrator
 		 * \param strPath The path to the image
 		 * \return the loaded image in a FileImage object (casted to the type Data)
 		 */
-		static filter::data::Data loadImageFromFile(std::string strPath)
-		{
-			return static_cast<filter::data::Data>(filter::data::FileImageData(strPath));
-		}
+		static inline Data loadImageFromFile(std::string strPath);
 
 		/**
 		 * \todo
@@ -76,10 +64,7 @@ namespace orchestrator
 		 * \param compression the format used to compress the image (like jpg)
 		 * \return the loaded image in a FileImage object (casted to the type Data)
 		 */
-		static filter::data::Data loadImageFromRawData(const std::string & rawData, const std::string & format, int width, int height, int channels)
-		{
-			return static_cast<filter::data::Data>(filter::data::FileImageData(rawData, format, width, height, channels));
-		}
+		static inline Data loadImageFromRawData(const std::string& rawData, const std::string& format, int width, int height, int channels);
 
 		/**
 		 * [TODO]
@@ -87,12 +72,7 @@ namespace orchestrator
 		 * \param strPath The images' directory's path
 		 * \return the loaded images in a DirectoryImgData object (casted to the type Data)
 		 */
-		static filter::data::Data loadImagesFromDirectory(std::string strPath)
-		{
-			return static_cast<filter::data::Data>(filter::data::DirectoryImgData(strPath));
-		}
-
-
+		static inline Data loadImagesFromDirectory(std::string strPath);
 
 		/**
 		 * [TODO]
@@ -101,15 +81,6 @@ namespace orchestrator
 		 * \return The loaded video in a FileVideoInput object (casted to the type Data)
 		 */
 		static filter::data::Data loadVideoFromFile(json::JsonTree& dataNode)
-		{
-			std::string path = dataNode.get("path");
-			bool loop = false;
-			if (dataNode.count("loop") != 0)
-			{
-				loop = dataNode.getBool("loop");
-			}
-			return static_cast<filter::data::Data>(filter::data::FileVideoInput(path, loop));
-		}
 
 		/**
 		 * [TODO]
@@ -117,7 +88,7 @@ namespace orchestrator
 		 * \param path the uri to the stream
 		 * \return The opened stream in a StreamVideoInput object (casted to the type Data)
 		 */
-		static filter::data::Data loadVideoFromStream(const std::string & path)
+		static inline Data loadVideoFromStream(const std::string & path)
 		{
 			return static_cast<filter::data::Data>(filter::data::StreamVideoInput(path));
 		}
@@ -143,32 +114,6 @@ namespace orchestrator
 		 * \return the loaded data in a SquareCrop object (casted to the type Data)
 		 */
 		static filter::data::Data loadSquareCrop(json::JsonTree& cropTree)
-		{
-			std::vector<filter::data::Data> res;
-			std::vector<int> pts;
-
-			auto pcitureJson = cropTree.get_child("IMGF");
-			filter::data::Data data_from_composer = getDataFromComposer("IMGF", pcitureJson);
-			filter::data::ImageData picture(static_cast<const filter::data::ImageData &>(data_from_composer));
-
-
-			if (cropTree.count("crop") != 0)
-			{
-				pts = as_vector<int>(cropTree, "crop");
-			}
-			else
-			{
-				const cv::Mat & cropImage = picture.getMat();
-
-				//Then the image itself is the crop
-				pts.push_back(0); pts.push_back(0);
-				pts.push_back(cropImage.cols); pts.push_back(cropImage.rows);
-			}
-			filter::data::SquareCrop squareCrop(picture, pts);
-
-			return squareCrop;
-		}
-
 
 		/**
 		 * [TODO]
@@ -178,55 +123,7 @@ namespace orchestrator
 		 * \return the loaded data in its corresponding type (casted to the type Data)
 		 */
 		static filter::data::Data getDataFromComposer(const std::string datatype, json::JsonTree& dataNode)
-		{
-			using namespace filter::data;
 			filter::data::IODataType ioDataType = filter::data::DataTypeMapper::getTypeFromString(datatype);
-			switch (ioDataType)
-			{
-			case filter::data::IODataType::IMGF:
-				Composer::checkJsonFieldExist(dataNode, "path");
-				return loadImageFromFile(dataNode.get("path"));
-			case filter::data::IODataType::VIDF:
-				Composer::checkJsonFieldExist(dataNode, "path");
-				return loadVideoFromFile(dataNode);
-			case IODataType::SEQIMGD:
-				Composer::checkJsonFieldExist(dataNode, "path");
-				return loadImagesFromDirectory(dataNode.get("path"));
-			case IODataType::STRMVID:
-				Composer::checkJsonFieldExist(dataNode, "path");
-				return loadVideoFromStream(dataNode.get("path"));
-			case IODataType::LISTIO:
-				Composer::checkJsonFieldExist(dataNode, "array");
-				return loadListIoData(dataNode);
-			case IODataType::PATTERN:
-				Composer::checkJsonFieldExist(dataNode, "desc");
-				return loadPatternData(dataNode);
-			case IODataType::SQR_CROP:
-				Composer::checkJsonFieldExist(dataNode, "IMGF");
-				return loadSquareCrop(dataNode);
-			case IODataType::IMGB64:
-			{
-				Composer::checkJsonFieldExist(dataNode, "data");
-				Composer::checkJsonFieldExist(dataNode, "format");
-				std::string format = dataNode.get("format");
-				std::transform(format.begin(), format.end(), format.begin(), ::toupper);
-
-				// width, height, and channels are stored in encoded data
-				if (!(format == "JPG" || format == "PNG"))
-				{
-					Composer::checkJsonFieldExist(dataNode, "channels");
-					Composer::checkJsonFieldExist(dataNode, "width");
-					Composer::checkJsonFieldExist(dataNode, "height");
-
-					return loadImageFromRawData(dataNode.get("data"), dataNode.get("format"), dataNode.getInt("width"), dataNode.getInt("height"), dataNode.getInt("channels"));
-				}
-				return loadImageFromRawData(dataNode.get("data"), dataNode.get("format"), 0, 0, 0);
-			}
-			case IODataType::NONE:
-			default:
-				throw HipeException("Cannot found the data type requested");
-			}
-		}
 
 		/**
 		 * [TODO]
@@ -235,6 +132,5 @@ namespace orchestrator
 		 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 		 */
 		static filter::data::Data getDataFromComposer(json::JsonTree& dataNode);
-
 	};
 }

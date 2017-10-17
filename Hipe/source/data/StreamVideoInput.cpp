@@ -47,6 +47,12 @@ namespace data
 		return static_cast<Data>(ImageData(data));
 	}
 
+	bool StreamVideoInput::empty() const
+	{
+		cv::Mat data;
+		return This_const()._capture.get()->read(data) != OK;;
+	}
+
 	StreamVideoInput::StreamVideoInput(const StreamVideoInput &data) : VideoData(data._type)
 	{
 		Data::registerInstance(data._This);
@@ -63,5 +69,4 @@ namespace data
 		if (This()._capture.get()->open() != OK)
 			throw HipeException("Cannot open streaming capture");
 	}
-
 }

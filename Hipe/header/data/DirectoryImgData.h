@@ -1,11 +1,14 @@
 #include <data/ImageArrayData.h>
 #include <boost/log/utility/setup/file.hpp>
 
-namespace data {
+#include <data/data_export.h>
+
+namespace data
+{
 	/**
 	 * \brief DirectoryImageData is the data type used to handle a collection of images contained in a folder. Uses OpenCV.
 	 */
-	class DirectoryImgData : public IOData<ImageArrayData, DirectoryImgData>
+	class DATA_EXPORT DirectoryImgData : public IOData<ImageArrayData, DirectoryImgData>
 	{
 		/**
 		 * \brief The path to the folder containing the images
@@ -64,18 +67,12 @@ namespace data {
 		* \brief Get the container of the images' data
 		* \return Returns a reference to the std::vector<cv::Mat> object containing the images' data
 		*/
-		std::vector<cv::Mat> & images()
-		{
-			return This()._array;
-		}
+		inline std::vector<cv::Mat>& images();
 
 		/**
 		* \brief Get data of an image by its index in the container
 		* \return Returns a cv::Mat object containing the image' data
 		*/
-		cv::Mat image(int index)
-		{
-			return This()._array[index];
-		}
+		inline cv::Mat image(int index);
 	};
 }

@@ -1,7 +1,7 @@
 #pragma once
-
-namespace data {
-	class OutputFilter
-	{
-	};
-}
+//
+//namespace data {
+//	class OutputFilter
+//	{
+//	};
+//}

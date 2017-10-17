@@ -5,16 +5,16 @@
 #include <data/IOData.h>
 #include <data/ImageData.h>
 
+#include <data/data_export.h>
+
 
 namespace data
 {
 	/**
 	 * \brief SquareCrop is the data type used to handle an image and information on its regions of interest
 	 */
-	class SquareCrop : public IOData<Data, SquareCrop>
+	class DATA_EXPORT SquareCrop : public IOData<Data, SquareCrop>
 	{
-
-
 	protected:
 		/**
 		 * \brief the list of crop represented by Rectangle and where Rectangle is X,Y the coordiante in the _picture and
@@ -38,12 +38,10 @@ namespace data
 
 		}
 
-
 	public:
 		using IOData::IOData;
 
 	public:
-
 		SquareCrop() : IOData(IODataType::SQR_CROP)
 		{
 			IOData::_Protection priv;
@@ -85,73 +83,35 @@ namespace data
 		SquareCrop(const SquareCrop& left) : IOData(left.getType())
 		{
 			Data::registerInstance(left._This);
-
 		}
 
 		/**
 		 * \brief
 		 * \return Returns the std::vector<cv::Rect> containing all the regions of interest
 		 */
-		std::vector<cv::Rect> getSquareCrop() const
-		{
-			return This_const()._squareCrop;
-		}
+		inline std::vector<cv::Rect> getSquareCrop() const;
 
 		/**
 		 * \brief
 		 * \return Returns the ImageData object containing the source image where the regions of interest are located
 		 */
-		ImageData getPicture() const
-		{
-			return This_const()._picture;
-		}
+		inline ImageData getPicture() const;
 
-		virtual SquareCrop& operator=(const SquareCrop& left)
-		{
-			if (this == &left) return *this;
-			IOData::_Protection priv;
-			if (!left._This) Data::registerInstance(new SquareCrop(priv));
-			else
-				Data::registerInstance(left._This);
-
-
-			return *this;
-		}
+		virtual SquareCrop& operator=(const SquareCrop& left);
 
 		/**
 		 * \brief Add one or multiple regions of interest to the object
 		 * \param left the ROI(s) position(s) on the image: x, y, width, height
 		 * \return A reference to the object
 		 */
-		IOData& operator<<(const std::vector<int>& left)
-		{
-			if (left.size() % 4 != 0)
-			{
-				std::stringstream strbuild;
-				strbuild << "Cannot push the list of crop because input " << left.size() << " isn't a modulo of 4 (2 positions X,Y and 2 size width,height)";
-				throw HipeException(strbuild.str());
-			}
-
-			for (unsigned int index = 0; index < left.size(); index += 4)
-			{
-				cv::Rect rect(left[index], left[index + 1], left[index + 2], left[index + 3]);
-				This()._squareCrop.push_back(rect);
-			}
-
-			return *this;
-		}
+		IOData& operator<<(const std::vector<int>& left);
 
 		/**
 		 * \brief Add one or multiple regions of interest to the object
 		 * \param left The list of the ROI(s) to add
 		 * \return A reference to the object
 		 */
-		IOData& operator<<(const std::vector<cv::Rect>& left)
-		{
-			This()._squareCrop = left;
-
-			return *this;
-		}
+		IOData& operator<<(const std::vector<cv::Rect>& left);
 
 		/**
 		 * \brief Add one or multiple regions of interest to the object, and an image. The image will overwrite the one already in the object
@@ -159,103 +119,34 @@ namespace data
 		 * \param leftImage The image from which the ROI(s) come(s). The image will overwrite the one already in the object
 		 * \return A reference to the object
 		 */
-		IOData& addPair(const std::vector<cv::Point>& leftCrop, const ImageData& leftImage)
-		{
-			if (leftCrop.size() % 2 != 0)
-			{
-				std::stringstream strbuild;
-				strbuild << "Cannot push the list of crop because input " << leftCrop.size() << " isn't a modulo of 2";
-				throw HipeException(strbuild.str());
-			}
-
-			for (unsigned int index = 0; index < leftCrop.size(); index += 2)
-			{
-				cv::Rect rect(leftCrop[index], leftCrop[index + 1]);
-				This()._squareCrop.push_back(rect);
-			}
-
-			This()._picture = leftImage;
-			This().crops(true);
-
-			return *this;
-		}
+		IOData& addPair(const std::vector<cv::Point>& leftCrop, const ImageData& leftImage);
 
 		/**
 		 * \brief Add one or multiple regions of interest to the object.
 		 * \param left The list of ROI(s) to add. A ROI is defined by two points (upper left and bottom right corners). Uses OpenCV cv::Point
 		 * \return A reference to the object
 		 */
-		IOData& operator<<(const std::vector<cv::Point>& left)
-		{
-			if (left.size() % 2 != 0)
-			{
-				std::stringstream strbuild;
-				strbuild << "Cannot push the list of crop because input " << left.size() << " isn't a modulo of 2";
-				throw HipeException(strbuild.str());
-			}
-
-			for (unsigned int index = 0; index < left.size(); index += 2)
-			{
-				cv::Rect rect(left[index], left[index + 1]);
-				This()._squareCrop.push_back(rect);
-			}
-
-			return *this;
-		}
+		IOData& operator<<(const std::vector<cv::Point>& left);
 
 		/**
 		 * \brief Overwrites the current image with a new one
 		 * \param left The ImageData object to overwrite the current one with
 		 * \return A reference to the object
 		 */
-		IOData& operator<<(const ImageData& left)
-		{
-			if (left.empty()) throw HipeException("No more Image to add in SquareCrop");
-
-			This()._picture = left;
-
-
-			return *this;
-		}
+		IOData& operator<<(const ImageData& left);
 
 		/**
 		* \brief Overwrites the current image with a new one
 		* \param left The image to overwrite the current one with
 		* \return A reference to the object
 		*/
-		IOData& operator<<(const cv::Mat left)
-		{
-			if (left.empty()) throw HipeException("No more Image to add in SquareCrop");
-
-			This()._picture = ImageData(left);
-
-
-			return *this;
-		}
+		IOData& operator<<(const cv::Mat left);
 
 		/**
 		* \brief  The function patterns generate an array of cv::Mat with
 		* all the crop representing a sub-matrix of the pattern image.
 		* \return ImageData containing the source to challenge the pattern image
 		*/
-		std::vector<cv::Mat> & crops(bool forceRefresh = false)
-		{
-			if (forceRefresh == false &&
-				This_const()._cropCache.size() == This_const()._squareCrop.size())
-			{
-				return This()._cropCache;
-			}
-
-			std::vector<cv::Mat> res;
-
-			for (cv::Rect crop : This()._squareCrop)
-			{
-				res.push_back(This()._picture.getMat()(crop));
-			}
-
-			This()._cropCache = res;
-
-			return This()._cropCache;
-		}
+		std::vector<cv::Mat>& crops(bool forceRefresh = false);
 	};
 }
