@@ -2,12 +2,12 @@
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <json/JsonFilterNode/JsonFilterTree.h>
-
-namespace core
+#include <json/json_export.h>
+namespace json
 {
 
 	typedef boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>>::iterator ptreeiterator;
-	class JsonTree
+	class JSON_EXPORT JsonTree
 	{
 		boost::property_tree::ptree jsonPtree;
 

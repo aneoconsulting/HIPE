@@ -4,7 +4,7 @@
 namespace json
 {
 
-	json::JsonFilterTree * JsonBuilder::buildAlgorithm(std::stringstream& dataResponse, core::JsonTree & treeRequest)
+	json::JsonFilterTree * JsonBuilder::buildAlgorithm(std::stringstream& dataResponse, json::JsonTree & treeRequest)
 	{
 		std::string OK = "Request OK";
 
@@ -18,7 +18,7 @@ namespace json
 		if (treeRequest.count("filters") == 0)
 			return static_cast<json::JsonFilterTree *>(orchestrator::OrchestratorFactory::getInstance()->getModel(algoName));
 
-		core::JsonTree filters = treeRequest.get_child("filters");
+		json::JsonTree filters = treeRequest.get_child("filters");
 
 		json::JsonFilterTree * tree = new JsonFilterTree();;
 		tree->setName(algoName);

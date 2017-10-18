@@ -1,7 +1,7 @@
-#include "JsonTree.h"
+#include <json/JsonTree.h>
 
 
-namespace core
+namespace json
 {
 	JsonTree::JsonTree()
 	{
@@ -45,7 +45,7 @@ namespace core
 		return jsonPtree.count(key);
 	}
 
-	JsonTree &JsonTree::get_child(const char* str)
+	JsonTree &JsonTree::get_child(const char* str) 
 	{
 		auto j = jsonPtree.get_child(str);
 		/*std::vector<JsonTree*> jsonTreeVector;

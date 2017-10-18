@@ -20,8 +20,8 @@ using namespace std;
 
 core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
 
-std::function<bool(std::string, core::JsonTree *)> kill_command() {
-	return [](std::string optionName, core::JsonTree *lptree)
+std::function<bool(std::string, json::JsonTree *)> kill_command() {
+	return [](std::string optionName, json::JsonTree *lptree)
 	{
 		if (optionName.compare("Kill") == 0) {
 			orchestrator::OrchestratorFactory::getInstance()->killall();
@@ -32,8 +32,8 @@ std::function<bool(std::string, core::JsonTree *)> kill_command() {
 	};
 }
 
-std::function<bool(std::string, core::JsonTree *)>  exit_command() {
-	return [](std::string optionName, core::JsonTree *lptree)
+std::function<bool(std::string, json::JsonTree *)>  exit_command() {
+	return [](std::string optionName, json::JsonTree *lptree)
 	{
 		const std::string exit = "Exit";
 		if (exit.find(optionName) == 0)
@@ -47,8 +47,8 @@ std::function<bool(std::string, core::JsonTree *)>  exit_command() {
 	};
 }
 
-std::function<bool(std::string, core::JsonTree *)> get_filters() {
-	return [](std::string optionName, core::JsonTree *lptree)
+std::function<bool(std::string, json::JsonTree *)> get_filters() {
+	return [](std::string optionName, json::JsonTree *lptree)
 	{
 		const std::string filters = "Filters";
 		int i = 0;
@@ -57,8 +57,8 @@ std::function<bool(std::string, core::JsonTree *)> get_filters() {
 			RegisterTable& reg = RegisterTable::getInstance();
 			for (auto &name : reg.getTypeNames())
 			{
-				auto parameters = new core::JsonTree;
-				auto child = new core::JsonTree;
+				auto parameters = new json::JsonTree;
+				auto child = new json::JsonTree;
 				for (auto &varName : reg.getVarNames(name))
 				{
 					child->put(varName, "");
@@ -74,8 +74,8 @@ std::function<bool(std::string, core::JsonTree *)> get_filters() {
 	};
 }
 
-std::function<bool(std::string, core::JsonTree *)> get_version() {
-	return [](std::string optionName, core::JsonTree *lptree)
+std::function<bool(std::string, json::JsonTree *)> get_version() {
+	return [](std::string optionName, json::JsonTree *lptree)
 	{
 		const std::string version = "Version";
 		if (version.find(optionName) == 0)
@@ -89,8 +89,8 @@ std::function<bool(std::string, core::JsonTree *)> get_version() {
 	};
 }
 
-std::function<bool(std::string, core::JsonTree *)> get_versionHashed() {
-	return [](std::string optionName, core::JsonTree *lptree)
+std::function<bool(std::string, json::JsonTree *)> get_versionHashed() {
+	return [](std::string optionName, json::JsonTree *lptree)
 	{
 		const std::string version = "Hash";
 		if (version.find(optionName) == 0)
@@ -103,9 +103,9 @@ std::function<bool(std::string, core::JsonTree *)> get_versionHashed() {
 	};
 }
 
-std::function<bool(std::string, core::JsonTree *)> get_commands_help() {
+std::function<bool(std::string, json::JsonTree *)> get_commands_help() {
 
-	return [](std::string OptionName, core::JsonTree * lptree)
+	return [](std::string OptionName, json::JsonTree * lptree)
 	{
 		const std::string help = "Help";
 		if (help.find(OptionName) == 0) {
@@ -129,15 +129,15 @@ void http::HttpTask::runTask() const
 	{
 		try {
 			std::stringstream dataResponse;
-			core::JsonTree treeRequest;// = new JsonTree;
-			core::JsonTree treeResponse;// = new JsonTree;
-			core::JsonTree treeResponseInfo;// = new JsonTree;
+			json::JsonTree treeRequest;// = new JsonTree;
+			json::JsonTree treeResponse;// = new JsonTree;
+			json::JsonTree treeResponseInfo;// = new JsonTree;
 			//treeRequest->read_json(static_cast<basic_istream<char>>(_request->content));
 			read_json(_request->content, treeRequest.get_json_ptree());
 			if (treeRequest.count("command") != 0)
 			{
 				auto command = treeRequest.get_child("command").get("type");
-				core::JsonTree  ltreeResponse;// = new JsonTree;
+				json::JsonTree  ltreeResponse;// = new JsonTree;
 				auto commandFound = CommandManager::callOption(command, get_version(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, kill_command(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, get_filters(),& ltreeResponse);
@@ -225,7 +225,7 @@ void http::HttpTask::runTask() const
 			HttpTask::logger << dataResponse.str();
 		}
 		catch (std::exception& e) {
-			auto treeResponse = new json:JsonTree;
+			auto treeResponse = new json::JsonTree;
 			treeResponse->Add("Status", e.what());
 			std::stringstream dataResponse;
 			write_json(dataResponse, treeResponse->get_json_ptree());
@@ -237,7 +237,7 @@ void http::HttpTask::runTask() const
 		}
 
 		catch (HipeException& e) {
-			auto treeResponse = new core::JsonTree;
+			auto treeResponse = new json::JsonTree;
 			treeResponse->Add("Status", e.what());
 			std::stringstream dataResponse;
 			write_json(dataResponse, treeResponse->get_json_ptree());

@@ -1,16 +1,16 @@
 #pragma once
 #include <core/HipeException.h>
 #include "JsonFilterNode/JsonFilterTree.h"
-#include "core/JsonTree.h"
+#include "json/JsonTree.h"
 namespace json
 {
 	class JsonBuilder
 	{
 	public:
 
-		static JsonFilterTree * buildAlgorithm(std::stringstream& dataResponse, core::JsonTree & treeRequest);
+		static JsonFilterTree * buildAlgorithm(std::stringstream& dataResponse, json::JsonTree & treeRequest);
 
-		static std::string getOrBuildOrchestrator(std::stringstream& data_response, core::JsonTree& treeRequest)
+		static std::string getOrBuildOrchestrator(std::stringstream& data_response, json::JsonTree& treeRequest)
 		{
 			std::string orchestrator;
 
