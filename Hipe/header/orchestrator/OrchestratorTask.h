@@ -10,7 +10,7 @@ namespace filter {
 class OrchestratorTask
 {
 public:
-	OrchestratorTask(filter::Model *root, filter::data::IOData& inputData, std::shared_ptr<filter::data::IOData> & outputData)
+	OrchestratorTask(filter::Model *root, filter::data::Data& inputData, std::shared_ptr<filter::data::Data> & outputData)
 	{
 		//Do a copy of the full Model to prevent of deletion during the thread execution
 

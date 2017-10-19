@@ -45,7 +45,7 @@ add_dependencies(streaming streaming_rtsp)
 
 add_dependencies(http filter data)
 
-add_dependencies(orchestrator core filter http json)
+add_dependencies(orchestrator core filter http json data)
 add_dependencies(hipe_server core http orchestrator json streaming)
 
 

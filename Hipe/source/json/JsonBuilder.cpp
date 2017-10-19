@@ -1,26 +1,20 @@
 #include <JsonBuilder.h>
-#include <orchestrator/Orchestrator.h>
 
 namespace json
 {
 
-	json::JsonFilterTree * JsonBuilder::buildAlgorithm(std::stringstream& dataResponse, boost::property_tree::ptree & treeRequest)
+	json::JsonFilterTree * JsonBuilder::buildAlgorithm(std::stringstream& dataResponse, json::JsonTree & treeRequest)
 	{
 		std::string OK = "Request OK";
 
 		if (treeRequest.count("name") == 0)
 			throw HipeException("The algorithm name is not found in the Json. Please inform the field \"name\" : \"name of algorithm\"");
 
-		std::string algoName = treeRequest.get<std::string>("name");
+		std::string algoName = treeRequest.get("name");
 
 
 
-		if (treeRequest.count("filters") == 0)
-			return static_cast<json::JsonFilterTree *>(orchestrator::OrchestratorFactory::getInstance()->getModel(algoName));
-
-		boost::property_tree::ptree filters = treeRequest.get_child("filters");
-
-		//std::string name = pt.get<string>("firstName") + " " + pt.get<std::string>("lastName") + " " + pairs.get<std::string>("name");
+		json::JsonTree filters = treeRequest.get_child("filters");
 
 		json::JsonFilterTree * tree = new JsonFilterTree();;
 		tree->setName(algoName);
@@ -55,9 +49,7 @@ namespace json
 		{
 			throw;
 		}
-		orchestrator::OrchestratorFactory::getInstance()->addModel(algoName, tree);
-		if (tree == nullptr)
-			throw HipeException("fail to build algorithm");
+		
 		return tree;
 	}
 }

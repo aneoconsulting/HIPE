@@ -1,7 +1,6 @@
 #include <orchestrator/Orchestrator.h>
 #include <image/DefaultScheduler.h>
 #include <core/misc.h>
-#include <orchestrator_export.h>
 
 
 template<> orchestrator::OrchestratorFactory* Singleton<orchestrator::OrchestratorFactory>::_instance = nullptr;

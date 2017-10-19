@@ -1,19 +1,16 @@
 #pragma once
-#include <boost/property_tree/ptree_fwd.hpp>
-#include <filter/tools/RegisterTable.h>
-#include <json/JsonFilterNode/JsonFilterNode.h>
-#include <json/JsonFilterNode/JsonFilterTree.h>
 #include <core/HipeException.h>
-
+#include "JsonFilterNode/JsonFilterTree.h"
+#include "json/JsonTree.h"
 namespace json
 {
-	class JsonBuilder
+	class JSON_EXPORT JsonBuilder
 	{
 	public:
 
-		static json::JsonFilterTree * buildAlgorithm(std::stringstream& dataResponse, boost::property_tree::ptree & treeRequest);
+		static JsonFilterTree * buildAlgorithm(std::stringstream& dataResponse, json::JsonTree & treeRequest);
 
-		static std::string getOrBuildOrchestrator(std::stringstream& data_response, boost::property_tree::ptree& treeRequest)
+		static std::string getOrBuildOrchestrator(std::stringstream& data_response, json::JsonTree& treeRequest)
 		{
 			std::string orchestrator;
 
@@ -21,7 +18,7 @@ namespace json
 				orchestrator = "DefaultScheduler";
 			else
 			{
-				orchestrator = treeRequest.get<std::string>("orchestrator");
+				orchestrator = treeRequest.get("orchestrator");
 			}
 
 			if (orchestrator.empty())
