@@ -1,5 +1,4 @@
 #include <JsonBuilder.h>
-#include <orchestrator/Orchestrator.h>
 
 namespace json
 {
@@ -14,9 +13,6 @@ namespace json
 		std::string algoName = treeRequest.get("name");
 
 
-
-		if (treeRequest.count("filters") == 0)
-			return static_cast<json::JsonFilterTree *>(orchestrator::OrchestratorFactory::getInstance()->getModel(algoName));
 
 		json::JsonTree filters = treeRequest.get_child("filters");
 
@@ -53,9 +49,7 @@ namespace json
 		{
 			throw;
 		}
-		orchestrator::OrchestratorFactory::getInstance()->addModel(algoName, tree);
-		if (tree == nullptr)
-			throw HipeException("fail to build algorithm");
+		
 		return tree;
 	}
 }

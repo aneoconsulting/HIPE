@@ -4,7 +4,7 @@
 #include "json/JsonTree.h"
 namespace json
 {
-	class JsonBuilder
+	class JSON_EXPORT JsonBuilder
 	{
 	public:
 

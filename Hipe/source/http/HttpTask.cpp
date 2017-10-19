@@ -3,7 +3,7 @@
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <orchestrator/Orchestrator.h>
-#include <data/Composer.h>
+#include <orchestrator/Composer.h>
 #include <core/HipeException.h>
 #include <http/CommandManager.h>
 #include <core/version.h>
@@ -172,6 +172,13 @@ void http::HttpTask::runTask() const
 			HttpTask::logger << "Port To listen task was " << core::getLocalEnv().getValue("http_port");
 
 			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);//core::JsonBuilder::buildAlgorithm(dataResponse, treeRequest->get_json_ptree());
+			const string name = json_filter_tree->getName();
+			orchestrator::OrchestratorFactory::getInstance()->addModel(name, json_filter_tree);
+			
+			json_filter_tree = static_cast<json::JsonFilterTree *>(orchestrator::OrchestratorFactory::getInstance()->getModel(name));
+			if (json_filter_tree == nullptr)
+				throw HipeException("fail to build or get the model");
+			
 			treeResponseInfo.Add("Algorithm", dataResponse.str());
 			dataResponse.str(std::string());
 
@@ -197,7 +204,7 @@ void http::HttpTask::runTask() const
 			//Check if data is present
 			if (treeRequest.count("data") != 0)
 			{
-				auto data = filter::data::Composer::getDataFromComposer(treeRequest.get_child("data"));
+				auto data = orchestrator::Composer::getDataFromComposer(treeRequest.get_child("data"));
 				//Start processing Algorithm with data
 				filter::data::Data outputData;
 

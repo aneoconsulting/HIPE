@@ -101,7 +101,8 @@ namespace orchestrator
 			{
 				//throw HipeException(key_name + " Model already exist");
 				//TODO Check if Algo need to be overriden
-				_models[key_name] = model;
+				if (model != nullptr)
+					_models[key_name] = model;
 			}
 		}
 
