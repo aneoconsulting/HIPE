@@ -14,6 +14,9 @@ namespace data
 	 * \tparam Base
 	 * \tparam Derived
 	 */
+	class Data;
+	template <typename Base, typename Derived>	class IOData;
+
 	template <typename Base, typename Derived>
 	class DATA_EXPORT IOData : public Base
 	{
@@ -90,14 +93,14 @@ namespace data
 			return static_cast<Derived &>(*((Base::_This).get()));
 		}
 
-		inline Derived & operator=(const Data& left)
+		/*inline Derived & operator=(const Data& left)
 		{
 			Data::registerInstance(left);
 			Data::_type = left.getType();
 			Data::_decorate = left.getDecorate();
 
 			return This();
-		}
+		}*/
 
 		/*	IOData& operator<<(const IOData& left)
 			{

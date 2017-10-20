@@ -33,7 +33,7 @@ namespace data
 		return (Array_const()[0].empty());
 	}
 
-	ImageData& ImageData::operator=(const Data& left)
+	/*ImageData& ImageData::operator=(const Data& left)
 	{
 		Data::registerInstance(left);
 		_type = left.getType();
@@ -41,4 +41,13 @@ namespace data
 
 		return *this;
 	}
+
+	ImageData& ImageData::operator=(Data& left)
+	{
+		Data::registerInstance(left);
+		_type = left.getType();
+		_decorate = left.getDecorate();
+
+		return *this;
+	}*/
 }
