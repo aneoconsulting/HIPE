@@ -54,11 +54,6 @@ namespace data
 		}
 
 		
-		IODataType getType() const
-		{
-			return Base::getType();
-		}
-
 		/**
 		 * \brief Depracated to review  no way to copy on left if it's const ....
 		 * \param left

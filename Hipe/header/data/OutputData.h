@@ -17,15 +17,11 @@ namespace data
 	 */
 	class DATA_EXPORT OutputData : public IOData<Data, OutputData>
 	{
-		std::string result;
+	
+	private:
 		Data input;
-		//std::shared_ptr<Data> input;
+	
 	public:
-		inline std::string getResult() const;
-
-		inline void setResult(const std::string& result);
-
-
 		OutputData() : IOData(IODataType::IMGB64)
 		{
 
@@ -36,7 +32,7 @@ namespace data
 			if (ref.getType() != IMGB64) throw HipeException("ERROR data::ImageArrayData::ImageArrayData - Only Connexdata should call this constructor.");
 
 			Data::registerInstance(ref);
-			result.clear();
+			
 			input = ref;
 			_decorate = true;
 		}
@@ -50,17 +46,23 @@ namespace data
 
 		OutputData& operator=(const OutputData& left);
 
-		inline std::string resultAsString() const;;
-
-		/**
-		 * \brief extract the data of a cv::Mat image and convert it to base64 (as a string)
-		 * \param m the input image ton convert
-		 * \return the data of the input as an alphanumeric string
-		 */
-		static std::string mat2str(const cv::Mat& m);
-
-		boost::property_tree::ptree resultAsJson();
 
 		virtual void copyTo(OutputData& left) const;
+
+		/**
+		* \brief extract the data of a cv::Mat image and convert it to base64 (as a string)
+		* \param m the input image ton convert
+		* \return the data of the input as an alphanumeric string
+		*/
+		static std::string mat2str(const cv::Mat& m);
+
+
+
+		Data getInput() const
+		{
+			return input;
+		}
+
+
 	};
 }

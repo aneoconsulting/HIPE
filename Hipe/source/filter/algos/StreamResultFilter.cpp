@@ -1,5 +1,5 @@
 #include <filter/algos/StreamResultFilter.h>
-#include <boost/proto/transform/arg.hpp>
+
 
 
 namespace filter

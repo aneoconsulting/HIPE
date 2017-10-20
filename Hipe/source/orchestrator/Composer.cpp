@@ -4,9 +4,9 @@
 
 namespace orchestrator
 {
-	filter::data::Data orchestrator::Composer::loadListIoData(json::JsonTree& dataNode)
+	data::Data Composer::loadListIoData(json::JsonTree& dataNode)
 	{
-		using namespace filter::data;
+		using namespace data;
 		std::vector<Data> res;
 
 		auto child = dataNode.allchildren("array");
@@ -19,9 +19,9 @@ namespace orchestrator
 		return static_cast<Data>(ListIOData(res));
 	}
 
-	filter::data::Data orchestrator::Composer::loadPatternData(json::JsonTree& dataNode)
+	data::Data orchestrator::Composer::loadPatternData(json::JsonTree& dataNode)
 	{
-		using namespace filter::data;
+		using namespace data;
 		std::vector<Data> res;
 		auto child = dataNode.allchildren("desc");
 		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
@@ -30,7 +30,7 @@ namespace orchestrator
 			auto data = orchestrator::Composer::getDataFromComposer(dataType, *itarray->second);
 			res.push_back(data);
 		}
-		filter::data::PatternData pattern(res);
+		data::PatternData pattern(res);
 
 		return static_cast<Data>(pattern);
 	}
@@ -41,9 +41,9 @@ namespace orchestrator
 	 * \param dataNode The node to query
 	 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 	 */
-	filter::data::Data Composer::getDataFromComposer(json::JsonTree& dataNode)
+	data::Data Composer::getDataFromComposer(json::JsonTree& dataNode)
 	{
-		using namespace filter::data;
+		using namespace data;
 		checkJsonFieldExist(dataNode, "type");
 		auto datatype = dataNode.get("type");
 

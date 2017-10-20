@@ -10,17 +10,16 @@
 #include <data/SquareCrop.h>
 #include <data/PatternData.h>
 #include <json/JsonTree.h>
+#include <orchestrator/orchestrator_export.h>
 
 namespace orchestrator
 
 {
-	/*std::shared_ptr<filter::data::ListIOData> ret;*/
-
 	/**
 	 *\todo
 	 * \brief The composer class handles the extraction and loading of the data from the json graph
 	 */
-	class Composer
+	class ORCHESTRATOR_EXPORT Composer
 	{
 	public:
 		/**
@@ -45,7 +44,7 @@ namespace orchestrator
 		 * \param jsonNode The node to query
 		 * \param key The key to find
 		 */
-		static bool checkJsonFieldExist(json::JsonTree& jsonNode, std::string key, bool throwException = true)
+		static bool checkJsonFieldExist(json::JsonTree& jsonNode, std::string key, bool throwException = true);
 
 		/**
 		 * [TODO]
@@ -53,7 +52,7 @@ namespace orchestrator
 		 * \param strPath The path to the image
 		 * \return the loaded image in a FileImage object (casted to the type Data)
 		 */
-		static inline Data loadImageFromFile(std::string strPath);
+		static inline data::Data loadImageFromFile(std::string strPath);
 
 		/**
 		 * \todo
@@ -64,7 +63,7 @@ namespace orchestrator
 		 * \param compression the format used to compress the image (like jpg)
 		 * \return the loaded image in a FileImage object (casted to the type Data)
 		 */
-		static inline Data loadImageFromRawData(const std::string& rawData, const std::string& format, int width, int height, int channels);
+		static inline data::Data loadImageFromRawData(const std::string& rawData, const std::string& format, int width, int height, int channels);
 
 		/**
 		 * [TODO]
@@ -72,7 +71,7 @@ namespace orchestrator
 		 * \param strPath The images' directory's path
 		 * \return the loaded images in a DirectoryImgData object (casted to the type Data)
 		 */
-		static inline Data loadImagesFromDirectory(std::string strPath);
+		static inline data::Data loadImagesFromDirectory(std::string strPath);
 
 		/**
 		 * [TODO]
@@ -80,7 +79,7 @@ namespace orchestrator
 		 * \param dataNode The data node from the json request tree containing the video to load
 		 * \return The loaded video in a FileVideoInput object (casted to the type Data)
 		 */
-		static filter::data::Data loadVideoFromFile(json::JsonTree& dataNode)
+		static data::Data loadVideoFromFile(json::JsonTree& dataNode);
 
 		/**
 		 * [TODO]
@@ -88,9 +87,9 @@ namespace orchestrator
 		 * \param path the uri to the stream
 		 * \return The opened stream in a StreamVideoInput object (casted to the type Data)
 		 */
-		static inline Data loadVideoFromStream(const std::string & path)
+		static inline data::Data loadVideoFromStream(const std::string & path)
 		{
-			return static_cast<filter::data::Data>(filter::data::StreamVideoInput(path));
+			return static_cast<data::Data>(data::StreamVideoInput(path));
 		}
 
 		/**
@@ -99,38 +98,36 @@ namespace orchestrator
 		 * \param the data node from the json request tree to query containing all the data
 		 * \return the loaded data in a ListIOData object (casted to the type Data)
 		 */
-		static filter::data::Data loadListIoData(json::JsonTree& dataNode);
+		static data::Data loadListIoData(json::JsonTree& dataNode);
 		/**
 		 * [TODO]
 		 * \brief Wrapper function to load the data from a pattern (PATTERN) as a PatternData object
 		 * \param dataNode The data node from the json request tree to query containing all the data
 		 * \return the loaded data in a PatternData oject (casted to the type Data)
 		 */
-		static filter::data::Data loadPatternData(json::JsonTree& dataNode);
+		static data::Data loadPatternData(json::JsonTree& dataNode);
 		/**
 		 * [TODO]
 		 * \brief Wrapper function to load the data from a [TODO] as a SquareCrop object
 		 * \param cropTree The data note from the json request tree to query containing all the data
 		 * \return the loaded data in a SquareCrop object (casted to the type Data)
 		 */
-		static filter::data::Data loadSquareCrop(json::JsonTree& cropTree)
+		static data::Data loadSquareCrop(json::JsonTree& cropTree);
 
-		/**
-		 * [TODO]
-		 * \brief Extract the data from a json tree node and load it to its corresponding type
-		 * \param datatype the type of the data to extract and load
-		 * \param dataNode The node containing the data
-		 * \return the loaded data in its corresponding type (casted to the type Data)
-		 */
-		static filter::data::Data getDataFromComposer(const std::string datatype, json::JsonTree& dataNode)
-			filter::data::IODataType ioDataType = filter::data::DataTypeMapper::getTypeFromString(datatype);
-
+			/**
+			 * [TODO]
+			 * \brief Extract the data from a json tree node and load it to its corresponding type
+			 * \param datatype the type of the data to extract and load
+			 * \param dataNode The node containing the data
+			 * \return the loaded data in its corresponding type (casted to the type Data)
+			 */
+			static data::Data getDataFromComposer(const std::string datatype, json::JsonTree& dataNode);
 		/**
 		 * [TODO]
 		 * \brief Extract the data from a json tree node (if existing) and load it to its corresponding type
 		 * \param dataNode The node to query
 		 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 		 */
-		static filter::data::Data getDataFromComposer(json::JsonTree& dataNode);
+		static data::Data getDataFromComposer(json::JsonTree& dataNode);
 	};
 }

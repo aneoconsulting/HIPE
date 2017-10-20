@@ -215,7 +215,7 @@ void http::HttpTask::runTask() const
 				{
 					data::OutputData output_data;
 					output_data = outputData;
-					auto outpd = output_data.resultAsJson();
+					auto outpd = json::JsonBuilder::buildJson(output_data);
 
 					treeResponse.AddChild("dataResponse",outpd);
 				}

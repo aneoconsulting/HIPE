@@ -11,15 +11,13 @@ namespace data
 	/**
 	 * \brief ListIOData is the data type to use when you have multiple types of data to handle at the same time
 	 */
-	class ListIOData : public IOData<Data, ListIOData>
+	class DATA_EXPORT ListIOData : public IOData<Data, ListIOData>
 	{
 	protected:
 		/**
 		 * \brief Container of all the data
 		 */
 		std::vector<Data> _listIoData;
-
-		using IOData::IOData;
 
 		ListIOData() : IOData(IODataType::LISTIO)
 		{

@@ -1,4 +1,5 @@
 #include <JsonBuilder.h>
+#include "data/OutputData.h"
 
 namespace json
 {
@@ -51,5 +52,88 @@ namespace json
 		}
 		
 		return tree;
+	}
+
+
+	
+
+	template <>
+	json::JsonTree JsonBuilder::buildJson<data::OutputData>(const data::OutputData & data)
+	{
+		json::JsonTree resultTree;
+		json::JsonTree outputTree;
+
+		// Case where there's no output data to process
+		if (!data.empty())
+		{
+			outputTree.Add("info", "NO Data as response");
+			resultTree.AddChild("DataResult", outputTree);
+			return resultTree;
+		}
+		if (data.This_const().getInput().getType() != data::IMGF && data.This_const().getInput().getType() != data::IMGENC)
+		{
+			outputTree.Add("ERROR", "Previous filter give wrong data type");
+			resultTree.AddChild("DataResult", outputTree);
+			return resultTree;
+		}
+		
+
+		int data_index = 0;
+
+		// For each image output its data in base64
+		const data::ImageArrayData& imgdata = static_cast<const data::ImageArrayData &>(data.This_const().getInput());
+
+		for (auto& mat : imgdata.This_const().Array_const())
+		{
+			// In addition to the base64 data, we add relevent information to the output
+			std::stringstream typeKey;
+			typeKey << "type_" << data_index;
+
+			std::stringstream dataKey;
+			dataKey << "data_" << data_index;
+
+			std::stringstream widthKey;
+			widthKey << "width_" << data_index;
+
+			std::stringstream heightKey;
+			heightKey << "height_" << data_index;
+
+			std::stringstream channelsKey;
+			channelsKey << "channels_" << data_index;
+
+			std::stringstream formatKey;
+			formatKey << "format_" << data_index;
+
+			std::string typeValue = data::DataTypeMapper::getStringFromType(data.This_const().getType());
+
+			outputTree.Add(typeKey.str(), typeValue);
+
+			if (imgdata.getType() == data::IMGF)
+			{
+				outputTree.Add(formatKey.str(), "RAW");
+				outputTree.AddInt(widthKey.str(), mat.cols);
+				outputTree.AddInt(heightKey.str(), mat.rows);
+				outputTree.AddInt(channelsKey.str(), mat.channels());
+			}
+			else if (imgdata.getType() == data::IMGENC)
+			{
+				const data::ImageEncodedData& imgEncData = static_cast<const data::ImageEncodedData&>(data.This_const().getInput());
+
+				outputTree.Add(formatKey.str(), imgEncData.getCompression());
+				outputTree.AddInt(widthKey.str(), imgEncData.getWidth());
+				outputTree.AddInt(heightKey.str(), imgEncData.getHeight());
+				outputTree.AddInt(channelsKey.str(), imgEncData.getChannelsCount());
+			}
+
+			outputTree.Add(dataKey.str(), data.mat2str(mat));
+
+			data_index++;
+		}
+
+		std::stringstream output;
+
+		resultTree.AddChild("DataResult", outputTree);
+
+		return resultTree;
 	}
 }
