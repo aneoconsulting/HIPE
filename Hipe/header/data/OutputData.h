@@ -32,6 +32,16 @@ namespace data
 
 		}
 
+		OutputData(const Data & ref) : IOData(ref.getType())
+		{
+			if (ref.getType() != IMGB64) throw HipeException("ERROR data::ImageArrayData::ImageArrayData - Only Connexdata should call this constructor.");
+
+			Data::registerInstance(ref);
+			result.clear();
+			input = ref;
+			_decorate = true;
+		}
+
 		OutputData(IODataType dataType) : IOData(dataType)
 		{
 

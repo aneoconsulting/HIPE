@@ -12,8 +12,7 @@ namespace data
 	 */
 	class DATA_EXPORT ImageData : public IOData<ImageArrayData, ImageData>
 	{
-	public:
-		using IOData::IOData;
+
 
 	protected:
 		ImageData(IOData::_Protection priv) : IOData(IMGF)
@@ -60,6 +59,15 @@ namespace data
 
 		}
 
+		ImageData(const Data & ref) : IOData(IMGF)
+		{
+			if (ref.getType() != IMGF) throw HipeException("ERROR data::ImageData::ImageData - Only Connexdata should call this constructor.");
+
+			Data::registerInstance(ref);
+			This()._type = ref.getType();
+			_decorate = ref.getDecorate();
+		}
+
 		virtual ~ImageData()
 		{
 
@@ -93,6 +101,8 @@ namespace data
 		*/
 		inline bool empty() const;
 
-		ImageData& operator=(const Data& left);
+		/*ImageData& operator=(const Data& left);
+
+		ImageData& operator=(Data& left);*/
 	};
 }

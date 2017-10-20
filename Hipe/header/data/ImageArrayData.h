@@ -18,12 +18,22 @@ namespace data
 		}
 
 	public:
+
 		/**
 		 * \brief ImageArrayData default constructor, the internal IODataType data type will be "SEQIMG"
 		 */
 		ImageArrayData() : IOData(SEQIMG)
 		{
 
+		}
+
+		ImageArrayData(const data::Data &right) : IOData(right.getType())
+		{
+			if (right.getType() != SEQIMG) throw HipeException("ERROR data::ImageArrayData::ImageArrayData - Only Connexdata should call this constructor.");
+
+			Data::registerInstance(right);
+			_array.resize(0);
+			_decorate = true;
 		}
 
 		/**
