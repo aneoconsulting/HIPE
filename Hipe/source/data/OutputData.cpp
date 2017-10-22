@@ -30,12 +30,12 @@ namespace data
 	{
 		IOData::operator=(left);
 
-		
+
 
 		return *this;
 	}
 
-	
+
 
 	std::string OutputData::mat2str(const cv::Mat& m)
 	{
