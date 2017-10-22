@@ -43,7 +43,6 @@ namespace data
 		}
 
 		OutputData& operator=(const Data& left);
-
 		OutputData& operator=(const OutputData& left);
 
 
@@ -55,14 +54,10 @@ namespace data
 		* \return the data of the input as an alphanumeric string
 		*/
 		static std::string mat2str(const cv::Mat& m);
-
-
-
 		Data getInput() const
 		{
 			return input;
 		}
-
 
 	};
 }

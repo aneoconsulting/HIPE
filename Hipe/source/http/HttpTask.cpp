@@ -1,21 +1,17 @@
 #include <HttpTask.h>
 #include <HttpServer.h>
-#include <boost/property_tree/ptree_fwd.hpp>
-#include <boost/property_tree/json_parser.hpp>
+#include <json/JsonBuilder.h>
 #include <orchestrator/Orchestrator.h>
 #include <orchestrator/Composer.h>
 #include <core/HipeException.h>
 #include <http/CommandManager.h>
 #include <core/version.h>
-#include "core/Localenv.h"
-#include "json/JsonBuilder.h"
+#include <core/Localenv.h>
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
 #include <assert.h>
 #endif
 
-
-using namespace boost::property_tree;
 using namespace std;
 
 core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");

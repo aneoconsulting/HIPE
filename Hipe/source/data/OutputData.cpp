@@ -55,7 +55,7 @@ namespace data
 		return base64_encode(data.data(), data.size());
 	}
 
-	
+
 
 	void OutputData::copyTo(OutputData& left) const
 	{
