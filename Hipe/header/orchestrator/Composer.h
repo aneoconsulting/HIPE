@@ -114,14 +114,15 @@ namespace orchestrator
 		 */
 		static data::Data loadSquareCrop(json::JsonTree& cropTree);
 
-			/**
-			 * [TODO]
-			 * \brief Extract the data from a json tree node and load it to its corresponding type
-			 * \param datatype the type of the data to extract and load
-			 * \param dataNode The node containing the data
-			 * \return the loaded data in its corresponding type (casted to the type Data)
-			 */
-			static data::Data getDataFromComposer(const std::string datatype, json::JsonTree& dataNode);
+		/**
+		 * [TODO]
+		 * \brief Extract the data from a json tree node and load it to its corresponding type
+		 * \param datatype the type of the data to extract and load
+		 * \param dataNode The node containing the data
+		 * \return the loaded data in its corresponding type (casted to the type Data)
+		 */
+		static data::Data getDataFromComposer(const std::string datatype, json::JsonTree& dataNode);
+
 		/**
 		 * [TODO]
 		 * \brief Extract the data from a json tree node (if existing) and load it to its corresponding type
