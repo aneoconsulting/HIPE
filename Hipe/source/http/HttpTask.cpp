@@ -1,21 +1,17 @@
 #include <HttpTask.h>
 #include <HttpServer.h>
-#include <boost/property_tree/ptree_fwd.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <orchestrator/Orchestrator.h>
 #include <orchestrator/Composer.h>
 #include <core/HipeException.h>
 #include <http/CommandManager.h>
 #include <core/version.h>
 #include "core/Localenv.h"
-#include "json/JsonBuilder.h"
+#include <json/JsonBuilder.h>
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
 #include <assert.h>
 #endif
 
-
-using namespace boost::property_tree;
 using namespace std;
 
 core::Logger http::HttpTask::logger = core::setClassNameAttribute("HttpTask");
@@ -128,12 +124,12 @@ void http::HttpTask::runTask() const
 #endif
 	{
 		try {
-			std::stringstream dataResponse;
-			json::JsonTree treeRequest;// = new JsonTree;
-			json::JsonTree treeResponse;// = new JsonTree;
-			json::JsonTree treeResponseInfo;// = new JsonTree;
-			//treeRequest->read_json(static_cast<basic_istream<char>>(_request->content));
-			read_json(_request->content, treeRequest.get_json_ptree());
+			stringstream dataResponse;
+			json::JsonTree treeRequest;
+			json::JsonTree treeResponse;
+			json::JsonTree treeResponseInfo;
+			treeRequest.read_json(_request->content);
+			//read_json(_request->content, treeRequest.get_json_ptree());
 			if (treeRequest.count("command") != 0)
 			{
 				auto command = treeRequest.get_child("command").get("type");
@@ -171,7 +167,7 @@ void http::HttpTask::runTask() const
 			HttpTask::logger << "Check if algorithm need to be built";
 			HttpTask::logger << "Port To listen task was " << core::getLocalEnv().getValue("http_port");
 
-			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);//core::JsonBuilder::buildAlgorithm(dataResponse, treeRequest->get_json_ptree());
+			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);
 			const string name = json_filter_tree->getName();
 			orchestrator::OrchestratorFactory::getInstance()->addModel(name, json_filter_tree);
 			
@@ -220,8 +216,8 @@ void http::HttpTask::runTask() const
 					treeResponse.AddChild("dataResponse",outpd);
 				}
 			}
-			write_json(dataResponse, treeResponse.get_json_ptree());
-
+			
+			treeResponse.write_json(dataResponse);
 
 			*_response << "HTTP/1.1 200 OK\r\n"
 				<< "Access-Control-Allow-Origin: *\r\n"
@@ -232,10 +228,10 @@ void http::HttpTask::runTask() const
 			HttpTask::logger << dataResponse.str();
 		}
 		catch (std::exception& e) {
-			auto treeResponse = new json::JsonTree;
-			treeResponse->Add("Status", e.what());
+			json::JsonTree treeResponse;
+			treeResponse.Add("Status", e.what());
 			std::stringstream dataResponse;
-			write_json(dataResponse, treeResponse->get_json_ptree());
+			treeResponse.write_json(dataResponse);
 			*_response << "HTTP/1.1 200 OK\r\n"
 				<< "Access-Control-Allow-Origin: *\r\n"
 				<< "Content-Type: application/json\r\n"
@@ -244,10 +240,10 @@ void http::HttpTask::runTask() const
 		}
 
 		catch (HipeException& e) {
-			auto treeResponse = new json::JsonTree;
-			treeResponse->Add("Status", e.what());
+			json::JsonTree treeResponse;
+			treeResponse.Add("Status", e.what());
 			std::stringstream dataResponse;
-			write_json(dataResponse, treeResponse->get_json_ptree());
+			treeResponse.write_json(dataResponse);
 			*_response << "HTTP/1.1 200 OK\r\n"
 				<< "Access-Control-Allow-Origin: *\r\n"
 				<< "Content-Type: application/json\r\n"

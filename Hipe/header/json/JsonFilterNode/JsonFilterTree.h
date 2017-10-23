@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <map>
 #include <filter/Model.h>
 #include <json/JsonFilterNode/JsonFilterNode.h>
@@ -10,7 +9,7 @@ namespace json
 {
 	class JsonFilterTree : public filter::Model
 	{
-		std::map<std::string, filter::Model *> _filterMap;
+		std::map<std::string, Model *> _filterMap;
 
 		//Check if the fully nodes are loaded;
 		//If not no dependencies node computation can be accomplish
@@ -50,12 +49,12 @@ namespace json
 		/// 
 		void add(JsonFilterNode& filterNode)
 		{
-			filter::Model* filter = filterNode.getFilter();
-			std::string name = filter->getName();
+			auto filter = filterNode.getFilter();
+			auto name = filter->getName();
 
 			if (_filterMap.find(name) != _filterMap.end())
 			{
-				std::string errorMessage = std::string("Filter named ");
+				auto errorMessage = std::string("Filter named ");
 				errorMessage += name;
 				errorMessage += " doesn't exist";
 

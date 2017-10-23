@@ -1,57 +1,24 @@
 #pragma once
-#include <boost/property_tree/ptree.hpp>
 #include <filter/Model.h>
 #include <filter/tools/RegisterTable.h>
-
+#include <json/JsonTree.h>
 namespace json
 {
 	class JsonFilterNode
 	{
 		filter::Model* _filter;
-
-		boost::property_tree::ptree& _params;
+		JsonTree& _params;
 	public:
 		template <typename T>
-		static std::vector<T> as_vector(boost::property_tree::ptree const& pt, boost::property_tree::ptree::key_type const& key)
-		{
-			std::vector<T> r;
-			for (auto& item : pt.get_child(key))
-				r.push_back(item.second.get_value<T>());
-			return r;
-		}
+		static std::vector<T> as_vector(JsonTree& pt, const char* key);
+		std::vector<std::string> getDependenciesFilter() const;
 
-	public:
-		std::vector<std::string> getDependenciesFilter()
-		{
-			if (_params.count("need") == 0)
-			{
-				return std::vector<std::string>();
-			}
-			return as_vector<std::string>(_params, "need");
-		}
-
-
-		JsonFilterNode(filter::Model* filter, boost::property_tree::ptree& params) : _filter(filter), _params(params)
+		JsonFilterNode(filter::Model* filter, JsonTree& params) : _filter(filter), _params(params)
 		{
 		}
 
-		void applyClassParameter()
-		{
-			for (auto& field : getParameterNames(_filter->getConstructorName()))
-			{
-				std::string copyField(field);
-
-				if (_params.count(field) != 0)
-				{
-					__invoke(_filter, "set_" + copyField + "_from_json", _params);
-				}
-			}
-		}
-
-		filter::Model* getFilter()
-		{
-			return _filter;
-		}
+		void applyClassParameter() const;
+		filter::Model* getFilter() const;
 	};
 }
 

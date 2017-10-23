@@ -35,16 +35,21 @@ namespace json
 		return *this;
 	}
 
-	void JsonTree::read_json(std::istream stream)
+	void JsonTree::read_json(std::istream &stream)
 	{
 		boost::property_tree::read_json(stream, jsonPtree);
 	}
+
+	void JsonTree::write_json(std::basic_ostream<boost::property_tree::ptree::key_type::value_type>& data_response) const
+	{
+		boost::property_tree::write_json(data_response, jsonPtree);
+	}
+
 
 	size_t JsonTree::count(std::string key) const
 	{
 		return jsonPtree.count(key);
 	}
-
 	JsonTree &JsonTree::get_child(const char* str) 
 	{
 		auto j = jsonPtree.get_child(str);
@@ -65,7 +70,6 @@ namespace json
 	{
 		return jsonPtree.end();
 	}
-
 	std::string JsonTree::get(std::string path) const
 	{
 		return jsonPtree.get<std::string>(path);
@@ -99,7 +103,6 @@ namespace json
 	{
 		jsonPtree = ptree;
 	}
-
 	std::map<std::string, JsonTree*> JsonTree::allchildren(char* name)
 	{
 		std::map<std::basic_string<char>, JsonTree*> ret;
