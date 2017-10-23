@@ -1,9 +1,9 @@
 #pragma once
 #include <data/FileVideoInput.h>
 #include <data/ListIOData.h>
+#include <data/OutputData.h>
 #include <data/StreamVideoInput.h>
 #include <boost/thread/thread.hpp>
-#include "data/ListIOData.h"
 #include <data/PatternData.h>
 #include <orchestrator/TaskInfo.h>
 

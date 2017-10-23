@@ -44,7 +44,7 @@ namespace orchestrator
 		 * \param jsonNode The node to query
 		 * \param key The key to find
 		 */
-		static bool checkJsonFieldExist(json::JsonTree& jsonNode, std::string key, bool throwException = true);
+		static inline bool checkJsonFieldExist(json::JsonTree& jsonNode, std::string key, bool throwException = true);
 
 		/**
 		 * [TODO]
@@ -59,8 +59,10 @@ namespace orchestrator
 		 * [TODO]
 		 * \brief Wrapper function to load an image, from its base64 raw data, as a FileImageData object.
 		 * \param rawData the raw data of the image in base64 format. The first part must be a header containg information on the properties of the image
-		 * \param compressed is the image compressed (like in jpg)?
-		 * \param compression the format used to compress the image (like jpg)
+		 * \param format the compression format (like jpeg or png) of the image as a three characters upper case string. Note that "RAW" means no compression
+		 * \param width the width of the image. The width of the image is not encoded in the raw data, so therefore, is needed.
+		 * \param height the height of the image. The height of the image is not encoded in the raw data, so therefore, is needed.
+		 * \param channels the channels count of the image. This information is not encoded in the raw data, so therefore, is needed.
 		 * \return the loaded image in a FileImage object (casted to the type Data)
 		 */
 		static inline data::Data loadImageFromRawData(const std::string& rawData, const std::string& format, int width, int height, int channels);
@@ -87,15 +89,12 @@ namespace orchestrator
 		 * \param path the uri to the stream
 		 * \return The opened stream in a StreamVideoInput object (casted to the type Data)
 		 */
-		static inline data::Data loadVideoFromStream(const std::string & path)
-		{
-			return static_cast<data::Data>(data::StreamVideoInput(path));
-		}
+		static inline data::Data loadVideoFromStream(const std::string & path);
 
 		/**
 		 * [TODO]
 		 * \brief Wrapper function to load a list of data (LISTIO) as a ListIOData object
-		 * \param the data node from the json request tree to query containing all the data
+		 * \param dataNode the data node from the json request tree to query containing all the data
 		 * \return the loaded data in a ListIOData object (casted to the type Data)
 		 */
 		static data::Data loadListIoData(json::JsonTree& dataNode);
