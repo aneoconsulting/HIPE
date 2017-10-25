@@ -18,7 +18,6 @@ namespace data
 		ACK = 0x41434b,					// This is an acknowledge packet
 		SIMG = 0x53494d47,				// Simple Image from base64 data
 		IMGF = 0x494d4746,				// Image from File
-		CIRCLE = 0x434952434c45,
 		LISTIO = 0x4c495354494f,		// List of multiple data types
 		SEQIMG = 0x534551494d47,		// Sequence of Image from base64 data source
 		SEQIMGD = 0x534551494d4744,		// Sequence of image from directory
