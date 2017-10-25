@@ -140,6 +140,17 @@ namespace filter
 			}
 
 			/**
+			* \brief Add points to the points container.
+			* \param points The point to add
+			* \return Returns a reference to the ShapeData object
+			*/
+			ShapeData& operator<<(const std::vector<cv::Point2f>& points)
+			{
+				This()._pointsArray.insert(This()._pointsArray.end(), points.begin(), points.end());
+				return *this;
+			}
+
+			/**
 			* \brief Add a rect to the rect container.
 			* \param rect The rect to add
 			* \return Returns a reference to the ShapeData object
@@ -151,6 +162,17 @@ namespace filter
 			}
 
 			/**
+			* \brief Add rects to the rect container.
+			* \param rects The rects to add
+			* \return Returns a reference to the ShapeData object
+			*/
+			ShapeData& operator<<(const std::vector<cv::Rect>& rects)
+			{
+				This()._rectsArray.insert(This()._rectsArray.end(), rects.begin(), rects.end());
+				return *this;
+			}
+
+			/**
 			* \brief Add a circle to the circles container.
 			* \param circle The circle to add
 			* \return Returns a reference to the ShapeData object
@@ -158,6 +180,17 @@ namespace filter
 			ShapeData& operator<<(cv::Vec3f circle)
 			{
 				This()._circlesArray.push_back(circle);
+				return *this;
+			}
+
+			/**
+			* \brief Add circles to the circles container.
+			* \param circles The circles to add
+			* \return Returns a reference to the ShapeData object
+			*/
+			ShapeData& operator<<(std::vector<cv::Vec3f> circles)
+			{
+				This()._circlesArray.insert(This()._circlesArray.end(), circles.begin(), circles.end());
 				return *this;
 			}
 
