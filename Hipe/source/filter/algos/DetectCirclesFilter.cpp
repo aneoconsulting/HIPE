@@ -39,13 +39,13 @@ HipeStatus filter::algos::DetectCirclesFilter::process()
 	// copy data to matrix by indexing it by rows
 	for (int y = 0; y < rowsCount; ++y)
 	{
-		float* row = circlesMat.ptr<float>(y);
+		cv::Vec3f* row = circlesMat.ptr<cv::Vec3f>(y);
 
 		for (int x = 0; x < colsCount; ++x)
 		{
 			for (int z = 0; z < circleDataCount; ++z)
 			{
-				row[x] = circles[y * rowsCount + x][z];
+				row[x][z] = circles[y * rowsCount + x][z];
 			}
 		}
 	}
