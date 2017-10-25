@@ -20,40 +20,8 @@ HipeStatus filter::algos::DetectCirclesFilter::process()
 		throw HipeException(errorMessage.str());
 	}
 
-	// We use a cv::Mat object to transfer the circles data
-	int rowsCount = 1;
-	int colsCount = circles.size();
-
-	cv::Mat circlesMat(rowsCount, colsCount, CV_32FC3);
-
-	// Assert created matrix is continuous to write its data using the right method
-	if (circlesMat.isContinuous())
-	{
-		colsCount *= rowsCount;
-		rowsCount = 1;
-	}
-
-	// Don't forget each circle is formed by x,y coordinates plus its radius
-	const int circleDataCount = 3;
-
-	// copy data to matrix by indexing it by rows
-	for (int y = 0; y < rowsCount; ++y)
-	{
-		cv::Vec3f* row = circlesMat.ptr<cv::Vec3f>(y);
-
-		for (int x = 0; x < colsCount; ++x)
-		{
-			for (int z = 0; z < circleDataCount; ++z)
-			{
-				row[x][z] = circles[y * rowsCount + x][z];
-			}
-		}
-	}
-
-
-	data::ImageArrayData output;
-	output << image;
-	output << circlesMat;
+	data::ShapeData output;
+	output << circles;
 
 	_connexData.push(output);
 

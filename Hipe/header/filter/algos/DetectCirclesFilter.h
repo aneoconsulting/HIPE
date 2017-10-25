@@ -4,7 +4,7 @@
 #include <core/HipeStatus.h>
 
 #include <data/ImageData.h>
-#include <data/ImageArrayData.h>
+#include <data/ShapeData.h>
 
 #include <sstream>
 
@@ -14,7 +14,7 @@ namespace filter
 	{
 		class DetectCirclesFilter : public filter::IFilter
 		{
-			CONNECTOR(data::ImageData, data::ImageArrayData);
+			CONNECTOR(data::ImageData, data::ShapeData);
 
 			REGISTER(DetectCirclesFilter, ()), _connexData(data::INDATA)
 			{
