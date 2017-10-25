@@ -5,7 +5,6 @@
 
 #include <data/ImageData.h>
 #include <data/ImageArrayData.h>
-#include <filter/algos/Antilogic/Antilogic.hpp>
 
 #include <sstream>
 
@@ -54,7 +53,7 @@ namespace filter
 			item contains the x and y coordinates of the circle's center and its
 			radius.
 			*/
-			bool detect_circles(Mat & image, std::vector<cv::Vec3f>& out_circles, int expected_rows, int expected_cols);
+			bool detect_circles(cv::Mat & image, std::vector<cv::Vec3f>& out_circles, int expected_rows, int expected_cols);
 		};
 
 		ADD_CLASS(DetectCirclesFilter, min_dist, min_radius, max_radius, factor_blur, hough_h_threshold, hough_l_threshold, strict);

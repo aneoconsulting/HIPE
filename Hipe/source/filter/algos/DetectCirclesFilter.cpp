@@ -60,23 +60,23 @@ HipeStatus filter::algos::DetectCirclesFilter::process()
 	return OK;
 }
 
-bool filter::algos::DetectCirclesFilter::detect_circles(Mat& image, std::vector<cv::Vec3f>& out_circles, int expected_rows, int expected_cols)
+bool filter::algos::DetectCirclesFilter::detect_circles(cv::Mat & image, std::vector<cv::Vec3f>& out_circles, int expected_rows, int expected_cols)
 {
 
 	int width, height, length;
-	Mat blurred_image, gray_image;
+	cv::Mat blurred_image, gray_image;
 
 	width = image.rows;
 	height = image.cols;
-	length = min(width, height);
+	length = std::min(width, height);
 
 	// Blur the image to reduce noise and improve circle detection.
-	Size blur_size(width / factor_blur, height / factor_blur);
+	cv::Size blur_size(width / factor_blur, height / factor_blur);
 
-	blur(image, blurred_image, blur_size);
+	cv::blur(image, blurred_image, blur_size);
 
 	// Convert the image to grayscale for the HoughCircles function.
-	cvtColor(blurred_image, gray_image, CV_BGR2GRAY);
+	cv::cvtColor(blurred_image, gray_image, CV_BGR2GRAY);
 	blurred_image.release();
 
 	// Use Antilogic's magic numbers.
@@ -85,7 +85,7 @@ bool filter::algos::DetectCirclesFilter::detect_circles(Mat& image, std::vector<
 	int ma_radius = length * max_radius;
 	// Detect the circles.
 	// https://docs.opencv.org/2.4/modules/gpu/doc/image_processing.html
-	HoughCircles(
+	cv::HoughCircles(
 		gray_image, // GpuMat
 		out_circles, // GpuMat
 		CV_HOUGH_GRADIENT, // method
