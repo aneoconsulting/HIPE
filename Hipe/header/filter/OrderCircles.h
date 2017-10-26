@@ -4,6 +4,7 @@
 #include <core/HipeStatus.h>
 #include <data/ImageData.h>
 #include <data/PatternData.h>
+#include <data/ShapeData.h>
 
 namespace filter
 {
@@ -11,7 +12,7 @@ namespace filter
 
 		class OrderCircles : public filter::IFilter
 		{
-			CONNECTOR(data::ListIOData, data::ImageArrayData);
+			CONNECTOR(data::ShapeData, data::ImageArrayData);
 
 			REGISTER(OrderCircles, ()), _connexData(data::INOUT)
 			{
