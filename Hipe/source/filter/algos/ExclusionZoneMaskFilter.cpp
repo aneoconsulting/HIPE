@@ -24,13 +24,11 @@ void filter::algos::ExclusionZoneMaskFilter::compute_exclusion_zone_mask(cv::Mat
 	cv::Mat mask_image;
 	cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(clahe_clipLimit, clahe_tileGridSize);
 
-	cv::fastNlMeansDenoisingColored(image, mask_image, denoise_h, denoise_templateWindowSize, denoise_searchWindowSize);
-	cv::cvtColor(mask_image, mask_image, cv::COLOR_BGR2GRAY);
 	//auto t1 = cv::getTickCount();
-	cv::fastNlMeansDenoising(image, mask_image, denoise_h, denoise_templateWindowSize, denoise_searchWindowSize);
+	cv::fastNlMeansDenoisingColored(image, mask_image, denoise_h, denoise_templateWindowSize, denoise_searchWindowSize);
 	//auto t2 = cv::getTickCount();
 	//auto time = (t2 - t1) / cv::getTickFrequency();
-
+	cv::cvtColor(mask_image, mask_image, cv::COLOR_BGR2GRAY);
 	clahe->apply(mask_image, mask_image);
 	cv::threshold(mask_image, image, 0, 255, cv::THRESH_BINARY | cv::THRESH_OTSU);
 }
