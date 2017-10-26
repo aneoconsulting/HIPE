@@ -53,35 +53,10 @@ namespace filter
 					std::swap(circles[i], circles[closest_index]);
 				}
 			}
-			int rows = 1; 
-			int cols = circles.size();
-			cv::Mat res(rows, cols, CV_32FC3);
-			// Assert created matrix is continuous to write its data using the right method
-			if (res.isContinuous())
-			{
-				cols *= rows;
-				rows = 1;
-			}
-
-			// Don't forget each circle is formed by x,y coordinates plus its radius
-			const int circleDataCount = 3;
-
-			// copy data to matrix by indexing it by rows
-			for (int y = 0; y < rows; ++y)
-			{
-				float* row = res.ptr<float>(y);
-
-				for (int x = 0; x < cols; ++x)
-				{
-					for (int z = 0; z < circleDataCount; ++z)
-					{
-						row[x] = circles[y * rows + x][z];
-					}
-				}
-			}
-			if (!res.empty()) {
-				data::ImageArrayData output;
-				output << res;
+			
+			if (!circles.empty()) {
+				data::ShapeData output;
+				output << circles;
 				_connexData.push(output);
 				return OK;
 			}

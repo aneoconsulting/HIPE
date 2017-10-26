@@ -12,9 +12,9 @@ namespace filter
 
 		class OrderCircles : public filter::IFilter
 		{
-			CONNECTOR(data::ShapeData, data::ImageArrayData);
+			CONNECTOR(data::ShapeData, data::ShapeData);
 
-			REGISTER(OrderCircles, ()), _connexData(data::INOUT)
+			REGISTER(OrderCircles, ()), _connexData(data::INDATA)
 			{
 			}
 			REGISTER_P(int, i);
