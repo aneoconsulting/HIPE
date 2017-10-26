@@ -32,7 +32,7 @@ namespace filter
 		
 
 		public:
-			HipeStatus HideCircles::process() override;
+			HipeStatus process() override;
 
 		};
 

@@ -34,13 +34,13 @@ namespace filter
 				else  circles = input2;
 
 
-				SIZE_T const s = circles.CirclesArray().size();
+				auto s = circles.CirclesArray().size();
 
-				int
-					width = images.getMat().cols,
-					height = images.getMat().rows;
+				
+				auto width = images.getMat().cols;
+				auto height = images.getMat().rows;
 
-				for (int i(0); i < s; ++i)
+				for (auto i(0); i < s; ++i)
 				{
 
 					int
@@ -62,14 +62,13 @@ namespace filter
 					bounding box of the outer radius.
 					*/
 					std::vector<cv::Vec3b> perimeter_pixels;
-					for (int k = x_min; k < x_max; ++k)
+					for (auto k = x_min; k < x_max; ++k)
 					{
-						for (int l = y_min; l < y_max; ++l)
+						for (auto l = y_min; l < y_max; ++l)
 						{
-							int
-								const dx = k - x,
-								dy = l - y,
-								distance = dx*dx + dy*dy;
+							auto const dx = k - x;
+							auto const dy = l - y;
+							auto const distance = dx*dx + dy*dy;
 							if (distance >= dist_inner && distance <= dist_outer)
 							{
 								perimeter_pixels.push_back(images.getMat().at<cv::Vec3b>(l, k));
