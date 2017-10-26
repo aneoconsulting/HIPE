@@ -11,11 +11,11 @@ namespace filter
 {
 	namespace algos
 	{
-		class ComputeRegularGridFilter : public filter::IFilter
+		class ComputeRegularGrid : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::ShapeData);
 
-			REGISTER(ComputeRegularGridFilter, ()), _connexData(data::INDATA)
+			REGISTER(ComputeRegularGrid, ()), _connexData(data::INDATA)
 			{
 				rows = 4;
 				cols = 4;
@@ -38,6 +38,6 @@ namespace filter
 			std::vector<cv::Point2f> compute_regular_grid(unsigned int rows, unsigned int cols, float width, float height, bool corners_only = false);
 		};
 
-		ADD_CLASS(ComputeRegularGridFilter, rows, cols, width, height);
+		ADD_CLASS(ComputeRegularGrid, rows, cols, width, height);
 	}
 }
