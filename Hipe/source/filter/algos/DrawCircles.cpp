@@ -36,18 +36,18 @@ namespace filter
 				}
 				else  circles = input2; 
 			
-				float const font_scale = factor_font_scale * std::min(images.getMat().rows, images.getMat().cols);
-				SIZE_T const s = circles.CirclesArray().size();
+				auto const font_scale = factor_font_scale * std::min(images.getMat().rows, images.getMat().cols);
+				auto const s = circles.CirclesArray().size();
 				cv::Scalar const circle_color(circle_colorR, circle_colorG, circle_colorB);
 				cv::Scalar const center_color(center_colorR, center_colorG, center_colorB);
 				cv::Scalar const text_color(text_colorR, text_colorG, text_colorB);
 			
 						
-					for (int i (0); i < s ; ++i)
+					for (auto i (0); i < s ; ++i)
 					{
 
 						cv::Point const center(cvRound(circles.CirclesArray()[i][0]), cvRound(circles.CirclesArray()[i][1]));
-						int  const radius = cvRound(circles.CirclesArray()[i][2]);
+						auto  const radius = cvRound(circles.CirclesArray()[i][2]);
 						// Draw perimeter.
 						circle(images.getMat(), center, radius, circle_color, thickness, 8, 0);
 						// Draw center.

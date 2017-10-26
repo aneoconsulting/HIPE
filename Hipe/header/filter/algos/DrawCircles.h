@@ -55,7 +55,7 @@ namespace filter
 
 
 		public:
-			HipeStatus DrawCircles::process() override;
+			HipeStatus process() override;
 			
 			};
 
