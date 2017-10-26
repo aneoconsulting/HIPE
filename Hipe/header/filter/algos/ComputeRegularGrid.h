@@ -17,16 +17,16 @@ namespace filter
 
 			REGISTER(ComputeRegularGrid, ()), _connexData(data::INDATA)
 			{
-				rows = 4;
-				cols = 4;
-				width = 800;
-				height = 800;
+				_rows = 4;
+				_cols = 4;
+				_width = 800;
+				_height = 800;
 			}
 
-			REGISTER_P(unsigned int, rows);
-			REGISTER_P(unsigned int, cols);
-			REGISTER_P(float, width);
-			REGISTER_P(float, height);
+			REGISTER_P(unsigned int, _rows);
+			REGISTER_P(unsigned int, _cols);
+			REGISTER_P(float, _width);
+			REGISTER_P(float, _height);
 
 			HipeStatus process() override;
 
@@ -38,6 +38,6 @@ namespace filter
 			std::vector<cv::Point2f> compute_regular_grid(unsigned int rows, unsigned int cols, float width, float height, bool corners_only = false);
 		};
 
-		ADD_CLASS(ComputeRegularGrid, rows, cols, width, height);
+		ADD_CLASS(ComputeRegularGrid, _rows, _cols, _width, _height);
 	}
 }
