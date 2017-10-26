@@ -21,7 +21,7 @@ namespace filter {
 		}
 
 
-		std::vector<cv::Point2f> ComputeRegularGrid::compute_regular_grid(unsigned int rows, unsigned int cols, float width, float height, bool corners_only = false)
+		std::vector<cv::Point2f> ComputeRegularGrid::compute_regular_grid(unsigned int rows, unsigned int cols, float width, float height, bool corners_only)
 		{
 			/*
 			--0----0----0--
