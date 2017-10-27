@@ -25,15 +25,15 @@ namespace filter
 			{
 				thickness = 5;
 				center_radius = 3;
-				circle_colorR = 0;
-				circle_colorG = 255;
-				circle_colorB = 0;
-				center_colorR = 0;
-				center_colorG = 0;
-				center_colorB = 255;
-				text_colorR = 255;
-				text_colorG = 0;
-				text_colorB = 0;
+				circle_color_r = 0;
+				circle_color_g = 255;
+				circle_color_b = 0;
+				center_color_r = 0;
+				center_color_g = 0;
+				center_color_b = 255;
+				text_color_r = 255;
+				text_color_g = 0;
+				text_color_b = 0;
 				
 				
 				factor_font_scale = FACTOR_FONT_SCALE;
@@ -41,15 +41,15 @@ namespace filter
 
 			REGISTER_P(int, thickness);
 			REGISTER_P(int, center_radius);
-			REGISTER_P(int, circle_colorR);
-			REGISTER_P(int, circle_colorG);
-			REGISTER_P(int, circle_colorB);
-			REGISTER_P(int, center_colorR);
-			REGISTER_P(int, center_colorG);
-			REGISTER_P(int, center_colorB);
-			REGISTER_P(int, text_colorR);
-			REGISTER_P(int, text_colorG);
-			REGISTER_P(int, text_colorB);
+			REGISTER_P(int, circle_color_r);
+			REGISTER_P(int, circle_color_g);
+			REGISTER_P(int, circle_color_b);
+			REGISTER_P(int, center_color_r);
+			REGISTER_P(int, center_color_g);
+			REGISTER_P(int, center_color_b);
+			REGISTER_P(int, text_color_r);
+			REGISTER_P(int, text_color_g);
+			REGISTER_P(int, text_color_b);
 			REGISTER_P(float, factor_font_scale);
 
 
@@ -59,6 +59,6 @@ namespace filter
 			
 			};
 
-			ADD_CLASS(DrawCircles, thickness, center_radius, circle_colorR, circle_colorG, circle_colorB, center_colorR, center_colorG, center_colorB, text_colorR, text_colorG, text_colorB, factor_font_scale);
+			ADD_CLASS(DrawCircles, thickness, center_radius, circle_color_r, circle_color_g, circle_color_b, center_color_r, center_color_g, center_color_b, text_color_r, text_color_g, text_color_b, factor_font_scale);
 		}
 	}

@@ -37,9 +37,9 @@ namespace filter
 			
 				auto const font_scale = factor_font_scale * std::min(images.getMat().rows, images.getMat().cols);
 				auto const s = circles.CirclesArray().size();
-				cv::Scalar const circle_color(circle_colorR, circle_colorG, circle_colorB);
-				cv::Scalar const center_color(center_colorR, center_colorG, center_colorB);
-				cv::Scalar const text_color(text_colorR, text_colorG, text_colorB);
+				cv::Scalar const circle_color(circle_color_r, circle_color_g, circle_color_b);
+				cv::Scalar const center_color(center_color_r, center_color_g, center_color_b);
+				cv::Scalar const text_color(text_color_r, text_color_g, text_color_b);
 			
 						
 					for (auto i (0); i < s ; ++i)
