@@ -19,7 +19,7 @@ namespace orchestrator
 	 *\todo
 	 * \brief The composer class handles the extraction and loading of the data from the json graph
 	 */
-	class ORCHESTRATOR_EXPORT Composer
+	class Composer
 	{
 	public:
 		/**
