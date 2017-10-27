@@ -17,9 +17,21 @@ namespace filter
 
 			REGISTER(ExclusionZoneMaskFilter, ()), _connexData(data::INOUT)
 			{
+				clahe_clip_limit = 1.0;
+				denoise_h = 20;
+				denoise_template_window_size = 20;
+				denoise_search_window_size = 40;
+				clahe_tile_grid_size_x = 4;
+				clahe_tile_grid_size_y = 4;
 			}
 
-			REGISTER_P(char, unused);
+			REGISTER_P(double, clahe_clip_limit);
+			REGISTER_P(double, denoise_h);
+			REGISTER_P(int, denoise_template_window_size);
+			REGISTER_P(int, denoise_search_window_size);
+			REGISTER_P(int, clahe_tile_grid_size_x);
+			REGISTER_P(int, clahe_tile_grid_size_y);
+
 			HipeStatus process() override;
 
 			/*!
@@ -29,6 +41,6 @@ namespace filter
 			void compute_exclusion_zone_mask(cv::Mat & image);
 		};
 
-		ADD_CLASS(ExclusionZoneMaskFilter, unused);
+		ADD_CLASS(ExclusionZoneMaskFilter, clahe_clip_limit, denoise_h, denoise_template_window_size, denoise_search_window_size, clahe_tile_grid_size_x, clahe_tile_grid_size_y);
 	}
 }
