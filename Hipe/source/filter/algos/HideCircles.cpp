@@ -11,8 +11,6 @@ namespace filter
 
 		HipeStatus HideCircles::process()
 		{
-
-
 			while (!_connexData.empty()) // While i've parent data
 			{
 				data::ImageData images;
@@ -21,24 +19,25 @@ namespace filter
 				data::Data input = _connexData.pop();
 				if (input.getType() == data::IMGF)
 				{
-					images = input;
+					images = static_cast<data::ImageData>(input);
 				}
-				else circles = input;
+				else circles = static_cast<data::ShapeData>(input);
 
 				data::Data input2 = _connexData.pop();
 				if (input2.getType() == data::IMGF)
 				{
-					images = input2;
+					images = static_cast<data::ImageData>(input2);
 
 				}
-				else  circles = input2;
+				else  circles = static_cast<data::ShapeData>(input2);
 
 
+				cv::Mat imageOutput = images.getMat().clone();
 				auto s = circles.CirclesArray().size();
 
-				
-				auto width = images.getMat().cols;
-				auto height = images.getMat().rows;
+
+				auto width = imageOutput.cols;
+				auto height = imageOutput.rows;
 
 				for (auto i(0); i < s; ++i)
 				{
@@ -71,7 +70,7 @@ namespace filter
 							auto const distance = dx*dx + dy*dy;
 							if (distance >= dist_inner && distance <= dist_outer)
 							{
-								perimeter_pixels.push_back(images.getMat().at<cv::Vec3b>(l, k));
+								perimeter_pixels.push_back(imageOutput.at<cv::Vec3b>(l, k));
 							}
 						}
 					}
@@ -79,12 +78,13 @@ namespace filter
 					// Calculate the average color.
 					cv::Scalar const mean_color = mean(perimeter_pixels);
 					cv::Point2f const center = { circles.CirclesArray()[i][0], circles.CirclesArray()[i][1] };
-					cv::circle(images.getMat(), center, r_outer, mean_color, -1);
+					cv::circle(imageOutput, center, r_outer, mean_color, -1);
 				}
 
-				_connexData.push(images);
-			
-			}			
+
+				_connexData.push(data::ImageData(imageOutput));
+
+			}
 			return OK;
 		}
 	}
