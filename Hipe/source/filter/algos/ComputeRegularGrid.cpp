@@ -10,7 +10,7 @@ namespace filter {
 
 			if (!image.data) throw HipeException("Error - filter::algos::ComputeRegularGridFilter::process - no input data found.");
 
-			std::vector<cv::Point2f> grid_points = compute_regular_grid(_rows, _cols, _width, _height);
+			std::vector<cv::Point2f> grid_points = compute_regular_grid(rows, cols, width, height);
 
 			data::ShapeData output;
 			output << grid_points;
