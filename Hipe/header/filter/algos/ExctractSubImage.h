@@ -3,7 +3,7 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <data/ImageData.h>
-#include "data/ShapeData.h"
+#include <data/ListIOData.h>
 
 namespace filter
 {
@@ -11,9 +11,9 @@ namespace filter
 	{
 		class ExctractSubImage : public filter::IFilter
 		{
-			CONNECTOR(data::ShapeData, data::ImageData);
+			CONNECTOR(data::Data, data::ImageArrayData);
 
-			REGISTER(ExctractSubImage, ()), _connexData(data::INOUT)
+			REGISTER(ExctractSubImage, ()), _connexData(data::INDATA)
 			{
 			}
 

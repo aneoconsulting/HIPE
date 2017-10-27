@@ -1,24 +1,121 @@
 #include <filter/algos/ExctractSubImage.h>
+#include "data/ShapeData.h"
+
 namespace filter
 {
 	namespace algos
 	{
-		HipeStatus ExctractSubImage::process()
-		{
-
-		}
-		std::vector<cv::Mat>
-			extract_subimages(
+		void subimg_add_text(
+			cv::Mat & image,
+			std::string txt,
+			int offset,
+			int hline,
+			int bottom_border,
+			int left_border,
+			float font_scale,
+			int font_thickness,
+			cv::Scalar text_color
+		);
+		void
+			clean_borders(
 				cv::Mat & image,
-				bool center_circles = true,
-				cv::Scalar line_color = { 128,128,128 },
-				cv::Scalar circle_color = { 240,176,0 },
-				int circle_thickness = 5,
-				float font_scale = 0.8,
-				int font_thickness = 1,
-				cv::Scalar text_color = { 0,0,255 }
+				cv::Point & center,
+				float threshold = 0.1,
+				int thickness = 1
 			)
 		{
+			int max_r =std::min(
+				std::min(center.x, image.cols - center.x),
+				std::min(center.y, image.rows - center.y)
+			);
+
+			cv::Vec3b black_pixel{ 0,0,0 };
+			cv::Vec3b white_pixel{ 255,255,255 };
+
+			for (int r = thickness; r<max_r; ++r)
+			{
+				int
+					r2_inner = r - thickness,
+					r2_outer = r + thickness;
+				r2_inner *= r2_inner;
+				r2_outer *= r2_outer;
+
+				unsigned int total = 0, black = 0;
+
+				for (int i = center.x - r; i<center.x + r; ++i)
+				{
+					for (int j = center.y - r; j<center.y + r; ++j)
+					{
+						int
+							dx = i - center.x,
+							dy = j - center.y,
+							distance = dx*dx + dy*dy;
+						if (distance >= r2_inner && distance <= r2_outer)
+						{
+							total++;
+							if (image.at<cv::Vec3b>(j, i) == black_pixel)
+							{
+								black++;
+							}
+						}
+					}
+				}
+				float ratio = (float)black / total;
+				if (ratio <= threshold)
+				{
+					// TODO: find a better way to do this (masking?)
+					for (int i = 0; i<image.cols; ++i)
+					{
+						for (int j = 0; j<image.rows; ++j)
+						{
+							int
+								dx = i - center.x,
+								dy = j - center.y,
+								distance = dx*dx + dy*dy;
+							if (distance >= r2_outer)
+							{
+								image.at<cv::Vec3b>(j, i) = white_pixel;
+							}
+						}
+					}
+					return;
+				}
+			}
+		}
+
+		HipeStatus ExctractSubImage::process()
+		{
+			auto data = _connexData.pop();
+			auto data2 = _connexData.pop();
+	
+			data::ShapeData data_shape;
+			data::ImageData dataIMage;
+			if(data.getType() == data::IODataType::SHAPE)
+			{
+
+				data_shape = data;
+				dataIMage = data2;
+			}
+			else
+			{
+				data_shape = data2;
+				dataIMage = data;
+			}
+			auto circles = data_shape.CirclesArray_const();
+			auto image = dataIMage.getMat();
+			bool center_circles = true;
+			cv::Scalar line_color = { 128,128,128 };
+			cv::Scalar circle_color = { 240,176,0 };
+
+			int circle_thickness = 5;
+
+			float font_scale = 0.8;
+			int font_thickness = 1;
+			cv::Scalar text_color = { 0,0,255 };
+
+			unsigned int rows = 4;
+			//! @brief The expected number of columns.
+			unsigned int cols = 4;
 			int
 				subwidth = image.cols / cols,
 				subheight = image.rows / rows,
@@ -114,7 +211,7 @@ namespace filter
 
 						// TODO: remove or improve, this is currently just a hack for demonstration
 						std::stringstream percent;
-						percent << fixed << std::setprecision(1) << (100.0 * black_pixels / total_pixels) << "%";
+						percent << std::setprecision(1) << (100.0 * black_pixels / total_pixels) << "%";
 
 						subimg_add_text(color_subimg, std::to_string(black_pixels), -1, hline, bottom_border, left_border, font_scale, font_thickness, text_color);
 						subimg_add_text(color_subimg, std::to_string(total_pixels), 0, hline, bottom_border, left_border, font_scale, font_thickness, text_color);
@@ -126,9 +223,18 @@ namespace filter
 				subimgs.push_back(color_subimg);
 				subimg.release();
 			}
-			return subimgs;
+			data::ImageArrayData res;
+			for (auto subimg : subimgs)
+			{
+				res.Array().push_back(subimg);
+			}
+			if(res.empty())
+			{
+				return EMPTY_RESULT;
+			}
+			_connexData.push(res);
+			return OK;
 		}
-
 
 		void
 			subimg_add_text(
@@ -168,66 +274,11 @@ namespace filter
 			);
 		}
 
+	
 
-		void	clean_borders(cv::Mat & image, cv::Point & center, float threshold = 0.1, int thickness = 1)
-		{
-			int max_r = std::min(
-				std::min(center.x, image.cols - center.x),
-				std::min(center.y, image.rows - center.y)
-			);
 
-			cv::Vec3b black_pixel{ 0,0,0 };
-			cv::Vec3b white_pixel{ 255,255,255 };
+		
 
-			for (int r = thickness; r < max_r; ++r)
-			{
-				int
-					r2_inner = r - thickness,
-					r2_outer = r + thickness;
-				r2_inner *= r2_inner;
-				r2_outer *= r2_outer;
-
-				unsigned int total = 0, black = 0;
-
-				for (int i = center.x - r; i < center.x + r; ++i)
-				{
-					for (int j = center.y - r; j < center.y + r; ++j)
-					{
-						int
-							dx = i - center.x,
-							dy = j - center.y,
-							distance = dx*dx + dy*dy;
-						if (distance >= r2_inner && distance <= r2_outer)
-						{
-							total++;
-							if (image.at<cv::Vec3b>(j, i) == black_pixel)
-							{
-								black++;
-							}
-						}
-					}
-				}
-				float ratio = (float)black / total;
-				if (ratio <= threshold)
-				{
-					// TODO: find a better way to do this (masking?)
-					for (int i = 0; i < image.cols; ++i)
-					{
-						for (int j = 0; j < image.rows; ++j)
-						{
-							int
-								dx = i - center.x,
-								dy = j - center.y,
-								distance = dx*dx + dy*dy;
-							if (distance >= r2_outer)
-							{
-								image.at<cv::Vec3b>(j, i) = white_pixel;
-							}
-						}
-					}
-					return;
-				}
-			}
-		}
+		
 	}
 }

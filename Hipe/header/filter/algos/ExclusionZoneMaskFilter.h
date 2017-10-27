@@ -6,7 +6,7 @@
 #include <data/ImageData.h>
 
 #include <opencv2/imgproc.hpp>
-#include <opencv2/photo.hpp>	// fastNlMeansDenoisingColored
+#include <opencv2/photo.hpp>	
 namespace filter
 {
 	namespace algos

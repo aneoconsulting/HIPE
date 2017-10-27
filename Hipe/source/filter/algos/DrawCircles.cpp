@@ -23,7 +23,7 @@ namespace filter
 				data::Data input = _connexData.pop();
 				if(input.getType()== data::IMGF)
 				{
-					 images = input;
+					images = static_cast<data::ImageData>(input).getMat().clone();
 				}
 				else circles = input; 
 
@@ -31,8 +31,7 @@ namespace filter
 
 				if (input2.getType() == data::IMGF)
 				{
-					 images = input2;
-					 
+					 images = static_cast<data::ImageData>(input2).getMat().clone();					 
 				}
 				else  circles = input2; 
 			
