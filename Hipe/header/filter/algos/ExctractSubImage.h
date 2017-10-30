@@ -43,6 +43,6 @@ namespace filter
 			void clean_borders(cv::Mat & image, cv::Point & center, float threshold = 0.1, int thickness = 1);
 		};
 
-		ADD_CLASS(ExctractSubImage, debug);
+		ADD_CLASS(ExctractSubImage, debug, expected_rows, expected_cols, center_circles);
 	}
 }
