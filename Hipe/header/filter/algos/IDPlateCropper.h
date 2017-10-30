@@ -33,7 +33,7 @@ namespace filter
 		 */
 		class IDPlateCropper : public filter::IFilter
 		{
-			CONNECTOR(data::ImageData, data::ImageData);
+			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
 
 			REGISTER(IDPlateCropper, ()), _connexData(data::INDATA)
 			{

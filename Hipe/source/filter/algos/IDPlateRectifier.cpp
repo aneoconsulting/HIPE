@@ -3,47 +3,55 @@
 
 HipeStatus filter::algos::IDPlateRectifier::process()
 {
-	data::ImageData data = _connexData.pop();
-	cv::Mat image = data.getMat();
-
-	//// Debug: searchlines limits
-	//normalizeRatios();
-
-	// Find ID plate's characters
-	const double drawContourThickness = CV_FILLED;
-	cv::Mat binarizedImage;
-	std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacter(image, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
-
-	// Separate them by rows (lines)
-	std::vector<int> characterRows = filter::algos::IDPlate::splitImgByCharRows(image, plateCharacters);
-
-	//// Add line to bottom of image (we want rows separated by top and bottom lines)
-	//characterRows.push_back(image.rows - 1);
-
-	//Debug
-	if (_debug)
+	while (!_connexData.empty())
 	{
-		cv::Mat debugImage = image.clone();
-		for (auto & row : characterRows)
+		data::ImageArrayData data = _connexData.pop();
+		data::ImageArrayData outputData;
+
+		for (auto& image : data.Array_const())
 		{
-			cv::line(debugImage, cv::Point(0, row), cv::Point(debugImage.cols - 1, row), cv::Scalar(0, 0, 255), 4);
+			//// Debug: searchlines limits
+			//normalizeRatios();
+
+			// Find ID plate's characters
+			const double drawContourThickness = CV_FILLED;
+			cv::Mat binarizedImage;
+			std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacter(image, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
+
+			// Separate them by rows (lines)
+			std::vector<int> characterRows = filter::algos::IDPlate::splitImgByCharRows(image, plateCharacters);
+
+			//// Add line to bottom of image (we want rows separated by top and bottom lines)
+			//characterRows.push_back(image.rows - 1);
+
+			//Debug
+			if (_debug)
+			{
+				cv::Mat debugImage = image.clone();
+				for (auto & row : characterRows)
+				{
+					cv::line(debugImage, cv::Point(0, row), cv::Point(debugImage.cols - 1, row), cv::Scalar(0, 0, 255), 4);
+				}
+				filter::algos::IDPlate::showImage(debugImage);
+			}
+
+			// Sort characters by rows
+			std::vector<std::vector<cv::Rect>> charactersSorted = filter::algos::IDPlate::splitCharactersByRows(plateCharacters, characterRows, image, _debug);
+
+			// Find whole text area
+			std::vector<cv::Point> bounds = findCharactersBounds(image, charactersSorted);
+
+			// Then extract it
+			cv::Mat rectifiedPlate = perspectiveCrop(image, bounds);
+
+			// Debug
+			if (_debug)	filter::algos::IDPlate::showImage(rectifiedPlate);
+
+			outputData << rectifiedPlate;
 		}
-		filter::algos::IDPlate::showImage(debugImage);
+
+		_connexData.push(outputData);
 	}
-
-	// Sort characters by rows
-	std::vector<std::vector<cv::Rect>> charactersSorted = filter::algos::IDPlate::splitCharactersByRows(plateCharacters, characterRows, image, _debug);
-
-	// Find whole text area
-	std::vector<cv::Point> bounds = findCharactersBounds(image, charactersSorted);
-
-	// Then extract it
-	cv::Mat rectifiedPlate = perspectiveCrop(image, bounds);
-
-	// Debug
-	if (_debug)	filter::algos::IDPlate::showImage(rectifiedPlate);
-
-	_connexData.push(data::ImageData(rectifiedPlate));
 	return OK;
 }
 
