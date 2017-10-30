@@ -13,7 +13,7 @@ HipeStatus filter::algos::IDPlateRectifier::process()
 	const double drawContourThickness = CV_FILLED;
 	cv::Mat binarizedImage;
 	std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacter(image, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
-	
+
 	// Separate them by rows (lines)
 	std::vector<int> characterRows = filter::algos::IDPlate::splitImgByCharRows(image, plateCharacters);
 
@@ -109,7 +109,7 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::findLongestT
 	}
 
 	int bestIndex = -1;		// TODO: Exception
-	int bestSumDeriv2 = std::numeric_limits<int>::max();
+	double bestSumDeriv2 = std::numeric_limits<double>::max();
 
 	//Select best index by deriv second 
 	for (int i = 0; i < nbDeriv.size() - linesToFind + 1; i++)
@@ -131,7 +131,8 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::findLongestT
 			}
 
 
-			deriv2Mean += nbDeriv[i + j].second;
+			//deriv2Mean += nbDeriv[i + j].second;
+			deriv2Mean += nbDeriv[i + j].second / nbDeriv[i + j].first;
 		}
 		if (isEmpty) continue;
 
