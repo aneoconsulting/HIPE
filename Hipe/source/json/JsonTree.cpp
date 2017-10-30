@@ -56,7 +56,7 @@ namespace json
 		jsonPtree = ptree;
 	}
 
-	JsonTree JsonTree::get_child(const char* str)
+	JsonTree JsonTree::get_child(const char* str)const
 	{
 		auto j = jsonPtree.get_child(str);
 		JsonTree res;
@@ -84,7 +84,7 @@ namespace json
 	{
 		return jsonPtree.get<int>(path);
 	}
-	boost::property_tree::ptree& JsonTree::get_json_ptree()
+	boost::property_tree::ptree& JsonTree::get_json_ptree() 
 	{
 		return jsonPtree;
 	}
@@ -106,7 +106,7 @@ namespace json
 	{
 		jsonPtree = ptree;
 	}
-	std::map<std::string, JsonTree*> JsonTree::allchildren(char* name)
+	std::map<std::string, JsonTree*> JsonTree::allchildren(char* name) const
 	{
 		std::map<std::basic_string<char>, JsonTree*> ret;
 		auto child = jsonPtree.get_child(name);
