@@ -25,7 +25,7 @@ namespace filter
 	{
 		/**
 		 * \brief The IDPlateIdentifier filter will handle the detection of the character of an ID plate then their recognition with machine learning
-		 * 
+		 *
 		 * \var IDPlateIdentifier::minXPos
 		 * The minimum position on the X Axis to start searching for characters.
 		 *
@@ -49,7 +49,7 @@ namespace filter
 		 */
 		class IDPlateIdentifier : public filter::IFilter
 		{
-			CONNECTOR(data::ImageData, data::ImageData);
+			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
 			REGISTER(IDPlateIdentifier, ()), _connexData(data::INDATA)
 			{
 				_debug = 0;

@@ -2,13 +2,18 @@
 
 HipeStatus filter::algos::IDPlateCropper::process()
 {
-	data::ImageData data = _connexData.pop();
-	cv::Mat image = data.getMat();
-
-	cv::Mat roi = processPlateImage(image);
-
-	_connexData.push(data::ImageData(roi));
-
+	while (!_connexData.empty())
+	{
+		data::ImageArrayData data = _connexData.pop();
+		
+		data::ImageArrayData output;
+		for (auto &image : data.Array_const())
+		{
+			cv::Mat roi = processPlateImage(image);
+			output << roi;
+		}
+		_connexData.push(output);
+	}
 	return OK;
 }
 
