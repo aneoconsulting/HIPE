@@ -13,10 +13,9 @@ namespace json
 		std::string algoName = treeRequest.get("name");
 
 
+		auto filters = treeRequest.get_child("filters");
 
-		json::JsonTree filters = treeRequest.get_child("filters");
-
-		json::JsonFilterTree * tree = new JsonFilterTree();;
+		auto tree = new JsonFilterTree();;
 		tree->setName(algoName);
 
 		for (auto filter = filters.begin(); filter != filters.end(); ++filter)

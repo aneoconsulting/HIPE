@@ -200,6 +200,7 @@ void http::HttpTask::runTask() const
 			//Check if data is present
 			if (treeRequest.count("data") != 0)
 			{
+				
 				auto data = orchestrator::Composer::getDataFromComposer(treeRequest.get_child("data"));
 				//Start processing Algorithm with data
 				filter::data::Data outputData;
