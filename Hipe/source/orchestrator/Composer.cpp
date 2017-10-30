@@ -4,7 +4,7 @@
 
 namespace orchestrator
 {
-	bool Composer::checkJsonFieldExist(json::JsonTree& jsonNode, std::string key, bool throwException)
+	filter::data::Data orchestrator::Composer::loadListIoData(const json::JsonTree& dataNode)
 	{
 		if (jsonNode.count(key) == 0)
 		{
@@ -52,7 +52,7 @@ namespace orchestrator
 		using namespace data;
 		std::vector<Data> res;
 
-		auto child = dataNode.allchildren("array");
+		auto child = dataNode .allchildren("array");
 		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 		{
 			auto iodata = getDataFromComposer(*itarray->second);
@@ -62,7 +62,7 @@ namespace orchestrator
 		return static_cast<Data>(ListIOData(res));
 	}
 
-	data::Data orchestrator::Composer::loadPatternData(json::JsonTree& dataNode)
+	filter::data::Data orchestrator::Composer::loadPatternData(const json::JsonTree& dataNode)
 	{
 		using namespace data;
 		std::vector<Data> res;
@@ -79,6 +79,7 @@ namespace orchestrator
 	}
 
 	data::Data Composer::loadSquareCrop(json::JsonTree& cropTree)
+	filter::data::Data Composer::getDataFromComposer(const json::JsonTree& dataNode)
 	{
 		std::vector<data::Data> res;
 		std::vector<int> pts;
@@ -163,4 +164,5 @@ namespace orchestrator
 
 		return getDataFromComposer(datatype, dataNode);
 	}
+
 }

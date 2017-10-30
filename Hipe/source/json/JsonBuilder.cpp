@@ -14,21 +14,20 @@ namespace json
 		std::string algoName = treeRequest.get("name");
 
 
+		auto filters = treeRequest.get_child("filters");
 
-		json::JsonTree filters = treeRequest.get_child("filters");
-
-		json::JsonFilterTree * tree = new JsonFilterTree();;
+		auto tree = new JsonFilterTree();;
 		tree->setName(algoName);
 
 		for (auto filter = filters.begin(); filter != filters.end(); ++filter)
 		{
 			auto element = filter->second.begin(); //first and unique element of filter
-			boost::property_tree::ptree child = element->second;
-			std::string type = element->first;
-			std::string name = child.get<std::string>("name");
-			filter::Model * res = static_cast<filter::Model *>(newFilter(type));
+			auto child = new JsonTree(element->second);
+			auto type = element->first;
+			auto name = child->get("name");
+			auto res = static_cast<filter::Model *>(newFilter(type));
 			res->setName(name);
-			JsonFilterNode json_filter_node = JsonFilterNode(res, child);
+			auto json_filter_node = JsonFilterNode(res, *child);
 			json_filter_node.applyClassParameter();
 
 			tree->add(json_filter_node);
@@ -37,7 +36,7 @@ namespace json
 			//TESTER
 			dataResponse << type;
 			dataResponse << " ";
-			dataResponse << child.get<std::string>("name");
+			dataResponse << child->get("name");
 
 			dataResponse << "; ";
 
