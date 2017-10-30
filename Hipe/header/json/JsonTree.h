@@ -21,7 +21,8 @@ namespace json
 		JsonTree & AddChild(std::string key, JsonTree & value) ;
 		JsonTree & AddChild(std::string key, boost::property_tree::ptree & value) ;
 		size_t count(std::string) const;
-		JsonTree &get_child(const char* str);
+		void set_json_tree(boost::property_tree::ptree ptree);
+		JsonTree get_child(const char* str);
 		ptreeiterator begin();
 		ptreeiterator end();
 		std::map<std::string, JsonTree*> allchildren(char* name);

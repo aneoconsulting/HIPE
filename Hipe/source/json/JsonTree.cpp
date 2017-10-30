@@ -50,21 +50,22 @@ namespace json
 	{
 		return jsonPtree.count(key);
 	}
-	JsonTree &JsonTree::get_child(const char* str) 
+
+	void JsonTree::set_json_tree(boost::property_tree::ptree ptree)
+	{
+		jsonPtree = ptree;
+	}
+
+	JsonTree JsonTree::get_child(const char* str)
 	{
 		auto j = jsonPtree.get_child(str);
-		/*std::vector<JsonTree*> jsonTreeVector;
-		for (auto itarray = j.begin(); itarray != j.end(); ++itarray)
-		{
-			jsonTreeVector.push_back(new JsonTree(itarray));
-		}*/
-
-		auto returnJ =  new JsonTree(j);
-		return *returnJ;
+		JsonTree res;
+		res.set_json_tree(j);
+		return res;
 	}
 	ptreeiterator  JsonTree::begin()
 	{
-		 return jsonPtree.begin();
+		return jsonPtree.begin();
 	}
 	ptreeiterator JsonTree::end()
 	{
@@ -90,15 +91,17 @@ namespace json
 
 	JsonTree& JsonTree::put(std::string key, std::string value)
 	{
-		auto res =  new JsonTree(jsonPtree.put(key, value));
-		return *res;
+		auto p = jsonPtree.put(key, value);
+		JsonTree j;
+		j.set_json_tree(p);
+		return j;
 	}
 
 	boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>>::iterator JsonTree::push_back(std::string p1, JsonTree &p2)
 	{
 		auto r = jsonPtree.push_back(std::make_pair(p1, p2.get_json_ptree()));
 		return r;
-    }
+	}
 	JsonTree::JsonTree(boost::property_tree::ptree ptree)
 	{
 		jsonPtree = ptree;
@@ -109,7 +112,7 @@ namespace json
 		auto child = jsonPtree.get_child(name);
 		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 		{
-			auto r = new JsonTree(itarray->second);
+			JsonTree *r = new JsonTree(itarray->second);
 			std::basic_string<char> data_type = itarray->first;
 			ret[data_type] = r;
 		}

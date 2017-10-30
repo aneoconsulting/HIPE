@@ -53,15 +53,15 @@ std::function<bool(std::string, json::JsonTree *)> get_filters() {
 			RegisterTable& reg = RegisterTable::getInstance();
 			for (auto &name : reg.getTypeNames())
 			{
-				auto parameters = new json::JsonTree;
-				auto child = new json::JsonTree;
+				json::JsonTree parameters;
+				json::JsonTree child;
 				for (auto &varName : reg.getVarNames(name))
 				{
-					child->put(varName, "");
+					child.put(varName, "");
 				}
 
-				parameters->push_back("", *child);
-				lptree->AddChild(name, *parameters);
+				parameters.push_back("", child);
+				lptree->AddChild(name, parameters);
 				++i;
 			}
 			return true;
