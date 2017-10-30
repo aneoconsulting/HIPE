@@ -44,7 +44,7 @@ namespace orchestrator
 		 * \param jsonNode The node to query
 		 * \param key The key to find
 		 */
-		static inline bool checkJsonFieldExist(json::JsonTree& jsonNode, std::string key, bool throwException = true);
+		static inline bool checkJsonFieldExist(const json::JsonTree& jsonNode, std::string key, bool throwException = true);
 
 		/**
 		 * [TODO]
@@ -81,7 +81,7 @@ namespace orchestrator
 		 * \param dataNode The data node from the json request tree containing the video to load
 		 * \return The loaded video in a FileVideoInput object (casted to the type Data)
 		 */
-		static filter::data::Data loadVideoFromFile(const json::JsonTree& dataNode)
+		static data::Data loadVideoFromFile(const json::JsonTree& dataNode);
 
 		/**
 		 * [TODO]
@@ -97,21 +97,21 @@ namespace orchestrator
 		 * \param dataNode the data node from the json request tree to query containing all the data
 		 * \return the loaded data in a ListIOData object (casted to the type Data)
 		 */
-		static filter::data::Data loadListIoData(const json::JsonTree& dataNode);
+		static data::Data loadListIoData(const json::JsonTree& dataNode);
 		/**
 		 * [TODO]
 		 * \brief Wrapper function to load the data from a pattern (PATTERN) as a PatternData object
 		 * \param dataNode The data node from the json request tree to query containing all the data
 		 * \return the loaded data in a PatternData oject (casted to the type Data)
 		 */
-		static filter::data::Data loadPatternData(const json::JsonTree& dataNode);
+		static data::Data loadPatternData(const json::JsonTree& dataNode);
 		/**
 		 * [TODO]
 		 * \brief Wrapper function to load the data from a [TODO] as a SquareCrop object
 		 * \param cropTree The data note from the json request tree to query containing all the data
 		 * \return the loaded data in a SquareCrop object (casted to the type Data)
 		 */
-		static filter::data::Data loadSquareCrop(const json::JsonTree& cropTree)
+		static data::Data loadSquareCrop(const json::JsonTree& cropTree);
 
 		/**
 		 * [TODO]
@@ -120,7 +120,7 @@ namespace orchestrator
 		 * \param dataNode The node containing the data
 		 * \return the loaded data in its corresponding type (casted to the type Data)
 		 */
-		static filter::data::Data getDataFromComposer(const std::string datatype, const json::JsonTree& dataNode)
+		static data::Data getDataFromComposer(const std::string datatype, const json::JsonTree& dataNode);
 
 		/**
 		 * [TODO]
@@ -128,6 +128,6 @@ namespace orchestrator
 		 * \param dataNode The node to query
 		 * \return the loaded data (if existing) in its corresponding type (casted to the type Data)
 		 */
-		static filter::data::Data getDataFromComposer(const json::JsonTree& dataNode);
+		static data::Data getDataFromComposer(const json::JsonTree& dataNode);
 	};
 }

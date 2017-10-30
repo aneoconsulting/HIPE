@@ -4,7 +4,21 @@
 
 namespace orchestrator
 {
-	filter::data::Data orchestrator::Composer::loadListIoData(const json::JsonTree& dataNode)
+	data::Data orchestrator::Composer::loadListIoData(const json::JsonTree& dataNode)
+	{
+		std::vector<data::Data> res;
+
+		auto child = dataNode.allchildren("array");
+		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
+		{
+			auto iodata = getDataFromComposer(*itarray->second);
+			res.push_back(iodata);
+		}
+
+		return static_cast<data::Data>(data::ListIOData(res));
+	}
+
+	bool Composer::checkJsonFieldExist(const json::JsonTree& jsonNode, std::string key, bool throwException)
 	{
 		if (jsonNode.count(key) == 0)
 		{
@@ -31,7 +45,7 @@ namespace orchestrator
 		return static_cast<data::Data>(data::DirectoryImgData(strPath));
 	}
 
-	data::Data Composer::loadVideoFromFile(json::JsonTree& dataNode)
+	data::Data Composer::loadVideoFromFile(const json::JsonTree& dataNode)
 	{
 		std::string path = dataNode.get("path");
 		bool loop = false;
@@ -47,22 +61,7 @@ namespace orchestrator
 		return static_cast<data::Data>(data::StreamVideoInput(path));
 	}
 
-	data::Data Composer::loadListIoData(json::JsonTree& dataNode)
-	{
-		using namespace data;
-		std::vector<Data> res;
-
-		auto child = dataNode .allchildren("array");
-		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
-		{
-			auto iodata = getDataFromComposer(*itarray->second);
-			res.push_back(iodata);
-		}
-
-		return static_cast<Data>(ListIOData(res));
-	}
-
-	filter::data::Data orchestrator::Composer::loadPatternData(const json::JsonTree& dataNode)
+	data::Data Composer::loadPatternData(const json::JsonTree& dataNode)
 	{
 		using namespace data;
 		std::vector<Data> res;
@@ -78,8 +77,7 @@ namespace orchestrator
 		return static_cast<Data>(pattern);
 	}
 
-	data::Data Composer::loadSquareCrop(json::JsonTree& cropTree)
-	filter::data::Data Composer::getDataFromComposer(const json::JsonTree& dataNode)
+	data::Data Composer::loadSquareCrop(const json::JsonTree& cropTree)
 	{
 		std::vector<data::Data> res;
 		std::vector<int> pts;
@@ -105,8 +103,8 @@ namespace orchestrator
 
 		return static_cast<data::Data>(squareCrop);
 	}
-
-	data::Data Composer::getDataFromComposer(const std::string datatype, json::JsonTree& dataNode)
+		
+	data::Data orchestrator::Composer::getDataFromComposer(const std::string datatype, const json::JsonTree& dataNode)
 	{
 		data::IODataType ioDataType = data::DataTypeMapper::getTypeFromString(datatype);
 		switch (ioDataType)
@@ -156,7 +154,7 @@ namespace orchestrator
 		}
 	}
 
-	data::Data Composer::getDataFromComposer(json::JsonTree& dataNode)
+	data::Data Composer::getDataFromComposer(const json::JsonTree& dataNode)
 	{
 		using namespace data;
 		checkJsonFieldExist(dataNode, "type");
