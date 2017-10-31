@@ -112,8 +112,6 @@ cv::Mat filter::algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plat
 	}
 
 	const int fontFace = cv::FONT_HERSHEY_PLAIN;
-	const double fontScale = 2;
-	const int fontThickness = 2;
 
 	// Print each found texts above plate image
 	for (size_t i = 0; i < charactersRects.size(); ++i)

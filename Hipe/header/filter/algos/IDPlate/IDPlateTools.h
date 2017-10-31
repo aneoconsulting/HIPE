@@ -111,8 +111,8 @@ namespace filter
 			 * \param plateImage The image to apply the filtering on
 			 * \param iterations The number of passes of filtering to apply
 			 * \param diameter The diameter of the kernel to use
-			 * \param sigmaColor 
-			 * \param sigmaSpace 
+			 * \param sigmaColor
+			 * \param sigmaSpace
 			 * \param debug If set to true, the result of the filtering will be shown
 			 * \param useGPU If set to true, the GPU will be prefered instead of the CPU
 			 * \return The filtered image
@@ -141,7 +141,7 @@ namespace filter
 			 * \return The position of the biggest found blob as a cv::Point object
 			 */
 			cv::Point findBiggestBlobPos(cv::Mat& binaryImage, cv::Scalar fillColor, cv::Scalar biggestBlobFillColor, unsigned char threshold, float& out_blobArea, int debug = 0);
-			
+
 			/**
 			 * \brief Find lines (Y coordinates) on an image separating multiple groups of characters. Characters must be sorted
 			 * \param image The image on which to find the lines
@@ -173,11 +173,11 @@ namespace filter
 			 * \param out_binarizedImage (output) the computed binary image containing the characters contours (white characters on black background)
 			 * \param debugLevel parameter used to show and draw debug information
 			 */
-			std::vector<cv::Rect> findPlateCharacter(const cv::Mat& plateImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, double charMinFillRatio, double charMaxFillRatio, cv::Size charRectMinSize = cv::Size(8,20), int contoursFillMethod = CV_FILLED, int debugLevel = 0);
-			
+			std::vector<cv::Rect> findPlateCharacter(const cv::Mat& plateImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, double charMinFillRatio, double charMaxFillRatio, cv::Size charRectMinSize = cv::Size(8, 20), int contoursFillMethod = CV_FILLED, int debugLevel = 0);
+
 			//std::vector<std::vector<cv::Rect>> extractPlateCharacters(const cv::Mat& preprocessedImage, cv::Mat& out_binarizedImage, double minPosX, double maxPosX, int minLines, int maxLines, double ratioY, double ratioHeight, double ratioWidth, const cv::Mat& dbgImage, int debug = 0);
 			/**
-			 * \brief 
+			 * \brief
 			 * \param preprocessedImage The preprocessed image of the ID plate (binarized: black characters on white background)
 			 * \param out_binarizedImage (output) the computed binary image containing the characters contours (white characters on black background)
 			 * \param minPosX The min position bound on the X Axis to start looking for characters
@@ -211,7 +211,7 @@ namespace filter
 			 * \return All the characters who passed the position and the size tests
 			 */
 			std::vector<cv::Rect> filterCharactersFromSize(const cv::Mat& image, std::vector<cv::Rect> characters, double minPosX, double maxPosX, int minLines, int maxLines, std::vector<cv::Rect>& out_dubiousCharacters, const cv::Mat& dbgImage, int debug);
-			
+
 			/**
 			 * \brief Analyze all the negative found characters to extract the false ones (their rects are similar from the valid ones on their respective lines)
 			 * \param image The image on which the rects were extracted
@@ -226,7 +226,7 @@ namespace filter
 			 */
 			std::vector<cv::Rect> filterFalseNegativeChars(const cv::Mat& image, const std::vector<std::vector<cv::Rect>>& textLines, std::vector<cv::Rect>& dubiousCharacters, LineFilteringMethod filterMethod, double ratioY, double ratioMinArea, double ratioMaxArea, const cv::Mat& dbgImage, int debug = 0, bool speedUp = false);
 			//std::vector<cv::Rect> filterFalseNegativeChars(const cv::Mat& image, const std::vector<std::vector<cv::Rect>>& textLines, std::vector<cv::Rect>& dubiousCharacters, LineFilteringMethod filterMethod, double ratioY, double ratioWidth, double ratioHeight, const cv::Mat & dbgImage, int debug = 0, bool speedUp = false);
-			
+
 			/**
 			 * \brief Extract useful data from a line and store it in a LineData struct
 			 * \see LineData
@@ -234,21 +234,21 @@ namespace filter
 			 * \return The computed line data
 			 */
 			LineData extractLineData(const std::vector<cv::Rect>& line);
-			
+
 			/**
 			 * \brief Convert a 3 channel image to a 1 channel one. (4 channels image are not handled)
 			 * \param colorImage The image to be converted
 			 * \return The converted 1 channel image
 			 */
 			cv::Mat convertColor2Gray(const cv::Mat& colorImage);
-			
+
 			/**
 			 * \brief Convert a 1 channel image to a 3 channels (BGR) one (2 channels image are not handled)
 			 * \param grayImage The image to be converted
 			 * \return The converted 3 channels image
 			 */
 			cv::Mat convertGray2Color(const cv::Mat& grayImage);
-			
+
 			/**
 			 * \brief Resizes an image (downscale) keeping its original aspect ratio
 			 * \param image The image to be downscaled
@@ -263,7 +263,7 @@ namespace filter
 			 * \param waitTime The time in ms the image will be shown. If waitTime = 0 the image will be show until a key is pressed. To not wait for a key to be pressed waitTime must be < 0
 			 */
 			void showImage(const cv::Mat& image, std::string name = "debug image", bool shouldDestroy = true, int waitTime = 0);
-			
+
 		}
 	}
 }
