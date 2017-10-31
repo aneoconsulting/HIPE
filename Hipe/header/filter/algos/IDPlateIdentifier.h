@@ -60,6 +60,8 @@ namespace filter
 				ratioY = 0.2;
 				ratioMinArea = 0.5;
 				ratioMaxArea = 3.0;
+				fontScale = 3;
+				fontThickness = 3;
 			}
 
 			REGISTER_P(int, _debug);
@@ -71,6 +73,8 @@ namespace filter
 			REGISTER_P(double, ratioY);
 			REGISTER_P(double, ratioMinArea);
 			REGISTER_P(double, ratioMaxArea);
+			REGISTER_P(int, fontScale);
+			REGISTER_P(int, fontThickness);
 
 
 		public:
@@ -111,7 +115,7 @@ namespace filter
 			cv::Mat createOutputImage(const cv::Mat& plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels);
 		};
 
-		ADD_CLASS(IDPlateIdentifier, _debug, minXPos, maxXPos, minLines, ratioY, ratioMinArea, ratioMaxArea);
+		ADD_CLASS(IDPlateIdentifier, _debug, minXPos, maxXPos, minLines, ratioY, ratioMinArea, ratioMaxArea, fontScale, fontThickness);
 
 		class LabelOCR
 		{
