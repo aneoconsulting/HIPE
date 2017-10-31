@@ -1,9 +1,9 @@
 #pragma once
 #include <data/IOData.h>
 
-namespace filter 
+namespace filter
 {
-	namespace data 
+	namespace data
 	{
 		/**
 		 * \brief ImageArrayData is the data type used to handle multiple images. Uses OpenCV.
@@ -12,7 +12,12 @@ namespace filter
 		{
 		protected:
 			std::vector<cv::Mat> _array;	//<! container of all the images data. The data are handled by cv::Mat objects 
-			 
+
+			ImageArrayData(IOData::_Protection priv) : IOData(SEQIMG)
+			{
+
+			}
+
 			ImageArrayData(data::IODataType type) : IOData(type)
 			{
 				/*Data::registerInstance(new ImageArrayData());*/
@@ -26,9 +31,11 @@ namespace filter
 			 */
 			ImageArrayData() : IOData(SEQIMG)
 			{
+				Data::registerInstance(new ImageArrayData(IOData::_Protection()));
+				This()._type = SEQIMG;
 			}
 
-			
+
 
 			/**
 			 * \brief ImageArrayData copy constructor
@@ -53,7 +60,7 @@ namespace filter
 			 */
 			std::vector<cv::Mat> & Array()
 			{
-				ImageArrayData &ret = This() ;
+				ImageArrayData &ret = This();
 				return ret._array;
 			}
 
@@ -85,7 +92,7 @@ namespace filter
 			 */
 			virtual void copyTo(ImageArrayData& left) const
 			{
-				for (const cv::Mat & image: Array_const())
+				for (const cv::Mat & image : Array_const())
 				{
 					cv::Mat res;
 					image.copyTo(res);
@@ -95,7 +102,7 @@ namespace filter
 			}
 
 			/**
-			 * \brief 
+			 * \brief
 			 * \return Returns true if the object doesn't contain any data
 			 */
 			inline bool empty() const

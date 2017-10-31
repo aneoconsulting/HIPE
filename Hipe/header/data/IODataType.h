@@ -36,6 +36,8 @@ namespace filter
 
 			TXT = 0x545854,
 			TXT_ARR = 0x5458545f415252,
+
+			SHAPE = 0x5348415045,			// Shape data (circle, rectangle or point)
 			NONE
 		};
 
@@ -188,6 +190,23 @@ namespace filter
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
 				if (typeStr.find("base64") != std::string::npos)
+					return true;
+
+				return false;
+			}
+
+			/**
+			 * \brief Checks if a data type is a points one
+			 * \param dataType The queried data type
+			 * \return Returns true if the queried data type is a points one
+			 */
+			static bool isShape(const IODataType & dataType)
+			{
+				std::string typeStr = getStringFromType(dataType);
+
+				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+
+				if (typeStr.find("shape") != std::string::npos)
 					return true;
 
 				return false;
