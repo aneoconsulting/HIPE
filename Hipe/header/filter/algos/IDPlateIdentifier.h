@@ -54,12 +54,12 @@ namespace filter
 			{
 				_debug = 0;
 
-				minXPos = 0.0;
-				maxXPos = 1.0;
-				minLines = 1;
-				ratioY = 1.0;
-				ratioMinArea = 1.0;
-				ratioMaxArea = 1.0;
+				minXPos = 0.05;
+				maxXPos = 0.8;
+				minLines = 4;
+				ratioY = 0.2;
+				ratioMinArea = 0.5;
+				ratioMaxArea = 3.0;
 			}
 
 			REGISTER_P(int, _debug);
