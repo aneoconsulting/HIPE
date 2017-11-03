@@ -25,7 +25,7 @@ namespace data
 		/**
 		* \brief ShapeData default constructor, the internal IODataType data type will be "SHAPE"
 		*/
-		ShapeData::ShapeData() : IOData(SHAPE)
+		ShapeData() : IOData(SHAPE)
 		{
 			::data::Data::registerInstance(new ShapeData(IOData::_Protection()));
 			This()._type = SHAPE;
@@ -36,14 +36,14 @@ namespace data
 		* \brief ShapeData copy constructor
 		* \param right The ShapeData to copy data from
 		*/
-		ShapeData::ShapeData(const ShapeData &right) : IOData(right._type)
+		ShapeData(const ShapeData &right) : IOData(right._type)
 		{
 			registerInstance(right._This);
 			_type = right.This_const()._type;
 			_decorate = right._decorate;
 		}
 
-		virtual ShapeData::~ShapeData()
+		virtual ~ShapeData()
 		{
 			IOData::release();
 			_circlesArray.clear();
