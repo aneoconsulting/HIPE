@@ -12,6 +12,11 @@ namespace data
 	protected:
 		std::vector<cv::Mat> _array;	//<! container of all the images data. The data are handled by cv::Mat objects 
 
+			ImageArrayData(IOData::_Protection priv) : IOData(SEQIMG)
+			{
+
+			}
+
 		ImageArrayData(data::IODataType type) : IOData(type)
 		{
 			/*Data::registerInstance(new ImageArrayData());*/
@@ -25,6 +30,8 @@ namespace data
 		ImageArrayData() : IOData(SEQIMG)
 		{
 
+				Data::registerInstance(new ImageArrayData(IOData::_Protection()));
+				This()._type = SEQIMG;
 		}
 
 		ImageArrayData(const data::Data &right) : IOData(right.getType())
