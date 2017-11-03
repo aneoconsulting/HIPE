@@ -25,7 +25,7 @@ HipeStatus filter::algos::ReshapeImage::process()
 		throw HipeException(errorMessage.str());
 	}
 
-	const std::vector<cv::Vec3f>& circles = static_cast<data::ShapeData>(shapeData).CirclesArray_const();
+	const std::vector<cv::Vec3f>& circles = static_cast<data::ShapeData&>(shapeData).CirclesArray_const();
 	const cv::Mat& image = static_cast<data::ImageData>(imageData).getMat();
 
 	cv::Mat outputImage = reshapeImage(image, circles, cv::Size(target_image_width, target_image_height), cv::Size(target_grid_width, target_grid_height));

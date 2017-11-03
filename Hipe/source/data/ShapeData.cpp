@@ -141,7 +141,7 @@ namespace data
 	* \param left The ShapeData oject to get the data from
 	* \return A reference to the object
 	*/
-	ShapeData& ShapeData::operator=(const ShapeData& left)
+	ShapeData& ShapeData::operator=(ShapeData& left)
 	{
 		_This = left._This;
 		_type = left._type;

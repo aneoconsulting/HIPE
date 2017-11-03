@@ -1,5 +1,7 @@
 #include <JsonBuilder.h>
-#include "data/OutputData.h"
+#include <data/OutputData.h>
+#include <data/ImageArrayData.h>
+#include <data/ImageEncodedData.h>
 
 namespace json
 {

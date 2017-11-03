@@ -3,9 +3,6 @@
 
 namespace data
 {
-	/**
-	 * \brief PointData is the data type used to handle multiple points. Uses OpenCV.
-	 */
 	class DATA_EXPORT ShapeData : public IOData <Data, ShapeData>
 	{
 	protected:
@@ -46,10 +43,6 @@ namespace data
 			_decorate = right._decorate;
 		}
 
-
-
-
-
 		virtual ShapeData::~ShapeData()
 		{
 			IOData::release();
@@ -64,43 +57,12 @@ namespace data
 				This()._rectsArray.clear();
 			}
 		}
-
-
-		/**
-		 * \brief Get the points container
-		 * \return Returns a reference to the std::vector<cv::Point2f> object containing the points
-		 */
 		std::vector<cv::Point2f> & PointsArray();
-
-		/**
-		* \brief Get the rects container
-		* \return Returns a reference to the std::vector<cv::Rect> object containing the rects
-		*/
 		std::vector<cv::Rect> & RectsArray();
-
-		/**
-		* \brief Get the circles container
-		* \return Returns a reference to the std::vector<cv::Vec3f> object containing the points
-		*/
 		std::vector<cv::Vec3f> & CirclesArray();
 
-
-		/**
-		 * \brief Get the points container (const version)
-		 * \return Returns a constant reference to the std::vector<cv::Point2f> object containing the points
-		 */
 		const std::vector<cv::Point2f> & PointsArray_const() const;
-
-		/**
-		* \brief Get the points container (const version)
-		* \return Returns a constant reference to the std::vector<cv::Rect> object containing the rects
-		*/
 		const std::vector<cv::Rect> & RectsArray_const() const;
-
-		/**
-		* \brief Get the points container (const version)
-		* \return Returns a constant reference to the std::vector<cv::Vec3f> object containing the points
-		*/
 		const std::vector<cv::Vec3f> & CirclesArray_const() const;
 
 
@@ -160,7 +122,7 @@ namespace data
 		 * \param left The ShapeData oject to get the data from
 		 * \return A reference to the object
 		 */
-		ShapeData& operator=(const ShapeData& left);
+		ShapeData& operator=(ShapeData& left);
 
 
 		/**
