@@ -29,7 +29,8 @@ namespace data
 
 		ImageArrayData(const data::Data &right) : IOData(right.getType())
 		{
-			if (right.getType() != SEQIMG) throw HipeException("ERROR data::ImageArrayData::ImageArrayData - Only Connexdata should call this constructor.");
+			auto type = right.getType();
+			if (type != SEQIMG) throw HipeException("ERROR data::ImageArrayData::ImageArrayData - Only Connexdata should call this constructor.");
 
 			Data::registerInstance(right);
 			_array.resize(0);

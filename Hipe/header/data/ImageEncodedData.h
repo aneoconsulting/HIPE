@@ -110,5 +110,11 @@ namespace data
 		inline int getHeight() const;
 
 		inline std::string getCompression() const;
+
+		inline bool empty() const
+		{
+			return ImageData::empty();
+
+		}
 	};
 }

@@ -65,8 +65,8 @@ namespace data
 
 		virtual bool empty() const
 		{
-
-			return static_cast<const Derived&>(This_const()).empty();
+			const Derived& down = static_cast<const Derived&>(This_const());
+			return down.empty();
 
 		}
 

@@ -164,7 +164,8 @@ namespace data
 			if (!port.empty())
 			{
 				const Data & popped = port.pop();
-				Din in = popped;
+				//Din in = (const Din &)popped;
+				Din in = static_cast<const Din &>(popped);
 
 				if (_way == INOUT)
 				{

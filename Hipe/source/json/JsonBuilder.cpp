@@ -63,7 +63,7 @@ namespace json
 		json::JsonTree outputTree;
 
 		// Case where there's no output data to process
-		if (!data.empty())
+		if (data.empty())
 		{
 			outputTree.Add("info", "NO Data as response");
 			resultTree.AddChild("DataResult", outputTree);

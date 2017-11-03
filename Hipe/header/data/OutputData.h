@@ -60,5 +60,15 @@ namespace data
 		{
 			return input;
 		}
+
+		bool empty()  const
+		{
+			if (_decorate == true)
+				return This_const().empty();
+
+			if (input.getType() == NONE) return true;
+
+			return input.empty();
+		}
 	};
 }
