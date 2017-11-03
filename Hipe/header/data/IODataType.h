@@ -105,22 +105,11 @@ namespace data
 		 * \return Returns true if the queried data type is a base64 one
 		 */
 		static bool isBase64(const IODataType& dataType);
-					return true;
-
-				return false;
-			}
-
 			/**
 			 * \brief Checks if a data type is a points one
 			 * \param dataType The queried data type
 			 * \return Returns true if the queried data type is a points one
 			 */
-			static bool isShape(const IODataType & dataType)
-			{
-				std::string typeStr = getStringFromType(dataType);
-
-				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
-
-				if (typeStr.find("shape") != std::string::npos)
+		static bool isShape(const IODataType & dataType);
 	};
 }

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "filter/algos/DrawCircles.h"
-#include "data/ShapeData.h"
-#include "data/ImageData.h"
+#include <filter/algos/DrawCircles.h>
+#include <data/ShapeData.h>
+#include <data/ImageData.h>
 
 
 namespace filter
@@ -20,12 +20,12 @@ namespace filter
 				data::ImageData images;
 				data::ShapeData circles;
 
-				data::Data input = _connexData.pop();
+				auto input = _connexData.pop();
 				if(input.getType()== data::IMGF)
 				{
 					images = static_cast<data::ImageData>(input).getMat().clone();
 				}
-				else circles = input; 
+				else circles = input;
 
 				data::Data input2 = _connexData.pop();
 

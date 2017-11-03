@@ -109,4 +109,16 @@ namespace data
 
 		return false;
 	}
+
+	bool DataTypeMapper::isShape(const IODataType& dataType)
+	{
+		std::string typeStr = getStringFromType(dataType);
+
+		std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+
+		if (typeStr.find("shape") != std::string::npos)
+			return true;
+
+		return false;
+	}
 }

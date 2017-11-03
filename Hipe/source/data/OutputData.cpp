@@ -1,4 +1,5 @@
 #include <data/OutputData.h>
+#include "core/base64.h"
 
 namespace data
 {

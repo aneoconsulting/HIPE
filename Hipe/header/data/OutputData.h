@@ -2,9 +2,6 @@
 
 #include <data/IOData.h>
 #include <opencv2/opencv.hpp>
-#include <core/base64.h>
-#include <data/ImageArrayData.h>
-#include "ImageEncodedData.h"
 #include <json/JsonTree.h>
 
 #include <data/data_export.h>
