@@ -5,7 +5,7 @@ namespace filter
 {
 	namespace data
 	{
-		typedef std::array<cv::Point2f, 4> four_points;
+		typedef std::vector<cv::Point2f> four_points;
 	
 		/**
 		 * \brief PointData is the data type used to handle multiple points. Uses OpenCV.
