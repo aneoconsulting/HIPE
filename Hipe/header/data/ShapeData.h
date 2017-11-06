@@ -162,7 +162,13 @@ namespace filter
 			*/
 			ShapeData& operator<<(const std::vector<cv::Point2f>& points)
 			{
-				This()._pointsArray.insert(This()._pointsArray.end(), points.begin(), points.end());
+				if(points.size()==4)
+				{
+					This()._quadrilatere.push_back(points);
+				}
+				else {
+					This()._pointsArray.insert(This()._pointsArray.end(), points.begin(), points.end());
+				}
 				return *this;
 			}
 
@@ -199,11 +205,6 @@ namespace filter
 				return *this;
 			}
 
-			ShapeData& operator<<(four_points quadrilatere)
-			{
-				This()._quadrilatere.push_back(quadrilatere);
-				return *this;
-			}
 
 			/**
 			* \brief Add circles to the circles container.
