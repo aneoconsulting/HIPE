@@ -5,6 +5,8 @@ namespace filter
 {
 	namespace data
 	{
+		typedef std::array<cv::Point2f, 4> four_points;
+	
 		/**
 		 * \brief PointData is the data type used to handle multiple points. Uses OpenCV.
 		 */
@@ -14,6 +16,8 @@ namespace filter
 			std::vector<cv::Point2f> _pointsArray;	//<! container of all the points. The data are handled by cv::Point2f objects 
 			std::vector<cv::Vec3f> _circlesArray;	//<! container of all the circles. The data are handled by cv::Vec3f objects
 			std::vector<cv::Rect> _rectsArray;		//<! container of all the rectangles. The data are handled by cv::Rect objects
+			//vector of array of 4 points: _quadrilatere[0][0].x or .y  
+			std::vector<four_points> _quadrilatere;		//<! container of all the quadrilateres. The data are handled by cv::vec4f objects
 
 			ShapeData(IOData::_Protection priv) : IOData(SHAPE)
 			{
@@ -56,12 +60,14 @@ namespace filter
 				_circlesArray.clear();
 				_pointsArray.clear();
 				_rectsArray.clear();
+				_quadrilatere.clear();
 
 				if (_This)
 				{
 					This()._circlesArray.clear();
 					This()._pointsArray.clear();
 					This()._rectsArray.clear();
+					This()._quadrilatere.clear();
 				}
 			}
 
@@ -84,6 +90,11 @@ namespace filter
 			{
 				ShapeData &ret = This();
 				return ret._rectsArray;
+			}
+			std::vector<four_points> & QuadrilatereArray()
+			{
+				ShapeData &ret = This();
+				return ret._quadrilatere;
 			}
 
 			/**
@@ -125,6 +136,11 @@ namespace filter
 			{
 				const ShapeData &ret = This_const();
 				return ret._circlesArray;
+			}
+			const std::vector<four_points> & QuadrilatereArray_const() const
+			{
+				const ShapeData &ret = This_const();
+				return ret._quadrilatere;
 			}
 
 
@@ -183,6 +199,12 @@ namespace filter
 				return *this;
 			}
 
+			ShapeData& operator<<(four_points quadrilatere)
+			{
+				This()._quadrilatere.push_back(quadrilatere);
+				return *this;
+			}
+
 			/**
 			* \brief Add circles to the circles container.
 			* \param circles The circles to add
@@ -210,14 +232,19 @@ namespace filter
 					left.This()._pointsArray.push_back(point);
 				}
 
-				for (const cv::Rect & point : RectsArray_const())
+				for (const cv::Rect & rect : RectsArray_const())
 				{
-					left.This()._rectsArray.push_back(point);
+					left.This()._rectsArray.push_back(rect);
 				}
 
-				for (const cv::Vec3f & point : CirclesArray_const())
+				for (const cv::Vec3f & circle : CirclesArray_const())
 				{
-					left.This()._circlesArray.push_back(point);
+					left.This()._circlesArray.push_back(circle);
+				}
+
+				for (const four_points & quad : QuadrilatereArray_const())
+				{
+					left.This()._quadrilatere.push_back(quad);
 				}
 			}
 
@@ -227,7 +254,7 @@ namespace filter
 			 */
 			inline bool empty() const override
 			{
-				return (This_const()._pointsArray.empty() && This_const()._circlesArray.empty() && This_const()._rectsArray.empty());
+				return (This_const()._quadrilatere.empty()&&This_const()._pointsArray.empty() && This_const()._circlesArray.empty() && This_const()._rectsArray.empty());
 			}
 
 			/**
