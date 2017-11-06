@@ -1,23 +1,23 @@
-#include <stdio.h>
-#include <iostream>
-#include "opencv2/core.hpp"
-#include "opencv2/highgui.hpp"
+#pragma once
 #include <filter/tools/RegisterClass.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
+
 #include "data/ImageArrayData.h"
 #include "data/ImageData.h"
 
+#include "opencv2/core.hpp"
+#include "opencv2/highgui.hpp"
 
+#include <cstdio>
+#include <iostream>
 
 namespace filter
 {
 	namespace algos
 	{
-
 		class FingerPrintMinutia : public filter::IFilter
 		{
-
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
 			CONNECTOR(data::ImageArrayData, data::ImageData);
 
@@ -40,9 +40,11 @@ namespace filter
 			void thinningIteration(cv::Mat& im, int iter);
 			void getDescriptor(cv::Mat const im, cv::Mat& descriptor, std::vector<cv::KeyPoint>  & keypoints);
 
+			void debugShow(const std::string& name, const cv::Mat& image, bool deleteWindow = false);
+
 		};
 
-		ADD_CLASS(FingerPrintMinutia, minHessian, matchthreshold,matchcoeff);
+		ADD_CLASS(FingerPrintMinutia, minHessian, matchthreshold, matchcoeff);
 	}
 }
 #pragma once

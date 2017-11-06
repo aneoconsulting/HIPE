@@ -1,5 +1,3 @@
-#pragma once
-
 #include "filter/algos/FingerPrint.h"
 #include "opencv2/features2d.hpp"
 #include "opencv2/xfeatures2d.hpp"
@@ -17,7 +15,7 @@ namespace filter
 
 		HipeStatus FingerPrint::process()
 		{
-			while (!_connexData.empty()) 
+			while (!_connexData.empty())
 			{
 				// Get images
 				data::ImageArrayData array(_connexData.pop());
@@ -28,7 +26,7 @@ namespace filter
 				// Compute Keypoints and descriptor
 				Ptr<Feature2D> orb_descriptor = ORB::create();
 				Mat descriptorstest, descriptorsref;
-				vector<KeyPoint> keypointstest,keypointsref;
+				vector<KeyPoint> keypointstest, keypointsref;
 				Ptr<SURF> detector = SURF::create();
 				detector->setHessianThreshold(minHessian);
 
@@ -43,18 +41,18 @@ namespace filter
 
 				//-- Quick calculation of min distances between keypoints
 				double min_dist = 1;
-			
+
 				for (auto i = 0; i < descriptorstest.rows; i++)
 				{
 					double const dist = matches[i].distance;
 					if (dist < min_dist) min_dist = dist;
-				
+
 				}
 				// Detect "good" match
 				std::vector< DMatch > good_matches;
 				for (auto i = 0; i < descriptorstest.rows; i++)
 				{
-					
+
 					if (matches[i].distance <= (std::min)(matchcoeff* min_dist, matchthreshold))
 					{
 						cerr << matches[i].distance << endl;
@@ -66,7 +64,7 @@ namespace filter
 				drawMatches(imagetest.getMat(), keypointstest, imageref.getMat(), keypointsref,
 					good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
 					vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-			
+
 
 
 				_connexData.push(data::ImageData(img_matches));
