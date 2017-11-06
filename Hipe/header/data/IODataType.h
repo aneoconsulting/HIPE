@@ -38,6 +38,7 @@ namespace filter
 			TXT_ARR = 0x5458545f415252,
 
 			SHAPE = 0x5348415045,			// Shape data (circle, rectangle or point)
+			MATCHER = 0x4d415443484552,
 			NONE
 		};
 
