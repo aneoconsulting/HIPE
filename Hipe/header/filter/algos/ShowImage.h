@@ -19,17 +19,15 @@ namespace filter
 		 * The time to wait before the window is automatically closed. A negative value will let the window be permanently shown and wait for user input.
 		 */
 
-		/**
-		 **\todo
-		 * \brief The ShowImage filter is used to show an image.
-		 * 
-		 * The image will be shown in a dedicated window whose name will be the same as the one given to the filter graph node in the JSON request.
-		 * The window can be automatically closed after a certain amount of time, or wait until the user do a keyboard input.
-		 */
+		 /**
+		  **\todo
+		  * \brief The ShowImage filter is used to show an image.
+		  *
+		  * The image will be shown in a dedicated window whose name will be the same as the one given to the filter graph node in the JSON request.
+		  * The window can be automatically closed after a certain amount of time, or wait until the user do a keyboard input.
+		  */
 		class ShowImage : public IFilter
 		{
-
-			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
 			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
 
 			REGISTER(ShowImage, ()), _connexData(data::INOUT)
@@ -47,13 +45,15 @@ namespace filter
 			REGISTER_P(bool, wait);
 			REGISTER_P(int, wait_ms);
 
-			virtual std::string resultAsString() { return std::string("TODO"); };
+		private:
+			int count = 0;
 
 		public:
+			virtual std::string resultAsString() { return std::string("TODO"); };
+
+
 			HipeStatus process()
 			{
-				cv::namedWindow(_name);
-
 				while (!_connexData.empty()) // While i've parent data
 				{
 					data::ImageArrayData images = _connexData.pop();
@@ -62,8 +62,10 @@ namespace filter
 					//Resize all images coming from the same parent
 					for (auto &myImage : images.Array())
 					{
+						std::string windowName = _name + "_" + std::to_string(++count);
+						cv::namedWindow(windowName);
 
-						::cv::imshow(_name, myImage);
+						::cv::imshow(windowName, myImage);
 						char c;
 
 						if (wait_ms <= 0 && wait)
@@ -85,9 +87,13 @@ namespace filter
 			void dispose()
 			{
 				Model::dispose();
-				cv::destroyWindow(_name);
-			}
 
+				while (count > 0)
+				{
+					std::string windowName = _name + "_" + std::to_string(count--);
+					cv::destroyWindow(windowName);
+				}
+			}
 		};
 
 		ADD_CLASS(ShowImage, waitkey, wait, wait_ms);

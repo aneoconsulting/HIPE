@@ -50,13 +50,13 @@ namespace filter
 		 * The minimum height a character rect must have to be accepted as a valid one.
 		 */
 
-		/**
-		 * \brief The IDPlateRectifier filter will try to extract the region of interest (where all the relative character are)
-		 *        of an ID plate and rework its perspective to make it easier to read.
-		 */
+		 /**
+		  * \brief The IDPlateRectifier filter will try to extract the region of interest (where all the relative character are)
+		  *        of an ID plate and rework its perspective to make it easier to read.
+		  */
 		class IDPlateRectifier : public filter::IFilter
 		{
-			CONNECTOR(data::ImageData, data::ImageData);
+			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
 
 			REGISTER(IDPlateRectifier, ()), _connexData(data::INDATA)
 			{

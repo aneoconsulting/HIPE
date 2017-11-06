@@ -3,47 +3,55 @@
 
 HipeStatus filter::algos::IDPlateRectifier::process()
 {
-	data::ImageData data = _connexData.pop();
-	cv::Mat image = data.getMat();
-
-	//// Debug: searchlines limits
-	//normalizeRatios();
-
-	// Find ID plate's characters
-	const double drawContourThickness = CV_FILLED;
-	cv::Mat binarizedImage;
-	std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacter(image, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
-	
-	// Separate them by rows (lines)
-	std::vector<int> characterRows = filter::algos::IDPlate::splitImgByCharRows(image, plateCharacters);
-
-	//// Add line to bottom of image (we want rows separated by top and bottom lines)
-	//characterRows.push_back(image.rows - 1);
-
-	//Debug
-	if (_debug)
+	while (!_connexData.empty())
 	{
-		cv::Mat debugImage = image.clone();
-		for (auto & row : characterRows)
+		data::ImageArrayData data = _connexData.pop();
+		data::ImageArrayData outputData;
+
+		for (auto& image : data.Array_const())
 		{
-			cv::line(debugImage, cv::Point(0, row), cv::Point(debugImage.cols - 1, row), cv::Scalar(0, 0, 255), 4);
+			//// Debug: searchlines limits
+			//normalizeRatios();
+
+			// Find ID plate's characters
+			const double drawContourThickness = CV_FILLED;
+			cv::Mat binarizedImage;
+			std::vector<cv::Rect> plateCharacters = filter::algos::IDPlate::findPlateCharacter(image, binarizedImage, charMinXBound, charMaxXBound, charMinFillRatio, charMaxFillRatio, cv::Size(charMinWidth, charMinHeight), drawContourThickness, _debug);
+
+			// Separate them by rows (lines)
+			std::vector<int> characterRows = filter::algos::IDPlate::splitImgByCharRows(image, plateCharacters);
+
+			//// Add line to bottom of image (we want rows separated by top and bottom lines)
+			//characterRows.push_back(image.rows - 1);
+
+			//Debug
+			if (_debug)
+			{
+				cv::Mat debugImage = image.clone();
+				for (auto & row : characterRows)
+				{
+					cv::line(debugImage, cv::Point(0, row), cv::Point(debugImage.cols - 1, row), cv::Scalar(0, 0, 255), 4);
+				}
+				filter::algos::IDPlate::showImage(debugImage);
+			}
+
+			// Sort characters by rows
+			std::vector<std::vector<cv::Rect>> charactersSorted = filter::algos::IDPlate::splitCharactersByRows(plateCharacters, characterRows, image, _debug);
+
+			// Find whole text area
+			std::vector<cv::Point> bounds = findCharactersBounds(image, charactersSorted);
+
+			// Then extract it
+			cv::Mat rectifiedPlate = perspectiveCrop(image, bounds);
+
+			// Debug
+			if (_debug)	filter::algos::IDPlate::showImage(rectifiedPlate);
+
+			outputData << rectifiedPlate;
 		}
-		filter::algos::IDPlate::showImage(debugImage);
+
+		_connexData.push(outputData);
 	}
-
-	// Sort characters by rows
-	std::vector<std::vector<cv::Rect>> charactersSorted = filter::algos::IDPlate::splitCharactersByRows(plateCharacters, characterRows, image, _debug);
-
-	// Find whole text area
-	std::vector<cv::Point> bounds = findCharactersBounds(image, charactersSorted);
-
-	// Then extract it
-	cv::Mat rectifiedPlate = perspectiveCrop(image, bounds);
-
-	// Debug
-	if (_debug)	filter::algos::IDPlate::showImage(rectifiedPlate);
-
-	_connexData.push(data::ImageData(rectifiedPlate));
 	return OK;
 }
 
@@ -109,7 +117,7 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::findLongestT
 	}
 
 	int bestIndex = -1;		// TODO: Exception
-	int bestSumDeriv2 = std::numeric_limits<int>::max();
+	double bestSumDeriv2 = std::numeric_limits<double>::max();
 
 	//Select best index by deriv second 
 	for (int i = 0; i < nbDeriv.size() - linesToFind + 1; i++)
@@ -131,7 +139,8 @@ std::vector<std::vector<cv::Rect>> filter::algos::IDPlateRectifier::findLongestT
 			}
 
 
-			deriv2Mean += nbDeriv[i + j].second;
+			//deriv2Mean += nbDeriv[i + j].second;
+			deriv2Mean += nbDeriv[i + j].second / nbDeriv[i + j].first;
 		}
 		if (isEmpty) continue;
 
@@ -305,7 +314,7 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findPlateTextArea(const 
 	newCorners[1] = rightCorners[0];
 	newCorners[2] = rightCorners[1];
 
-	// Add offset to botom line
+
 	// Debug
 	if (_debug)
 	{
@@ -315,19 +324,11 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findPlateTextArea(const 
 		filter::algos::IDPlate::showImage(temp);
 	}
 
-	const int offset = 0;
-	const int maxOffsettedValue = cv::max(newCorners[2].y, newCorners[3].y) + offset;
-	if (maxOffsettedValue < plateImage.rows - 1)
+	// Clamp values
+	for(int i = 0; i < newCorners.size(); ++i)
 	{
-		newCorners[2].y += offset;
-		newCorners[3].y += offset;
-	}
-	// If offset is too high add what can be added
-	else
-	{
-		const int newOffset = maxOffsettedValue - plateImage.rows - 1;
-		newCorners[2].y += maxOffsettedValue;
-		newCorners[3].y += maxOffsettedValue;
+		newCorners[i].x = std::max(0, std::min(newCorners[i].x, plateImage.cols - 1));
+		newCorners[i].y = std::max(0, std::min(newCorners[i].y, plateImage.rows - 1));
 	}
 
 	// Debug
@@ -430,6 +431,10 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaTopLine(const cv
 			}
 		}
 	}
+
+	// Tentative FIX endpoint enside image bounds: Clamp cartesianMax
+	cartesianMax.x = std::max(0, std::min(cartesianMax.x, plateHorizontalLines.cols - 1));
+	cartesianMax.y = std::max(0, std::min(cartesianMax.y, plateHorizontalLines.rows - 1));
 
 	// Debug
 	if (_debug)
@@ -560,6 +565,10 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaLeftLine(const c
 
 	}
 
+	// Tentative FIX endpoint inside image bounds: Clamp cartesianMax
+	cartesianMax.x = std::max(0, std::min(cartesianMax.x, plateVerticalLines.cols - 1));
+	cartesianMax.y = std::max(0, std::min(cartesianMax.y, plateVerticalLines.rows - 1));
+
 	// Debug
 	if (_debug)
 	{
@@ -677,6 +686,10 @@ std::vector<cv::Point> filter::algos::IDPlateRectifier::findAreaRightLine(const 
 			}
 		}
 	}
+
+	// Tentative FIX endpoint enside image bounds: Clamp cartesianMax
+	cartesianMax.x = std::max(0, std::min(cartesianMax.x, plateVerticalLines.cols - 1));
+	cartesianMax.y = std::max(0, std::min(cartesianMax.y, plateVerticalLines.rows - 1));
 
 	// Debug
 	if (_debug)
@@ -972,7 +985,8 @@ int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image,
 	int sum;
 	int sumMax = 0;
 	double tBest = 0.0;
-	double dbgValX, dbgValY;
+	double dbgValX = 0;
+	double dbgValY = 0;
 	cv::Point2f dbgBestPoint;
 
 	for (double t = maxAngle; t > minAngle; t -= strideTheta)
@@ -995,6 +1009,7 @@ int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image,
 			//int y = cv::min(image.rows - 1, static_cast<int>(origin.y + r * sinT + 0.5));
 			//y = cv::max(0, y);
 
+			//if (_debug && (x <= 10 || x >= 800))
 			if (_debug > 2)
 			{
 				cv::Mat temp = filter::algos::IDPlate::convertGray2Color(image);
@@ -1014,14 +1029,13 @@ int filter::algos::IDPlateRectifier::findBestVerticalLine(const cv::Mat & image,
 		}
 
 		// Debug
+
+
 		if (_debug > 2)
 		{
 			dbgValX = origin.x + rho * cosT + 0.5;
 			dbgValY = origin.y + rho * sinT + 0.5;
-		}
 
-		if (_debug > 2)
-		{
 			cv::Mat searchLine = filter::algos::IDPlate::convertGray2Color(image);
 			cv::circle(searchLine, origin, 3, cv::Scalar(0, 0, 255), 3);
 			cv::circle(searchLine, cv::Point2f(dbgValX, dbgValY), 3, cv::Scalar(0, 0, 255), 3);
@@ -1063,11 +1077,13 @@ cv::Point2f filter::algos::IDPlateRectifier::computeLinesIntersectionPoint(const
 	int x3 = b[0], y3 = b[1];
 	int x4 = b[2], y4 = b[3];
 
-	if (float d = ((float)(x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4)))
+	// If denom equals 0, lines are parallel
+	const int denom = ((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4));
+	if (denom != 0)
 	{
 		cv::Point2f pt;
-		pt.x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / d;
-		pt.y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / d;
+		pt.x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / static_cast<double>(denom);
+		pt.y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / static_cast<double>(denom);
 		return pt;
 	}
 	else
@@ -1111,7 +1127,7 @@ cv::Mat filter::algos::IDPlateRectifier::perspectiveCrop(const cv::Mat & plateIm
 	perspectiveOutput.push_back(cv::Point2f(boundingRect.width, boundingRect.height));
 	perspectiveOutput.push_back(cv::Point2f(0, boundingRect.height));
 
-	cv::Mat output = cv::Mat::zeros(boundingRect.height, boundingRect.width, CV_8UC1);
+	cv::Mat output = cv::Mat::zeros(boundingRect.height, boundingRect.width, CV_8UC3);
 
 	cv::Mat perspectiveTransform = cv::getPerspectiveTransform(perspectiveInput, perspectiveOutput);
 	cv::warpPerspective(plateImage, output, perspectiveTransform, output.size());

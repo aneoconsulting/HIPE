@@ -25,7 +25,7 @@ namespace filter
 	{
 		/**
 		 * \brief The IDPlateIdentifier filter will handle the detection of the character of an ID plate then their recognition with machine learning
-		 * 
+		 *
 		 * \var IDPlateIdentifier::minXPos
 		 * The minimum position on the X Axis to start searching for characters.
 		 *
@@ -49,17 +49,19 @@ namespace filter
 		 */
 		class IDPlateIdentifier : public filter::IFilter
 		{
-			CONNECTOR(data::ImageData, data::ImageData);
+			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
 			REGISTER(IDPlateIdentifier, ()), _connexData(data::INDATA)
 			{
 				_debug = 0;
 
-				minXPos = 0.0;
-				maxXPos = 1.0;
-				minLines = 1;
-				ratioY = 1.0;
-				ratioMinArea = 1.0;
-				ratioMaxArea = 1.0;
+				minXPos = 0.05;
+				maxXPos = 0.8;
+				minLines = 4;
+				ratioY = 0.2;
+				ratioMinArea = 0.5;
+				ratioMaxArea = 3.0;
+				fontScale = 3;
+				fontThickness = 3;
 			}
 
 			REGISTER_P(int, _debug);
@@ -71,6 +73,8 @@ namespace filter
 			REGISTER_P(double, ratioY);
 			REGISTER_P(double, ratioMinArea);
 			REGISTER_P(double, ratioMaxArea);
+			REGISTER_P(int, fontScale);
+			REGISTER_P(int, fontThickness);
 
 
 		public:
@@ -111,7 +115,7 @@ namespace filter
 			cv::Mat createOutputImage(const cv::Mat& plateImage, const std::vector<cv::Rect>& charactersRects, const std::vector<std::string>& charactersLabels);
 		};
 
-		ADD_CLASS(IDPlateIdentifier, _debug, minXPos, maxXPos, minLines, ratioY, ratioMinArea, ratioMaxArea);
+		ADD_CLASS(IDPlateIdentifier, _debug, minXPos, maxXPos, minLines, ratioY, ratioMinArea, ratioMaxArea, fontScale, fontThickness);
 
 		class LabelOCR
 		{
