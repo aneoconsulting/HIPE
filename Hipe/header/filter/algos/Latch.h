@@ -4,6 +4,7 @@
 #include <core/HipeStatus.h>
 #include <data/ImageData.h>
 #include <data/PatternData.h>
+#include <data/MatcherData.h>
 #include <opencv2/xfeatures2d.hpp>
 #include <atomic>
 
@@ -14,7 +15,7 @@ namespace filter
 	{
 		/**
 		 * \var Latch::inlier_threshold
-		 * The inliers distance threshold used to match them between images. [TODO]
+		 * The inliers2_const distance threshold used to match them between images. [TODO]
 		 *
 		 * \var Latch::nn_match_ratio
 		 * The nearest neighbor matching ratio. [TODO]
@@ -29,43 +30,27 @@ namespace filter
 		 * Should we wait and show the output image?
 		 */
 
-		/**
-		  *\todo
-		  * \brief The Latch filter will match similarities into two images.
-		  *
-		  * It is used to find an object from an image in another one using keypoints by using the LATCH algorithm.
-		  * It awaits a PatternData object in input and will output an image containing the contoured computed matching simimarities.
-		  * The filter will work as a separate thread to be able to find objects in videos.
-		  * For an alternative: \see Akaze
-		 */
+		 /**
+		   *\todo
+		   * \brief The Latch filter will match similarities into two images.
+		   *
+		   * It is used to find an object from an image in another one using keypoints by using the LATCH algorithm.
+		   * It awaits a PatternData object in input and will output an image containing the contoured computed matching simimarities.
+		   * The filter will work as a separate thread to be able to find objects in videos.
+		   * For an alternative: \see Akaze
+		  */
 		class FILTER_EXPORT Latch : public filter::IFilter
 		{
 			std::atomic<bool> isStart;		//<! [TODO] Is the thread running?
 			boost::thread *thr_server;		//<! [TODO] Pointer to the latch matching task.
 			core::queue::ConcurrentQueue<data::PatternData> imagesStack;	//<! [TODO] The queue containing the frames to process.
 
-			/**
-			 * \brief The MatchContainer class is a data structure used to regroup all the detection information needed to match two images.
-			 */
-			class MatchContainer
-			{
-			public:
-				cv::Mat patternImage;					//<! [TODO] The pattern image to find on the request image.
-				std::vector<cv::KeyPoint> inliers1;		//<! The inliers (the pertinent information) computed from the patternImage.
-
-				cv::Mat requestImage;					//<! [TODO] The request image on which we would like to find the patternImage.
-				std::vector<cv::KeyPoint> inliers2;		//<! The inliers (the pertinent information) computed from the request image.
-
-				std::vector<cv::DMatch> goodMatches;	//<! The inliers1 and inliers2 that match (i.e. they were found on the patternImage and the requestImage).
-
-
-			};
-			core::queue::ConcurrentQueue<MatchContainer> result;	//<! [TODO] The queue containing the results of all the detections to process
-			MatchContainer tosend;									//<! The current frame's matching result to output
+			core::queue::ConcurrentQueue<data::MatcherData> result;	//<! [TODO] The queue containing the results of all the detections to process
+			data::MatcherData tosend;									//<! The current frame's matching result to output
 
 			int count_frame;										//<! The number of frames already processed 
 
-			CONNECTOR(data::PatternData, data::ImageData);
+			CONNECTOR(data::PatternData, data::MatcherData);
 
 			REGISTER(Latch, ()), _connexData(data::INDATA)
 			{
@@ -92,7 +77,7 @@ namespace filter
 			 * \param patternData The PatternData object containing the regions of interest and the request image. \see PatternData
 			 * \return Returns the result of the detection as a MatchContainer object. \see MatchContainer
 			 */
-			MatchContainer detectObject(data::PatternData & patternData);
+			data::MatcherData detectObject(data::PatternData& patternData);
 
 		public:
 
