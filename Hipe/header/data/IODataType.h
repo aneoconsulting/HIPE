@@ -29,6 +29,7 @@ namespace filter
 			STRMVIDF = 0x5354524d56494446,	// Streaming video from file
 
 			PATTERN = 0x5041545445524e,		// Pattern type with crop and data source
+			DIRPATTERN = 0x444952504154,		// DIRPattern type with crop and data source
 			SQR_CROP = 0x5351525f43524f50,	// Square crop
 
 			IMGB64 = 0x494d47423634,		// Image from base64 data
