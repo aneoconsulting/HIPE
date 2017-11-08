@@ -2,7 +2,10 @@
 #include <filter/tools/RegisterClass.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-#include <opencv2/highgui/highgui.hpp>
+
+#include <opencv2/core.hpp>
+#include <opencv2/calib3d.hpp>
+
 #include <data/ShapeData.h>
 #include <data/MatcherData.h>
 
@@ -19,9 +22,11 @@ namespace filter
 
 			REGISTER(Homography, ()), _connexData(data::INDATA)
 			{
-
+				draw_matches = false;
+				_debug = false;
 			}
-			REGISTER_P(int, unused);
+			REGISTER_P(bool, draw_matches);
+			REGISTER_P(bool, _debug);
 
 			~Homography()
 			{
@@ -34,6 +39,7 @@ namespace filter
 			{
 				data::MatcherData md = _connexData.pop();
 
+				// No keypoints found means no homography matrix
 				if (md.goodMatches().empty())
 				{
 					_connexData.push(data::ShapeData());
@@ -50,19 +56,28 @@ namespace filter
 					scene.push_back(md.inliers2()[md.goodMatches()[i].queryIdx].pt);
 				}
 
-				// Note: Some errors occured BEFORE fixing the code, so the try/catch block may not be mandatory, but mind the filter should not kill the whole process when playing a video. 
+				// See also this article: https://docs.opencv.org/3.1.0/d7/dff/tutorial_feature_homography.html
+				// The try / catch block may not be mandatory, but some errors occured with cv::findHomography and cv::perspectiveTransform.Regardless, mind the filter should not kill the whole process when playing a video.
 				try
 				{
 					cv::Mat H = findHomography(obj, scene, cv::RANSAC);
 
+					// not enough keypoints means no homography matrix
+					if (!H.data)
+					{
+						if (_debug) std::cout << "Warning in Homography filter: Couldn't compute homography matrix. Not enough keypoints (" << obj.size() << ")." << std::endl;
+						_connexData.push(data::ShapeData());
+						return OK;;
+					}
+
 
 					//-- Get the corners from the image_1 ( the object to be "detected" )
 					std::vector<cv::Point2f> obj_corners(4);
-					obj_corners[0] = cvPoint(0, 0);
-					obj_corners[1] = cvPoint(md.patternImage().cols, 0);
+					obj_corners[0] = cv::Point2f(0, 0);
+					obj_corners[1] = cv::Point2f(md.patternImage().cols, 0);
 
-					obj_corners[2] = cvPoint(md.patternImage().cols, md.patternImage().rows);
-					obj_corners[3] = cvPoint(0, md.patternImage().rows);
+					obj_corners[2] = cv::Point2f(md.patternImage().cols, md.patternImage().rows);
+					obj_corners[3] = cv::Point2f(0, md.patternImage().rows);
 
 					std::vector<cv::Point2f> scene_corners(4);
 					perspectiveTransform(obj_corners, scene_corners, H);
@@ -76,14 +91,25 @@ namespace filter
 
 					res.QuadrilatereArray().push_back(corners);
 
+					// If the user want to, put also the keypoints in the ShapeData object
+					if (draw_matches)
+					{
+						std::vector<cv::Point2f> transformedPoints;
+						cv::perspectiveTransform(obj, transformedPoints, H);
+						res.PointsArray() = transformedPoints;
+					}
+
 					_connexData.push(res);
 				}
 				catch (const std::exception& e)
 				{
-					std::stringstream errorMessage;
-					errorMessage << "Error in Homography filter: " << e.what();
-					//throw HipeException(errorMessage.str());
-					std::cout << errorMessage.str();
+					if (_debug)
+					{
+						std::stringstream errorMessage;
+						errorMessage << "Error in Homography filter: " << e.what();
+						//throw HipeException(errorMessage.str());
+						std::cout << errorMessage.str();
+					}
 					_connexData.push(data::ShapeData());
 				}
 
@@ -96,6 +122,6 @@ namespace filter
 
 		};
 
-		ADD_CLASS(Homography, unused);
+		ADD_CLASS(Homography, draw_matches, _debug);
 	}
 }
