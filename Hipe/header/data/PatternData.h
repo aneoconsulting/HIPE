@@ -13,8 +13,8 @@ namespace filter
 	namespace data
 	{
 		/**
-		 * \brief PatternData is the data type used to handle an image, information on its regions of interest (\see SquareCrop), and a request image to find on those regions. Uses OpenCV. 
-		 */
+		* \brief PatternData is the data type used to handle an image, information on its regions of interest (\see SquareCrop), and a request image to find on those regions. Uses OpenCV.
+		*/
 		class PatternData : public VideoData<PatternData>
 		{
 		public:
@@ -26,9 +26,9 @@ namespace filter
 			ImageData _requestImg;	//<! The image to compare to the region of interest
 			int _endOfSource;		//<! End of video source flag
 
-		
 
-		
+
+
 		protected:
 			PatternData(IOData::_Protection priv) : VideoData(PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
 			{
@@ -45,13 +45,13 @@ namespace filter
 				newFrame();
 			}
 
-		
+
 			using VideoData::VideoData;
 			PatternData(const Data& base) : VideoData(base), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
 			{
 			}
 
-		
+
 			/**
 			* \brief A copy Constructor accepting an image (ImageData). Overwrites the input source image
 			* \param inputImage The image used to overrite the input source one
@@ -66,9 +66,9 @@ namespace filter
 
 
 			/**
-			 * \brief A copy Constructor accepting a list of 2 Data (CROP and SOURCE)
-			 * \param left the list of data
-			 */
+			* \brief A copy Constructor accepting a list of 2 Data (CROP and SOURCE)
+			* \param left the list of data
+			*/
 			PatternData(const std::vector<Data>& left) : VideoData(IODataType::PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
 			{
 				Data::registerInstance(new PatternData(IOData::_Protection()));
@@ -98,31 +98,31 @@ namespace filter
 					errorMsg << "One or two Data aren't not found to build patternData\n";
 					errorMsg << "Crop found   : " << (crop_found ? " OK " : "FAIL");
 					errorMsg << "Source found : " << (source_found ? " OK " : "FAIL");
-					throw HipeException();
+					throw HipeException(errorMsg.str());
 				}
-				
+
 			}
-		
+
 
 			/**
-			 * \brief Copy constructor for PatternDate copy
-			 * \param left antoher PatternData
-			 */
+			* \brief Copy constructor for PatternDate copy
+			* \param left antoher PatternData
+			*/
 			PatternData(const PatternData& left) : VideoData(left.getType()), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
 			{
 				Data::registerInstance(left._This);
-				
+
 				/*This()._squareCrop = left.This_const()._squareCrop;
 				This()._requestImg = left.This_const()._requestImg;
 				This()._inputSource = left.This_const()._inputSource;*/
 			}
-			
+
 
 			/**
-			 * \brief Overloaded ssignment operator used to copy PatternData objects.
-			 * \param left The PatternData object to use as a source for the copy
-			 * \return Returns a reference to the copied PatternData object
-			 */
+			* \brief Overloaded ssignment operator used to copy PatternData objects.
+			* \param left The PatternData object to use as a source for the copy
+			* \return Returns a reference to the copied PatternData object
+			*/
 			virtual PatternData& operator=(const PatternData& left)
 			{
 				if (_This == left._This) return *this;
@@ -130,7 +130,7 @@ namespace filter
 				Data::registerInstance(left._This);
 
 				/*This()._type = left.This_const().getType();
-				
+
 				This()._squareCrop = left.This_const()._squareCrop;
 				This()._requestImg = left.This_const()._requestImg;
 				This()._inputSource = left.This_const()._inputSource;
@@ -141,11 +141,11 @@ namespace filter
 			}
 
 			/**
-			 * \todo
-			 * \brief Overloaded insersion operator used to copy PatternData objects.
-			 * \param left The PatternData object to use as a source for the copy
-			 * \return Returns a reference to the copied PatternData object
-			 */
+			* \todo
+			* \brief Overloaded insersion operator used to copy PatternData objects.
+			* \param left The PatternData object to use as a source for the copy
+			* \return Returns a reference to the copied PatternData object
+			*/
 			PatternData& operator<<(const PatternData& left)
 			{
 				if (_This == left._This) return *this;
@@ -163,10 +163,10 @@ namespace filter
 			}
 
 			/**
-			 * \brief Overloaded insetion operator used to overwrite the PatternData object's request image with another one
-			 * \param left The ImageData used to overwrite The PatternData's one
-			 * \return Returns a reference to the copied PatternData objet
-			 */
+			* \brief Overloaded insetion operator used to overwrite the PatternData object's request image with another one
+			* \param left The ImageData used to overwrite The PatternData's one
+			* \return Returns a reference to the copied PatternData objet
+			*/
 			PatternData& operator<<(const ImageData& left)
 			{
 				This()._requestImg = left;
@@ -175,10 +175,10 @@ namespace filter
 			}
 
 			/**
-			 * \brief Check if the source included in the pattern is a a video coming from a file or coming from a streaming input
-			 * Info : This code will check if the data need a transformation or not before rootfilter push in the Orchestrator
-			 * \return true if the  source is a video or a streaming video
-			 */
+			* \brief Check if the source included in the pattern is a a video coming from a file or coming from a streaming input
+			* Info : This code will check if the data need a transformation or not before rootfilter push in the Orchestrator
+			* \return true if the  source is a video or a streaming video
+			*/
 			static bool isVideoSource(IODataType dataType)
 			{
 				return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);
@@ -195,20 +195,20 @@ namespace filter
 			}
 
 			/**
-			 * \brief Control if the source is an expected entry
-			 * \param dataType 
-			 * \return 
-			 */
+			* \brief Control if the source is an expected entry
+			* \param dataType
+			* \return
+			*/
 			static inline bool isInputSource(IODataType dataType)
 			{
-				return DataTypeMapper::isImage(dataType) || DataTypeMapper::isStreaming(dataType) ||  DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);;
+				return DataTypeMapper::isImage(dataType) || DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);;
 			}
 
 			/**
-			 * \brief Return the request image to compare to the pattern. This is the image where the pattern need to be found.
-			 * Info : At this step the patternData need to have an ImageData source ONLY.
-			 * \return ImageData containing the source to challenge to the pattern image
-			 */
+			* \brief Return the request image to compare to the pattern. This is the image where the pattern need to be found.
+			* Info : At this step the patternData need to have an ImageData source ONLY.
+			* \return ImageData containing the source to challenge to the pattern image
+			*/
 			ImageData imageRequest() const
 			{
 				return This_const()._requestImg;
@@ -234,18 +234,18 @@ namespace filter
 			}
 
 			/**
-			 * \brief Get the regions of interest
-			 * \return The SquareCrop object containing all the regions of interest
-			 */
+			* \brief Get the regions of interest
+			* \return The SquareCrop object containing all the regions of interest
+			*/
 			SquareCrop getSquareCrop() const
 			{
 				return This_const()._squareCrop;
 			}
 
 			/**
-			 * \brief Copy the data of the object to another one
-			 * \param left The PatternData object to overwrite
-			 */
+			* \brief Copy the data of the object to another one
+			* \param left The PatternData object to overwrite
+			*/
 			void copyTo(PatternData& left) const
 			{
 				cv::Mat image;
@@ -254,14 +254,14 @@ namespace filter
 				left.This()._requestImg = imageRequest;
 				left.This()._inputSource = This_const()._inputSource;
 				left.This()._squareCrop = This_const()._squareCrop;
-				
-				
+
+
 			}
 
 			/**
-			 * \brief 
-			 * \return [TODO]
-			 */
+			* \brief
+			* \return [TODO]
+			*/
 			Data newFrame()
 			{
 				if (isImageSource(This_const()._inputSource.getType()))
@@ -299,9 +299,9 @@ namespace filter
 			}
 
 			/**
-			 * \brief Does the request image contain data ?
-			 * \return Returns true if the request image doesn't contain any data
-			 */
+			* \brief Does the request image contain data ?
+			* \return Returns true if the request image doesn't contain any data
+			*/
 			inline bool empty() const
 			{
 				if (This_const()._requestImg.empty()) return true;
@@ -311,17 +311,17 @@ namespace filter
 			}
 
 			/**
-			 * [TODO]
-			 * \brief 
-			 * \param left
-			 * \return 
-			 */
+			* [TODO]
+			* \brief
+			* \param left
+			* \return
+			*/
 			PatternData& operator=(const Data& left)
 			{
 				Data::registerInstance(left);
 				_type = left.getType();
 				_decorate = left.getDecorate();
-				
+
 				return *this;
 			}
 

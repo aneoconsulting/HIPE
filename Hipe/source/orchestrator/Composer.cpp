@@ -1,6 +1,7 @@
 #include <data/IOData.h>
 #include <json/JsonTree.h>
 #include <Composer.h>
+#include "data/DirPatternData.h"
 
 namespace orchestrator
 {
@@ -22,6 +23,7 @@ namespace orchestrator
 	filter::data::Data orchestrator::Composer::loadPatternData(const json::JsonTree& dataNode)
 	{
 		using namespace filter::data;
+		bool isDirPAtterData=false;
 		std::vector<Data> res;
 		auto child = dataNode.allchildren("desc");
 		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
@@ -29,7 +31,17 @@ namespace orchestrator
 			const std::string dataType = itarray->first;
 			auto data = orchestrator::Composer::getDataFromComposer(dataType, *itarray->second);
 			res.push_back(data);
+			filter::data::IODataType ioDataType = filter::data::DataTypeMapper::getTypeFromString(dataType);
+			/*if(ioDataType == IODataType::SEQIMGD)
+			{
+				isDirPAtterData = true;
+			}*/
 		}
+		/*if(isDirPAtterData)
+		{
+			DirPatternData dirPattern(res);
+			return static_cast<Data>(dirPattern);
+		}*/
 		filter::data::PatternData pattern(res);
 
 		return static_cast<Data>(pattern);

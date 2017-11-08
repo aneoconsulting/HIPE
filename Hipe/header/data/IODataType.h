@@ -146,6 +146,20 @@ namespace filter
 
 				return false;
 			}
+
+			static bool isSequenceDirectory(const IODataType & dataType)
+			{
+				/*if (dataType == IODataType::LISTIO)
+				return true;*/
+				std::string typeStr = getStringFromType(dataType);
+
+				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+
+				if (typeStr.find("seqimgd") != std::string::npos)
+					return true;
+
+				return false;
+			}
 			/**
 			 * \brief Checks if a data type is a list type one
 			 * \param dataType The queried data type
