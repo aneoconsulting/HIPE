@@ -10,10 +10,10 @@ namespace filter {
 				throw HipeException("Demux needs DirPattern");
 			}
 			
-			for(auto d : data.patterns())
+			/*for(auto d : data.patterns())
 			{
 				_connexData.pushonce(d);
-			}
+			}*/
 			return OK;
 		}
 	}

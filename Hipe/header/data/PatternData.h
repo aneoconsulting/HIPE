@@ -254,8 +254,6 @@ namespace filter
 				left.This()._requestImg = imageRequest;
 				left.This()._inputSource = This_const()._inputSource;
 				left.This()._squareCrop = This_const()._squareCrop;
-
-
 			}
 
 			/**

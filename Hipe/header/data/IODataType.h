@@ -105,7 +105,7 @@ namespace filter
 
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
-				if (typeStr.find("img") != std::string::npos)
+				if (typeStr.find("img") != std::string::npos && typeStr.find("seq")==std::string::npos)
 					return true;
 
 				return false;

@@ -1,6 +1,5 @@
 #pragma once
-#include <filter/FilePatternFilter.h>
-#include <boost/filesystem/fstream.hpp>
+#include <filter/algos/FilePatternFilter.h>
 
 
 namespace filter
@@ -10,7 +9,7 @@ namespace filter
 		HipeStatus FilePatternFilter::process()
 		{
 			auto p = _connexData.pop();
-			auto pathdir = p.PathDir();
+			auto pathdir = static_cast<data::DirectoryImgData>(p.DirectoryImg()).DirectoryPath();
 			auto fullPath = pathdir.append(filePath);
 		
 			cv::Mat crop = cv::imread(fullPath, CV_LOAD_IMAGE_ANYCOLOR);

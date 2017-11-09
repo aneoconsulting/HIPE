@@ -20,28 +20,46 @@ namespace orchestrator
 		return static_cast<Data>(ListIOData(res));
 	}
 
+	bool Composer::checkIfDirectory(const std::map<std::basic_string<char>, json::JsonTree*>& map)
+	{
+		return true;
+	}
+
 	filter::data::Data orchestrator::Composer::loadPatternData(const json::JsonTree& dataNode)
 	{
 		using namespace filter::data;
 		bool isDirPAtterData=false;
 		std::vector<Data> res;
 		auto child = dataNode.allchildren("desc");
+	/*	if(checkIfDirectory(child))
+		{
+			
+		}*/
 		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 		{
 			const std::string dataType = itarray->first;
-			auto data = orchestrator::Composer::getDataFromComposer(dataType, *itarray->second);
-			res.push_back(data);
-			filter::data::IODataType ioDataType = filter::data::DataTypeMapper::getTypeFromString(dataType);
-			/*if(ioDataType == IODataType::SEQIMGD)
+			IODataType ioDataType = filter::data::DataTypeMapper::getTypeFromString(dataType);
+			if (ioDataType == IODataType::SQR_CROP)
 			{
-				isDirPAtterData = true;
-			}*/
+				if (itarray->second->count("SEQIMGD") == 1) {
+					isDirPAtterData = true;
+					auto seqimgd = itarray->second->get_child("SEQIMGD");
+					auto data = getDataFromComposer("SEQIMGD", seqimgd);
+					res.push_back(data);
+				}
+				
+			}
+			else {
+				auto data = getDataFromComposer(dataType, *itarray->second);
+				res.push_back(data);
+			}
+			
 		}
-		/*if(isDirPAtterData)
+		if(isDirPAtterData)
 		{
 			DirPatternData dirPattern(res);
 			return static_cast<Data>(dirPattern);
-		}*/
+		}
 		filter::data::PatternData pattern(res);
 
 		return static_cast<Data>(pattern);
