@@ -30,7 +30,11 @@ HipeStatus filter::algos::OverlayFilter::process()
 		}
 		else
 		{
-			throw HipeException("Error in OverlayFilter: Input type is not handled: " + data.getType());
+			std::stringstream errorMessage;
+			errorMessage << "Error in OverlayFilter: Input type is not handled: ";
+			errorMessage << data::DataTypeMapper::getStringFromType(data.getType());
+			errorMessage << std::endl;
+			throw HipeException(errorMessage.str());
 		}
 	}
 
