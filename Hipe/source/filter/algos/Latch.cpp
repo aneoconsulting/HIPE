@@ -121,7 +121,7 @@ namespace filter
 			}
 			count_frame++;
 
-			data::MatcherData img_result;
+			data::MatcherData md_result;
 			cv::Mat res;
 
 			if (patternData.imageRequest().getMat().empty())
@@ -129,14 +129,14 @@ namespace filter
 				data::MatcherData output;
 				_connexData.push(output);
 			}
-			else if (result.trypop_until(img_result, 30)) // wait 30ms no more
+			else if (result.trypop_until(md_result, 30)) // wait 30ms no more
 			{
-				tosend = img_result;
+				tosend = md_result;
 				_connexData.push(tosend);
 			}
-			else if (wait == true && result.trypop_until(img_result, 5000)) // wait 5 sec it's like infinite but allow to kill thread
+			else if (wait == true && result.trypop_until(md_result, wait_time)) // wait 5 sec it's like infinite but allow to kill thread
 			{
-				tosend = img_result;
+				tosend = md_result;
 				_connexData.push(tosend);
 			}
 			else if (tosend.requestImage_const().empty())
@@ -146,7 +146,7 @@ namespace filter
 			}
 			else
 			{
-				img_result = tosend; //Use backup because the algorithme is too late
+				md_result = tosend; //Use backup because the algorithme is too late
 
 				_connexData.push(tosend);
 			}

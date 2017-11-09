@@ -54,10 +54,12 @@ namespace filter
 
 			REGISTER(Latch, ()), _connexData(data::INDATA)
 			{
+				wait_time = 5000;
 				hessianThreshold = 100;
 				skip_frame = -1;
 				isStart = false;
 				wait = false;
+				thr_server = nullptr;
 			}
 
 			REGISTER_P(float, inlier_threshold);
@@ -68,6 +70,7 @@ namespace filter
 			REGISTER_P(int, skip_frame);
 
 			REGISTER_P(bool, wait);
+			REGISTER_P(int, wait_time);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
@@ -101,6 +104,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(Latch, inlier_threshold, nn_match_ratio, hessianThreshold, wait);
+		ADD_CLASS(Latch, inlier_threshold, nn_match_ratio, hessianThreshold, wait, wait_time);
 	}
 }
