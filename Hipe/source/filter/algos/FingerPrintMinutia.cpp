@@ -94,11 +94,11 @@ namespace filter
 			Mat input_binary;
 
 			cvtColor(im, input_binary, cv::COLOR_BGR2GRAY);
-			//im.copyTo(input_binary);
-			//Mat input_thinned= input_binary < 200;
-			//Apply thinning algorithm
-			//Mat input_binary;
-			threshold(input_binary, input_binary, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+			// Compute threshold
+			float thresholdValue = threshold(input_binary, input_binary.clone(), 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+			// Apply thresholding
+			input_binary = input_binary < thresholdValue;
+			
 			Mat input_thinned = input_binary.clone();
 			debugShow("input_binary", input_binary, true);
 			debugShow("input_thinned", input_thinned, true);
