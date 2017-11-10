@@ -8,16 +8,19 @@ namespace filter
 	{
 		HipeStatus FilePatternFilter::process()
 		{
-			auto p = _connexData.pop();
-			auto pathdir = static_cast<data::DirectoryImgData>(p.DirectoryImg()).DirectoryPath();
-			auto fullPath = pathdir.append(filePath);
-		
-			cv::Mat crop = cv::imread(fullPath, CV_LOAD_IMAGE_ANYCOLOR);
-			if(crop.data)
+			data::DirPatternData p = _connexData.pop();
+			auto pathdir = static_cast<data::DirectoryImgData>(p.This().DirectoryImg()).This().DirectoryPath();
+			auto fullPath = pathdir.append("\\").append(filePath);
+			data::ImageData imageInput = p.This().imageSource();
+			cv::Mat imageLoaded = cv::imread(fullPath, CV_LOAD_IMAGE_ANYCOLOR);
+			if(imageLoaded.data)
 			{
-				data::ImageData imagedata(crop);
-				data::SquareCrop squarecrop(imagedata);
-				data::PatternData pattern(squarecrop);
+				std::vector<int> crop = { 0,0, imageLoaded.size().width, imageLoaded.size().height };
+				data::ImageData imagedata(imageLoaded);
+				data::SquareCrop squarecrop;
+				squarecrop << imagedata;
+				squarecrop << crop;
+				data::PatternData pattern(imageInput, squarecrop);
 				_connexData.push(pattern);
 			}
 			else

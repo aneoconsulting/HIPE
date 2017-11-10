@@ -245,7 +245,8 @@ namespace filter
 				if (!port.empty())
 				{
 					const Data & popped = port.pop();
-					Din in = popped;
+					//Din in = popped;
+					Din in = static_cast<const Din &>(popped);
 					if (_way == INOUT)
 					{
 						broacast(in);

@@ -6,6 +6,7 @@
 #include "data/ListIOData.h"
 #include <data/PatternData.h>
 #include <orchestrator/TaskInfo.h>
+#include "data/DirPatternData.h"
 
 
 namespace orchestrator
@@ -375,7 +376,11 @@ namespace orchestrator
 				else if (filter::data::DataTypeMapper::isPattern(inputData.getType()))
 				{
 					using videoType = filter::data::PatternData;
-					processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
+					using videoDir = filter::data::DirPatternData;
+					if(inputData.getType() == filter::data::IODataType::DIRPATTERN)
+						processVideo(root, static_cast<videoDir&>(inputData), outputData, debug);
+					else
+						processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
 				}
 				else
 				{

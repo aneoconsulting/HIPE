@@ -188,7 +188,7 @@ namespace filter
 
 				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
-				if (typeStr.find("pattern") != std::string::npos)
+				if (typeStr.find("pattern") != std::string::npos || typeStr.find("dirpat") != std::string::npos)
 					return true;
 
 				return false;

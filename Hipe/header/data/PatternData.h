@@ -63,6 +63,15 @@ namespace filter
 				This()._inputSource = static_cast<Data>(inputImage);
 				newFrame();
 			}
+			PatternData(ImageData &inputImage, SquareCrop & squareCrope) : VideoData(IODataType::PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
+			{
+				Data::registerInstance(new PatternData(IOData::_Protection()));
+
+				This()._requestImg = static_cast<Data>(inputImage);
+				This()._squareCrop = squareCrope;
+				newFrame();
+			}
+
 
 
 			/**
@@ -278,9 +287,9 @@ namespace filter
 					cv::Mat mat = images.Array()[images.Array().size() - This()._endOfSource];
 
 					--(This()._endOfSource);
-
-					This()._requestImg = ImageData(mat);
-
+					if (This()._requestImg.empty()) {
+						This()._requestImg = ImageData(mat);
+					}
 					return static_cast<Data>(*this);
 				}
 				else if (isVideoSource(This()._inputSource.getType()))

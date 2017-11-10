@@ -22,13 +22,21 @@ namespace filter
 
 
 		protected:
-			DirPatternData(IOData::_Protection priv) : VideoData(PATTERN),_endOfSource(-1)
+			DirPatternData(IOData::_Protection priv) : VideoData(DIRPATTERN),_endOfSource(-1)
 			{
 
 			}
 
 		public:
-			DirPatternData() : VideoData<DirPatternData>(IODataType::PATTERN), _endOfSource(-1), _dirPath("")
+			/**
+			* \brief Copy constructor for PatternDate copy
+			* \param left antoher PatternData
+			*/
+			DirPatternData(const DirPatternData& left) : VideoData(left.getType()), _endOfSource(-1)
+			{
+				Data::registerInstance(left._This);
+			}
+			DirPatternData() : VideoData<DirPatternData>(IODataType::DIRPATTERN), _endOfSource(-1), _dirPath("")
 			{
 				Data::registerInstance(new DirPatternData(IOData::_Protection()));
 				ImageData inputImage;
@@ -44,7 +52,7 @@ namespace filter
 			{
 			}
 
-			DirPatternData(const std::vector<Data>& left) : VideoData(IODataType::PATTERN), _endOfSource(-1)
+			DirPatternData(const std::vector<Data>& left) : VideoData(IODataType::DIRPATTERN), _endOfSource(-1)
 			{
 				registerInstance(new DirPatternData(_Protection()));
 				auto pathIsDefined = false;
@@ -83,7 +91,7 @@ namespace filter
 			* \brief A copy Constructor accepting an image (ImageData). Overwrites the input source image
 			* \param inputImage The image used to overrite the input source one
 			*/
-			DirPatternData(ImageData &inputImage) : VideoData(IODataType::PATTERN),  _endOfSource(-1), _dirPath("")
+			DirPatternData(ImageData &inputImage) : VideoData(IODataType::DIRPATTERN),  _endOfSource(-1), _dirPath("")
 			{
 				Data::registerInstance(new DirPatternData(IOData::_Protection()));
 
@@ -91,16 +99,6 @@ namespace filter
 				newFrame();
 			}
 			
-		
-			/**
-			* \brief Copy constructor for PatternDate copy
-			* \param left antoher PatternData
-			*/
-			DirPatternData(const DirPatternData& left) : VideoData(left.getType()), _endOfSource(-1), _dirPath("")
-			{
-				Data::registerInstance(left._This);
-			}
-
 
 			/**
 			* \brief Overloaded ssignment operator used to copy PatternData objects.
@@ -153,6 +151,11 @@ namespace filter
 			ImageData imageRequest() const
 			{
 				return This_const()._requestImg;
+			}
+
+			Data imageSource() const
+			{
+				return This_const()._inputSource;
 			}
 
 			Data DirectoryImg() const
@@ -213,11 +216,17 @@ namespace filter
 					if (This_const()._endOfSource <= -1)
 						This()._endOfSource = images.Array().size();
 
-					
+					if (This_const()._endOfSource == 0)
+					{
+						This()._requestImg = (ImageData(cv::Mat::zeros(0, 0, 0)));
+						return static_cast<Data>(*this);
+					}
+
 					cv::Mat mat = images.Array()[images.Array().size() - This()._endOfSource];
 
 					--(This()._endOfSource);
 
+					This()._requestImg = ImageData(mat);
 
 					return static_cast<Data>(*this);
 				}
@@ -227,6 +236,7 @@ namespace filter
 					Data res = video.newFrame();
 					if (isImageSource(res.getType()) == false)
 						throw HipeException("Something is going wrong with patternData and Video source ? ");
+					This()._requestImg = static_cast<ImageData&>(res);
 
 					return static_cast<Data>(*this);
 				}
