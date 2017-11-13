@@ -91,30 +91,40 @@ namespace filter
 		HipeStatus FingerPrintMinutiae::process()
 		{
 			data::ImageArrayData data(_connexData.pop());
-			data::ImageData queryImageData(data.Array()[0]);
-			data::ImageData refImageData(data.Array()[1]);
+			data::ImageData queryImageData(data.Array_const()[0]);
 
+			std::vector<cv::Mat> refImages;
+			for (size_t i = 1; i < data.Array_const().size(); ++i)
+			{
+				refImages.push_back(data.Array_const()[i]);
+			}
+
+			// Preprocess query image, done only once
 			cv::Mat queryImage = queryImageData.getMat();
-			cv::Mat refImage = refImageData.getMat();
-
 			cv::Mat queryImagePreprocessed = preprocessFingerprint(queryImage);
-			cv::Mat refImagePreprocessed = preprocessFingerprint(refImage);
 
-			std::vector<cv::KeyPoint> queryKeypoints, refKeypoints;
-			queryKeypoints = computeMinutiae(queryImagePreprocessed);
-			refKeypoints = computeMinutiae(refImagePreprocessed);
+			// Match query image with other inputed images
+			for (auto& currentRefImage : refImages)
+			{
+				// Preprocess current reference image
+				cv::Mat currentRefImagePreprocessed = preprocessFingerprint(currentRefImage);
 
-			cv::Mat queryDescriptors, refDescriptors;
-			queryDescriptors = computeMinutiaeDescriptors(queryImagePreprocessed, queryKeypoints);
-			refDescriptors = computeMinutiaeDescriptors(refImagePreprocessed, refKeypoints);
+				std::vector<cv::KeyPoint> queryKeypoints, refKeypoints;
+				queryKeypoints = computeMinutiae(queryImagePreprocessed);
+				refKeypoints = computeMinutiae(currentRefImagePreprocessed);
 
-			std::vector<cv::DMatch> foundMatches = matchFingerprints(refImagePreprocessed, refDescriptors, queryImagePreprocessed, queryDescriptors);
+				cv::Mat queryDescriptors, refDescriptors;
+				queryDescriptors = computeMinutiaeDescriptors(queryImagePreprocessed, queryKeypoints);
+				refDescriptors = computeMinutiaeDescriptors(currentRefImagePreprocessed, refKeypoints);
 
-			cv::Mat resultImage = drawMatches(foundMatches, refImage, refKeypoints, queryImage, queryKeypoints);
+				std::vector<cv::DMatch> foundMatches = matchFingerprints(currentRefImagePreprocessed, refDescriptors, queryImagePreprocessed, queryDescriptors, queryKeypoints, refKeypoints, true);
 
-			if (_debug) debugShow("found matches", resultImage, true);
+				cv::Mat resultImage = drawMatches(foundMatches, currentRefImage, refKeypoints, queryImage, queryKeypoints);
 
-			_connexData.push(data::ImageData(resultImage));
+				if (_debug) debugShow("found matches", resultImage, true);
+
+				_connexData.push(data::ImageData(resultImage));
+			}
 
 			return OK;
 		}
@@ -208,17 +218,25 @@ namespace filter
 		{
 			cv::Mat descriptors;
 
-			Ptr<Feature2D> orb_descriptor = ORB::create();
-			orb_descriptor->compute(fingerprintImage, minutiae, descriptors);
+			//Ptr<Feature2D> orb_descriptor = ORB::create();
+			//orb_descriptor->compute(fingerprintImage, minutiae, descriptors);
+
+			cv::Ptr<Feature2D> sift_descriptor = SIFT::create();
+			sift_descriptor->compute(fingerprintImage, minutiae, descriptors);
 
 			return descriptors;
 		}
 
-		std::vector<cv::DMatch> FingerPrintMinutiae::matchFingerprints(const cv::Mat& refFingerprintImage, const cv::Mat& refFingerprintDescriptors, const cv::Mat& queryFingerprintImage, const cv::Mat& queryFingerprintDescriptors)
+		std::vector<cv::DMatch> FingerPrintMinutiae::matchFingerprints(const cv::Mat& refFingerprintImage, const cv::Mat& refFingerprintDescriptors, const cv::Mat& queryFingerprintImage, const cv::Mat& queryFingerprintDescriptors, const std::vector<cv::KeyPoint>& refFingerprintKeypoints, const std::vector<cv::KeyPoint>& queryFingerprintKeypoints, bool parallelOnly)
 		{
-			// Use this ctr with orb
-			cv::FlannBasedMatcher flannMatcher = cv::FlannBasedMatcher(new flann::LshIndexParams(6, 12, 1), new flann::SearchParams(50));
+			if (parallelOnly && (refFingerprintKeypoints.empty() || queryFingerprintKeypoints.empty()))
+				throw HipeException("Error in FingerprintMinutiae filter: Tried to extract parallel descriptors, but no keypoints found as input");
 
+			// Use this ctr with orb
+			//cv::FlannBasedMatcher flannMatcher = cv::FlannBasedMatcher(new flann::LshIndexParams(6, 12, 1), new flann::SearchParams(50));
+
+			// Use this ctr with sift
+			cv::FlannBasedMatcher flannMatcher = cv::FlannBasedMatcher();
 			std::vector<DMatch> foundMatches, goodMatches;
 
 			flannMatcher.match(refFingerprintDescriptors, queryFingerprintDescriptors, foundMatches);
@@ -233,16 +251,32 @@ namespace filter
 			}
 
 			// Extract good matches
+			std::vector<cv::Point2f> queryMatches, refMatches;
 			for (auto& match : foundMatches)
+			//for(size_t i = 0; i < foundMatches.size(); ++i)
 			{
+				//cv::DMatch& match = foundMatches[i];
+
 				if (match.distance <= std::max(matchcoeff*  minDistance, matchthreshold))
 				{
 					std::cout << "LOG - FingerPringMinutia: acceptable match distance found: " << match.distance << std::endl;
 					goodMatches.push_back(match);
+					if (parallelOnly)
+					{
+						queryMatches.push_back(queryFingerprintKeypoints[match.queryIdx].pt);
+						refMatches.push_back(refFingerprintKeypoints[match.trainIdx].pt);
+					}
 				}
 			}
 
-			return goodMatches;
+			if (!parallelOnly)
+				return goodMatches;
+
+			else if (areDescriptorsParallel(refMatches, queryMatches))
+				return goodMatches;
+
+			else
+				return std::vector<DMatch>();
 		}
 
 		cv::Mat FingerPrintMinutiae::drawMatches(const std::vector<cv::DMatch>& matches, const cv::Mat& refFingerprintImage, const std::vector<cv::KeyPoint> refKeypoints, const cv::Mat& queryFingerprintImage, const std::vector<cv::KeyPoint> queryKeypoints)
@@ -251,6 +285,30 @@ namespace filter
 			cv::drawMatches(refFingerprintImage, refKeypoints, queryFingerprintImage, queryKeypoints, matches, output, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
 			return output;
+		}
+
+		bool FingerPrintMinutiae::areDescriptorsParallel(const std::vector<cv::Point2f>& refDescriptorsPositions, const std::vector<cv::Point2f>& queryDescriptorsPositions, float threshold)
+		{
+			if (refDescriptorsPositions.size() != queryDescriptorsPositions.size())
+				throw HipeException("Error in FingerprintMinutiae filter: Cannot extract parallel descriptors, reference and query images' descriptors count mismatch.");
+
+			for (size_t i = 0; i < refDescriptorsPositions.size() - 1; ++i)
+			{
+				const cv::Point& currRefPoint = refDescriptorsPositions[i];
+				const cv::Point& nextRefPoint = refDescriptorsPositions[i + 1];
+				const cv::Point& currQueryPoint = queryDescriptorsPositions[i];
+				const cv::Point& nextQueryPoint = queryDescriptorsPositions[i + 1];
+
+				const double dx0 = currRefPoint.x - currQueryPoint.x;
+				const double dy0 = currRefPoint.y - currQueryPoint.y;
+
+				const double dx1 = nextRefPoint.x - nextQueryPoint.x;
+				const double dy1 = nextRefPoint.y - nextRefPoint.y;
+
+				if (abs(dx1 - dx0) > threshold || abs(dy1 - dy0) > threshold) return false;
+			}
+
+			return true;
 		}
 	}
 }
