@@ -126,12 +126,12 @@ namespace filter
 			if (deleteWindow) cv::destroyWindow(name);
 		}
 
-		const cv::Mat& FingerPrintMinutiae::preprocessFingerprint(const cv::Mat& fingerprintImage)
+		cv::Mat FingerPrintMinutiae::preprocessFingerprint(const cv::Mat& fingerprintImage)
 		{
 			cv::Mat preprocessedImage;
 
 			// Convert image to grayscale
-			if (preprocessedImage.channels() == 3)
+			if (fingerprintImage.channels() == 3)
 				cv::cvtColor(fingerprintImage, preprocessedImage, cv::COLOR_BGR2GRAY);
 			else
 				throw HipeException("Error in FingerPrintMinutia filter: Cannot convert image to grayscale. Unknown input type.");
@@ -177,7 +177,7 @@ namespace filter
 			{
 				const float* row = normalized.ptr<float>(y);
 
-				for (size_t x = 0; x < normalized.cols; ++y)
+				for (size_t x = 0; x < normalized.cols; ++x)
 				{
 					if (row[x] > threshold)
 						keypoints.push_back(cv::KeyPoint(x, y, 1));
@@ -204,10 +204,11 @@ namespace filter
 			return keypoints;
 		}
 
-		const cv::Mat& FingerPrintMinutiae::computeMinutiaeDescriptors(const cv::Mat& fingerprintImage, std::vector<cv::KeyPoint>& minutiae)
+		cv::Mat FingerPrintMinutiae::computeMinutiaeDescriptors(const cv::Mat& fingerprintImage, std::vector<cv::KeyPoint>& minutiae)
 		{
-			Ptr<Feature2D> orb_descriptor = ORB::create();
 			cv::Mat descriptors;
+
+			Ptr<Feature2D> orb_descriptor = ORB::create();
 			orb_descriptor->compute(fingerprintImage, minutiae, descriptors);
 
 			return descriptors;
@@ -215,6 +216,7 @@ namespace filter
 
 		std::vector<cv::DMatch> FingerPrintMinutiae::matchFingerprints(const cv::Mat& refFingerprintImage, const cv::Mat& refFingerprintDescriptors, const cv::Mat& queryFingerprintImage, const cv::Mat& queryFingerprintDescriptors)
 		{
+			// Use this ctr with orb
 			cv::FlannBasedMatcher flannMatcher = cv::FlannBasedMatcher(new flann::LshIndexParams(6, 12, 1), new flann::SearchParams(50));
 
 			std::vector<DMatch> foundMatches, goodMatches;

@@ -43,10 +43,10 @@ namespace filter
 			void thinning(cv::Mat &im);
 			void thinningIteration(cv::Mat& im, int iter);
 
-			const cv::Mat& preprocessFingerprint(const cv::Mat& fingerprintImage);
+			cv::Mat preprocessFingerprint(const cv::Mat& fingerprintImage);
 			const std::vector<cv::KeyPoint> computeMinutiae(const cv::Mat& fingerprintImage);
 
-			const cv::Mat& computeMinutiaeDescriptors(const cv::Mat& fingerprintImage, std::vector<cv::KeyPoint>& minutiae);
+			cv::Mat computeMinutiaeDescriptors(const cv::Mat& fingerprintImage, std::vector<cv::KeyPoint>& minutiae);
 			std::vector<cv::DMatch> matchFingerprints(const cv::Mat& refFingerprintImage, const cv::Mat& refFingerprintDescriptors, const cv::Mat& queryFingerprintImage, const cv::Mat& queryFingerprintDescriptors);
 
 			cv::Mat drawMatches(const std::vector<cv::DMatch>& matches, const cv::Mat& refFingerprintImage, const std::vector<cv::KeyPoint> refKeypoints, const cv::Mat& queryFingerprintImage, const std::vector<cv::KeyPoint> queryKeypoints);
