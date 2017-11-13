@@ -1,30 +1,33 @@
 #pragma once
 #include <filter/tools/RegisterClass.h>
-#include <core/HipeException.h>
+#include <filter/IFilter.h>
+#include <core/HipeStatus.h>
+#include "data/ImageArrayData.h"
+#include <vector>
+#include "data/ImageData.h"
 
 
 namespace filter
 {
 	namespace algos
 	{
+
 		class Gaussian : public filter::IFilter
 		{
-			REGISTER(Gaussian, ())
+
+			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
+			CONNECTOR(data::ImageData, data::ImageData);
+
+			REGISTER(Gaussian, ()), _connexData(data::INDATA)
 			{
+				sigma = 2;
 
 			}
 
 			REGISTER_P(int, sigma);
 
-			virtual std::string resultAsString() { return std::string("TODO"); };
-
 		public:
-			HipeStatus process()
-			{
-				throw HipeException(_constructor + " process isn't yet implmented");
-			}
-
-			
+			HipeStatus process() override;
 
 		};
 
