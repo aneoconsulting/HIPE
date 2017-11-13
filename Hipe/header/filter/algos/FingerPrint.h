@@ -6,10 +6,6 @@
 #include <data/ImageArrayData.h>
 #include <data/ImageData.h>
 
-#include "opencv2/core.hpp"
-#include "opencv2/highgui.hpp"
-
-#include <iostream>
 #include <cstdio>
 
 namespace filter
@@ -26,12 +22,14 @@ namespace filter
 				minHessian = 400;
 				matchthreshold = 0.1;
 				matchcoeff = 2;
+				minnumbermatch = 4;
 
 			}
 
 			REGISTER_P(int, minHessian);
 			REGISTER_P(double, matchthreshold);
 			REGISTER_P(double, matchcoeff);
+			REGISTER_P(double, minnumbermatch);
 
 
 		public:
@@ -39,7 +37,7 @@ namespace filter
 
 		};
 
-		ADD_CLASS(FingerPrint, minHessian, matchthreshold,matchcoeff);
+		ADD_CLASS(FingerPrint, minHessian, matchthreshold,matchcoeff, minnumbermatch);
 	}
 }
 #pragma once

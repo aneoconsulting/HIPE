@@ -59,11 +59,27 @@ namespace filter
 						good_matches.push_back(matches[i]);
 					}
 				}
-				// Draw only "good" matches
+				
 				Mat img_matches;
+
+				// Match succeed if number of good match is > minnumbermatch
+				if(good_matches.size()>minnumbermatch)
+				{
+					putText(imagetest.getMat(), "Match Succeed", Point(15,15), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(0, 255, 0), 2, 8, false);
+				
+
+				}
+				else
+				{
+					putText(imagetest.getMat(), "Match Failed", Point(15, 15), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 0, 0), 2, 8, false);
+					
+				}
+			
+				// Draw only "good" matches
 				drawMatches(imagetest.getMat(), keypointstest, imageref.getMat(), keypointsref,
 					good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
 					vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+				
 
 
 
