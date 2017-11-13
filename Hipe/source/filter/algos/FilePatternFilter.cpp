@@ -9,9 +9,9 @@ namespace filter
 		HipeStatus FilePatternFilter::process()
 		{
 			data::DirPatternData p = _connexData.pop();
-			auto pathdir = static_cast<data::DirectoryImgData>(p.This().DirectoryImg()).This().DirectoryPath();
+			auto pathdir = static_cast<data::DirectoryImgData>(p.DirectoryImg()).DirectoryPath();
 			auto fullPath = pathdir.append("\\").append(filePath);
-			data::ImageData imageInput = p.This().imageSource();
+			data::ImageData imageInput = p.imageSource();
 			cv::Mat imageLoaded = cv::imread(fullPath, CV_LOAD_IMAGE_ANYCOLOR);
 			if(imageLoaded.data)
 			{

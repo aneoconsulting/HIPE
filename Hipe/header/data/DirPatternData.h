@@ -16,9 +16,8 @@ namespace filter
 		{
 			Data _inputSource;		
 			int _endOfSource;		
-			std::string _dirPath;
 			ImageData _requestImg;
-			Data dir;
+			DirectoryImgData dir;
 
 
 		protected:
@@ -36,7 +35,7 @@ namespace filter
 			{
 				Data::registerInstance(left._This);
 			}
-			DirPatternData() : VideoData<DirPatternData>(IODataType::DIRPATTERN), _endOfSource(-1), _dirPath("")
+			DirPatternData() : VideoData<DirPatternData>(IODataType::DIRPATTERN), _endOfSource(-1)
 			{
 				Data::registerInstance(new DirPatternData(IOData::_Protection()));
 				ImageData inputImage;
@@ -91,7 +90,7 @@ namespace filter
 			* \brief A copy Constructor accepting an image (ImageData). Overwrites the input source image
 			* \param inputImage The image used to overrite the input source one
 			*/
-			DirPatternData(ImageData &inputImage) : VideoData(IODataType::DIRPATTERN),  _endOfSource(-1), _dirPath("")
+			DirPatternData(ImageData &inputImage) : VideoData(IODataType::DIRPATTERN),  _endOfSource(-1)
 			{
 				Data::registerInstance(new DirPatternData(IOData::_Protection()));
 
@@ -158,7 +157,7 @@ namespace filter
 				return This_const()._inputSource;
 			}
 
-			Data DirectoryImg() const
+			DirectoryImgData DirectoryImg() const
 			{
 				return This_const().dir;
 			}
@@ -188,10 +187,7 @@ namespace filter
 				return DataTypeMapper::isImage(dataType) || DataTypeMapper::isStreaming(dataType);
 			}
 
-			std::string PathDir() const
-			{			
-				return This_const()._dirPath;
-			}
+			
 		
 			/**
 			* \brief Copy the data of the object to another one
@@ -200,7 +196,7 @@ namespace filter
 			void copyTo(DirPatternData& left) const
 			{
 				left.This()._inputSource = This_const()._inputSource;
-				left.This()._dirPath = This_const()._dirPath;
+				left.This().dir = This_const().dir;
 			}
 
 			/**
@@ -249,7 +245,7 @@ namespace filter
 			*/
 			inline bool empty() const
 			{
-				if (This_const()._requestImg.empty() && This_const()._dirPath.empty()) return true;
+				if (This_const()._requestImg.empty() && This_const().dir.empty()) return true;
 
 				return false;
 			}

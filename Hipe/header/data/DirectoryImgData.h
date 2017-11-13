@@ -13,8 +13,8 @@ namespace filter {
 			 * \brief The path to the folder containing the images
 			 */
 			std::string _directoryPath;
-		
-			
+
+
 
 			DirectoryImgData(IOData::_Protection priv) : IOData(IODataType::SEQIMGD)
 			{
@@ -35,7 +35,7 @@ namespace filter {
 				This()._type = SEQIMGD;
 			}
 			/**
-			 * \brief 
+			 * \brief
 			 * \param directoryPath The path to where the images are located
 			 */
 
@@ -45,7 +45,7 @@ namespace filter {
 
 				This()._directoryPath = directoryPath;
 			}
-		
+
 			//DirectoryImgData(const std::string & directoryPath, bool getImages) : IOData(data::IODataType::SEQIMGD)
 			//{
 			//	Data::registerInstance(new DirectoryImgData());
@@ -89,7 +89,7 @@ namespace filter {
 			* \return Returns a reference to the std::vector<cv::Mat> object containing the images' data
 			*/
 
-		
+
 			virtual DirectoryImgData& operator=(const DirectoryImgData& left)
 			{
 				Data::registerInstance(left);
@@ -101,7 +101,7 @@ namespace filter {
 
 			std::string DirectoryPath() const
 			{
-				return _directoryPath;
+				return This_const()._directoryPath;
 			}
 			std::vector<cv::Mat> & images()
 			{
@@ -116,6 +116,17 @@ namespace filter {
 			{
 				return This()._array[index];
 			}
+
+			/**
+			* \brief Does the request image contain data ?
+			* \return Returns true if the request image doesn't contain any data
+			*/
+			inline bool empty() const
+			{
+				if (This_const()._directoryPath.empty() || This_const()._array.empty()) return true;
+				return false;
+			}
 		};
 	}
 }
+

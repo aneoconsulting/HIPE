@@ -31,10 +31,7 @@ namespace orchestrator
 		bool isDirPAtterData=false;
 		std::vector<Data> res;
 		auto child = dataNode.allchildren("desc");
-	/*	if(checkIfDirectory(child))
-		{
-			
-		}*/
+
 		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 		{
 			const std::string dataType = itarray->first;
