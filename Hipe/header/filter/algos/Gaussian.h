@@ -7,6 +7,8 @@
 #include "data/ImageData.h"
 
 
+
+
 namespace filter
 {
 	namespace algos
@@ -15,22 +17,26 @@ namespace filter
 		class Gaussian : public filter::IFilter
 		{
 
-			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
+		
 			CONNECTOR(data::ImageData, data::ImageData);
 
 			REGISTER(Gaussian, ()), _connexData(data::INDATA)
 			{
-				sigma = 2;
+				sigmaX = 1;
+				sigmaX = sigmaY;
+				kernelsize = -1;
 
 			}
 
-			REGISTER_P(int, sigma);
+			REGISTER_P(int, sigmaX);
+			REGISTER_P(int, sigmaY);
+			REGISTER_P(int, kernelsize);
 
 		public:
 			HipeStatus process() override;
 
 		};
 
-		ADD_CLASS(Gaussian, sigma);
+		ADD_CLASS(Gaussian, sigmaX,sigmaY, kernelsize);
 	}
 }

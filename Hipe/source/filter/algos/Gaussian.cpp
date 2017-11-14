@@ -7,22 +7,33 @@ namespace filter
 {
 	namespace algos
 	{
+		/**
+		* \var Blur::kernelsize
+		* The size of the kernel to use (i.e. the number of neighbouring pixels to evaluate).
+		*
+		* \var Blur::sigmaX
+		* The gaussian kernel standard deviation in the X direction.
+		*
+		* \var Blur::sigmaY
+		* The gaussian kernel standard deviation in the Y direction. Default value is sigmaY=sigmaX
+		*/
+
 
 		HipeStatus Gaussian::process()
 		{
 
 
-			while (!_connexData.empty()) // While i've parent data
+			while (!_connexData.empty()) 
 			{
 
-				data::ImageData images(_connexData.pop());
+				data::ImageData images(_connexData.pop()); //Pop input image
+
 				cv::Mat res;
 
-				/// Reduce noise with a kernel 3x3
-				GaussianBlur(images.getMat(), res, cv::Size(-1, -1), sigma, sigma);
+				GaussianBlur(images.getMat(), res, cv::Size(kernelsize, kernelsize), sigmaX, sigmaY); //gaussian filter
 
 
-				_connexData.push(res);
+				_connexData.push(res); //push output image
 			}
 			return OK;
 		}
