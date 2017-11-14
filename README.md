@@ -126,10 +126,12 @@ On Linux, you need gcc 5+, CMake and Makefile to build HIPE. Make sur your gcc v
 
 ### [[..][11]] Libraries and other dependencies
 As mentioned before, HIPE uses multiple libraries.    
-To make things easier, we decided to regroup them in a package. The main goal of this package is portability: extract it where you want. There is no setup to be done and there will be no conflict with your own libraries.
+To make things easier, we decided to regroup them in a package. The main goal of this package is portability: extract it where you want. There is no setup to be done and there will be no conflict with your own libraries.    
+
+**Important:** Two files are missing in the HipeExternal archive (libiomp5md.dll & libiomp5md.pdb). You can find them where you downloaded it. These two files are to be placed in a _bin_ folder (you have to create one) in the _win64/intel64_win_ one.   
 
 **Note:** The package can be extracted anywhere but it _must_ keep its hierarchy as HIPE's configuration files will look for precise locations: Don't move or rename anything in the win64 folder.    
-
+    
 ## [[..][1]] Project Building
 * [Windows][131] 
 * [Linux][132]
