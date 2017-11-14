@@ -1,11 +1,12 @@
 [0]: #content
 [1]: #-build-hipe
 [11]: #-requirements
-[111]: #-cmake-347
+[111]: #-cmake-372
 [112]: #-nvidia-cuda-80
-[113]: #-windows-platforms
-[114]: #-linux-platforms
-[115]: #-libraries-and-other-dependencies
+[113]: #-nvidia-cudnn
+[114]: #-windows-platforms
+[115]: #-linux-platforms
+[116]: #-libraries-and-other-dependencies
 [12]: #-project-building
 [121]: #-windows
 [122]: #-linux
@@ -25,6 +26,7 @@
 [21212]: #-create-and-edit-a-request
 [21213]: #-save-your-request
 [21214]: #-send-a-request
+[2122]: #-web-interface
 [3]: #-develop-with-hipe
 [31]: #-develop-filters
 [311]: #-register-macro
@@ -63,9 +65,10 @@ How to start with HIPE
 ## [[..][1]] Requirements
 * [CMake][111]
 * [Nvidia CUDA][112]
-* [Windows Specific][113]
-* [Linux Specific][114]
-* [Libraries and other dependencies][115]
+* [Nvidia cuDNN][113]
+* [Windows Specific][114]
+* [Linux Specific][115]
+* [Libraries and other dependencies][116]
 <br></br><br></br><br></br>
 
 
@@ -73,9 +76,10 @@ HIPE can be built and used on a Windows or Linux platform.
 Here is a summary list of all the primary third party programs and libraries needed. It is not required to build all the dependencies separately as they were all packed in the HipeExternal archive.
 
 -	Third party
-	-	CMake 3.4.7+
+	-	CMake 3.7.2
 -	Dependencies
 	-	Nvidia CUDA 8.0
+	-	Nvidia CuDNN for CUDA 8.0
 	-	HDF5
 	-	caffe
 	-	dlib
@@ -88,8 +92,8 @@ Here is a summary list of all the primary third party programs and libraries nee
 	-	GCC 5+
 	-	Makefile
 
-### [[..][11]] CMake 3.4.7+
-To build HIPE, the minimum required version of CMake is 3.4.7.
+### [[..][11]] CMake 3.7.2
+To build HIPE, the required version of CMake is 3.7.2 (this version only).
 
 CMake can be [downloaded here]( https://cmake.org/download/)    
 
@@ -102,11 +106,18 @@ The toolkit can be downloaded on the [Nvidia CUDA dedicated website](https://dev
 
 **Note:** The version 8.0 must be present on your system’s _PATH_, as HIPE's building configuration files will look for it here. If you already have multiple versions of the toolkit installed, or you don’t want it to be referenced in it,  you can also fill the ``CUDA_SDK_ROOT_DIR`` and ``CUDA_TOOLKIT_ROOT_DIR`` fields when the “Could not find CUDA” CMake error will occur in the building phase.
 
+### [[..][11]] Nvidia cuDNN    
+Nvidia cuDNN library is also required. You must download a version matching the downloaded version of CUDA (the v7.0.3 for CUDA 8.0 Windows 10 library should work).    
+You can download it from the [Nvidia CuDNN dedicated website](https://developer.nvidia.com/rdp/form/cudnn-download-survey), but you will need to have (or create) a Nvidia devevloper account.    
+The content of the archive must be placed where you extracted and installed CUDA. In other words, put the content of the bin, lib, and include foldes in the CUDA's ones.    
 
 ### [[..][11]] Windows platforms
-On Windows platforms, _Visual Studio 2015 Update 3_ was used to compile the dependencies and is the main tool to work on HIPE. The project will **_only_** work with this version. At least, only when using the VC140 build tools.
+On Windows platforms, _Visual Studio 2015 Update 3_ was used to compile the dependencies and is the main tool to work on HIPE. The project will **_only_** work with this version. At least, only when using the VC140 build tools.    
     
-If you don’t have those build tools or any Visual Studio version installed, you can find the free 2015 Community one in the [older downloads page](https://www.visualstudio.com/fr/vs/older-downloads/) on the Visual Studio website. Don't forget to install the Update 3 package.
+If you don’t have those build tools or any Visual Studio version installed, you can find the free 2015 Community one in the [older downloads page](https://www.visualstudio.com/fr/vs/older-downloads/) on the Visual Studio website. Don't forget to install the Update 3 package, or download the full version already prepacked with the update.    
+
+**Note:** You will need an account to download it. You can in fact use any microsoft account (even the exchange account from your company if you possess one).    
+**Note:** The first time you will try to access the download page with your account, surely no content will be shown. In that case you will need to go to the front page of the Visual Studio website to initialize your account. When you will return to the download page, the different versions will then be downloadable.    
 
 
 ### [[..][11]] Linux platforms  
@@ -117,7 +128,7 @@ On Linux, you need gcc 5+, CMake and Makefile to build HIPE. Make sur your gcc v
 As mentioned before, HIPE uses multiple libraries.    
 To make things easier, we decided to regroup them in a package. The main goal of this package is portability: extract it where you want. There is no setup to be done and there will be no conflict with your own libraries.
 
-**Note:** The package can be extracted anywhere but it _must_ keep its hierarchy as HIPE's configuration files will look for precise locations.
+**Note:** The package can be extracted anywhere but it _must_ keep its hierarchy as HIPE's configuration files will look for precise locations: Don't move or rename anything in the win64 folder.    
 
 ## [[..][1]] Project Building
 * [Windows][131] 
@@ -130,10 +141,9 @@ To build HIPE's Visual Studio project files, you must use CMake.
 
 1.	Fill in the HIPE sources and build directories fields. You can chose the build directory you want, but remember that HIPE sources are located on the Hipe subdirectory.
 2.	Click on _Configure_ and select the _Visual Studio build tools (Visual Studio 14 2015 Win64)_ build tools then confirm by clicking on the _Finish_ button. The configuration will start. If not, click again on _Configure_.
-3.	An error (Could not find ``HIPE_EXTERNAL`` variable) will occur. You will have to fill the ``HIPE_EXTERNAL`` field with the path of the directory where the extracted HipeExternal archive is located. The expected directory is the one where the _win64_ is.
+3.	An error (Could not find ``HIPE_EXTERNAL`` variable) will occur. You will have to fill the ``HIPE_EXTERNAL`` field with the path of the directory where the extracted HipeExternal archive is located. The expected directory is the one containing the _win64_ one.
 4.	When the configuration is done, you must click on _Generate_ to create the Visual Studio project files. The files will be generated on the selected build directory.
 
-**Note:** The default target is x64 Debug.
 
 ### [[..][12]] Linux
 **[TODO]**    
@@ -150,11 +160,11 @@ You must go through a few configuration steps before being able to start working
 
 
 ### [[..][13]] Windows
-In the Visual Studio solution, the default start up project to set is _hype_server_.
+In the Visual Studio solution, the default start up project to set is _hipe_server_.    
 
-The compiled dependencies files (*.dll files) must be referenced in your system folder, your system’s PATH or Visual Studio's debug one. You can also copy them next to the _hype_server.exe_ executable file.
+The compiled dependencies files (*.dll files) must be referenced in your system folder, your system’s PATH or Visual Studio's debug one. You can also copy them next to the _hipe_server.exe_ executable file.    
 
-Here is the list of the needed dependencies. The dependencies are all coming from the HipeExternal archive.
+Here is the list of the needed dependencies. The dependencies are all coming from the HipeExternal archive.    
 
 -	boost
 -	OpenCV
@@ -165,30 +175,31 @@ Here is the list of the needed dependencies. The dependencies are all coming fro
 -	HDF5
 -	Intel
 
-**Note:** If you want to copy them next to the hype_server.exe binary, you will find it in the _chosen_build_directory_/target/_chosen_build_target_/
+**Note:** If you want to copy them next to the hipe_server.exe binary, you will find it in the _chosen_build_directory_/target/_chosen_build_target_/
 
 where:
 
 * _chosen_build_directory_ is the build directoy you chose in CMake
 * _chosen_build_target_ is the debug or release chosen build target
  
-If you want to use Visual Studio’s debug path, you can add them by completing the field _Environment_ of the _hype_server_ Debugging properties tab (right click on hype_server Properties->Debugging). The variable can contain multiple properties all separated by new lines.
+If you want to use Visual Studio’s debug path, you can add them by completing the field _Environment_ of the _hipe_server_ Debugging properties tab (right click on hipe_server->Properties->Debugging Tab). The variable can contain multiple properties all separated by new lines.
 
 Assuming you start with an empty PATH variable you will end up with a value similar to the following one:
 ```
 PATH=%HipeExternal%/win64/boost_1_62_0/lib64-msvc-14.0;%HipeExternal%/win64/opencv/x64/vc14/bin;%HipeExternal%/win64/intel64_win/bin;%HipeExternal%/win64/ffmpeg/bin;%HipeExternal%/win64/gstreamer/1.0/x86_64/bin;%HipeExternal%/win64/liblept/bin;%HipeExternal%/win64/hdf5/bin;C:/NVIDIA/CUDA/v8.0/Toolkit/bin;%PATH%
 ```
 
-**Note:** ``%HipeExternal%`` is not set by default. You must either replace it by the location where you extracted the HipeExternal package or set it manually in your system.    
+**Note:** ``%HipeExternal%`` is to replace by the location where you extracted the HipeExternal package. You can use any text editor to do that faster.     
 **Note:** The whole PATH variable **must be set on the _same_ line**!    
-**Note:** Working with this debug PATH overwrites the system’s one. To still use it you must add ``%PATH%`` at the end of the value.
+**Note:** Working with this debug PATH overwrites the system’s one. To still use it you must add ``%PATH%`` at the end of the value.    
+**Note:** Don't forget: The whole PATH variable **must be set on the _same_ line**!    
 
 
 ### [[..][13]] Linux
 **[TODO]**    
 You will have to refer to the steps done on Windows platforms and redo them in your chosen environment.    
 
-**Note:** There is a slight difference with the linux hype_server binary file. It is located on the _chosen_build_directory_/_chosen_target_ folder.
+**Note:** There is a slight difference with the linux hipe_server binary file. It is located on the _chosen_build_directory_/_chosen_target_ folder.
 
 # [[~][0]] How to use HIPE
 ## [[..][2]] JSON Requests    
@@ -202,7 +213,8 @@ You will have to refer to the steps done on Windows platforms and redo them in y
         * [Import requests][21211] 
 		* [Create and edit a request][21212]
 		* [Save your request][21213] 
-		* [Send a request][21214] 
+		* [Send a request][21214]
+	* [Web Interface][2122]
 <br></br><br></br><br></br>
 
 
@@ -354,6 +366,8 @@ To send the request you will have to click on the blue _Send_ button (7.). The s
 
 **Note:** HIPE internally uses the 9090 port to listen for and send JSON requests but It will change in the near future with the apparition of configuration files. You will be able to manually set the port you want to use.
 
+#### [[..][212]] Web Interface
+An alternative to postman is the web interface that can be found [here](http://dev-hipe.aneo.local:3000/).    
 
 # [[~][0]] Develop with HIPE
 ## [[..][3]] Develop filters
