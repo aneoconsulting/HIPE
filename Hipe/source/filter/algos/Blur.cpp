@@ -1,4 +1,4 @@
-#include "filter/algos/Gaussian.h"
+#include "filter/algos/Blur.h"
 #include "data/ShapeData.h"
 #include "data/ImageData.h"
 
@@ -10,20 +10,14 @@ namespace filter
 		/**
 		* \var Blur::kernelsize
 		* The size of the kernel to use (i.e. the number of neighbouring pixels to evaluate).
-		*
-		* \var Blur::sigmaX
-		* The gaussian kernel standard deviation in the X direction.
-		*
-		* \var Blur::sigmaY
-		* The gaussian kernel standard deviation in the Y direction. Default value is sigmaY=sigmaX
 		*/
 
 
-		HipeStatus Gaussian::process()
+		HipeStatus Blur::process()
 		{
 
 
-			while (!_connexData.empty()) 
+			while (!_connexData.empty())
 			{
 
 				data::ImageData data = _connexData.pop();//Pop input image
@@ -36,7 +30,7 @@ namespace filter
 				}
 
 
-				GaussianBlur(inputImage, outputImage, cv::Size(kernelSize, kernelSize), sigmaX, sigmaY); //gaussian filter
+				blur(inputImage, outputImage, cv::Size(kernelSize, kernelSize)); //gaussian filter
 
 
 				_connexData.push(outputImage); //push output image

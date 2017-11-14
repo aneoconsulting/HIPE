@@ -22,19 +22,19 @@ namespace filter
 			{
 				sigmaX = 1;
 				sigmaX = sigmaY;
-				kernelsize = -1;
+				kernelSize = -1;
 
 			}
 
 			REGISTER_P(int, sigmaX);
 			REGISTER_P(int, sigmaY);
-			REGISTER_P(int, kernelsize);
+			REGISTER_P(int, kernelSize);
 
 		public:
 			HipeStatus process() override;
 
 		};
 
-		ADD_CLASS(Gaussian, sigmaX, sigmaY, kernelsize);
+		ADD_CLASS(Gaussian, sigmaX, sigmaY, kernelSize);
 	}
 }

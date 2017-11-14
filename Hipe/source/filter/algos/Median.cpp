@@ -30,7 +30,7 @@ namespace filter
 				}
 
 
-				medianBlur(inputImage, outputImage, kernelsize); //gaussian filter
+				medianBlur(inputImage, outputImage, kernelSize); //gaussian filter
 
 
 				_connexData.push(outputImage); //push output image
