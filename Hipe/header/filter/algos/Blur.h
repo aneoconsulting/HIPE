@@ -18,17 +18,17 @@ namespace filter
 			REGISTER(Blur, ()), _connexData(data::INDATA)
 			{
 
-				kernelsize = 3;
+				kernelSize = 3;
 
 			}
 
-			REGISTER_P(int, kernelsize);
+			REGISTER_P(int, kernelSize);
 
 		public:
 			HipeStatus process() override;
 
 		};
 
-		ADD_CLASS(Blur, kernelsize);
+		ADD_CLASS(Blur, kernelSize);
 	}
 }
