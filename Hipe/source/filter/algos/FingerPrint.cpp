@@ -50,6 +50,7 @@ namespace filter
 				}
 				// Detect "good" match
 				std::vector< DMatch > good_matches;
+				std::vector< DMatch > match_failed;
 				for (auto i = 0; i < descriptorstest.rows; i++)
 				{
 
@@ -66,19 +67,22 @@ namespace filter
 				if(good_matches.size()>minnumbermatch)
 				{
 					putText(imagetest.getMat(), "Match Succeed", Point(15,15), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(0, 255, 0), 2, 8, false);
-				
+					// Draw only "good" matches
+					drawMatches(imagetest.getMat(), keypointstest, imageref.getMat(), keypointsref,
+						good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
+						vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
 				}
 				else
 				{
 					putText(imagetest.getMat(), "Match Failed", Point(15, 15), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 0, 0), 2, 8, false);
-					
+					// Draw only "good" matches
+					drawMatches(imagetest.getMat(), keypointstest, imageref.getMat(), keypointsref,
+						match_failed, img_matches, Scalar::all(-1), Scalar::all(-1),
+						vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 				}
 			
-				// Draw only "good" matches
-				drawMatches(imagetest.getMat(), keypointstest, imageref.getMat(), keypointsref,
-					good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
-					vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+	
 				
 
 
