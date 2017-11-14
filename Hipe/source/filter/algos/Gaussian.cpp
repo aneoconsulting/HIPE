@@ -26,14 +26,20 @@ namespace filter
 			while (!_connexData.empty()) 
 			{
 
-				data::ImageData images(_connexData.pop()); //Pop input image
+				data::ImageData data = _connexData.pop();//Pop input image
+				cv::Mat const inputImage = data.getMat();
+				cv::Mat outputImage;
 
-				cv::Mat res;
+				if (!inputImage.data)
+				{
+					throw HipeException("[Error] BilateralFilter::process - No input data found.");
+				}
 
-				GaussianBlur(images.getMat(), res, cv::Size(kernelsize, kernelsize), sigmaX, sigmaY); //gaussian filter
+
+				GaussianBlur(inputImage, outputImage, cv::Size(kernelsize, kernelsize), sigmaX, sigmaY); //gaussian filter
 
 
-				_connexData.push(res); //push output image
+				_connexData.push(outputImage); //push output image
 			}
 			return OK;
 		}

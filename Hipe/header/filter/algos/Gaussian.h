@@ -2,8 +2,6 @@
 #include <filter/tools/RegisterClass.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-#include "data/ImageArrayData.h"
-#include <vector>
 #include "data/ImageData.h"
 
 
@@ -37,6 +35,6 @@ namespace filter
 
 		};
 
-		ADD_CLASS(Gaussian, sigmaX,sigmaY, kernelsize);
+		ADD_CLASS(Gaussian, sigmaX, sigmaY, kernelsize);
 	}
 }
