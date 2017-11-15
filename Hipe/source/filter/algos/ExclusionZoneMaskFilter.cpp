@@ -4,10 +4,13 @@ HipeStatus filter::algos::ExclusionZoneMaskFilter::process()
 {
 	data::ImageData data = _connexData.pop();
 	cv::Mat& image = data.getMat();
+	cv::Mat output = image.clone();
 
-	if (!image.data) throw HipeException("Error - filter::algos::ExclusionZoneMaskFilter::process - no input data found.");
+	if (!output.data) throw HipeException("Error - filter::algos::ExclusionZoneMaskFilter::process - no input data found.");
 
-	compute_exclusion_zone_mask(image);
+	compute_exclusion_zone_mask(output);
+
+	_connexData.push(output);
 
 	return OK;
 }
