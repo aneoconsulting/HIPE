@@ -116,9 +116,8 @@ On Windows platforms, _Visual Studio 2015 Update 3_ was used to compile the depe
     
 If you don’t have those build tools or any Visual Studio version installed, you can find the free 2015 Community one in the [older downloads page](https://www.visualstudio.com/fr/vs/older-downloads/) on the Visual Studio website. Don't forget to install the Update 3 package, or download the full version already prepacked with the update.    
 
-**Note:** You will need an account to download it. You can in fact use any microsoft account (even the exchange account from your company if you possess one).    
-**Note:** The first time you will try to access the download page with your account, surely no content will be shown. In that case you will need to go to the front page of the Visual Studio website to initialize your account. When you will return to the download page, the different versions will then be downloadable.    
-
+**Note:** You will need an account and join the Visual Studio dev essentials program with it to download it. You can in fact use any microsoft account.    
+**Note:** The first time you will try to access the download page with your account, there's a possibility that no content will be shown. In that case you will need to go to the front page of the Visual Studio website (or the Benefits tab) to initialize your account (note that you will also find a link to join the dev essentials program on this page). When you will return to the download page, the different versions will then be displayed.    
 
 ### [[..][11]] Linux platforms  
 **[TODO]**    
