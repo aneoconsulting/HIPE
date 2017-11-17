@@ -6,6 +6,7 @@
 #include <data/ImageData.h>
 #include <data/ShapeData.h>
 #include <data/PatternData.h>
+#include <data/DirPatternData.h>
 
 
 namespace filter

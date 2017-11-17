@@ -58,6 +58,7 @@ bool filter::algos::OverlayFilter::isDrawableSource(const data::Data& data)
 	{
 	case data::IMGF:
 	case data::PATTERN:
+	case data::DIRPATTERN:
 		return true;
 	default:
 		return false;
@@ -94,6 +95,12 @@ filter::data::ImageData filter::algos::OverlayFilter::extractSourceImageData(dat
 	{
 		data::PatternData pattern = static_cast<data::PatternData &>(data);
 		return pattern.imageRequest();
+	}
+	// Now we can extract source image directly from dirpatterndata
+	else if (type == data::DIRPATTERN)
+	{
+		data::DirPatternData & dirPattern = static_cast<data::DirPatternData &>(data);
+		return dirPattern.imageRequest();
 	}
 	else
 	{
