@@ -56,8 +56,19 @@ namespace filter
 				registerInstance(new DirPatternData(_Protection()));
 				auto pathIsDefined = false;
 				auto source_found = false;
-				if (left.size() != 2)
-					throw HipeException("There more data in the vector than needed");
+
+				const size_t expectedDataCount = 2;
+				if (left.size() != expectedDataCount)
+				{
+					std::stringstream errorMessage;
+					errorMessage << "Error in DirPatternData: ";
+					errorMessage << (left.size() > 2 ? "Too much " : "Not Enough ");
+					errorMessage << "data needed for creation received. ";
+					errorMessage << "Expected " << expectedDataCount << " found " << left.size() << "." << std::endl;
+
+					throw HipeException(errorMessage.str());
+				}
+				
 				for (auto dataPattern : left)
 				{
 					
@@ -76,7 +87,7 @@ namespace filter
 					}
 				}
 
-				if (pathIsDefined == false && source_found == false)
+				if (pathIsDefined == false || source_found == false)
 				{
 					std::stringstream errorMsg;
 					errorMsg << "One or two Data aren't not found to build DirpatternData\n";
