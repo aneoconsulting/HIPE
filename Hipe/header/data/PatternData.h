@@ -83,8 +83,18 @@ namespace filter
 				bool crop_found = false;
 				bool source_found = false;
 
-				if (left.size() != 2)
-					throw HipeException("There more data in the vector than needed");
+				const size_t expectedDataCount = 2;
+				if (left.size() != expectedDataCount)
+				{
+					std::stringstream errorMessage;
+					errorMessage << "Error in PatternData: ";
+					errorMessage << (left.size() > 2 ? "Too much " : "Not Enough ");
+					errorMessage << "data needed for creation received. ";
+					errorMessage << "Expected " << expectedDataCount << " found " << left.size() << "." << std::endl;
+
+					throw HipeException(errorMessage.str());
+				}
+
 				for (auto dataPattern : left)
 				{
 					if (dataPattern.getType() == SQR_CROP)
@@ -189,7 +199,8 @@ namespace filter
 			*/
 			static bool isVideoSource(IODataType dataType)
 			{
-				return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);
+				//return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);
+				return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isVideo(dataType);
 			}
 
 			/**
@@ -209,7 +220,8 @@ namespace filter
 			*/
 			static inline bool isInputSource(IODataType dataType)
 			{
-				return DataTypeMapper::isImage(dataType) || DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);;
+				//return DataTypeMapper::isImage(dataType) || DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);;
+				return isImageSource(dataType) || isVideoSource(dataType);
 			}
 
 			/**
