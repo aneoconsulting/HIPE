@@ -3,11 +3,11 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 
-#include "data/ImageArrayData.h"
-#include "data/ImageData.h"
+#include <data/ImageArrayData.h>
+#include <data/ImageData.h>
 
-#include "opencv2/core.hpp"
-#include "opencv2/highgui.hpp"
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
 
 #include <cstdio>
 #include <iostream>

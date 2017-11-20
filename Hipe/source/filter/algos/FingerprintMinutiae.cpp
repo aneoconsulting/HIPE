@@ -1,16 +1,16 @@
-#include "filter/algos/FingerPrintMinutiae.h"
-#include "data/ImageData.h"
+#include <filter/algos/FingerPrintMinutiae.h>
+#include <data/ImageData.h>
 
 #include <stdio.h>
 #include <iostream>
 #include <stdio.h>
 #include <iostream>
-#include "algorithm"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/xfeatures2d.hpp"
+#include <algorithm>
+#include <opencv2/core.hpp>
+#include <opencv2/features2d.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/xfeatures2d.hpp>
 
 
 
@@ -253,7 +253,7 @@ namespace filter
 			// Extract good matches
 			std::vector<cv::Point2f> queryMatches, refMatches;
 			for (auto& match : foundMatches)
-			//for(size_t i = 0; i < foundMatches.size(); ++i)
+				//for(size_t i = 0; i < foundMatches.size(); ++i)
 			{
 				//cv::DMatch& match = foundMatches[i];
 
