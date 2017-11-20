@@ -1,4 +1,5 @@
 #pragma once
+#include <core/HipeException.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/mat.hpp>
 #include <data/IODataType.h>
@@ -6,6 +7,7 @@
 #include <data/ImageData.h>
 #include <data/SquareCrop.h>
 #include <data/VideoData.h>
+#include <data/FileVideoInput.h>
 
 namespace filter
 {
@@ -103,7 +105,7 @@ namespace filter
 						This()._squareCrop = static_cast<const SquareCrop&>(dataPattern);
 					}
 
-					if (isInputSource(dataPattern.getType()))
+					else if (isInputSource(dataPattern.getType()))
 					{
 						source_found = true;
 						This()._inputSource = dataPattern;
@@ -305,8 +307,15 @@ namespace filter
 				}
 				else if (isVideoSource(This()._inputSource.getType()))
 				{
-					VideoData & video = static_cast<VideoData &>(This()._inputSource);
+					//VideoData & video = static_cast<VideoData &>(This()._inputSource);
+
+					// Template issue workaround: for now, only videos as input are handled
+					if (This()._inputSource.getType() != VIDF)
+						throw HipeException("Error in PatternData: For now, only videos (VIDF type) are handled as input source.");
+
+					VideoData<FileVideoInput> & video = static_cast<VideoData<FileVideoInput> &>(This()._inputSource);
 					Data res = video.newFrame();
+
 					if (isImageSource(res.getType()) == false)
 						throw HipeException("Something is going wrong with patternData and Video source ? ");
 					This()._requestImg = static_cast<ImageData&>(res);
