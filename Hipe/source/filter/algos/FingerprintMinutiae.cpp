@@ -1,4 +1,4 @@
-#include <filter/algos/FingerPrintMinutiae.h>
+#include <filter/algos/FingerprintMinutiae.h>
 #include <data/ImageData.h>
 
 #include <stdio.h>
@@ -25,7 +25,7 @@ namespace filter
 
 
 		// Perform a single thinning iteration, which is repeated until the skeletization is finalized
-		void FingerPrintMinutiae::thinningIteration(Mat& im, int iter)
+		void FingerprintMinutiae::thinningIteration(Mat& im, int iter)
 		{
 			Mat marker = Mat::zeros(im.size(), CV_8UC1);
 
@@ -62,7 +62,7 @@ namespace filter
 		}
 
 		// Function for thinning any given binary image within the range of 0-255. If not you should first make sure that your image has this range preset and configured!
-		void FingerPrintMinutiae::thinning(Mat& im)
+		void FingerprintMinutiae::thinning(Mat& im)
 		{
 			//debugShow("thinning_input", im, true);
 			// Enforce the range tob e in between 0 - 255
@@ -88,7 +88,7 @@ namespace filter
 			im *= 255;
 		}
 
-		HipeStatus FingerPrintMinutiae::process()
+		HipeStatus FingerprintMinutiae::process()
 		{
 			data::ImageArrayData data(_connexData.pop());
 			data::ImageData queryImageData(data.Array_const()[0]);
@@ -129,14 +129,14 @@ namespace filter
 			return OK;
 		}
 
-		void FingerPrintMinutiae::debugShow(const std::string& name, const cv::Mat& image, bool deleteWindow)
+		void FingerprintMinutiae::debugShow(const std::string& name, const cv::Mat& image, bool deleteWindow)
 		{
 			cv::imshow(name, image);
 			cv::waitKey(0);
 			if (deleteWindow) cv::destroyWindow(name);
 		}
 
-		cv::Mat FingerPrintMinutiae::preprocessFingerprint(const cv::Mat& fingerprintImage)
+		cv::Mat FingerprintMinutiae::preprocessFingerprint(const cv::Mat& fingerprintImage)
 		{
 			cv::Mat preprocessedImage;
 
@@ -161,7 +161,7 @@ namespace filter
 			return preprocessedImage;
 		}
 
-		std::vector<cv::KeyPoint> FingerPrintMinutiae::computeMinutiae(const cv::Mat& fingerprintImage)
+		std::vector<cv::KeyPoint> FingerprintMinutiae::computeMinutiae(const cv::Mat& fingerprintImage)
 		{
 			const int neighborhoodSize = 2;
 			const int sobelKernelSize = 3;
@@ -214,7 +214,7 @@ namespace filter
 			return keypoints;
 		}
 
-		cv::Mat FingerPrintMinutiae::computeMinutiaeDescriptors(const cv::Mat& fingerprintImage, std::vector<cv::KeyPoint>& minutiae)
+		cv::Mat FingerprintMinutiae::computeMinutiaeDescriptors(const cv::Mat& fingerprintImage, std::vector<cv::KeyPoint>& minutiae)
 		{
 			cv::Mat descriptors;
 
@@ -227,7 +227,7 @@ namespace filter
 			return descriptors;
 		}
 
-		std::vector<cv::DMatch> FingerPrintMinutiae::matchFingerprints(const cv::Mat& refFingerprintImage, const cv::Mat& refFingerprintDescriptors, const cv::Mat& queryFingerprintImage, const cv::Mat& queryFingerprintDescriptors, const std::vector<cv::KeyPoint>& refFingerprintKeypoints, const std::vector<cv::KeyPoint>& queryFingerprintKeypoints, bool parallelOnly)
+		std::vector<cv::DMatch> FingerprintMinutiae::matchFingerprints(const cv::Mat& refFingerprintImage, const cv::Mat& refFingerprintDescriptors, const cv::Mat& queryFingerprintImage, const cv::Mat& queryFingerprintDescriptors, const std::vector<cv::KeyPoint>& refFingerprintKeypoints, const std::vector<cv::KeyPoint>& queryFingerprintKeypoints, bool parallelOnly)
 		{
 			if (parallelOnly && (refFingerprintKeypoints.empty() || queryFingerprintKeypoints.empty()))
 				throw HipeException("Error in FingerprintMinutiae filter: Tried to extract parallel descriptors, but no keypoints found as input");
@@ -279,7 +279,7 @@ namespace filter
 				return std::vector<DMatch>();
 		}
 
-		cv::Mat FingerPrintMinutiae::drawMatches(const std::vector<cv::DMatch>& matches, const cv::Mat& refFingerprintImage, const std::vector<cv::KeyPoint>& refKeypoints, const cv::Mat& queryFingerprintImage, const std::vector<cv::KeyPoint>& queryKeypoints)
+		cv::Mat FingerprintMinutiae::drawMatches(const std::vector<cv::DMatch>& matches, const cv::Mat& refFingerprintImage, const std::vector<cv::KeyPoint>& refKeypoints, const cv::Mat& queryFingerprintImage, const std::vector<cv::KeyPoint>& queryKeypoints)
 		{
 			cv::Mat output;
 			cv::drawMatches(refFingerprintImage, refKeypoints, queryFingerprintImage, queryKeypoints, matches, output, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
@@ -287,7 +287,7 @@ namespace filter
 			return output;
 		}
 
-		bool FingerPrintMinutiae::areDescriptorsParallel(const std::vector<cv::Point2f>& refDescriptorsPositions, const std::vector<cv::Point2f>& queryDescriptorsPositions, float threshold)
+		bool FingerprintMinutiae::areDescriptorsParallel(const std::vector<cv::Point2f>& refDescriptorsPositions, const std::vector<cv::Point2f>& queryDescriptorsPositions, float threshold)
 		{
 			if (refDescriptorsPositions.size() != queryDescriptorsPositions.size())
 				throw HipeException("Error in FingerprintMinutiae filter: Cannot extract parallel descriptors, reference and query images' descriptors count mismatch.");

@@ -16,12 +16,12 @@ namespace filter
 {
 	namespace algos
 	{
-		class FingerPrintMinutiae : public filter::IFilter
+		class FingerprintMinutiae : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
 			CONNECTOR(data::ImageArrayData, data::ImageData);
 
-			REGISTER(FingerPrintMinutiae, ()), _connexData(data::INDATA)
+			REGISTER(FingerprintMinutiae, ()), _connexData(data::INDATA)
 			{
 				minHessian = 400;
 				matchthreshold = 0.1;
@@ -57,7 +57,7 @@ namespace filter
 
 		};
 
-		ADD_CLASS(FingerPrintMinutiae, minHessian, matchthreshold, matchcoeff, _debug);
+		ADD_CLASS(FingerprintMinutiae, minHessian, matchthreshold, matchcoeff, _debug);
 	}
 }
 #pragma once
