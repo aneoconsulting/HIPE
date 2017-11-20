@@ -161,7 +161,7 @@ namespace filter
 			return preprocessedImage;
 		}
 
-		const std::vector<cv::KeyPoint> FingerPrintMinutiae::computeMinutiae(const cv::Mat& fingerprintImage)
+		std::vector<cv::KeyPoint> FingerPrintMinutiae::computeMinutiae(const cv::Mat& fingerprintImage)
 		{
 			const int neighborhoodSize = 2;
 			const int sobelKernelSize = 3;
@@ -279,7 +279,7 @@ namespace filter
 				return std::vector<DMatch>();
 		}
 
-		cv::Mat FingerPrintMinutiae::drawMatches(const std::vector<cv::DMatch>& matches, const cv::Mat& refFingerprintImage, const std::vector<cv::KeyPoint> refKeypoints, const cv::Mat& queryFingerprintImage, const std::vector<cv::KeyPoint> queryKeypoints)
+		cv::Mat FingerPrintMinutiae::drawMatches(const std::vector<cv::DMatch>& matches, const cv::Mat& refFingerprintImage, const std::vector<cv::KeyPoint>& refKeypoints, const cv::Mat& queryFingerprintImage, const std::vector<cv::KeyPoint>& queryKeypoints)
 		{
 			cv::Mat output;
 			cv::drawMatches(refFingerprintImage, refKeypoints, queryFingerprintImage, queryKeypoints, matches, output, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);

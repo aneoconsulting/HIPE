@@ -44,12 +44,12 @@ namespace filter
 			void thinningIteration(cv::Mat& im, int iter);
 
 			cv::Mat preprocessFingerprint(const cv::Mat& fingerprintImage);
-			const std::vector<cv::KeyPoint> computeMinutiae(const cv::Mat& fingerprintImage);
+			std::vector<cv::KeyPoint> computeMinutiae(const cv::Mat& fingerprintImage);
 
 			cv::Mat computeMinutiaeDescriptors(const cv::Mat& fingerprintImage, std::vector<cv::KeyPoint>& minutiae);
 			std::vector<cv::DMatch> matchFingerprints(const cv::Mat& refFingerprintImage, const cv::Mat& refFingerprintDescriptors, const cv::Mat& queryFingerprintImage, const cv::Mat& queryFingerprintDescriptors, const std::vector<cv::KeyPoint>& refFingerprintKeypoints = std::vector<cv::KeyPoint>(), const std::vector<cv::KeyPoint>& queryFingerprintKeypoints = std::vector<cv::KeyPoint>(), bool parallelOnly = false);
 
-			cv::Mat drawMatches(const std::vector<cv::DMatch>& matches, const cv::Mat& refFingerprintImage, const std::vector<cv::KeyPoint> refKeypoints, const cv::Mat& queryFingerprintImage, const std::vector<cv::KeyPoint> queryKeypoints);
+			cv::Mat drawMatches(const std::vector<cv::DMatch>& matches, const cv::Mat& refFingerprintImage, const std::vector<cv::KeyPoint>& refKeypoints, const cv::Mat& queryFingerprintImage, const std::vector<cv::KeyPoint>& queryKeypoints);
 
 			bool areDescriptorsParallel(const std::vector<cv::Point2f>& refDescriptorsPositions, const std::vector<cv::Point2f>& queryDescriptorsPositions, float threshold = 5.0f);
 
