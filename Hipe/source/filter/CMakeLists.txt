@@ -199,7 +199,7 @@ endforeach()
 include_directories(filter ${_src_filter_inc_path})
 if (UNIX)
 	#SET (MYLIBS -Wl,--whole-archive streaming core data -Wl,--no-whole-archive)
-	SET (MYLIBS -Wl,--start-group streaming core data -Wl,--end-group)
+	SET (MYLIBS -Wl,--start-group -lstreaming -lcore -ldata -Wl,--end-group)
 endif()
 
 if(WIN32)
