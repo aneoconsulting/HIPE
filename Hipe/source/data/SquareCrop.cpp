@@ -2,10 +2,10 @@
 
 namespace data
 {
-	std::vector<cv::Rect> SquareCrop::getSquareCrop() const
-	{
-		return This_const()._squareCrop;
-	}
+	//std::vector<cv::Rect> SquareCrop::getSquareCrop() const
+	//{
+	//	return This_const()._squareCrop;
+	//}
 
 	ImageData SquareCrop::getPicture() const
 	{
