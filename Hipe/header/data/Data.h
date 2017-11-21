@@ -38,16 +38,16 @@ namespace data
 			release();
 		}
 
-		inline void registerInstance(const Data & childInstance);
+		void registerInstance(const Data & childInstance);
 
-		inline void registerInstance(Data* childInstance);
+		void registerInstance(Data* childInstance);
 
-		inline void registerInstance(std::shared_ptr<Data> childInstance);
+		void registerInstance(std::shared_ptr<Data> childInstance);
 
 
-		inline IODataType getType() const;
+		IODataType getType() const;
 
-		inline bool getDecorate() const;
+		bool getDecorate() const;
 
 		void copyTypeTo(Data& left);
 
@@ -57,8 +57,8 @@ namespace data
 
 		Data& operator=(const Data& left);
 
-		inline void release();
+		void release();
 
-		inline void setType(const IODataType io_data_type);
+		void setType(const IODataType io_data_type);
 	};
 }

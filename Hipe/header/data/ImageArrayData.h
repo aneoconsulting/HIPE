@@ -65,13 +65,13 @@ namespace data
 		 * \brief Get the container of the images' data
 		 * \return Returns a reference to the std::vector<cv::Mat> object containing the images' data
 		 */
-		inline std::vector<cv::Mat>& Array();
+		std::vector<cv::Mat>& Array();
 
 		/**
 		 * \brief Get the container of the images' data (const version)
 		 * \return Returns a constant reference to the std::vector<cv::Mat> object containing the images' data
 		 */
-		inline const std::vector<cv::Mat>& Array_const() const;
+		const std::vector<cv::Mat>& Array_const() const;
 
 		/**
 		 * \brief Add an image to the container.
@@ -90,7 +90,7 @@ namespace data
 		 * \brief
 		 * \return Returns true if the object doesn't contain any data
 		 */
-		inline bool empty() const;
+		bool empty() const;
 
 		/**
 		 * \todo

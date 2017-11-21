@@ -60,20 +60,20 @@ namespace data
 		 * \return Returns the WayData value
 		 * \see WayData
 		 */
-		inline WayData getWay() const;
+		WayData getWay() const;
 
 		/**
 		 * \brief [TODO]
 		 * \return [TODO]
 		 */
-		inline virtual ConnexDataBase& getCast();
+		virtual ConnexDataBase& getCast();
 
 		/**
 		 * \brief [TODO]
 		 * \param right
 		 * \return
 		 */
-		inline virtual ConnexDataBase& operator<<(ConnexDataBase& right);
+		virtual ConnexDataBase& operator<<(ConnexDataBase& right);
 
 		/**
 		 * \brief [TODO]

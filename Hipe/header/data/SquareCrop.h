@@ -89,10 +89,7 @@ namespace data
 		 * \brief
 		 * \return Returns the std::vector<cv::Rect> containing all the regions of interest
 		 */
-		inline std::vector<cv::Rect> getSquareCrop() const
-		{
-			return This_const()._squareCrop;
-		}
+		std::vector<cv::Rect> getSquareCrop() const;
 
 		/**
 		 * \brief

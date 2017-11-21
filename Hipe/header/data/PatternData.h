@@ -110,47 +110,47 @@ namespace data
 		 * Info : This code will check if the data need a transformation or not before rootfilter push in the Orchestrator
 		 * \return true if the  source is a video or a streaming video
 		 */
-		static inline bool isVideoSource(IODataType dataType);
+		static bool isVideoSource(IODataType dataType);
 
 		/**
 		* \brief Check if the source included in the pattern is a an image
 		* Info : This code will check if the data need a transformation or not before rootfilter push in the Orchestrator
 		* \return true if the source is an image
 		*/
-		static inline bool isImageSource(IODataType dataType);
+		static bool isImageSource(IODataType dataType);
 
 		/**
 		 * \brief Control if the source is an expected entry
 		 * \param dataType
 		 * \return
 		 */
-		static inline bool isInputSource(IODataType dataType);
+		static bool isInputSource(IODataType dataType);
 
 		/**
 		 * \brief Return the request image to compare to the pattern. This is the image where the pattern need to be found.
 		 * Info : At this step the patternData need to have an ImageData source ONLY.
 		 * \return ImageData containing the source to challenge to the pattern image
 		 */
-		inline ImageData imageRequest() const;
+		ImageData imageRequest() const;
 
 		/**
 		* \brief Return the request image to compare to the pattern. This is the image where the pattern need to be found.
 		* Info : At this step the patternData need to have an ImageData source ONLY.
 		* \return ImageData containing the source to challenge the pattern image
 		*/
-		inline SquareCrop crops() const;
+		SquareCrop crops() const;
 
 		/**
 		* \brief  The function patterns generate an array of cv::Mat with all the crop representing a sub-matrix of the pattern image.
 		* \return ImageData containing the source to challenge the pattern image
 		*/
-		inline std::vector<cv::Mat> patterns();
+		std::vector<cv::Mat> patterns();
 
 		/**
 		 * \brief Get the regions of interest
 		 * \return The SquareCrop object containing all the regions of interest
 		 */
-		inline SquareCrop getSquareCrop() const;
+		SquareCrop getSquareCrop() const;
 
 		/**
 		 * \brief Copy the data of the object to another one
@@ -168,7 +168,7 @@ namespace data
 		 * \brief Does the request image contain data ?
 		 * \return Returns true if the request image doesn't contain any data
 		 */
-		inline bool empty() const;
+		bool empty() const;
 
 		/**
 		 * [TODO]

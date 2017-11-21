@@ -87,19 +87,19 @@ namespace data
 		 * \brief Get the image's data
 		 * \return Returns a reference to the cv::Mat object containing the image's data
 		 */
-		inline cv::Mat& getMat();
+		cv::Mat& getMat();
 
 		/**
 		* \brief Get the image's data (const version)
 		* \return Returns a constant reference to the cv::Mat object containing the image's data
 		*/
-		inline const cv::Mat& getMat() const;
+		const cv::Mat& getMat() const;
 
 		/**
 		* \brief
 		* \return Returns true if the object doesn't contain any data
 		*/
-		inline bool empty() const;
+		bool empty() const;
 
 		/*ImageData& operator=(const Data& left);
 

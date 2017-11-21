@@ -39,7 +39,7 @@ namespace data
 		 * \brief Get the data
 		 * \return Returns the data in a std::vector container
 		 */
-		inline std::vector<Data> getListIoData();
+		std::vector<Data> getListIoData();
 
 		ListIOData(const ListIOData& left) : IOData(left)
 		{
@@ -76,18 +76,18 @@ namespace data
 		 * \brief
 		 * \return Returns true if the object doesn't contain any data
 		 */
-		inline bool empty() const;
+		bool empty() const;
 
 		/**
 		 * \brief Get the object's data container (const version)
 		 * \return Returns a constant reference to the object's data container
 		 */
-		inline const std::vector<Data>& getListData() const;
+		const std::vector<Data>& getListData() const;
 
 		/**
 		 * \brief Overwrites the data of the object with the content of a container
 		 * \param left The container to copy the data from
 		 */
-		inline void setListData(const std::vector<Data>& left);
+		void setListData(const std::vector<Data>& left);
 	};
 }
