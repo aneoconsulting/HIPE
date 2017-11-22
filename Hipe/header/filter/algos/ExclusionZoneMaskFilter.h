@@ -15,7 +15,7 @@ namespace filter
 		{
 			CONNECTOR(data::ImageData, data::ImageData);
 
-			REGISTER(ExclusionZoneMaskFilter, ()), _connexData(data::INOUT)
+			REGISTER(ExclusionZoneMaskFilter, ()), _connexData(data::INDATA)
 			{
 				clahe_clip_limit = 1.0;
 				denoise_h = 20;

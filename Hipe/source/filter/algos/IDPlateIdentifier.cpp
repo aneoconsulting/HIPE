@@ -2,43 +2,53 @@
 
 HipeStatus filter::algos::IDPlateIdentifier::process()
 {
-	data::ImageData data = _connexData.pop();
-	cv::Mat image = data.getMat();
-
-	// Find characters
-	LabelOCR labelOCR(true);
-	std::vector<cv::Rect> charactersRects;
-
-	// Preprocess image
-	cv::Mat preprocessed = preprocessImage(image);
-	cv::Mat binarizedImage;
-
-	// Find characters rois
-	int maxLines = 2 * minLines - 1;
-	std::vector<std::vector<cv::Rect>> characters = filter::algos::IDPlate::extractPlateCharacters(preprocessed, binarizedImage, minXPos, maxXPos, minLines, maxLines, ratioY, ratioMinArea, ratioMaxArea, image, _debug);
-
-	// Crop rois to create separate images
-	std::vector <std::vector<cv::Mat>> croppedCharactersLines;
-	for(auto & line : characters)
+	while (!_connexData.empty())
 	{
-		croppedCharactersLines.push_back(cropROIs(image, line));
+		data::ImageArrayData data = _connexData.pop();
+		data::ImageArrayData outputData;
+
+		for (auto& image : data.Array_const())
+		{
+
+			// Find characters
+			LabelOCR labelOCR(true);
+			std::vector<cv::Rect> charactersRects;
+
+			// Preprocess image
+			cv::Mat preprocessed = preprocessImage(image);
+			cv::Mat binarizedImage;
+
+			// Find characters rois
+			int maxLines = 2 * minLines - 1;
+			std::vector<std::vector<cv::Rect>> characters = filter::algos::IDPlate::extractPlateCharacters(preprocessed, binarizedImage, minXPos, maxXPos, minLines, maxLines, ratioY, ratioMinArea, ratioMaxArea, image, _debug);
+
+			// Crop rois to create separate images
+			std::vector <std::vector<cv::Mat>> croppedCharactersLines;
+			for (auto & line : characters)
+			{
+				croppedCharactersLines.push_back(cropROIs(image, line));
+			}
+
+			// Identify them using Tesseract
+			std::vector < std::vector<std::string>> labelsLines;
+			for (auto & line : croppedCharactersLines)
+			{
+				labelsLines.push_back(labelOCR.runRecognition(line, 30));	// legacy version: labelType = 2
+			}
+
+			// Output results in an image
+			cv::Mat outputImage = image.clone();
+			for (int i = 0; i < croppedCharactersLines.size(); ++i)
+			{
+				outputImage = createOutputImage(outputImage, characters[i], labelsLines[i]);
+			}
+
+			outputData << outputImage;
+		}
+
+		_connexData.push(outputData);
 	}
 
-	// Identify them using Tesseract
-	std::vector < std::vector<std::string>> labelsLines;
-	for (auto & line : croppedCharactersLines)
-	{
-		labelsLines.push_back(labelOCR.runRecognition(line, 30));	// legacy version: labelType = 2
-	}
-
-	// Output results in an image
-	cv::Mat output = image.clone();
-	for(int i = 0; i < croppedCharactersLines.size(); ++i)
-	{
-		output = createOutputImage(output, characters[i], labelsLines[i]);
-	}
-
-	_connexData.push(output);
 	return OK;
 }
 
@@ -102,8 +112,6 @@ cv::Mat filter::algos::IDPlateIdentifier::createOutputImage(const cv::Mat & plat
 	}
 
 	const int fontFace = cv::FONT_HERSHEY_PLAIN;
-	const double fontScale = 2;
-	const int fontThickness = 2;
 
 	// Print each found texts above plate image
 	for (size_t i = 0; i < charactersRects.size(); ++i)
@@ -147,7 +155,7 @@ void filter::algos::LabelOCR::preProcess(const cv::Mat & InputImage, cv::Mat & b
 {
 	// Color segmentation
 	cv::Mat midImage = quantizeImage(InputImage, 2);
-	if(debugLevel) filter::algos::IDPlate::showImage(midImage, "LaelOCR::preProcess - midImage");
+	if (debugLevel) filter::algos::IDPlate::showImage(midImage, "LaelOCR::preProcess - midImage");
 
 	cv::Mat midImageGrayscale;
 	cvtColor(midImage, midImageGrayscale, CV_RGB2GRAY);

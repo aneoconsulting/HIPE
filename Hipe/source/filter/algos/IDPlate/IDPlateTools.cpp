@@ -68,10 +68,10 @@ cv::Point filter::algos::IDPlate::findBiggestBlobPos(cv::Mat& binaryImage, cv::S
 
 				if (currArea > maxArea)
 				{
-					 // Fill max area in max area color
+					// Fill max area in max area color
 					cv::floodFill(outputImage, pos, biggestBlobFillColor);
 
-					 // Fill old max area in fill color
+					// Fill old max area in fill color
 					if (maxAreaPos != cv::Point(-1, -1)) cv::floodFill(outputImage, maxAreaPos, fillColor);
 
 					// Update max area value

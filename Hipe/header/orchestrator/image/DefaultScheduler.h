@@ -101,7 +101,7 @@ namespace orchestrator
 				filter::Model* filterRoot = reinterpret_cast<filter::Model *>(root);
 				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
 				std::atomic<bool> * isActive = new std::atomic<bool>(true);
-				
+
 				std::shared_ptr<data::StreamVideoInput> cpyVideo = std::make_shared<data::StreamVideoInput>(video);
 				boost::thread * task = new boost::thread([cpyFilterRoot, cpyVideo, isActive]()
 				{
@@ -135,7 +135,7 @@ namespace orchestrator
 
 						frame = cpyVideo->newFrame();
 					}
-					
+
 					cleanDataChild(cpyFilterRoot);
 
 					disposeChild(cpyFilterRoot);
@@ -149,7 +149,7 @@ namespace orchestrator
 				taskInfo.filter.reset(cpyFilterRoot, [](filter::Model *) {});
 				runningTasks.push_back(taskInfo);
 				//task.join();
-				
+
 			}
 
 			template<class VideoClass>
@@ -179,7 +179,7 @@ namespace orchestrator
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
 
 					data::Data res;
-					
+
 					res = cpyVideo->newFrame();
 
 					//TODO manage a buffering every things is here to do it
@@ -188,12 +188,12 @@ namespace orchestrator
 					{
 						for (filter::Model * filter : matrixLayer[0])
 						{
-							
+
 							*(filter) << res;
-							
+
 						}
 						cleanDataChild(cpyFilterRoot);
-		
+
 						//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
 						for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
 						{
@@ -211,9 +211,9 @@ namespace orchestrator
 										throw HipeException("Cannot free properly the Streaming videocapture");
 									return;
 								}
-		
+
 								catch (std::exception& e) {
-									std::cerr << "Unkown error during the "<< filter->getName() << " execution. Msg : " << e.what() << ". Please contact us"  << std::endl;
+									std::cerr << "Unkown error during the " << filter->getName() << " execution. Msg : " << e.what() << ". Please contact us" << std::endl;
 									cleanDataChild(cpyFilterRoot);
 									disposeChild(cpyFilterRoot);
 									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
@@ -229,7 +229,7 @@ namespace orchestrator
 						{
 							if (filter == nullptr) continue;
 
-						
+
 							filter->process(); // Nothing to keep we are in async and detach task. Just execute
 
 							data::ConnexDataBase & outRes = filter->getConnector();
@@ -303,7 +303,7 @@ namespace orchestrator
 
 				for (filter::Model * filter : matrixLayer[0])
 				{
-					*(filter) << inputData;	
+					*(filter) << inputData;
 				}
 
 				//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
@@ -312,29 +312,29 @@ namespace orchestrator
 				{
 					for (auto& filter : matrixLayer[layer])
 					{
-						
+
 						filter->process();
-						
+
 						//pushOutputToChild(filter, *(inter_output.get()));
 					}
 				}
-				
+
 				//Special case for final result and other filter
 				for (auto& filter : matrixLayer[matrixLayer.size() - 1])
 				{
 					if (filter == nullptr) continue;
-					
+
 					if (filter->getConstructorName().find("OutputRawDataFilter") != std::string::npos)
 					{
 						data::ConnexDataBase & outRes = filter->getConnector();
 						data::OutputData outData;
 						outData = static_cast<data::DataPort &>(outRes.getPort()).pop();
 						outputData = outData;
-						
+
 					}
 					filter->process();
 				}
-				
+
 				cleanDataChild(filterRoot);
 				disposeChild(filterRoot);
 			}
@@ -344,8 +344,8 @@ namespace orchestrator
 			{}
 
 			void process(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug = false)
-			{	
-				
+			{
+
 			    if (data::DataTypeMapper::isSequence(inputData.getType()))
 				{
 					processSequence(root, inputData, outputData, debug);
@@ -381,7 +381,7 @@ namespace orchestrator
 				{
 					throw HipeException("Unknown type of data");
 				}
-				
+
 			}
 
 			virtual void killall()
