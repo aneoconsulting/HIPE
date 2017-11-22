@@ -95,7 +95,7 @@ namespace data
 		 * \brief
 		 * \return Returns the ImageData object containing the source image where the regions of interest are located
 		 */
-		inline ImageData getPicture() const;
+		ImageData getPicture() const;
 
 		virtual SquareCrop& operator=(const SquareCrop& left);
 

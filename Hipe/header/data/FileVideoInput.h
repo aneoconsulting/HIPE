@@ -29,7 +29,7 @@ namespace data
 		 */
 		bool _loop;
 
-		inline cv::Mat asOutput();
+		cv::Mat asOutput();
 
 	private:
 		FileVideoInput() : VideoData(IODataType::VIDF)
@@ -73,6 +73,6 @@ namespace data
 		 * \brief Checks if the FileVideo is empty.
 		 * \return  Returns true if the object doesn't contain any data or the video is not opened, false either.
 		 */
-		inline bool empty() const;
+		bool empty() const;
 	};
 }

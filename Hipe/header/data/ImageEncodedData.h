@@ -103,13 +103,13 @@ namespace data
 
 		ImageEncodedData& operator=(const ImageEncodedData& left);
 
-		inline int getChannelsCount() const;
+		int getChannelsCount() const;
 
-		inline int getWidth() const;
+		int getWidth() const;
 
-		inline int getHeight() const;
+		int getHeight() const;
 
-		inline std::string getCompression() const;
+		std::string getCompression() const;
 
 		inline bool empty() const
 		{
