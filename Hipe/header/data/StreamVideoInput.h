@@ -11,61 +11,52 @@
 #include "ImageData.h"
 
 
-namespace filter
+namespace data
 {
-	namespace data
+	/**
+	 * \brief Input filter used to acquire data from a stream
+	 */
+	class DATA_EXPORT StreamVideoInput : public VideoData<StreamVideoInput>
 	{
 		/**
-		 * \brief Input filter used to acquire data from a stream
+		 * \brief the url (path) to the stream
 		 */
-		class DATA_EXPORT StreamVideoInput : public VideoData<StreamVideoInput>
-		{
-			/**
-			 * \brief the url (path) to the stream
-			 */
-			boost::filesystem::path _filePath;
-			/**
-			 * \brief the data of the stream
-			 */
-			std::shared_ptr<CaptureVideo> _capture;
-			
-			cv::Mat asOutput() const;
+		boost::filesystem::path _filePath;
+		/**
+		 * \brief the data of the stream
+		 */
+		std::shared_ptr<CaptureVideo> _capture;
 
-		private:
-			StreamVideoInput();
+		cv::Mat asOutput() const;
 
-		public:
-			using VideoData<StreamVideoInput>::VideoData;
+	private:
+		StreamVideoInput();
+
+	public:
+		using VideoData<StreamVideoInput>::VideoData;
 
 
-			StreamVideoInput(const StreamVideoInput &data);
+		StreamVideoInput(const StreamVideoInput &data);
 
-			/**
-			 * \brief Constructor with stream's url as an std::string object
-			 * \param url The url to the stream
-			 */
-			StreamVideoInput(const std::string & url);
+		/**
+		 * \brief Constructor with stream's url as an std::string object
+		 * \param url The url to the stream
+		 */
+		StreamVideoInput(const std::string & url);
 
-			
 
-			
-			virtual ~StreamVideoInput();
+		virtual ~StreamVideoInput();
 
-			/**
-			 * \brief 
-			 * \return Returns the stream's next frame or a black image if the playback ended
-			 */
-			Data newFrame();
+		/**
+		 * \brief
+		 * \return Returns the stream's next frame or a black image if the playback ended
+		 */
+		Data newFrame();
 
-			/**
-			 * \brief 
-			 * \return Returns true if there's no data
-			 */
-			bool empty() const
-			{
-				cv::Mat data;
-				return This_const()._capture.get()->read(data) != OK;;
-			}
-		};
-	}
+		/**
+		 * \brief
+		 * \return Returns true if there's no data
+		 */
+		bool empty() const;
+	};
 }

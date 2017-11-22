@@ -31,6 +31,7 @@ target_link_libraries(orchestrator ${Boost_LIBRARIES})
 target_link_libraries(orchestrator ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(orchestrator filter)
 target_link_libraries(orchestrator json)
+target_link_libraries(orchestrator data)
 target_link_libraries(orchestrator core)
 
 

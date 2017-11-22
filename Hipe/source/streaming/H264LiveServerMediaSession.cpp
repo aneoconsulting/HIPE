@@ -1,12 +1,12 @@
 #include "H264LiveServerMediaSession.h"
 
 
-H264LiveServerMediaSession* H264LiveServerMediaSession::createNew(UsageEnvironment& env, bool reuseFirstSource, core::queue::ConcurrentQueue<filter::data::Data> & concurrent_queue)
+H264LiveServerMediaSession* H264LiveServerMediaSession::createNew(UsageEnvironment& env, bool reuseFirstSource, core::queue::ConcurrentQueue<data::Data> & concurrent_queue)
 {
 	return new H264LiveServerMediaSession(env, reuseFirstSource, concurrent_queue);
 }
 
-H264LiveServerMediaSession::H264LiveServerMediaSession(UsageEnvironment& env, bool reuseFirstSource, core::queue::ConcurrentQueue<filter::data::Data> & concurrent_queue) : OnDemandServerMediaSubsession(env, reuseFirstSource), 
+H264LiveServerMediaSession::H264LiveServerMediaSession(UsageEnvironment& env, bool reuseFirstSource, core::queue::ConcurrentQueue<data::Data> & concurrent_queue) : OnDemandServerMediaSubsession(env, reuseFirstSource), 
 fAuxSDPLine(NULL), fDoneFlag(0), fDummySink(NULL), _concurrent_queue(concurrent_queue)
 {
 	

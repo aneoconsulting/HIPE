@@ -8,7 +8,7 @@ namespace json
 {
 
 	typedef boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>>::iterator ptreeiterator;
-	class JSON_EXPORT JsonTree
+	class JsonTree
 	{
 		boost::property_tree::ptree jsonPtree;
 

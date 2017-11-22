@@ -1,16 +1,28 @@
 #include <data/ConnexData.h>
 #include "core/HipeException.h"
 
-namespace filter
+namespace data
 {
-	namespace data
+	template <>
+	double* CopyObject<double *>::copy(double* &left)
 	{
-		template <>
-		double* CopyObject<double *>::copy(double* &left)
-		{
-			throw HipeException("Can't allocate native array. need the size to do it");
-		}
+		throw HipeException("Can't allocate native array. need the size to do it");
+	}
 
-		
+	WayData ConnexDataBase::getWay() const
+	{
+		return _way;
+	}
+
+	ConnexDataBase& ConnexDataBase::getCast()
+	{
+		return *this;
+	}
+
+	ConnexDataBase& ConnexDataBase::operator<<(ConnexDataBase& right)
+	{
+		this->getCast().operator<<(right.getCast());
+
+		return *this;
 	}
 }

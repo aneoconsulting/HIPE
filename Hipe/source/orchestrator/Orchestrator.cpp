@@ -10,16 +10,9 @@ namespace orchestrator
 	void OrchestratorFactory::start_orchestrator()
 	{
 		auto orchestrator_factory = OrchestratorFactory::getInstance();
-		
+
 		image::DefaultScheduler * default_scheduler = new image::DefaultScheduler();
 
 		orchestrator_factory->addOrchestrator("DefaultScheduler", default_scheduler);
-
-		
 	}
-
-	
-
-
-
 }

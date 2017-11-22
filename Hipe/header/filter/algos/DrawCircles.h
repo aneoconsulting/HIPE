@@ -33,8 +33,7 @@ namespace filter
 				center_color_b = 255;
 				text_color_r = 255;
 				text_color_g = 0;
-				text_color_b = 0;
-				
+				text_color_b = 0;				
 				
 				factor_font_scale = FACTOR_FONT_SCALE;
 			}

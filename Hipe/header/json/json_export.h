@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined _WIN32 || defined __CYGWIN__
+#if defined WIN32 || defined __CYGWIN__
 	#ifdef JSON_BUILD
 		#ifdef __GNUC__
 			#define JSON_EXPORT __attribute__ ((dllexport))

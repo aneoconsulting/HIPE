@@ -5,7 +5,6 @@ namespace filter
 {
 	namespace algos
 	{
-
 		void cropper_mouse_call(int event, int x, int y, int f, void* cvCropperData)
 		{
 			auto& userData = *static_cast<std::shared_ptr<Cropper::CVCropperData> *>(cvCropperData);
@@ -36,12 +35,12 @@ namespace filter
 					userData->rectangle[userData->index + 1] = pt2;
 					userData->sandBoxImage_backup.copyTo(userData->sandBoxImage);
 
-					for (int i = 0; i < userData->index + 2; i+=2)
+					for (int i = 0; i < userData->index + 2; i += 2)
 					{
-						cv::rectangle(userData->sandBoxImage, userData->rectangle[i], userData->rectangle[i + 1], Scalar(255, 0, 0), 4);
+						cv::rectangle(userData->sandBoxImage, userData->rectangle[i], userData->rectangle[i + 1], cv::Scalar(255, 0, 0), 4);
 					}
 				}
-				
+
 				break;
 			case  CV_EVENT_LBUTTONUP:
 				if (userData->clicked) {
@@ -53,7 +52,7 @@ namespace filter
 
 					for (int i = 0; i < userData->index + 2; i += 2)
 					{
-						cv::rectangle(userData->sandBoxImage, userData->rectangle[i], userData->rectangle[i + 1], Scalar(255, 0, 0), 4);
+						cv::rectangle(userData->sandBoxImage, userData->rectangle[i], userData->rectangle[i + 1], cv::Scalar(255, 0, 0), 4);
 					}
 
 					userData->index += 2;
@@ -67,6 +66,6 @@ namespace filter
 				break;
 			}
 		}
-	
+
 	}
 }

@@ -21,7 +21,7 @@ namespace filter
 				{
 					images = static_cast<data::ImageData>(input);
 				}
-				else circles = static_cast<data::ShapeData>(input);
+				else circles = static_cast<data::ShapeData&>(input);
 
 				data::Data input2 = _connexData.pop();
 				if (input2.getType() == data::IMGF)
@@ -29,7 +29,7 @@ namespace filter
 					images = static_cast<data::ImageData>(input2);
 
 				}
-				else  circles = static_cast<data::ShapeData>(input2);
+				else  circles = static_cast<data::ShapeData&>(input2);
 
 
 				cv::Mat imageOutput = images.getMat().clone();

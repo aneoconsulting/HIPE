@@ -162,7 +162,7 @@ namespace json
 			return OK;
 		}
 
-		Model& operator<<(filter::data::Data& element) override
+		Model& operator<<(data::Data& element) override
 		{
 			return *this;
 		}
@@ -172,7 +172,7 @@ namespace json
 			return *this;
 		}
 
-		filter::data::ConnexDataBase& getConnector() override
+		data::ConnexDataBase& getConnector() override
 		{
 			throw HipeException("Cannot call method getConnector from the class JsonFilter");
 		}
