@@ -1,8 +1,8 @@
 #include <data/IOData.h>
 #include <json/JsonTree.h>
 #include <Composer.h>
-#include "data/DirPatternData.h"
-#include "data/SquareCrop.h"
+#include <data/DirPatternData.h>
+#include <data/SquareCrop.h>
 
 namespace orchestrator
 {
@@ -19,11 +19,6 @@ namespace orchestrator
 		}
 
 		return static_cast<Data>(ListIOData(res));
-	}
-
-	bool Composer::checkIfDirectory(const std::map<std::basic_string<char>, json::JsonTree*>& map)
-	{
-		return true;
 	}
 
 	filter::data::Data orchestrator::Composer::loadPatternData(const json::JsonTree& dataNode)
