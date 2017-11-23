@@ -3,6 +3,7 @@
 
 namespace data
 {
+	typedef std::vector<cv::Point2f> four_points;
 	class DATA_EXPORT ShapeData : public IOData <Data, ShapeData>
 	{
 	protected:
@@ -93,14 +94,7 @@ namespace data
 		* \return Returns a reference to the ShapeData object
 		*/
 		ShapeData& operator<<(const std::vector<cv::Point2f>& points);
-				if(points.size()==4)
-				{
-					This()._quadrilatere.push_back(points);
-				}
-				else {
-					This()._pointsArray.insert(This()._pointsArray.end(), points.begin(), points.end());
-				}
-
+				
 		/**
 		* \brief Add a rect to the rect container.
 		* \param rect The rect to add
@@ -128,17 +122,12 @@ namespace data
 		* \return Returns a reference to the ShapeData object
 		*/
 		ShapeData& operator<<(std::vector<cv::Vec3f> circles);
-				}
-
-				for (const four_points & quad : QuadrilatereArray_const())
-				{
-					left.This()._quadrilatere.push_back(quad);
-
+				
 		/**
 		 * \brief
 		 * \return Returns true if the object doesn't contain any data
 		 */
-		inline bool empty() const override
+		bool empty() const override
 		{
 			return (This_const()._pointsArray.empty() && This_const()._circlesArray.empty() && This_const()._rectsArray.empty());
 		}

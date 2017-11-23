@@ -267,9 +267,9 @@ namespace orchestrator
 
 				else if (data::DataTypeMapper::isVideo(inputData.getType()))
 				//TMI: HACK: Workaround FilePatternFilter
-				if (inputData.getType() == filter::data::IODataType::SEQIMGD)
+				if (inputData.getType() == data::IODataType::SEQIMGD)
 				{
-					filter::data::DirectoryImgData & dirImgData = static_cast<filter::data::DirectoryImgData &>(inputData);
+					data::DirectoryImgData & dirImgData = static_cast<data::DirectoryImgData &>(inputData);
 					dirImgData.loadImagesData();
 				}
 					processImages(root, inputData, outputData, debug);
@@ -352,11 +352,11 @@ namespace orchestrator
 			void process(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug = false)
 			{
 
-				if (filter::data::DataTypeMapper::isSequence(inputData.getType()))
+				if (data::DataTypeMapper::isSequence(inputData.getType()))
 				{
 					processSequence(root, inputData, outputData, debug);
 				}
-				else if (filter::data::DataTypeMapper::isListIo(inputData.getType()))
+				else if (data::DataTypeMapper::isListIo(inputData.getType()))
 				{
 					data::ListIOData &list_io_data = static_cast<data::ListIOData&>(inputData);
 					processListData(root, list_io_data, outputData, debug);
@@ -381,8 +381,8 @@ namespace orchestrator
 				else if (data::DataTypeMapper::isPattern(inputData.getType()))
 				{
 					using videoType = data::PatternData;
-					using videoDir = filter::data::DirPatternData;
-					if (inputData.getType() == filter::data::IODataType::DIRPATTERN)
+					using videoDir = data::DirPatternData;
+					if (inputData.getType() == data::IODataType::DIRPATTERN)
 						processVideo(root, static_cast<videoDir&>(inputData), outputData, debug);
 					else
 						processVideo(root, static_cast<videoType&>(inputData), outputData, debug);

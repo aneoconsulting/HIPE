@@ -77,42 +77,7 @@ namespace data
 		 * \param left the list of data
 		 */
 		PatternData(const std::vector<Data>& left);
-				{
-					std::stringstream errorMessage;
-					errorMessage << "Error in PatternData: ";
-					errorMessage << (left.size() > 2 ? "Too much " : "Not Enough ");
-					errorMessage << "data needed for creation received. ";
-					errorMessage << "Expected " << expectedDataCount << " found " << left.size() << "." << std::endl;
-
-					throw HipeException(errorMessage.str());
-				}
-
-				for (auto dataPattern : left)
-				{
-					if (dataPattern.getType() == SQR_CROP)
-					{
-						crop_found = true;
-						This()._squareCrop = static_cast<const SquareCrop&>(dataPattern);
-					}
-
-					else if (isInputSource(dataPattern.getType()))
-					{
-						source_found = true;
-						This()._inputSource = dataPattern;
-					}
-				}
-
-				if (crop_found == false || source_found == false)
-				{
-					std::stringstream errorMsg;
-					errorMsg << "One or two Data aren't not found to build patternData\n";
-					errorMsg << "Crop found   : " << (crop_found ? " OK " : "FAIL");
-					errorMsg << "Source found : " << (source_found ? " OK " : "FAIL");
-					throw HipeException(errorMsg.str());
-				}
-
-			}
-
+				
 
 		/**
 		 * \brief Copy constructor for PatternDate copy
@@ -156,7 +121,6 @@ namespace data
 		 * \return true if the  source is a video or a streaming video
 		 */
 		static bool isVideoSource(IODataType dataType);
-				return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isVideo(dataType);
 
 		/**
 		* \brief Check if the source included in the pattern is a an image
@@ -171,7 +135,6 @@ namespace data
 		 * \return
 		 */
 		static bool isInputSource(IODataType dataType);
-				return isImageSource(dataType) || isVideoSource(dataType);
 
 		/**
 		 * \brief Return the request image to compare to the pattern. This is the image where the pattern need to be found.
@@ -211,13 +174,7 @@ namespace data
 		 */
 		Data newFrame();
 
-					// Template issue workaround: for now, only videos as input are handled
-					if (This()._inputSource.getType() != VIDF)
-						throw HipeException("Error in PatternData: For now, only videos (VIDF type) are handled as input source.");
-
-					VideoData<FileVideoInput> & video = static_cast<VideoData<FileVideoInput> &>(This()._inputSource);
-
-
+				
 		/**
 		 * \brief Does the request image contain data ?
 		 * \return Returns true if the request image doesn't contain any data

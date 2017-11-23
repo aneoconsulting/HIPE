@@ -8,7 +8,7 @@ namespace filter
 	{
 		HipeStatus FilePatternFilter::process()
 		{
-			data::DirPatternData p = _connexData.pop();
+			auto p = _connexData.pop();
 			auto pathdir = static_cast<data::DirectoryImgData>(p.DirectoryImg()).DirectoryPath();
 			auto fullPath = pathdir.append("\\").append(filePath);
 			data::ImageData imageInput = p.imageSource();

@@ -68,12 +68,12 @@ namespace orchestrator
 		using namespace data;
 		std::vector<Data> res;
 		auto child = dataNode.allchildren("desc");
-
+		bool isDirPAtterData = false;
 		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 		{
 			const std::string dataType = itarray->first;
-			IODataType ioDataType = filter::data::DataTypeMapper::getTypeFromString(dataType);
-			if (ioDataType == IODataType::SQR_CROP)
+			IODataType ioDataType = DataTypeMapper::getTypeFromString(dataType);
+			if (ioDataType == SQR_CROP)
 			{
 				if (itarray->second->count("SEQIMGD") == 1) {
 					isDirPAtterData = true;
@@ -86,15 +86,13 @@ namespace orchestrator
 				{
 					auto inputData = itarray->second->get_child("IMGF");
 					auto outputData = getDataFromComposer("IMGF", inputData);
-					const cv::Mat & imageData = static_cast<const filter::data::ImageData &>(outputData).getMat();
+					const cv::Mat & imageData = static_cast<const ImageData &>(outputData).getMat();
 
 					// We still need a square crop object to create a Pattern Data
 					cv::Rect imageRect(0, 0, imageData.cols, imageData.rows);
 					std::vector<cv::Rect> rects;
 					rects.push_back(imageRect);
-					filter::data::SquareCrop crop(imageData, rects);
-
-
+					SquareCrop crop(imageData, rects);
 					res.push_back(crop);
 				}
 			}
@@ -109,7 +107,7 @@ namespace orchestrator
 			DirPatternData dirPattern(res);
 			return static_cast<Data>(dirPattern);
 		}
-		filter::data::PatternData pattern(res);
+		PatternData pattern(res);
 
 		return static_cast<Data>(pattern);
 	}

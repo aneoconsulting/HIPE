@@ -84,7 +84,7 @@ bool filter::algos::OverlayFilter::isOverlayData(const data::Data& data)
 	}
 }
 
-filter::data::ImageData filter::algos::OverlayFilter::extractSourceImageData(data::Data& data)
+data::ImageData filter::algos::OverlayFilter::extractSourceImageData(data::Data& data)
 {
 	const data::IODataType& type = data.getType();
 	if (type == data::IMGF)
