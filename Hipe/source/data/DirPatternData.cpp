@@ -76,11 +76,7 @@ namespace data
 		return This_const().dir;
 	}
 
-	/**
-	* \brief Check if the source included in the pattern is a a video coming from a file or coming from a streaming input
-	* Info : This code will check if the data need a transformation or not before rootfilter push in the Orchestrator
-	* \return true if the  source is a video or a streaming video
-	*/
+	
 	bool DirPatternData::isVideoSource(IODataType dataType)
 	{
 		return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);
@@ -91,32 +87,20 @@ namespace data
 		return DataTypeMapper::isSequenceDirectory(dataType);
 	}
 
-	/**
-	* \brief Control if the source is an expected entry
-	* \param dataType
-	* \return
-	*/
+	
 	bool DirPatternData::isInputSource(IODataType dataType)
 	{
 		return DataTypeMapper::isImage(dataType) || DataTypeMapper::isStreaming(dataType);
 	}
 
 
-
-	/**
-	* \brief Copy the data of the object to another one
-	* \param left The PatternData object to overwrite
-	*/
 	void DirPatternData::copyTo(DirPatternData& left) const
 	{
 		left.This()._inputSource = This_const()._inputSource;
 		left.This().dir = This_const().dir;
 	}
 
-	/**
-	* \brief
-	* \return [TODO]
-	*/
+	
 	Data DirPatternData::newFrame()
 	{
 		if (isImageSource(This_const()._inputSource.getType()))
@@ -153,10 +137,7 @@ namespace data
 		return Data();
 	}
 
-	/**
-	* \brief Does the request image contain data ?
-	* \return Returns true if the request image doesn't contain any data
-	*/
+	
 	bool DirPatternData::empty() const
 	{
 		if (This_const()._requestImg.empty() && This_const().dir.empty()) return true;
@@ -164,12 +145,6 @@ namespace data
 		return false;
 	}
 
-	/**
-	* [TODO]
-	* \brief
-	* \param left
-	* \return
-	*/
 	DirPatternData & DirPatternData::operator=(const Data& left)
 	{
 		Data::registerInstance(left);

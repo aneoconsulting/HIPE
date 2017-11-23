@@ -142,7 +142,7 @@ namespace data
 		*/
 		static bool isVideoSource(IODataType dataType);
 
-		static inline bool isDirectory(IODataType dataType);
+		static bool isDirectory(IODataType dataType);
 
 		/**
 		* \brief Control if the source is an expected entry
