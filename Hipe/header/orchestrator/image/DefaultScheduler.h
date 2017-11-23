@@ -1,9 +1,9 @@
 #pragma once
 #include <data/FileVideoInput.h>
 #include <data/ListIOData.h>
+#include <data/OutputData.h>
 #include <data/StreamVideoInput.h>
 #include <boost/thread/thread.hpp>
-#include "data/ListIOData.h"
 #include <data/PatternData.h>
 #include <orchestrator/TaskInfo.h>
 #include "data/DirPatternData.h"
@@ -76,7 +76,7 @@ namespace orchestrator
 				}
 			}
 
-			/*static void pushOutputToChild(filter::IFilter* filter, filter::data::Data& io_data)
+			/*static void pushOutputToChild(filter::IFilter* filter, data::Data& io_data)
 			{
 				if (io_data.empty())
 					return;
@@ -85,7 +85,7 @@ namespace orchestrator
 				{
 					if (childFilter.second->get_protect() == DataAccess::COPY)
 					{
-						filter::data::Data copy(io_data, true);
+						data::Data copy(io_data, true);
 						childFilter.second->setInputData(copy);
 					}
 					else
@@ -95,25 +95,25 @@ namespace orchestrator
 				}
 			}*/
 
-			void processStreaming(filter::Model* root, filter::data::Data& inputData, filter::data::Data & outputData, bool debug)
+			void processStreaming(filter::Model* root, data::Data& inputData, data::Data & outputData, bool debug)
 			{
-				const filter::data::StreamVideoInput & video = static_cast<const filter::data::StreamVideoInput&>(inputData);
+				const data::StreamVideoInput & video = static_cast<const data::StreamVideoInput&>(inputData);
 				cv::Mat frame;
 				filter::Model* filterRoot = reinterpret_cast<filter::Model *>(root);
 				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
 				std::atomic<bool> * isActive = new std::atomic<bool>(true);
 
-				std::shared_ptr<filter::data::StreamVideoInput> cpyVideo = std::make_shared<filter::data::StreamVideoInput>(video);
+				std::shared_ptr<data::StreamVideoInput> cpyVideo = std::make_shared<data::StreamVideoInput>(video);
 				boost::thread * task = new boost::thread([cpyFilterRoot, cpyVideo, isActive]()
 				{
 					int maxLevel = getMaxLevelNode(cpyFilterRoot->getRootFilter());
-					std::shared_ptr<filter::data::Data> outputData;
+					std::shared_ptr<data::Data> outputData;
 
 					MatrixLayerNode matrixLayer(maxLevel + 1);
 
 					//TODO : insert debug layers into the matrix
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
-					filter::data::Data frame = cpyVideo->newFrame();
+					data::Data frame = cpyVideo->newFrame();
 					//TODO manage a buffering every things is here to do it
 					//For now we just pick up one image
 					while (!frame.empty() && (*isActive) == true)
@@ -154,7 +154,7 @@ namespace orchestrator
 			}
 
 			template<class VideoClass>
-			void processVideo(filter::Model* root, VideoClass& inputData, filter::data::Data & outputData, bool debug)
+			void processVideo(filter::Model* root, VideoClass& inputData, data::Data & outputData, bool debug)
 			{
 				VideoClass & video = static_cast<VideoClass&>(inputData);
 				cv::Mat frame;
@@ -172,14 +172,14 @@ namespace orchestrator
 				boost::thread *task = new boost::thread([cpyFilterRoot, cpyVideo, maxLevel, isActive]()
 				{
 					//int maxLevel = getMaxLevelNode(cpyFilterRoot->getRootFilter());
-					std::shared_ptr<filter::data::Data> thr_outputData;
+					std::shared_ptr<data::Data> thr_outputData;
 
 					MatrixLayerNode matrixLayer(maxLevel + 1);
 
 					//TODO insert debug layers into the matrix
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
 
-					filter::data::Data res;
+					data::Data res;
 
 					res = cpyVideo->newFrame();
 
@@ -233,8 +233,8 @@ namespace orchestrator
 
 							filter->process(); // Nothing to keep we are in async and detach task. Just execute
 
-							filter::data::ConnexDataBase & outRes = filter->getConnector();
-							filter::data::DataPort & port = (static_cast<filter::data::DataPort &>(outRes.getPort()));
+							data::ConnexDataBase & outRes = filter->getConnector();
+							data::DataPort & port = (static_cast<data::DataPort &>(outRes.getPort()));
 							while (port.size() != 0)
 							{
 								port.pop();
@@ -258,13 +258,14 @@ namespace orchestrator
 			}
 
 
-			void processSequence(filter::Model* root, filter::data::Data& inputData, filter::data::Data &outputData, bool debug)
+			void processSequence(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug)
 			{
-				if (filter::data::DataTypeMapper::isVideo(inputData.getType()))
+				if (data::DataTypeMapper::isImage(inputData.getType()))
 				{
 					throw HipeException("processSequence of Video isn't yet implemented");
 				}
 
+				else if (data::DataTypeMapper::isVideo(inputData.getType()))
 				//TMI: HACK: Workaround FilePatternFilter
 				if (inputData.getType() == filter::data::IODataType::SEQIMGD)
 				{
@@ -274,27 +275,27 @@ namespace orchestrator
 					processImages(root, inputData, outputData, debug);
 			}
 
-			void processListData(filter::Model* root, filter::data::ListIOData & inputData, filter::data::Data& outputData, bool debug)
+			void processListData(filter::Model* root, data::ListIOData & inputData, data::Data& outputData, bool debug)
 			{
-				if (inputData.getType() != filter::data::IODataType::LISTIO)
+				if (inputData.getType() != data::IODataType::LISTIO)
 				{
 					throw HipeException("cannot accept Data type other than List");
 				}
 				auto vecData = inputData.getListData();
 				for (auto it = vecData.begin(); it != vecData.end(); ++it)
 				{
-					if (filter::data::DataTypeMapper::isImage(it->getType()))
+					if (data::DataTypeMapper::isImage(it->getType()))
 					{
 						processImages(root, *it, outputData, debug);
 					}
-					else if (filter::data::DataTypeMapper::isVideo(it->getType()))
+					else if (data::DataTypeMapper::isVideo(it->getType()))
 					{
 						throw HipeException("processSequence of Video isn't yet implemented");
 					}
 				}
 			}
 
-			void processImages(filter::Model* root, filter::data::Data & inputData, filter::data::Data &outputData, bool debug)
+			void processImages(filter::Model* root, data::Data & inputData, data::Data &outputData, bool debug)
 			{
 				filter::Model* filterRoot = reinterpret_cast<filter::Model *>(root);
 				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
@@ -312,7 +313,7 @@ namespace orchestrator
 				}
 
 				//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
-				std::shared_ptr<filter::data::Data> inter_output;
+				std::shared_ptr<data::Data> inter_output;
 				for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
 				{
 					for (auto& filter : matrixLayer[layer])
@@ -331,9 +332,9 @@ namespace orchestrator
 
 					if (filter->getConstructorName().find("OutputRawDataFilter") != std::string::npos)
 					{
-						filter::data::ConnexDataBase & outRes = filter->getConnector();
-						filter::data::OutputData outData;
-						outData = static_cast<filter::data::DataPort &>(outRes.getPort()).pop();
+						data::ConnexDataBase & outRes = filter->getConnector();
+						data::OutputData outData;
+						outData = static_cast<data::DataPort &>(outRes.getPort()).pop();
 						outputData = outData;
 
 					}
@@ -345,10 +346,10 @@ namespace orchestrator
 			}
 
 
-			void processPattern(filter::Model* root, filter::data::Data data, filter::data::Data& output_data, bool debug)
+			void processPattern(filter::Model* root, data::Data data, data::Data& output_data, bool debug)
 			{}
 
-			void process(filter::Model* root, filter::data::Data& inputData, filter::data::Data &outputData, bool debug = false)
+			void process(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug = false)
 			{
 
 				if (filter::data::DataTypeMapper::isSequence(inputData.getType()))
@@ -357,29 +358,29 @@ namespace orchestrator
 				}
 				else if (filter::data::DataTypeMapper::isListIo(inputData.getType()))
 				{
-					filter::data::ListIOData &list_io_data = static_cast<filter::data::ListIOData&>(inputData);
+					data::ListIOData &list_io_data = static_cast<data::ListIOData&>(inputData);
 					processListData(root, list_io_data, outputData, debug);
 				}
-				else if (filter::data::DataTypeMapper::isImage(inputData.getType()))
+				else if (data::DataTypeMapper::isImage(inputData.getType()))
 				{
 					processImages(root, inputData, outputData, debug);
 				}
-				else if (filter::data::DataTypeMapper::isVideo(inputData.getType()))
+				else if (data::DataTypeMapper::isVideo(inputData.getType()))
 				{
-					using videoType = filter::data::FileVideoInput;
+					using videoType = data::FileVideoInput;
 
-					if (inputData.getType() == filter::data::STRMVID)
-						using videoType = filter::data::StreamVideoInput;
+					if (inputData.getType() == data::STRMVID)
+						using videoType = data::StreamVideoInput;
 
 					processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
 				}
-				else if (filter::data::DataTypeMapper::isStreaming(inputData.getType()))
+				else if (data::DataTypeMapper::isStreaming(inputData.getType()))
 				{
 					processStreaming(root, inputData, outputData, debug);
 				}
-				else if (filter::data::DataTypeMapper::isPattern(inputData.getType()))
+				else if (data::DataTypeMapper::isPattern(inputData.getType()))
 				{
-					using videoType = filter::data::PatternData;
+					using videoType = data::PatternData;
 					using videoDir = filter::data::DirPatternData;
 					if (inputData.getType() == filter::data::IODataType::DIRPATTERN)
 						processVideo(root, static_cast<videoDir&>(inputData), outputData, debug);

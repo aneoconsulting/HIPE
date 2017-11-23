@@ -31,6 +31,7 @@ target_link_libraries(http ${Boost_LIBRARIES})
 target_link_libraries(http ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(http filter)
 target_link_libraries(http json)
+target_link_libraries(http orchestrator)
 target_link_libraries(http data)
 target_link_libraries(http core)
 

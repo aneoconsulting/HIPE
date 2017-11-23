@@ -159,7 +159,7 @@ std::shared_ptr<TaskContainer>& Streaming::getStreaming(int port, int height, in
 
 std::shared_ptr<TaskContainer>& Streaming::createStreaming(int port, int height, int width, int fps)
 {
-	//core::queue::ConcurrentQueue<filter::data::IOData>* concurrent_queue = new core::queue::ConcurrentQueue<filter::data::IOData>();
+	//core::queue::ConcurrentQueue<data::IOData>* concurrent_queue = new core::queue::ConcurrentQueue<data::IOData>();
 	std::shared_ptr<TaskContainer> shrTaskContainer = std::make_shared<TaskContainer>();
 	int rows = (height >> 1) * 2;
 	int cols = (width / 24) * 24;

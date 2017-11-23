@@ -7,184 +7,85 @@
 #include <boost/filesystem/path.hpp>
 #include <core/base64.h>
 
-namespace filter
+#include <data/data_export.h>
+
+namespace data
 {
-	namespace data
+	/**
+	 * \brief FileImageData is the data type used to handle an image and additonnal information. Uses OpenCV.
+	 */
+	class DATA_EXPORT FileImageData : public IOData<ImageData, FileImageData>
 	{
 		/**
-		 * \brief FileImageData is the data type used to handle an image and additonnal information. Uses OpenCV.
+		 * \brief Path to the image
 		 */
-		class FileImageData : public IOData<ImageData, FileImageData>
+		boost::filesystem::path _filePath;
+
+		inline cv::Mat asOutput();
+	private:
+		FileImageData() : IOData(IODataType::IMGF)
 		{
-			/**
-			 * \brief Path to the image
-			 */
-			boost::filesystem::path _filePath;
 
-			cv::Mat asOutput() { return cv::Mat::zeros(0, 0, CV_8UC1); }
-		private:
-			FileImageData() : IOData(IODataType::IMGF)
+		}
+
+	public:
+
+		/**
+		 * \brief FileImageData copy constructor
+		 * \param right the FileImageData to copy
+		 */
+		FileImageData(const FileImageData & right) : IOData(IODataType::IMGF)
+		{
+			Data::registerInstance(right._This);
+		}
+
+		/**
+		 * \brief Constructor with path to image
+		 * \param filePath Complete path to the image
+		 */
+		FileImageData(const std::string & filePath) : IOData(IODataType::IMGF)
+		{
+			Data::registerInstance(new FileImageData());
+			This()._filePath = filePath;
+			This()._type = IMGF;
+
+			cv::Mat mat = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
+			if (mat.empty())
 			{
+				std::stringstream strbuild;
+				strbuild << "Cannot open file : " << filePath;
 
+				throw HipeException(strbuild.str());
 			}
+			This()._array.push_back(mat);
+		}
 
-		public:
-
-			/**
-			 * \brief FileImageData copy constructor
-			 * \param right the FileImageData to copy
-			 */
-			FileImageData(const FileImageData & right) : IOData(IODataType::IMGF)
-			{
-				Data::registerInstance(right._This);
-			}
-
-			/**
-			 * \brief Constructor with path to image
-			 * \param filePath Complete path to the image
-			 */
-			FileImageData(const std::string & filePath) : IOData(IODataType::IMGF)
-			{
-				Data::registerInstance(new FileImageData());
-				This()._filePath = filePath;
-				This()._type = IMGF;
-
-				cv::Mat mat = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
-				if (mat.empty())
-				{
-					std::stringstream strbuild;
-					strbuild << "Cannot open file : " << filePath;
-
-					throw HipeException(strbuild.str());
-				}
-				This()._array.push_back(mat);
-
-			}
-
-			/**
-			* \brief Constructor with raw or compressed data of image
-			* \param data raw or compressed data in base64 of the image image
-			*/
-			FileImageData(const std::string & base64Data, const std::string & format, int width, int height, int channels) : IOData(IODataType::IMGF)
-			{
-				// Decode base64
-				const std::string decoded = base64_decode(base64Data);
-
-				// Put data from string in array to match OpenCV required data type
-				std::vector<uchar> dataDecoded = std::vector<uchar>(decoded.begin(), decoded.end());
-
-				// Compressed case, nothing to do with raw
-				if (format == "JPG" || format == "PNG")
-				{
-					cv::Mat dataDecodedMat(1, dataDecoded.size(), CV_8UC1, dataDecoded.data());
-					dataDecodedMat = cv::imdecode(dataDecodedMat, cv::IMREAD_UNCHANGED);
-					
-					width = dataDecodedMat.cols;
-					height = dataDecodedMat.rows;
-					channels = dataDecodedMat.channels();
-
-					if (!dataDecodedMat.data) throw HipeException("filter::data::FileImageData::FileImageData: Couldn't decode base64 image data. Either data is corrupted, or format (" + format + ") is wrong");
-
-					dataDecoded.clear();
-					dataDecoded.insert(dataDecoded.begin(), dataDecodedMat.datastart, dataDecodedMat.dataend);
-				}
-				else if (format == "RAW")
-				{
-					// For now nothing more to do with RAW format
-				}
-				else
-				{
-					throw HipeException("unknown base64 data compression format");
-				}
+		/**
+		* \brief Constructor with raw or compressed data of image
+		* \param data raw or compressed data in base64 of the image image
+		*/
+		FileImageData(const std::string& base64Data, const std::string& format, int width, int height, int channels);
 
 
-				// Create cv::Mat object from received image parameters
-				cv::Mat image = cv::Mat(height, width, getCV8UTypeFromChannels(channels));
+		/**
+		* \brief Copy the image data of the ImageData object to another one.
+		* \param left The object where to copy the data to
+		*/
+		virtual void copyTo(ImageData& left) const;
 
-				// Construct FileImageData object
-				Data::registerInstance(new FileImageData());
-				This()._filePath = format;
-				This()._type = IMGF;
-
-				// Handle non continuous matrices (will most probably never occur)
-				int lwidth = width;
-				int lheight = height;
-				if (image.isContinuous())
-				{
-					lwidth *= lheight;
-					lheight = 1;
-				}
-
-				// Don't forget channels!
-				lwidth *= channels;
-
-				// copy data to matrix
-				for (int y = 0; y < lheight; ++y)
-				{
-					uchar* row = image.ptr<uchar>(y);
-					for (int x = 0; x < lwidth; ++x)
-					{
-						row[x] = dataDecoded[y * lwidth + x];
-					}
-				}
-
-				if (image.empty())
-				{
-					throw HipeException("Could not create image from base64 data");
-				}
-
-				This()._array.push_back(image);
-			}
-
-
-			/**
-			* \brief Copy the image data of the ImageData object to another one.
-			* \param left The object where to copy the data to
-			*/
-			virtual void copyTo(ImageData& left) const
-			{
-				ImageData::copyTo(static_cast<ImageData &>(left));
-
-			}
-
-			/**
-			 * \todo
-			 * \brief FileImageData assignment operator
-			 * \param left The FileImageData object to get the data from
-			 * \return A reference to the object
-			 */
-			FileImageData& operator=(const FileImageData& left)
-			{
-				_This = left._This;
-				_type = left._type;
-				_decorate = left._decorate;
-
-				return *this;
-			}
-		private:
-			/**
-			 * \brief Get the OpenCV data type corresponding to the image channels count needed to create a cv::Mat object (assuming the data type used is an unsigned char (8U))
-			 * \param channels the image channels count
-			 * \return the OpenCV value corresponding to a CV_8UCX image where x is the number of channels
-			 */
-			int getCV8UTypeFromChannels(int channels)
-			{
-				switch (channels)
-				{
-				case 1:
-					return CV_8UC1;
-				case 2:
-					return CV_8UC2;
-				case 3:
-					return CV_8UC3;
-				case 4:
-					return CV_8UC4;
-				default:
-					std::stringstream errorMessage;
-					errorMessage << "ERROR - filter::data::FileImageData: Channels count (" << channels << ") not handled.";
-					throw HipeException(errorMessage.str());
-				}
-			}
-		};
-	}
+		/**
+		 * \todo
+		 * \brief FileImageData assignment operator
+		 * \param left The FileImageData object to get the data from
+		 * \return A reference to the object
+		 */
+		FileImageData& operator=(const FileImageData& left);
+	private:
+		/**
+		 * \brief Get the OpenCV data type corresponding to the image channels count needed to create a cv::Mat object (assuming the data type used is an unsigned char (8U))
+		 * \param channels the image channels count
+		 * \return the OpenCV value corresponding to a CV_8UCX image where x is the number of channels
+		 */
+		int getCV8UTypeFromChannels(int channels);
+	};
 }

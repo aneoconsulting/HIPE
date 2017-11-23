@@ -3,7 +3,7 @@
 #include <core/HipeException.h>
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
-
+#include <data/ImageArrayData.h>
 
 
 namespace filter
@@ -46,7 +46,7 @@ namespace filter
 			{
 				while (!_connexData.empty()) // While i've parent data
 				{
-					data::ImageArrayData images = _connexData.pop();
+					auto images = _connexData.pop();
 					if (images.getType() == data::PATTERN)
 					{
 						throw HipeException("The resize object cant resize PatternData. Please Develop ResizePatterData");

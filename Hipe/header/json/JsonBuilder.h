@@ -1,7 +1,9 @@
 #pragma once
 #include <core/HipeException.h>
-#include "JsonFilterNode/JsonFilterTree.h"
-#include "json/JsonTree.h"
+#include <json/JsonFilterNode/JsonFilterTree.h>
+#include <json/JsonTree.h>
+#include <data/OutputData.h>
+
 namespace json
 {
 	class JsonBuilder
@@ -32,6 +34,19 @@ namespace json
 
 			return orchestrator;
 		}
+
+		template <typename DataType>
+		static json::JsonTree buildJson(const DataType & data)
+		{
+		
+				throw HipeException("Not yet implemented for type " + data.getType());
+	
+		}
+
+
 	};
+
+	template <>
+	json::JsonTree JsonBuilder::buildJson<data::OutputData>(const data::OutputData & data);
 }
 

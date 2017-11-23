@@ -20,10 +20,8 @@
 #include <data/ShapeData.h>
 #include <filter/filter_export.h>
 
-namespace filter {
-	namespace data {
-		class ImageData;
-	}
+namespace data {
+	class ImageData;
 }
 
 namespace filter
@@ -35,13 +33,13 @@ namespace filter
 		 *  The number of frames to skip between each detection.
 		 */
 
-		/**
-		 * \todo
-		 * \brief The FaceDetection filter is used to detect faces in an image or a video.
-		 * 
-		 *  The filter uses dlib.
-		 *  It will output a SquareCrop object containing all the found faces.
-		 */
+		 /**
+		  * \todo
+		  * \brief The FaceDetection filter is used to detect faces in an image or a video.
+		  *
+		  *  The filter uses dlib.
+		  *  It will output a SquareCrop object containing all the found faces.
+		  */
 		class FILTER_EXPORT FaceDetection : public filter::IFilter
 		{
 			int count_frame;	//<! The number of already processed frames 

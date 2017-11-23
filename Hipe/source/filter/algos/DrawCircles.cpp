@@ -1,8 +1,8 @@
 #pragma once
 
-#include "filter/algos/DrawCircles.h"
-#include "data/ShapeData.h"
-#include "data/ImageData.h"
+#include <filter/algos/DrawCircles.h>
+#include <data/ShapeData.h>
+#include <data/ImageData.h>
 
 
 namespace filter
@@ -12,20 +12,18 @@ namespace filter
 
 		HipeStatus DrawCircles::process()
 		{
-			
-
 			while (!_connexData.empty()) // While i've parent data
 			{
 
 				data::ImageData images;
 				data::ShapeData circles;
 
-				data::Data input = _connexData.pop();
+				auto input = _connexData.pop();
 				if(input.getType()== data::IMGF)
 				{
 					images = static_cast<data::ImageData>(input).getMat().clone();
 				}
-				else circles = input; 
+				else circles = static_cast<data::ShapeData&>(input);
 
 				data::Data input2 = _connexData.pop();
 
@@ -33,7 +31,7 @@ namespace filter
 				{
 					 images = static_cast<data::ImageData>(input2).getMat().clone();					 
 				}
-				else  circles = input2; 
+				else  circles = static_cast<data::ShapeData&>(input2); 
 			
 				auto const font_scale = factor_font_scale * std::min(images.getMat().rows, images.getMat().cols);
 				auto const s = circles.CirclesArray().size();

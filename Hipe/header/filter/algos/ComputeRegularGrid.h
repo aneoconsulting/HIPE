@@ -4,8 +4,7 @@
 #include <core/HipeStatus.h>
 
 #include <data/ImageData.h>
-#include <data/ImageArrayData.h>
-#include "data/ShapeData.h"
+#include <data/ShapeData.h>
 
 namespace filter
 {
@@ -35,7 +34,8 @@ namespace filter
 			@param grid_size The size of the grid (rows * columns).
 			@return A vector of Point2f objects representing the points of the regular grid, orderd by row then column.
 			*/
-			std::vector<cv::Point2f> compute_regular_grid(unsigned int rows, unsigned int cols, float width, float height, bool corners_only = false);
+		private:
+			static std::vector<cv::Point2f> compute_regular_grid(unsigned int rows, unsigned int cols, float width, float height, bool corners_only = false);
 		};
 
 		ADD_CLASS(ComputeRegularGrid, rows, cols, width, height);

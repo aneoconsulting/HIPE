@@ -30,7 +30,7 @@ namespace filter
 			HipeStatus process()
 			{
 				// Nothing to do here
-				// see filter::data::OutputData::resultAsJson
+				// see json::JsonBuilder::buildJson
 				// see http::HttpTask
 				// see orchestrator::image::DefaultScheduler
 				return OK;

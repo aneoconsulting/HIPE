@@ -14,12 +14,12 @@ namespace filter
 			data::ImageData data_image;
 			if (data.getType() == data::IODataType::SHAPE)
 			{
-				data_shape = data;
+				data_shape = static_cast<data::ShapeData &>(data);
 				data_image = data2;
 			}
 			else
 			{
-				data_shape = data2;
+				data_shape = static_cast<data::ShapeData &>(data2);
 				data_image = data;
 			}
 

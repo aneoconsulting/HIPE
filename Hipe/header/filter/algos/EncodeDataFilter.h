@@ -38,7 +38,7 @@ namespace filter
 			HipeStatus process() override
 			{
 
-				filter::data::ImageData data = _connexData.pop();
+				data::ImageData data = _connexData.pop();
 				cv::Mat image = data.getMat();
 
 				std::transform(type.begin(), type.end(), type.begin(), ::toupper);
@@ -119,7 +119,7 @@ namespace filter
 					}
 					break;
 				default:
-					throw HipeException("ERROR - filter::data::EncodeDataFilter::getTypeFromString: Incorrect compression type (" + getStringFromType(type) + ").");
+					throw HipeException("ERROR - data::EncodeDataFilter::getTypeFromString: Incorrect compression type (" + getStringFromType(type) + ").");
 				}
 
 				if (!typeErrorMessage.empty())
@@ -160,7 +160,7 @@ namespace filter
 				case PNG:
 					return ".png";
 				default:
-					throw HipeException("ERROR - filter::data::EncodeDataFilter::getTypeFromString: Incorrect compression type (" + getStringFromType(type) + ").");
+					throw HipeException("ERROR - data::EncodeDataFilter::getTypeFromString: Incorrect compression type (" + getStringFromType(type) + ").");
 				}
 			}
 
@@ -176,7 +176,7 @@ namespace filter
 				CompressionTypes compressionType = static_cast<CompressionTypes>(value);
 				if (value < 0L || compressionType < 0L)
 				{
-					throw HipeException("ERROR - filter::data::EncodeDataFilter::getTypeFromString: Incorrect compression type (" + compressionTypeString + ").");
+					throw HipeException("ERROR - data::EncodeDataFilter::getTypeFromString: Incorrect compression type (" + compressionTypeString + ").");
 				}
 				return compressionType;
 			}

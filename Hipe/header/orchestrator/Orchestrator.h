@@ -7,8 +7,7 @@
 #include <filter/Model.h>
 #include <core/HipeException.h>
 #include <json/JsonFilterNode/JsonFilterTree.h>
-#include <data/IOData.h>
-#include <data/OutputData.h>
+#include <data/Data.h>
 #include <orchestrator/orchestrator_export.h>
 
 namespace orchestrator
@@ -21,7 +20,7 @@ namespace orchestrator
 	class OrchestratorBase
 	{
 	public:
-		virtual void process(filter::Model* root, filter::data::Data & data, filter::data::Data & outPutData) = 0;
+		virtual void process(filter::Model* root, data::Data & data, data::Data & outPutData) = 0;
 
 		virtual ~OrchestratorBase()
 		{
@@ -59,7 +58,7 @@ namespace orchestrator
 			
 		}
 
-		void process(filter::Model* root, filter::data::Data & data, filter::data::Data & outPutData)
+		void process(filter::Model* root, data::Data & data, data::Data & outPutData)
 		{
 			
 			_conductor->process(root, data, outPutData);
@@ -186,7 +185,7 @@ namespace orchestrator
 			_modelStore[modelName] = orchestratorName;
 		}
 
-		void process(const std::string& model_name, filter::data::Data & data, filter::data::Data & outputData)
+		void process(const std::string& model_name, data::Data & data, data::Data & outputData)
 		{
 			filter::Model * root;
 
