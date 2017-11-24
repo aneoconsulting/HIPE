@@ -262,7 +262,7 @@ namespace orchestrator
 			{
 				if (data::DataTypeMapper::isImage(inputData.getType()))
 				{
-					throw HipeException("processSequence of Video isn't yet implemented");
+					processImages(root, inputData, outputData, debug);
 				}
 
 				else if (data::DataTypeMapper::isVideo(inputData.getType()))

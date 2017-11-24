@@ -149,7 +149,7 @@ namespace data
 		* \param dataType
 		* \return
 		*/
-		static inline bool isInputSource(IODataType dataType);
+		static bool isInputSource(IODataType dataType);
 
 
 
