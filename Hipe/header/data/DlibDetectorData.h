@@ -1,22 +1,24 @@
 #pragma once
 #include <data/IOData.h>
 
+#include <boost/thread/shared_mutex.hpp>
 #include <dlib/image_processing.h>
+#include <data/HogTrainer/HogTrainer.h>
 
 namespace filter
 {
 	namespace data
 	{
 		/**
-		 * \brief DlibDetectorData is the data class used to handle dlib detectors. Uses Dlib.
-		 */
+		* \brief DlibDetectorData is the data class used to handle dlib detectors. Uses Dlib.
+		*/
 		class DlibDetectorData : public IOData <Data, DlibDetectorData>
 		{
-			typedef dlib::scan_fhog_pyramid<dlib::pyramid_down<6> > image_scanner_type;
-			typedef dlib::object_detector<image_scanner_type> detector_type;
+			typedef dlib::object_detector<::data::hog_trainer::image_scanner_type> detector_type;
 
 		private:
-			std::vector<detector_type> _detectors;
+			std::reference_wrapper<const std::vector<detector_type> > _detectors;
+			std::shared_ptr<boost::shared_mutex> _mutex;
 
 		protected:
 
@@ -35,8 +37,8 @@ namespace filter
 
 
 			/**
-			 * \brief DlibDetectorData default constructor, the internal IODataType data type will be "DLIBDTCT"
-			 */
+			* \brief DlibDetectorData default constructor, the internal IODataType data type will be "DLIBDTCT"
+			*/
 			DlibDetectorData() : IOData(DLIBDTCT)
 			{
 				Data::registerInstance(new DlibDetectorData(IOData::_Protection()));
@@ -46,21 +48,22 @@ namespace filter
 
 
 			/**
-			 * \brief DlibDetectorData copy constructor
-			 * \param right The DlibDetectorData to copy data from
-			 */
-			DlibDetectorData(const data::DlibDetectorData &right) : IOData(right._type)
+			* \brief DlibDetectorData copy constructor
+			* \param right The DlibDetectorData to copy data from
+			*/
+			DlibDetectorData(const data::DlibDetectorData &right) : IOData(right._type), _detectors(right._detectors)
 			{
 				Data::registerInstance(right._This);
 				_type = right.This_const()._type;
 				_decorate = right._decorate;
+				_mutex = right._mutex;
 			}
 
-			DlibDetectorData(const std::vector<detector_type> & detectors) : IOData(DLIBDTCT)
+			DlibDetectorData(const std::vector<detector_type> & detectors, std::shared_ptr<boost::shared_mutex> mutex) : IOData(DLIBDTCT), _detectors(detectors)
 			{
 				Data::registerInstance(new DlibDetectorData(IOData::_Protection()));
+				//Data::registerInstance(new DlibDetectorData(_detectors, mutex));
 				This()._type = DLIBDTCT;
-				This()._detectors = detectors;
 
 				_type = DLIBDTCT;
 			}
@@ -68,84 +71,33 @@ namespace filter
 			virtual ~DlibDetectorData()
 			{
 				IOData::release();
-
-				_detectors.clear();
-
-				if (_This)
-				{
-					This()._detectors.clear();
-				}
 			}
 
 
 
 			/**
-			 * \brief Accessor (const version) to the detectors container
-			 * \return Returns a const reference to the detectors container.
-			 */
+			* \brief Accessor (const version) to the detectors container
+			* \return Returns a const reference to the detectors container.
+			*/
 			const std::vector<detector_type>& detectors_const() const
 			{
 				return This_const()._detectors;
 			}
 
 			/**
-			 * \brief Accessor to the detectors container
-			 * \return Returns a reference to the detectors container.
+			 * \brief Accessori to the object mutex
+			 * \return Returns a shared_tr to the object's mutex.
 			 */
-			std::vector<detector_type>& detectors()
+			std::shared_ptr<boost::shared_mutex> mutex_ptr()
 			{
-				return This()._detectors;
+				return This()._mutex;
 			}
 
 			/**
-			 * \brief Add detectors to the detectors container.
-			 * \param detectors The detectors to add.
-			 * \return Returns a reference to the DlibDetectorData object.
-			 */
-			DlibDetectorData& operator<<(const std::vector<detector_type>& detectors)
-			{
-				This()._detectors.insert(This()._detectors.end(), detectors.begin(), detectors.end());
-				return *this;
-			}
-
-			/**
-			 * \brief Add detector to the detectors container.
-			 * \param detector The detector to add.
-			 * \return Returns a reference to the DlibDetectorData object.
-			 */
-			DlibDetectorData& operator<<(const detector_type& detector)
-			{
-				This()._detectors.push_back(detector);
-				return *this;
-			}
-
-
-			/**
-			 * \brief Copy the data of the object to another one
-			 * \param left The other object where to copy the data to. Its current data will not be overwritten
-			 */
-			virtual void copyTo(DlibDetectorData& left) const
-			{
-				if (left.getType() != getType())
-					throw HipeException("ERROR - data::DlibDetectorData::copyTo - cannot copy object data. Types mismatch.");
-
-				left.This()._detectors.insert(left.This()._detectors.end(), This_const()._detectors.begin(), This_const()._detectors.end());
-			}
-
-			/**
-			 * \brief
-			 * \return Returns true if the object doesn't contain any data
-			 */
-			inline bool empty() const override
-			{
-				return This_const()._detectors.empty();
-			}
-
-			/**
-			 * \brief DlibDetectorData assignment operator.
-			 * \param left The DlibDetectorData oject to get the data from.
-			 * \return A reference to the object.
-			 */
+			* \brief DlibDetectorData assignment operator.
+			* \param left The DlibDetectorData oject to get the data from.
+			* \return A reference to the object.
+			*/
 			DlibDetectorData& operator=(const DlibDetectorData& left)
 			{
 				Data::registerInstance(left);

@@ -56,7 +56,7 @@ namespace filter
 					throw HipeException("Error in HogLiveDetector: wrong input data types");
 
 				// Detect objects in image
-				std::vector<cv::Rect> detectedObjects = hogDetect(image->getMat(), detectors->detectors_const());
+				std::vector<cv::Rect> detectedObjects = hogDetect(image->getMat(), detectors->detectors_const(), detectors->mutex_ptr());
 
 				// Output ShapeData
 				data::ShapeData output;
@@ -72,14 +72,16 @@ namespace filter
 				return cv::Rect(cv::Point2i(r.left(), r.top()), cv::Point2i(r.right() + 1, r.bottom() + 1));
 			};
 
-			std::vector<cv::Rect> hogDetect(const cv::Mat& frame, const std::vector<dlib::object_detector<::data::hog_trainer::image_scanner_type> >& detectors) const
+			std::vector<cv::Rect> hogDetect(const cv::Mat& frame, const std::vector<dlib::object_detector<::data::hog_trainer::image_scanner_type> >& detectors, std::shared_ptr<boost::shared_mutex> detectors_mutex) const
 			{
 				// Convert the OpenCV image to a dlib image.
 				dlib::array2d<dlib::bgr_pixel> dlib_image;
 				dlib::assign_image(dlib_image, dlib::cv_image<dlib::bgr_pixel>(frame));
 
 				// Evaluate the detectors.
+				boost::upgrade_lock<boost::shared_mutex> lock(*detectors_mutex);
 				std::vector<dlib::rectangle> dlib_rects = dlib::evaluate_detectors(detectors, dlib_image);
+				lock.unlock();
 
 				std::vector<cv::Rect> rects;
 				for (auto dlib_rect : dlib_rects)

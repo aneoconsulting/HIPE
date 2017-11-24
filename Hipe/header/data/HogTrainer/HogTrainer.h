@@ -11,6 +11,9 @@
 #include <dlib/gui_widgets.h>
 #include <dlib/image_processing.h>
 #include <dlib/data_io.h>
+
+#include <boost/thread/shared_mutex.hpp>
+
 namespace data
 {
 	namespace hog_trainer
@@ -113,7 +116,6 @@ namespace data
 
 
 
-
 		/*!
 		@brief A class for interactive training of dlib fhog detectors.
 		*/
@@ -163,6 +165,7 @@ namespace data
 			std::vector<std::vector<dlib::rectangle>> boxes_train;
 
 			std::vector<dlib::object_detector<IMAGE_SCANNER_TYPE>> detectors;
+			boost::shared_mutex detectors_shared_mutex;
 			std::vector<bool> active;
 			bool toggle_active = false;
 
@@ -180,6 +183,9 @@ namespace data
 			void
 				move_get_detectors(std::vector<dlib::object_detector<IMAGE_SCANNER_TYPE>> target)
 			{
+				boost::upgrade_lock<boost::shared_mutex> lock(detectors_shared_mutex);
+				boost::upgrade_to_unique_lock<boost::shared_mutex> unique_lock(lock);
+
 				std::move(detectors.begin(), detectors.end(), std::back_inserter(target));
 				detectors.resize(0);
 			}
@@ -192,6 +198,18 @@ namespace data
 				get_detectors()
 			{
 				return detectors;
+			}
+
+
+			/*!
+			Get a copy of a shared mutex.
+			*/
+			std::shared_ptr<boost::shared_mutex>
+				get_mutex()
+			{
+				std::shared_ptr<boost::shared_mutex> ptr(&detectors_shared_mutex);
+				//return std::shared_ptr<boost::shared_mutex>(detectors_shared_mutex);
+				return ptr;
 			}
 
 
@@ -324,7 +342,6 @@ namespace data
 				{
 					cv::circle(display, { 20,20 }, 10, { 0,0,255 }, -2);
 				}
-
 				if (toggle_active)
 				{
 					for (size_t i = 0; i < active.size(); ++i)
@@ -342,7 +359,6 @@ namespace data
 						if (active[i])
 						{
 							fhog_to_mat(detectors[i], hog);
-
 							width = hog.cols * height / hog.rows;
 							min_x = display.cols - width;
 
@@ -361,10 +377,8 @@ namespace data
 							cv::Point2f cursor;
 							contour_center(cntrs[0], cursor);
 							cv::circle(display, cursor, 5, { 0,128,255 }, -2);
-							//if (cursor.x > min_x and cursor.x < max_x and cursor.y > min_y and cursor.y < max_y)
 							if (cursor.x > min_x && cursor.x < max_x && cursor.y > min_y && cursor.y < max_y)
 							{
-								//active[i] = not active[i];
 								active[i] = !active[i];
 								toggle_active = false;
 							}
@@ -452,21 +466,25 @@ namespace data
 			void
 				clear_inactive()
 			{
-				std::cout << detectors.size() << " vs " << active.size() << std::endl;
 				std::cout << "removing inactive detectors" << std::endl;
+
+				boost::upgrade_lock<boost::shared_mutex> lock(detectors_shared_mutex);
+				boost::upgrade_to_unique_lock<boost::shared_mutex> unique_lock(lock);
+
 				auto it1 = std::remove_if(
 					detectors.begin(),
 					detectors.end(),
-					//[&, this](dlib::object_detector<image_scanner_type> & dtr) -> bool {return not this->active.at(&dtr - this->detectors.data()); }
 					[&, this](dlib::object_detector<image_scanner_type> & dtr) -> bool {return !this->active.at(&dtr - this->detectors.data()); }
 				);
 				detectors.erase(it1, detectors.end());
+
+				//detectors_shared_mutex.unlock();
+				unique_lock.mutex()->unlock();
 
 				std::cout << "removing corresponding booleans" << std::endl;
 				auto it2 = std::remove_if(
 					active.begin(),
 					active.end(),
-					//[](bool actv) -> bool {return not actv; }
 					[](bool actv) -> bool {return !actv; }
 				);
 				active.erase(it2, active.end());
@@ -516,7 +534,15 @@ namespace data
 				trainer.set_c(1);
 				trainer.be_verbose();
 				trainer.set_epsilon(0.01);
+
+				boost::upgrade_lock<boost::shared_mutex> lock(detectors_shared_mutex);
+				boost::upgrade_to_unique_lock<boost::shared_mutex> unique_lock(lock);
+
 				detectors.push_back(trainer.train(images_train, boxes_train));
+
+				//detectors_shared_mutex.unlock();
+				unique_lock.mutex()->unlock();
+
 				active.push_back(true);
 
 				images_train.clear();
@@ -704,12 +730,10 @@ namespace data
 					action_begin = std::clock();
 					break;
 				case 't':
-					//train = not train;
 					train = !train;
 					action_begin = std::clock();
 					break;
 				case 'd':
-					//detect = not detect;
 					detect = !detect;
 					break;
 				case 'r':
@@ -717,7 +741,6 @@ namespace data
 					clear_inactive();
 					break;
 				case 's':
-					//toggle_active = not toggle_active;
 					toggle_active = !toggle_active;
 					break;
 				}
@@ -792,6 +815,7 @@ namespace data
 					}
 
 
+
 				// Mirror image for natural interaction.
 				cv::flip(display, display, 1);
 				draw();
@@ -805,7 +829,7 @@ namespace data
 		/*!
 		@brief HogTrainer derived class that manages the camera resource.
 		*/
-		template <typename IMAGE_SCANNER_TYPE>
+		template<typename IMAGE_SCANNER_TYPE>
 		class HogTrainerWithCamera : public HogTrainer<IMAGE_SCANNER_TYPE>
 		{
 		private:

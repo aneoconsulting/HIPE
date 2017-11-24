@@ -2,9 +2,13 @@
 
 HipeStatus filter::algos::HOGLiveTrainer::process()
 {
-	data::Data data = _connexData.pop();
+	data::ImageData data = _connexData.pop();
 
-	_connexData.push(data::ImageData(data));
+	skipFrames();
+	pushInputFrame(data);
+
+	data::DlibDetectorData output = popOutputData();
+	_connexData.push(output);
 
 	return OK;
 }
@@ -26,23 +30,47 @@ void filter::algos::HOGLiveTrainer::startFilterThread()
 	HOGLiveTrainer* pThis = this;
 	_pFilterThread = new boost::thread([pThis]
 	{
+		data::DlibDetectorData output(pThis->_ht.get_detectors(), pThis->_ht.get_mutex());
+
+		pThis->_ht.init();
 		while (pThis->_isThreadRunning)
 		{
-			data::Data data;
+			data::ImageData data;
 			if (!pThis->_inputDataStack.trypop_until(data, 30))		// Try to pop during 30s
 				continue;
 
-			data::Data output = pThis->processLiveTraining(data);
+			pThis->_ht.process_frame(data.getMat());
 
 			if (pThis->_outputDataStack.size() != 0)
 				pThis->_outputDataStack.clear();
-
 			pThis->_outputDataStack.push(output);
 		}
 	});
 }
 
-data::Data filter::algos::HOGLiveTrainer::processLiveTraining(const data::Data& data)
+void filter::algos::HOGLiveTrainer::pushInputFrame(const data::ImageData& frame)
 {
-	return data::Data();
+	_inputDataStack.push(frame);
+	++_countProcessedFrames;
+}
+
+void filter::algos::HOGLiveTrainer::skipFrames()
+{
+	if (_countProcessedFrames % skip_frames == 0)
+	{
+		_countProcessedFrames = 0;
+
+		if (_inputDataStack.size() != 0)
+			_inputDataStack.clear();
+	}
+}
+
+filter::data::DlibDetectorData filter::algos::HOGLiveTrainer::popOutputData()
+{
+	//data::DlibDetectorData output;
+	//const int waitTime = 30;
+
+	//_outputDataStack.trypop_until(output, waitTime);
+
+	return data::DlibDetectorData(_ht.get_detectors(), _ht.get_mutex());
 }
