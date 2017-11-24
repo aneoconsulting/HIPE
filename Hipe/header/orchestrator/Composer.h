@@ -98,6 +98,7 @@ namespace orchestrator
 		 * \return the loaded data in a ListIOData object (casted to the type Data)
 		 */
 		static data::Data loadListIoData(const json::JsonTree& dataNode);
+		static bool checkIfDirectory(const std::map<std::basic_string<char>, json::JsonTree*>& map);
 		/**
 		 * [TODO]
 		 * \brief Wrapper function to load the data from a pattern (PATTERN) as a PatternData object

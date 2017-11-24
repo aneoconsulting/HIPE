@@ -217,6 +217,39 @@ namespace data
 		}
 
 		/**
+			* [TODO]
+			* \brief distribute data to the port's output.
+			* \param dataOutput The data to distribute to each child one data per child 
+			*/
+			void distribute(Dout & dataOutput)
+			{
+
+				for (auto& childPair : portOutput)
+				{
+					ConnexDataBase* child = childPair.first;
+					/**
+					* We need to copy the data to avoid to write on image when other children can use it
+					*/
+					if (portOutput.size() > 1 && child->getWay() == INOUT)
+					{
+						Dout cpy = CopyObject<Dout>::copy(dataOutput);
+						if (portOutput[child]->empty()) {
+							portOutput[child]->push(cpy);
+							break;
+						}
+					}
+					else
+					{
+						if(portOutput[child]->empty())
+						{
+							portOutput[child]->push(dataOutput);
+							break;
+						}
+					}
+				}
+			}
+
+			/**
 		 * \brief Send data to the port. The port will establish a link with the next filter of the graph.
 		 * \param dataOutput The data the port should reference
 		 */
@@ -229,6 +262,17 @@ namespace data
 			}
 
 			broacast(dataOutput);
+			}
+
+			void pushonce(Dout dataOutput)
+			{
+
+				if (_way == INOUT)
+				{
+					throw HipeException("An inout data can't push new data, relation is ONE input to ONE output");
+				}
+
+				distribute(dataOutput);
 		}
 
 		/**

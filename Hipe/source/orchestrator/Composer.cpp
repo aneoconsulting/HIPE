@@ -1,6 +1,8 @@
 #include <data/IOData.h>
 #include <json/JsonTree.h>
 #include <Composer.h>
+#include <data/DirPatternData.h>
+#include <data/SquareCrop.h>
 
 namespace orchestrator
 {
@@ -66,13 +68,46 @@ namespace orchestrator
 		using namespace data;
 		std::vector<Data> res;
 		auto child = dataNode.allchildren("desc");
+		bool isDirPAtterData = false;
 		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 		{
 			const std::string dataType = itarray->first;
-			auto data = orchestrator::Composer::getDataFromComposer(dataType, *itarray->second);
-			res.push_back(data);
+			IODataType ioDataType = DataTypeMapper::getTypeFromString(dataType);
+			if (ioDataType == SQR_CROP)
+			{
+				if (itarray->second->count("SEQIMGD") == 1) {
+					isDirPAtterData = true;
+					auto seqimgd = itarray->second->get_child("SEQIMGD");
+					auto data = getDataFromComposer("SEQIMGD", seqimgd);
+					res.push_back(data);
+				}
+
+				else if (itarray->second->count("IMGF") == 1)
+				{
+					auto inputData = itarray->second->get_child("IMGF");
+					auto outputData = getDataFromComposer("IMGF", inputData);
+					const cv::Mat & imageData = static_cast<const ImageData &>(outputData).getMat();
+
+					// We still need a square crop object to create a Pattern Data
+					cv::Rect imageRect(0, 0, imageData.cols, imageData.rows);
+					std::vector<cv::Rect> rects;
+					rects.push_back(imageRect);
+					SquareCrop crop(imageData, rects);
+					res.push_back(crop);
+				}
+			}
+			else {
+				auto data = getDataFromComposer(dataType, *itarray->second);
+				res.push_back(data);
+			}
+
 		}
-		data::PatternData pattern(res);
+		if (isDirPAtterData)
+		{
+			DirPatternData dirPattern(res);
+			return static_cast<Data>(dirPattern);
+		}
+		PatternData pattern(res);
 
 		return static_cast<Data>(pattern);
 	}
@@ -162,5 +197,4 @@ namespace orchestrator
 
 		return getDataFromComposer(datatype, dataNode);
 	}
-
 }

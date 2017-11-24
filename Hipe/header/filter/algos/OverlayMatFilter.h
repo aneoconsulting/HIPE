@@ -23,7 +23,7 @@ namespace filter
 		class OverlayMatFilter : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
-			CONNECTOR(data::ImageData, data::ImageData);
+			CONNECTOR(data::Data, data::ImageData);
 
 			REGISTER(OverlayMatFilter, ()), _connexData(data::INDATA)
 			{

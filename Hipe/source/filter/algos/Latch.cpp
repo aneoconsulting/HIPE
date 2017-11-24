@@ -15,8 +15,8 @@ namespace filter
 					if (!This->imagesStack.trypop_until(pattern, 30))
 						continue;
 
-					MatchContainer res = This->detectObject(pattern);
-			
+					data::MatcherData res = This->detectObject(pattern);
+
 
 					if (This->result.size() != 0)
 						This->result.clear();
@@ -28,7 +28,7 @@ namespace filter
 			});
 		}
 
-		Latch::MatchContainer Latch::detectObject(data::PatternData & patternData)
+		data::MatcherData Latch::detectObject(data::PatternData & patternData)
 		{
 
 			double homography_array[9] = { 7.6285898e-01, -2.9922929e-01, 2.2567123e+02,
@@ -93,19 +93,9 @@ namespace filter
 				}
 			}
 
-			cv::Mat res;
-			MatchContainer container;
-
-			/*cv::drawMatches(patternImage, inliers1, requestImage, inliers2, good_matches, res);*/
-			container.patternImage = patternImage;
-			container.requestImage = requestImage;
-			container.inliers1 = inliers1;
-	
-			container.inliers2 = inliers2;
-			container.goodMatches = good_matches;
+			data::MatcherData container(patternImage, requestImage, inliers1, inliers2, good_matches);
 
 			return container;
-
 		}
 
 		HipeStatus Latch::process()
@@ -114,11 +104,12 @@ namespace filter
 			{
 				startDetectObject();
 			}
-			//outputData.reset(new data::OutputData());
+
 			data::PatternData patternData = _connexData.pop();
 			if (patternData.crops().getSquareCrop().empty())
 			{
-				_connexData.push(patternData.imageRequest());
+				data::MatcherData output;
+				_connexData.push(output);
 				return OK;
 			}
 
@@ -129,36 +120,37 @@ namespace filter
 				imagesStack.push(patternData);
 			}
 			count_frame++;
-			
-			MatchContainer img_result;
+
+			data::MatcherData md_result;
 			cv::Mat res;
+
 			if (patternData.imageRequest().getMat().empty())
 			{
-				_connexData.push(patternData.imageRequest());
+				data::MatcherData output;
+				_connexData.push(output);
 			}
-			else if (result.trypop_until(img_result, 30)) // wait 30ms no more
+			else if (result.trypop_until(md_result, 30)) // wait 30ms no more
 			{
-				cv::drawMatches(patternData.imageRequest().getMat(), img_result.inliers2, img_result.patternImage, img_result.inliers1, img_result.goodMatches, res);
-				tosend = img_result;
-				_connexData.push(data::ImageData(res));
+				tosend = md_result;
+				_connexData.push(tosend);
 			}
-			else if (wait == true && result.trypop_until(img_result, 5000)) // wait 5 sec it's like infinite but allow to kill thread
+			else if (wait == true && result.trypop_until(md_result, wait_time)) // wait 5 sec it's like infinite but allow to kill thread
 			{
-				cv::drawMatches(patternData.imageRequest().getMat(), img_result.inliers2, img_result.patternImage, img_result.inliers1, img_result.goodMatches, res);
-				tosend = img_result;
-				_connexData.push(data::ImageData(res));
+				tosend = md_result;
+				_connexData.push(tosend);
 			}
-			else if (tosend.requestImage.empty())
+			else if (tosend.requestImage_const().empty())
 			{
-				_connexData.push(patternData.imageRequest());
+				data::MatcherData output;
+				_connexData.push(output);
 			}
 			else
 			{
-				img_result = tosend; //Use backup because the algorithme is too late
-				cv::drawMatches(patternData.imageRequest().getMat(), img_result.inliers2, img_result.patternImage, img_result.inliers1, img_result.goodMatches, res);
-				_connexData.push(data::ImageData(res));
+				md_result = tosend; //Use backup because the algorithme is too late
+
+				_connexData.push(tosend);
 			}
-			
+
 			return OK;
 		}
 	}

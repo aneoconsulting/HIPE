@@ -3,12 +3,15 @@
 
 namespace data
 {
+	typedef std::vector<cv::Point2f> four_points;
 	class DATA_EXPORT ShapeData : public IOData <Data, ShapeData>
 	{
 	protected:
 		std::vector<cv::Point2f> _pointsArray;	//<! container of all the points. The data are handled by cv::Point2f objects 
 		std::vector<cv::Vec3f> _circlesArray;	//<! container of all the circles. The data are handled by cv::Vec3f objects
 		std::vector<cv::Rect> _rectsArray;		//<! container of all the rectangles. The data are handled by cv::Rect objects
+			//vector of array of 4 points: _quadrilatere[0][0].x or .y  
+			std::vector<four_points> _quadrilatere;		//<! container of all the quadrilateres. The data are handled by cv::vec4f objects
 
 		ShapeData(IOData::_Protection priv) : IOData(SHAPE)
 		{
@@ -49,12 +52,14 @@ namespace data
 			_circlesArray.clear();
 			_pointsArray.clear();
 			_rectsArray.clear();
+				_quadrilatere.clear();
 
 			if (_This)
 			{
 				This()._circlesArray.clear();
 				This()._pointsArray.clear();
 				This()._rectsArray.clear();
+					This()._quadrilatere.clear();
 			}
 		}
 		std::vector<cv::Point2f> & PointsArray();
@@ -64,6 +69,16 @@ namespace data
 		const std::vector<cv::Point2f> & PointsArray_const() const;
 		const std::vector<cv::Rect> & RectsArray_const() const;
 		const std::vector<cv::Vec3f> & CirclesArray_const() const;
+			std::vector<four_points> & QuadrilatereArray()
+			{
+				ShapeData &ret = This();
+				return ret._quadrilatere;
+			}
+			const std::vector<four_points> & QuadrilatereArray_const() const
+			{
+				const ShapeData &ret = This_const();
+				return ret._quadrilatere;
+			}
 
 
 		/**
@@ -79,7 +94,7 @@ namespace data
 		* \return Returns a reference to the ShapeData object
 		*/
 		ShapeData& operator<<(const std::vector<cv::Point2f>& points);
-
+				
 		/**
 		* \brief Add a rect to the rect container.
 		* \param rect The rect to add
@@ -100,18 +115,19 @@ namespace data
 		*/
 		ShapeData& operator<<(cv::Vec3f circle);
 
+
 		/**
 		* \brief Add circles to the circles container.
 		* \param circles The circles to add
 		* \return Returns a reference to the ShapeData object
 		*/
 		ShapeData& operator<<(std::vector<cv::Vec3f> circles);
-
+				
 		/**
 		 * \brief
 		 * \return Returns true if the object doesn't contain any data
 		 */
-		inline bool empty() const override
+		bool empty() const override
 		{
 			return (This_const()._pointsArray.empty() && This_const()._circlesArray.empty() && This_const()._rectsArray.empty());
 		}

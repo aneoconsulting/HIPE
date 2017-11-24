@@ -32,12 +32,12 @@ namespace filter
 		public:
 			HipeStatus process() override
 			{
-				if(path.empty() || filename.empty())
+				if (path.empty() || filename.empty())
 				{
 					throw HipeException("[ERROR]: SaveImage::process - You must provide a path and a filename");
 				}
 
-				data::ImageData data =  _connexData.pop();
+				data::ImageData data = _connexData.pop();
 				cv::Mat image(data.getMat());
 
 				// Get Date
@@ -49,11 +49,14 @@ namespace filter
 				std::ostringstream completeFilename;
 				completeFilename << path << std::put_time(time, "%d%m%Y_%H%M%S") << "_" << filename << "." << extension;
 
-				
+
 				// Write image
-				if(!cv::imwrite(completeFilename.str(), image))
+				if (!cv::imwrite(completeFilename.str(), image))
 				{
-					throw HipeException("[ERROR]: SaveImage::process - Couldn't write image to file. Check path, extension and quality flag.");
+					std::stringstream errorMessage;
+					errorMessage << "ERROR in OutputImage filter: Couldn't write image to file. Check path, extension and quality flag." << std::endl;
+					errorMessage << "Complete filepath is: " << completeFilename.str() << std::endl;
+					throw HipeException(errorMessage.str());
 				}
 				return OK;
 			}

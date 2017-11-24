@@ -4,7 +4,9 @@
 #include <filter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <data/ImageData.h>
-#include <data/SquareCrop.h>
+#include <data/ShapeData.h>
+#include <data/PatternData.h>
+#include <data/DirPatternData.h>
 
 
 namespace filter
@@ -12,16 +14,11 @@ namespace filter
 	namespace algos
 	{
 		/**
-		 * \var OverlayFilter::ratio
-		 * [TODO]
-		 */
-
-		/**
-		 * \todo
-		 * \brief The OverlayFilter filter is used contour regions of interests in an image.
-		 * 
-		 * The ConnexData port must contain 2 objects. The image on which the filter will draw, and the list of regions of interest (SquareCrop object).
-		 */
+		* \todo
+		* \brief The OverlayFilter filter is used contour regions of interests in an image.
+		*
+		* The ConnexData port must contain 2 objects. The image on which the filter will draw, and the list of regions of interest (ShapeData object), or text.
+		*/
 		class OverlayFilter : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
@@ -32,66 +29,22 @@ namespace filter
 
 			}
 
-			REGISTER_P(double, ratio);
+			REGISTER_P(char, unused);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
 		public:
-			HipeStatus process()
-			{
-				if (_connexData.size() % 2 != 0)
-				{
-					throw HipeException("The Overlay missing or text data. Please be sure to link properly with parent");
-				}
+			HipeStatus process();
 
-				//while (!_connexData.empty()) // While i've parent data
-				{
-					data::Data data1 = _connexData.pop();
-					data::Data data2 = _connexData.pop();
+			bool isDrawableSource(const data::Data& data);
+			bool isOverlayData(const data::Data& data);
 
-					if (data1.getType() != data::IMGF &&
-						data1.getType() != data::TXT_ARR &&
-						data1.getType() != data::TXT &&
-						data1.getType() != data::SQR_CROP)
-					{
-						throw HipeException("The Overlay object cant aggregate tan text ATM. Please Develop OverlayFilter");
-					}
-					if (data2.getType() != data::IMGF &&
-						data2.getType() != data::TXT_ARR &&
-						data2.getType() != data::TXT &&
-						data2.getType() != data::SQR_CROP)
-					{
-						throw HipeException("The Overlay object cant aggregate tan text ATM. Please Develop OverlayFilter");
-					}
-					data::ImageData image;
-					if (data1.getType() != data::IMGF && data2.getType() != data::IMGF)
-					{
-						throw HipeException("Missing image to generate overlay text");
-					}
-					if (data1.getType() == data::IMGF)
-						image = static_cast<data::ImageData &>(data1);
-					if (data2.getType() == data::IMGF)
-						image = static_cast<data::ImageData &>(data2);
+			data::ImageData extractSourceImageData(data::Data& data);
 
-					if (data1.getType() == data::TXT || data2.getType() == data::TXT_ARR)
-						throw HipeException("Text overlay is not yet implemented");
+			void drawShape(cv::Mat& image, const data::ShapeData& shape);
 
-					data::SquareCrop crops;
-					if (data1.getType() == data::SQR_CROP)
-						crops = static_cast<data::SquareCrop &>(data1);
-					if (data2.getType() == data::SQR_CROP)
-						crops = static_cast<data::SquareCrop &>(data2);
-
-					for (cv::Rect & rect : crops.getSquareCrop())
-					{
-						cv::rectangle(image.getMat(), rect, cv::Scalar(255, 0, 0));
-					}
-					_connexData.push(image);
-				}
-				return OK;
-			}
 		};
 
-		ADD_CLASS(OverlayFilter, ratio);
+		ADD_CLASS(OverlayFilter, unused);
 	}
 }

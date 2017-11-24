@@ -32,7 +32,8 @@ namespace filter
 						cvRect.width = (rect.right() - rect.left()) / 2;
 						rects.push_back(cvRect);
 					}
-					data::SquareCrop crop(image, rects);
+					data::ShapeData crop;
+					crop << rects;
 
 					if (This->crops.size() != 0)
 						This->crops.clear();
@@ -114,11 +115,11 @@ namespace filter
 					count_frame++;
 				}
 				//TODO manage list of SquareCrop. For now consider there only one SquareCrop
-				data::SquareCrop popSquareCrop;
-				if (crops.trypop_until(popSquareCrop, 30)) // wait 30ms no more
+				data::ShapeData popShapeData;
+				if (crops.trypop_until(popShapeData, 30)) // wait 30ms no more
 				{
-					_connexData.push(popSquareCrop);
-					tosend = popSquareCrop;
+					_connexData.push(popShapeData);
+					tosend = popShapeData;
 				}
 				else {
 

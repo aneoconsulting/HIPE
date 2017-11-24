@@ -1,12 +1,13 @@
 #pragma once
+#include <core/HipeException.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/mat.hpp>
 #include <data/IODataType.h>
 #include <data/IOData.h>
-#include <data/ListIOData.h>
 #include <data/ImageData.h>
 #include <data/SquareCrop.h>
 #include <data/VideoData.h>
+#include <data/FileVideoInput.h>
 
 #include <data/data_export.h>
 
@@ -60,6 +61,15 @@ namespace data
 			This()._inputSource = static_cast<Data>(inputImage);
 			newFrame();
 		}
+			PatternData(ImageData &inputImage, SquareCrop & squareCrope) : VideoData(IODataType::PATTERN), _squareCrop(ImageData(), std::vector<int>()), _endOfSource(-1)
+			{
+				Data::registerInstance(new PatternData(IOData::_Protection()));
+
+				This()._requestImg = static_cast<Data>(inputImage);
+				This()._squareCrop = squareCrope;
+				newFrame();
+			}
+
 
 
 		/**
@@ -67,7 +77,7 @@ namespace data
 		 * \param left the list of data
 		 */
 		PatternData(const std::vector<Data>& left);
-
+				
 
 		/**
 		 * \brief Copy constructor for PatternDate copy
@@ -164,6 +174,7 @@ namespace data
 		 */
 		Data newFrame();
 
+				
 		/**
 		 * \brief Does the request image contain data ?
 		 * \return Returns true if the request image doesn't contain any data

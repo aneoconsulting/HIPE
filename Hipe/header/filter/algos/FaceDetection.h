@@ -15,7 +15,9 @@
 
 #include <dlib/image_processing/render_face_detections.h>
 #include <dlib/image_processing.h>
-#include <data/SquareCrop.h>
+#include <data/ImageArrayData.h>
+#include <data/ImageData.h>
+#include <data/ShapeData.h>
 #include <filter/filter_export.h>
 
 namespace data {
@@ -47,12 +49,12 @@ namespace filter
 
 			std::atomic<bool> isStart;				//<! [TODO] Boolean used to know when the thread is running and the faces should be detected ?
 			core::queue::ConcurrentQueue<data::ImageData> imagesStack;	//<! [TODO] The queue containing the frames to process
-			core::queue::ConcurrentQueue<data::SquareCrop> crops;		//<! [TODO] The queue containing the cropped faces from the images
-			data::SquareCrop tosend;	//<! The found faces to output to the ConnexData port
+			core::queue::ConcurrentQueue<data::ShapeData> crops;		//<! [TODO] The queue containing the cropped faces from the images
+			data::ShapeData tosend;	//<! The found faces to output to the ConnexData port
 
 			boost::thread *thr_server;	//<! [TODO] Pointer to the face detection task
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
-			CONNECTOR(data::ImageArrayData, data::SquareCrop);
+			CONNECTOR(data::ImageArrayData, data::ShapeData);
 
 			REGISTER(FaceDetection, ()), _connexData(data::INDATA)
 			{

@@ -6,6 +6,7 @@
 #include <boost/thread/thread.hpp>
 #include <data/PatternData.h>
 #include <orchestrator/TaskInfo.h>
+#include "data/DirPatternData.h"
 
 
 namespace orchestrator
@@ -259,14 +260,18 @@ namespace orchestrator
 
 			void processSequence(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug)
 			{
-				if (data::DataTypeMapper::isImage(inputData.getType()))
-				{
-					processImages(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isVideo(inputData.getType()))
+				if (data::DataTypeMapper::isVideo(inputData.getType()))
 				{
 					throw HipeException("processSequence of Video isn't yet implemented");
 				}
+
+				//TMI: HACK: Workaround FilePatternFilter
+				if (inputData.getType() == data::IODataType::SEQIMGD)
+				{
+					data::DirectoryImgData & dirImgData = static_cast<data::DirectoryImgData &>(inputData);
+					dirImgData.loadImagesData();
+				}
+				processImages(root, inputData, outputData, debug);
 			}
 
 			void processListData(filter::Model* root, data::ListIOData & inputData, data::Data& outputData, bool debug)
@@ -346,11 +351,11 @@ namespace orchestrator
 			void process(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug = false)
 			{
 
-			    if (data::DataTypeMapper::isSequence(inputData.getType()))
+				if (data::DataTypeMapper::isSequence(inputData.getType()))
 				{
 					processSequence(root, inputData, outputData, debug);
 				}
-				if (data::DataTypeMapper::isListIo(inputData.getType()))
+				else if (data::DataTypeMapper::isListIo(inputData.getType()))
 				{
 					data::ListIOData &list_io_data = static_cast<data::ListIOData&>(inputData);
 					processListData(root, list_io_data, outputData, debug);
@@ -375,7 +380,11 @@ namespace orchestrator
 				else if (data::DataTypeMapper::isPattern(inputData.getType()))
 				{
 					using videoType = data::PatternData;
-					processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
+					using videoDir = data::DirPatternData;
+					if (inputData.getType() == data::IODataType::DIRPATTERN)
+						processVideo(root, static_cast<videoDir&>(inputData), outputData, debug);
+					else
+						processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
 				}
 				else
 				{
