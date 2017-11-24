@@ -65,7 +65,7 @@ void filter::algos::HOGLiveTrainer::skipFrames()
 	}
 }
 
-filter::data::DlibDetectorData filter::algos::HOGLiveTrainer::popOutputData()
+data::DlibDetectorData filter::algos::HOGLiveTrainer::popOutputData()
 {
 	//data::DlibDetectorData output;
 	//const int waitTime = 30;
