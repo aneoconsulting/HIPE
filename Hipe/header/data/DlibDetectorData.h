@@ -17,8 +17,8 @@ namespace filter
 			typedef dlib::object_detector<::data::hog_trainer::image_scanner_type> detector_type;
 
 		private:
-			std::reference_wrapper<const std::vector<detector_type> > _detectors;
-			std::shared_ptr<boost::shared_mutex> _mutex;
+			std::shared_ptr<const std::vector<detector_type> > _detectors = nullptr;
+			std::shared_ptr<boost::shared_mutex> _mutex = nullptr;
 
 		protected:
 
@@ -59,7 +59,7 @@ namespace filter
 				_mutex = right._mutex;
 			}
 
-			DlibDetectorData(const std::vector<detector_type> & detectors, std::shared_ptr<boost::shared_mutex> mutex) : IOData(DLIBDTCT), _detectors(detectors)
+			DlibDetectorData(const std::vector<detector_type> & detectors, std::shared_ptr<boost::shared_mutex> mutex) : IOData(DLIBDTCT), _detectors(&detectors)
 			{
 				Data::registerInstance(new DlibDetectorData(IOData::_Protection()));
 				//Data::registerInstance(new DlibDetectorData(_detectors, mutex));
@@ -81,7 +81,7 @@ namespace filter
 			*/
 			const std::vector<detector_type>& detectors_const() const
 			{
-				return This_const()._detectors;
+				return *This_const()._detectors;
 			}
 
 			/**
