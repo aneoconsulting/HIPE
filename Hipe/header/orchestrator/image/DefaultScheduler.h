@@ -260,19 +260,18 @@ namespace orchestrator
 
 			void processSequence(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug)
 			{
-				if (data::DataTypeMapper::isImage(inputData.getType()))
+				if (data::DataTypeMapper::isVideo(inputData.getType()))
 				{
-					processImages(root, inputData, outputData, debug);
+					throw HipeException("processSequence of Video isn't yet implemented");
 				}
 
-				else if (data::DataTypeMapper::isVideo(inputData.getType()))
 				//TMI: HACK: Workaround FilePatternFilter
 				if (inputData.getType() == data::IODataType::SEQIMGD)
 				{
 					data::DirectoryImgData & dirImgData = static_cast<data::DirectoryImgData &>(inputData);
 					dirImgData.loadImagesData();
 				}
-					processImages(root, inputData, outputData, debug);
+				processImages(root, inputData, outputData, debug);
 			}
 
 			void processListData(filter::Model* root, data::ListIOData & inputData, data::Data& outputData, bool debug)
