@@ -13,10 +13,10 @@ namespace filter
 {
 	namespace algos
 	{
-		class LiveDetection : public filter::IFilter
+		class HOGLiveTrainer : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::Data);
-			REGISTER(LiveDetection, ()), _connexData(data::INDATA)
+			REGISTER(HOGLiveTrainer, ()), _connexData(data::INDATA)
 			{
 				_isThreadRunning = true;
 				_pFilterThread = nullptr;
@@ -42,6 +42,6 @@ namespace filter
 
 			data::Data processLiveTraining(const data::Data& data);
 		};
-		ADD_CLASS(LiveDetection, unused);
+		ADD_CLASS(HOGLiveTrainer, unused);
 	}
 }

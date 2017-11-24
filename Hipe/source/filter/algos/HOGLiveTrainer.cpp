@@ -1,6 +1,6 @@
-#include <filter/algos/LiveDetection.h>
+#include <filter/algos/HOGLiveTrainer.h>
 
-HipeStatus filter::algos::LiveDetection::process()
+HipeStatus filter::algos::HOGLiveTrainer::process()
 {
 	data::Data data = _connexData.pop();
 
@@ -9,7 +9,7 @@ HipeStatus filter::algos::LiveDetection::process()
 	return OK;
 }
 
-void filter::algos::LiveDetection::dispose()
+void filter::algos::HOGLiveTrainer::dispose()
 {
 	_isThreadRunning = false;
 
@@ -21,9 +21,9 @@ void filter::algos::LiveDetection::dispose()
 	}
 }
 
-void filter::algos::LiveDetection::startFilterThread()
+void filter::algos::HOGLiveTrainer::startFilterThread()
 {
-	LiveDetection* pThis = this;
+	HOGLiveTrainer* pThis = this;
 	_pFilterThread = new boost::thread([pThis]
 	{
 		while (pThis->_isThreadRunning)
@@ -42,7 +42,7 @@ void filter::algos::LiveDetection::startFilterThread()
 	});
 }
 
-filter::data::Data filter::algos::LiveDetection::processLiveTraining(const data::Data& data)
+data::Data filter::algos::HOGLiveTrainer::processLiveTraining(const data::Data& data)
 {
 	return data::Data();
 }
