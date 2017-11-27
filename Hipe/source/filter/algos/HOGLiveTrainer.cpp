@@ -56,6 +56,9 @@ void filter::algos::HOGLiveTrainer::pushInputFrame(const data::ImageData& frame)
 
 void filter::algos::HOGLiveTrainer::skipFrames()
 {
+	if (skip_frames == 0)
+		return;
+
 	if (_countProcessedFrames % skip_frames == 0)
 	{
 		_countProcessedFrames = 0;

@@ -23,6 +23,7 @@ namespace filter
 			{
 				_isThreadRunning = true;
 				_pFilterThread = nullptr;
+				_countProcessedFrames = 0;
 
 				skip_frames = 0;
 
