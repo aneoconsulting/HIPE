@@ -19,7 +19,8 @@ namespace filter
 		class HOGLiveTrainer : public filter::IFilter
 		{
 			CONNECTOR(data::ImageData, data::DlibDetectorData);
-			REGISTER(HOGLiveTrainer, ()), _connexData(data::INDATA)
+
+			REGISTER(HOGLiveTrainer, ()), _connexData(data::WayData::INDATA)
 			{
 				_isThreadRunning = true;
 				_pFilterThread = nullptr;
@@ -38,7 +39,9 @@ namespace filter
 			core::queue::ConcurrentQueue<data::ImageData> _inputDataStack;			//<! [TODO] The queue containing the frames to process.
 			core::queue::ConcurrentQueue<data::DlibDetectorData> _outputDataStack;	//<! [TODO] The queue containing the results of all the detections to process
 
-			::data::hog_trainer::HogTrainer<::data::hog_trainer::image_scanner_type> _ht;
+			data::DlibDetectorData _outputData;
+
+			data::hog_trainer::HogTrainer<data::hog_trainer::image_scanner_type> _ht;
 
 			size_t _countProcessedFrames;
 
@@ -49,9 +52,9 @@ namespace filter
 		private:
 			void startFilterThread();
 
-			inline void pushInputFrame(const data::ImageData& frame);
-			inline void skipFrames();
-			inline data::DlibDetectorData popOutputData();
+			void pushInputFrame(const data::ImageData& frame);
+			void skipFrames();
+			data::DlibDetectorData popOutputData();
 		};
 		ADD_CLASS(HOGLiveTrainer, skip_frames);
 	}

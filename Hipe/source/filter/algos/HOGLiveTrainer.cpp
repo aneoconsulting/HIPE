@@ -30,7 +30,7 @@ void filter::algos::HOGLiveTrainer::startFilterThread()
 	HOGLiveTrainer* pThis = this;
 	_pFilterThread = new boost::thread([pThis]
 	{
-		data::DlibDetectorData output(pThis->_ht.get_detectors(), pThis->_ht.get_mutex());
+		//data::DlibDetectorData output(pThis->_ht.get_detectors(), pThis->_ht.get_mutex());
 
 		pThis->_ht.init();
 		while (pThis->_isThreadRunning)
@@ -40,6 +40,7 @@ void filter::algos::HOGLiveTrainer::startFilterThread()
 				continue;
 
 			pThis->_ht.process_frame(data.getMat());
+			data::DlibDetectorData output(pThis->_ht.get_detectors());
 
 			if (pThis->_outputDataStack.size() != 0)
 				pThis->_outputDataStack.clear();
@@ -70,10 +71,9 @@ void filter::algos::HOGLiveTrainer::skipFrames()
 
 data::DlibDetectorData filter::algos::HOGLiveTrainer::popOutputData()
 {
-	//data::DlibDetectorData output;
-	//const int waitTime = 30;
+	const int waitTime = 30;
 
-	//_outputDataStack.trypop_until(output, waitTime);
+	_outputDataStack.trypop_until(_outputData, waitTime);
 
-	return data::DlibDetectorData(_ht.get_detectors(), _ht.get_mutex());
+	return _outputData;
 }
