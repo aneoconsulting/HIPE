@@ -12,8 +12,6 @@
 #include <dlib/image_processing.h>
 #include <dlib/data_io.h>
 
-#include <boost/thread/shared_mutex.hpp>
-
 namespace data
 {
 	namespace hog_trainer
@@ -165,7 +163,6 @@ namespace data
 			std::vector<std::vector<dlib::rectangle>> boxes_train;
 
 			std::vector<dlib::object_detector<IMAGE_SCANNER_TYPE>> detectors;
-			boost::shared_mutex detectors_shared_mutex;
 			std::vector<bool> active;
 			bool toggle_active = false;
 
@@ -183,9 +180,6 @@ namespace data
 			void
 				move_get_detectors(std::vector<dlib::object_detector<IMAGE_SCANNER_TYPE>> target)
 			{
-				boost::upgrade_lock<boost::shared_mutex> lock(detectors_shared_mutex);
-				boost::upgrade_to_unique_lock<boost::shared_mutex> unique_lock(lock);
-
 				std::move(detectors.begin(), detectors.end(), std::back_inserter(target));
 				detectors.resize(0);
 			}
@@ -199,19 +193,6 @@ namespace data
 			{
 				return detectors;
 			}
-
-
-			/*!
-			Get a copy of a shared mutex.
-			*/
-			std::shared_ptr<boost::shared_mutex>
-				get_mutex()
-			{
-				std::shared_ptr<boost::shared_mutex> ptr(&detectors_shared_mutex);
-				//return std::shared_ptr<boost::shared_mutex>(detectors_shared_mutex);
-				return ptr;
-			}
-
 
 
 			/*!
@@ -468,9 +449,6 @@ namespace data
 			{
 				std::cout << "removing inactive detectors" << std::endl;
 
-				boost::upgrade_lock<boost::shared_mutex> lock(detectors_shared_mutex);
-				boost::upgrade_to_unique_lock<boost::shared_mutex> unique_lock(lock);
-
 				auto it1 = std::remove_if(
 					detectors.begin(),
 					detectors.end(),
@@ -478,8 +456,6 @@ namespace data
 				);
 				detectors.erase(it1, detectors.end());
 
-				//detectors_shared_mutex.unlock();
-				unique_lock.mutex()->unlock();
 
 				std::cout << "removing corresponding booleans" << std::endl;
 				auto it2 = std::remove_if(
@@ -535,13 +511,7 @@ namespace data
 				trainer.be_verbose();
 				trainer.set_epsilon(0.01);
 
-				boost::upgrade_lock<boost::shared_mutex> lock(detectors_shared_mutex);
-				boost::upgrade_to_unique_lock<boost::shared_mutex> unique_lock(lock);
-
 				detectors.push_back(trainer.train(images_train, boxes_train));
-
-				//detectors_shared_mutex.unlock();
-				unique_lock.mutex()->unlock();
 
 				active.push_back(true);
 
@@ -742,6 +712,8 @@ namespace data
 					break;
 				case 's':
 					toggle_active = !toggle_active;
+					break;
+				default:
 					break;
 				}
 			}
