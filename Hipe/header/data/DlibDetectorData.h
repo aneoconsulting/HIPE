@@ -17,8 +17,10 @@ namespace data
 		typedef dlib::object_detector<::data::hog_trainer::image_scanner_type> detector_type;
 
 	private:
-		std::shared_ptr<const std::vector<detector_type> > _detectors = nullptr;
-		std::shared_ptr<boost::shared_mutex> _mutex = nullptr;
+		//std::shared_ptr<const std::vector<detector_type> > _detectors = nullptr;
+		//std::shared_ptr<boost::shared_mutex> _mutex = nullptr;
+
+		std::vector<detector_type> _detectors;
 
 	protected:
 
@@ -51,21 +53,24 @@ namespace data
 		* \brief DlibDetectorData copy constructor
 		* \param right The DlibDetectorData to copy data from
 		*/
-		DlibDetectorData(const data::DlibDetectorData &right) : IOData(right._type), _detectors(right._detectors)
+		DlibDetectorData(const data::DlibDetectorData &right) : IOData(right._type)
 		{
 			data::Data::registerInstance(right._This);
 			_type = right.This_const()._type;
 			_decorate = right._decorate;
-			_mutex = right._mutex;
+			_detectors = right._detectors;
+			//_mutex = right._mutex;
 		}
 
-		DlibDetectorData(const std::vector<detector_type> & detectors, std::shared_ptr<boost::shared_mutex> mutex) : IOData(data::IODataType::DLIBDTCT), _detectors(&detectors)
+		//DlibDetectorData(const std::vector<detector_type> & detectors, std::shared_ptr<boost::shared_mutex> mutex) : IOData(data::IODataType::DLIBDTCT), _detectors(&detectors)
+		DlibDetectorData(const std::vector<detector_type> & detectors) : IOData(data::IODataType::DLIBDTCT)
 		{
 			data::Data::registerInstance(new DlibDetectorData(IOData::_Protection()));
 			//Data::registerInstance(new DlibDetectorData(_detectors, mutex));
 			This()._type = data::IODataType::DLIBDTCT;
-
+			This()._detectors = detectors;
 			_type = data::IODataType::DLIBDTCT;
+			_detectors = detectors;
 		}
 
 		virtual ~DlibDetectorData()

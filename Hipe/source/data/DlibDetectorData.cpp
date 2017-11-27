@@ -2,13 +2,13 @@
 
 const std::vector<data::DlibDetectorData::detector_type>& data::DlibDetectorData::detectors_const() const
 {
-	return *This_const()._detectors;
+	return This_const()._detectors;
 }
 
-std::shared_ptr<boost::shared_mutex> data::DlibDetectorData::mutex_ptr()
-{
-	return This()._mutex;
-}
+//std::shared_ptr<boost::shared_mutex> data::DlibDetectorData::mutex_ptr()
+//{
+//	return This()._mutex;
+//}
 
 data::DlibDetectorData& data::DlibDetectorData::operator=(const DlibDetectorData& left)
 {
