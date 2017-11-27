@@ -40,7 +40,7 @@ namespace filter
 				data::ImageData* image;
 				data::DlibDetectorData* detectors;
 
-				if (data1.getType() == !data::IODataType::IMGF)
+				if (data1.getType() == data::IODataType::IMGF)
 				{
 					image = static_cast<data::ImageData *>(&data1);
 					detectors = static_cast<data::DlibDetectorData *>(&data2);
