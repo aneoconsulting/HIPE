@@ -207,7 +207,7 @@ namespace data
 			std::shared_ptr<boost::shared_mutex>
 				get_mutex()
 			{
-				std::shared_ptr<boost::shared_mutex> ptr(&detectors_shared_mutex);
+				std::shared_ptr<boost::shared_mutex> ptr(&detectors_shared_mutex, [](boost::shared_mutex* ){ });
 				//return std::shared_ptr<boost::shared_mutex>(detectors_shared_mutex);
 				return ptr;
 			}

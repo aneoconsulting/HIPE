@@ -59,12 +59,13 @@ namespace data
 			_mutex = right._mutex;
 		}
 
-		DlibDetectorData(const std::vector<detector_type> & detectors, std::shared_ptr<boost::shared_mutex> mutex) : IOData(data::IODataType::DLIBDTCT), _detectors(&detectors)
+		DlibDetectorData(const std::vector<detector_type> & detectors, std::shared_ptr<boost::shared_mutex> mutex) : IOData(data::IODataType::DLIBDTCT), _detectors(&detectors, [](const std::vector<detector_type> *) {}), _mutex(mutex)
 		{
 			data::Data::registerInstance(new DlibDetectorData(IOData::_Protection()));
 			//Data::registerInstance(new DlibDetectorData(_detectors, mutex));
 			This()._type = data::IODataType::DLIBDTCT;
-
+			This()._detectors = _detectors;
+			This()._mutex = mutex;
 			_type = data::IODataType::DLIBDTCT;
 		}
 
