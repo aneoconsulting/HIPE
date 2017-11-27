@@ -12,7 +12,7 @@ namespace data
 	/**
 	* \brief DlibDetectorData is the data class used to handle dlib detectors. Uses Dlib.
 	*/
-	class DlibDetectorData : public data::IOData<data::Data, DlibDetectorData>
+	class DATA_EXPORT DlibDetectorData : public data::IOData<data::Data, DlibDetectorData>
 	{
 		typedef dlib::object_detector<::data::hog_trainer::image_scanner_type> detector_type;
 
@@ -79,35 +79,19 @@ namespace data
 		* \brief Accessor (const version) to the detectors container
 		* \return Returns a const reference to the detectors container.
 		*/
-		const std::vector<detector_type>& detectors_const() const
-		{
-			return *This_const()._detectors;
-		}
+		const std::vector<detector_type>& detectors_const() const;
 
 		/**
-		 * \brief Accessori to the object mutex
+		 * \brief Accessor to the object mutex
 		 * \return Returns a shared_tr to the object's mutex.
 		 */
-		std::shared_ptr<boost::shared_mutex> mutex_ptr()
-		{
-			return This()._mutex;
-		}
+		std::shared_ptr<boost::shared_mutex> mutex_ptr();
 
 		/**
 		* \brief DlibDetectorData assignment operator.
 		* \param left The DlibDetectorData oject to get the data from.
 		* \return A reference to the object.
 		*/
-		DlibDetectorData& operator=(const DlibDetectorData& left)
-		{
-			data::Data::registerInstance(left);
-
-			//_This = left._This;
-
-			_type = left._type;
-			_decorate = left._decorate;
-
-			return *this;
-		}
+		DlibDetectorData& operator=(const DlibDetectorData& left);
 	};
 }
