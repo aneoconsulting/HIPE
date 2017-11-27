@@ -30,7 +30,7 @@ namespace data
 		second.
 		*/
 		static
-		bool
+			bool
 			compare_contour_area(std::vector<cv::Point> const & a, std::vector<cv::Point> const & b)
 		{
 			return cv::contourArea(a) > cv::contourArea(b);
@@ -44,7 +44,7 @@ namespace data
 		*/
 		template <typename P>
 		static
-		void
+			void
 			contour_center(std::vector<cv::Point> const & cntr, P & point)
 		{
 			cv::Moments cntr_moments;
@@ -61,7 +61,7 @@ namespace data
 		@param image The grayscale output image.
 		*/
 		static
-		void
+			void
 			fhog_to_mat(dlib::object_detector<image_scanner_type> const & detector, cv::Mat & image)
 		{
 			dlib::matrix<unsigned char> fhog = dlib::draw_fhog(detector);
@@ -840,7 +840,7 @@ namespace data
 		public:
 			HogTrainerWithCamera(
 				int cp = 0,
-				unsigned char h = DEFAULT_HUE
+				unsigned char h = HogTrainer<IMAGE_SCANNER_TYPE>::DEFAULT_HUE
 			) :
 				HogTrainer<IMAGE_SCANNER_TYPE>{ h },
 				cam_prime{ cp }
@@ -862,15 +862,15 @@ namespace data
 				run()
 			{
 				cv::Mat frame;
-				init();
-				while (running)
+				this->init();
+				while (this->running)
 				{
 					if (!vc_prime.read(frame))
 					{
 						std::cerr << "Failed to read frame from capture device " << cam_prime << std::endl;
 						break;
 					}
-					process_frame(frame);
+					this->process_frame(frame);
 				}
 			}
 		};
