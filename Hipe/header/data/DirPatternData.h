@@ -73,7 +73,7 @@ namespace data
 				if (dataPattern.getType() == SEQIMGD)
 				{
 					pathIsDefined = true;
-					This().dir = dataPattern;
+					This().dir = static_cast<data::DirectoryImgData &>(dataPattern);
 
 					//This()._dirPath = static_cast<const DirectoryImgData&> (dir).DirectoryPath();
 				}
