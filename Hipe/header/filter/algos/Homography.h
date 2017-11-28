@@ -22,7 +22,7 @@ namespace filter
 
 			REGISTER(Homography, ()), _connexData(data::INDATA)
 			{
-				draw_matches = false;
+				draw_matches = true;
 				_debug = false;
 			}
 			REGISTER_P(bool, draw_matches);
