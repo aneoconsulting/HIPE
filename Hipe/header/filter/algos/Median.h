@@ -4,30 +4,24 @@
 #include <core/HipeStatus.h>
 #include "data/ImageData.h"
 
-
-
-
 namespace filter
 {
 	namespace algos
 	{
 
-		class Gaussian : public filter::IFilter
+		class Median : public filter::IFilter
 		{
 
-		
+
 			CONNECTOR(data::ImageData, data::ImageData);
 
-			REGISTER(Gaussian, ()), _connexData(data::INDATA)
+			REGISTER(Median, ()), _connexData(data::INDATA)
 			{
-				sigmaX = 1;
-				sigmaX = sigmaY;
-				kernelSize = -1;
+		
+				kernelSize = 3;
 
 			}
 
-			REGISTER_P(int, sigmaX);
-			REGISTER_P(int, sigmaY);
 			REGISTER_P(int, kernelSize);
 
 		public:
@@ -35,6 +29,6 @@ namespace filter
 
 		};
 
-		ADD_CLASS(Gaussian, sigmaX, sigmaY, kernelSize);
+		ADD_CLASS(Median, kernelSize);
 	}
 }
