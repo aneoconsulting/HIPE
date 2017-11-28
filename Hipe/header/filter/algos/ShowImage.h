@@ -34,6 +34,8 @@ namespace filter
 			{
 				wait = false;
 				wait_ms = 0;
+				sequential = false;
+				dedicated_window = true;
 			}
 
 			~ShowImage()
@@ -44,6 +46,8 @@ namespace filter
 			REGISTER_P(int, waitkey);
 			REGISTER_P(bool, wait);
 			REGISTER_P(int, wait_ms);
+			REGISTER_P(bool, sequential);	// Wait for input after each image is shown
+			REGISTER_P(bool, dedicated_window); // Should the images be shown in a unique window or in different ones?
 
 		private:
 			int count = 0;
@@ -62,24 +66,21 @@ namespace filter
 					//Resize all images coming from the same parent
 					for (auto &myImage : images.Array())
 					{
-						std::string windowName = _name + "_" + std::to_string(++count);
+						std::string windowName = _name;
+
+						// Here, append image index if multiple windows should be used
+						if (dedicated_window) windowName += "_" + std::to_string(++count);
+
 						cv::namedWindow(windowName);
+						cv::imshow(windowName, myImage);
 
-						::cv::imshow(windowName, myImage);
-						char c;
-
-						if (wait_ms <= 0 && wait)
-						{
-							std::cout << "Waiting for key..." << std::endl;
-							cv::waitKey(0);
-						}
-						else if (wait_ms > 0)
-						{
-							cv::waitKey(wait_ms);
-						}
+						// Here, only wait for input if the user want to (sequential mode)
+						if (sequential) waitKey();
 					}
-				}
 
+					// Here, only wait for input when all the images are shown (parallel mode)
+					if (!sequential) waitKey();
+				}
 
 				return OK;
 			}
@@ -88,14 +89,39 @@ namespace filter
 			{
 				Model::dispose();
 
-				while (count > 0)
+				
+				// Destroy each window if in dedicated mode
+				if (dedicated_window)
 				{
-					std::string windowName = _name + "_" + std::to_string(count--);
+					while (count > 0)
+					{
+						std::string windowName = _name;
+						windowName += "_" + std::to_string(count--);
+						cv::destroyWindow(windowName);
+					}
+				}
+				// Destroy unique window if not
+				else
+				{
+					std::string windowName = _name;
 					cv::destroyWindow(windowName);
+				}
+			}
+
+			void waitKey()
+			{
+				if (wait_ms <= 0 && wait)
+				{
+					std::cout << "Waiting for key..." << std::endl;
+					cv::waitKey(0);
+				}
+				else if (wait_ms > 0)
+				{
+					cv::waitKey(wait_ms);
 				}
 			}
 		};
 
-		ADD_CLASS(ShowImage, waitkey, wait, wait_ms);
+		ADD_CLASS(ShowImage, waitkey, wait, wait_ms, sequential, dedicated_window);
 	}
 }
