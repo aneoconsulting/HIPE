@@ -8,8 +8,17 @@ namespace data
 		bool crop_found = false;
 		bool source_found = false;
 
-		if (left.size() != 2)
-			throw HipeException("There more data in the vector than needed");
+		const int awaitedDataCount = 2;
+		if (left.size() != awaitedDataCount)
+		{
+			std::stringstream errorMessage;
+			errorMessage << "Error in PatternData - Incorrect input data count to create a PatternData object. ";
+			errorMessage << "Expected " << awaitedDataCount << ", found " << left.size();
+			errorMessage << std::endl;
+
+			throw HipeException(errorMessage.str());
+		}
+
 		for (auto dataPattern : left)
 		{
 			if (dataPattern.getType() == SQR_CROP)
@@ -18,7 +27,7 @@ namespace data
 				This()._squareCrop = static_cast<const SquareCrop&>(dataPattern);
 			}
 
-			if (isInputSource(dataPattern.getType()))
+			else if (isInputSource(dataPattern.getType()))
 			{
 				source_found = true;
 				This()._inputSource = dataPattern;
@@ -28,7 +37,7 @@ namespace data
 		if (crop_found == false || source_found == false)
 		{
 			std::stringstream errorMsg;
-			errorMsg << "One or two Data aren't not found to build patternData\n";
+			errorMsg << "Some data were not found to build patternData\n";
 			errorMsg << "Crop found   : " << (crop_found ? " OK " : "FAIL");
 			errorMsg << "Source found : " << (source_found ? " OK " : "FAIL");
 			throw HipeException();
@@ -77,7 +86,7 @@ namespace data
 
 	bool PatternData::isVideoSource(IODataType dataType)
 	{
-		return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);
+		return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isVideo(dataType);
 	}
 
 	bool PatternData::isImageSource(IODataType dataType)
@@ -87,7 +96,7 @@ namespace data
 
 	bool PatternData::isInputSource(IODataType dataType)
 	{
-		return DataTypeMapper::isImage(dataType) || DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);;
+		return isVideoSource(dataType) || isImageSource(dataType);
 	}
 
 	ImageData PatternData::imageRequest() const
@@ -122,7 +131,8 @@ namespace data
 
 	Data PatternData::newFrame()
 	{
-		if (isImageSource(This_const()._inputSource.getType()))
+		auto sourceType = This_const()._inputSource.getType();
+		if (isImageSource(sourceType))
 		{
 			ImageArrayData& images = static_cast<ImageArrayData &>(This()._inputSource);
 
@@ -143,9 +153,11 @@ namespace data
 
 			return static_cast<Data>(*this);
 		}
-		else if (isVideoSource(This()._inputSource.getType()))
+		else if (isVideoSource(sourceType))
 		{
-			VideoData& video = static_cast<VideoData &>(This()._inputSource);
+			if (sourceType != VIDF) throw HipeException("Error in PatternData::newFrame - Only video files (VIDF data types) are yet handled as input source.");
+
+			VideoData<FileVideoInput>& video = static_cast<VideoData<FileVideoInput> &>(This()._inputSource);
 			Data res = video.newFrame();
 			if (isImageSource(res.getType()) == false)
 				throw HipeException("Something is going wrong with patternData and Video source ? ");
