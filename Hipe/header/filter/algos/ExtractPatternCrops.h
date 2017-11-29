@@ -39,7 +39,8 @@ namespace filter
 					data::ImageArrayData output;
 					for (auto & crop : crops)
 					{
-						output << crop;
+						// Copy data to match INDATA intended mode
+						output << crop.clone();
 					}
 
 					_connexData.push(output);
