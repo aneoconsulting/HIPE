@@ -118,6 +118,7 @@ data::ShapeData filter::algos::HOGLiveDetector::detect(const std::vector<dlib::o
 
 void filter::algos::HOGLiveDetector::pushInputDetector(const data::DlibDetectorData& detector)
 {
+	_inputDataStack.clear();
 	_inputDataStack.push(detector);
 }
 
