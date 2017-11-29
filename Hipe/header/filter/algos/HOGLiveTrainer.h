@@ -26,7 +26,7 @@ namespace filter
 				_pFilterThread = nullptr;
 				_countProcessedFrames = 0;
 
-				skip_frames = 0;
+				skip_frames = 4;
 
 				startFilterThread();
 			}
