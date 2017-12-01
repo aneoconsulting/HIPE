@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cmath>
 #include <string>
+#include <chrono>
 
 #include <opencv2/opencv.hpp>
 
@@ -134,8 +135,8 @@ namespace data
 			unsigned char hue = DEFAULT_HUE;
 			unsigned char center_h = 0, center_s = 0, center_v = 0;
 
-			double conf_interval = 2;
-			clock_t action_begin{ 0 };
+			double configuration_interval = 5;
+			std::chrono::system_clock::time_point action_begin;
 
 			bool running = false;
 			bool calibrated = false;
@@ -150,7 +151,6 @@ namespace data
 			int vp_offset_y = 175;
 
 			bool vp_conf = false;
-
 			bool pos_conf = false;
 
 			std::map<const char *, cv::Mat> windows;
@@ -158,6 +158,10 @@ namespace data
 
 			bool detect = false;
 			bool train = false;
+			//! Interval to limit rate of training images
+			double training_image_interval = 0.5;
+			unsigned int n_training_threads = 4;
+			double fhog_epsilon = 0.01;
 
 			dlib::array<dlib::array2d<unsigned char>> images_train;
 			std::vector<std::vector<dlib::rectangle>> boxes_train;
@@ -195,6 +199,89 @@ namespace data
 			}
 
 
+
+			/*!
+			@brief Get the active detectors.
+			*/
+			void
+				get_active_detectors(std::vector<dlib::object_detector<IMAGE_SCANNER_TYPE>> & active_detectors)
+			{
+				for (size_t i = 0; i < detectors.size(); ++i)
+				{
+					if (active[i])
+					{
+						active_detectors.push_back(detectors[i]);
+					}
+				}
+			}
+
+
+
+			/*!
+			@brief Return the elapsed time since the action begin, in seconds.
+			*/
+			double
+				get_elapsed_time()
+			{
+				std::chrono::system_clock::time_point t_now = std::chrono::system_clock::now();
+				auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(t_now - action_begin);
+				return dt.count() / 1000.;
+			}
+
+
+			/*!
+			@brief Reset the action timer.
+			*/
+			void
+			reset_action_timer()
+			{
+				action_begin = std::chrono::system_clock::now();
+			}
+
+
+			/*!
+			@brief Set the number of training images per second.
+			*/
+			void
+			set_training_images_per_second(unsigned int ips)
+			{
+				training_image_interval = 1. / static_cast<double>(ips);
+			}
+
+
+			/*!
+			@brief Set the number of training images per second.
+			@param n The number of threads to use for fhog training.
+			*/
+			void
+			set_number_training_threads(unsigned int n)
+			{
+				n_training_threads = n;
+			}
+
+
+			/*!
+			@brief Set the epsilon value for the fhog trainer.
+			@param eps The value to set.
+			*/
+			void
+			set_fhog_epsilon(double eps)
+			{
+				fhog_epsilon = eps;
+			}
+
+
+			/*!
+			@brief Set the configuration interval.
+			@param eps The interval, in seconds.
+			*/
+			void
+			set_configuration_interval(double secs)
+			{
+				configuration_interval = secs;
+			}
+
+
 			/*!
 			@brief
 			Set the min and max HSV ranges for filtering the target color. This
@@ -202,7 +289,7 @@ namespace data
 			action.
 			*/
 			void
-				set_hsv_ranges()
+			set_hsv_ranges()
 			{
 				hsv_min[1] = (center_s > DELTA_S ? center_s - DELTA_S : 0);
 				hsv_max[1] = (255 - DELTA_S > center_s ? center_s + DELTA_S : 255);
@@ -217,7 +304,7 @@ namespace data
 			Calibrate the target color based on the center pixel of the last frame.
 			*/
 			void
-				calibrate()
+			calibrate()
 			{
 				calibration_pixel = center_pixel;
 				hue = center_h;
@@ -321,7 +408,14 @@ namespace data
 				}
 				else if (train || images_train.size())
 				{
-					cv::circle(display, { 20,20 }, 10, { 0,0,255 }, -2);
+					cv::Scalar color {0,0,255};
+					cv::circle(display, { 20,20 }, 10, color, -2);
+
+					int scale = 2, thickness = 2, baseline, x = 40, y=20;
+					std::string count =  std::to_string(images_train.size());
+					cv::Size textsize = cv::getTextSize(count, CV_FONT_HERSHEY_PLAIN, scale, thickness, &baseline);
+					y += textsize.height / 2;
+					cv::putText(display, count, {x,y}, CV_FONT_HERSHEY_PLAIN, scale, color, thickness);
 				}
 				if (toggle_active)
 				{
@@ -477,11 +571,10 @@ namespace data
 			void
 				collect_training_images(cv::Mat const & frame)
 			{
-				clock_t now = std::clock();
-				double elapsed_sec = (double)(now - action_begin) / CLOCKS_PER_SEC;
-				if (elapsed_sec >= 0.2)
+				double elapsed_sec = get_elapsed_time();
+				if (elapsed_sec >= training_image_interval)
 				{
-					action_begin = now;
+					reset_action_timer();
 					dlib::array2d<unsigned char> dlib_image;
 					dlib::assign_image(dlib_image, dlib::cv_image<dlib::bgr_pixel>(frame));
 					images_train.push_back(dlib_image);
@@ -506,10 +599,10 @@ namespace data
 				image_scanner_type scanner;
 				scanner.set_detection_window_size(viewports[0].width, viewports[0].height);
 				dlib::structural_object_detection_trainer<image_scanner_type> trainer(scanner);
-				trainer.set_num_threads(4);
+				trainer.set_num_threads(n_training_threads);
 				trainer.set_c(1);
 				trainer.be_verbose();
-				trainer.set_epsilon(0.01);
+				trainer.set_epsilon(fhog_epsilon);
 
 				detectors.push_back(trainer.train(images_train, boxes_train));
 
@@ -526,16 +619,23 @@ namespace data
 			/*!
 			@brief Draw a shrinking bar to indicate time remaining.
 			@param display The image on which to draw the bar.
+			@return True if the timer was drawn (i.e. the timer is still running).
 			*/
 			bool
 				draw_timer(cv::Mat const & display)
 			{
-				clock_t now = std::clock();
-				double remaining_secs = conf_interval - ((double)(now - action_begin) / CLOCKS_PER_SEC);
-				double fraction_remaining = std::fmax(remaining_secs / conf_interval, 0);
-				int bar_width = fraction_remaining * (display.cols - 1);
-				cv::rectangle(display, { 0,display.rows - 20 }, { bar_width, display.rows }, { 0,128,255 }, -1);
-				return (remaining_secs <= 0);
+				double remaining_secs = configuration_interval - get_elapsed_time();
+				if (remaining_secs > 0)
+				{
+					double fraction_remaining = std::fmax(remaining_secs / configuration_interval, 0);
+					int bar_width = fraction_remaining * (display.cols - 1);
+					cv::rectangle(display, { 0,display.rows - 20 }, { bar_width, display.rows }, { 0,128,255 }, -1);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 
 
@@ -547,7 +647,7 @@ namespace data
 			The image on which to draw the viewport and reference points.
 			*/
 			void
-				configure_viewport(cv::Mat & display)
+				configure_viewport_size_from_image(cv::Mat & display)
 			{
 				if (cntrs.size() > 1)
 				{
@@ -570,7 +670,7 @@ namespace data
 					// 				int height = std::abs(y_b-y_a);
 					// 				cv::rectangle(display, {left, bottom}, {left+width, bottom+height}, {0,255,0}, 2);
 
-					if (draw_timer(display))
+					if (! draw_timer(display))
 					{
 						viewports[0].width = box.width;
 						viewports[0].height = box.height;
@@ -589,7 +689,7 @@ namespace data
 			The image on which to draw the viewport and reference points.
 			*/
 			void
-				configure_offset(cv::Mat const & display)
+				configure_viewport_offset_from_image(cv::Mat const & display)
 			{
 				if (cntrs.size() > 1)
 				{
@@ -602,13 +702,30 @@ namespace data
 					cv::circle(display, pa, 50, { 0,255,0 }, -2);
 					cv::circle(display, pb, 5, { 0,128,255 }, 2);
 
-					if (draw_timer(display))
+					if (! draw_timer(display))
 					{
 						vp_offset_x = pb.x - pa.x;
 						vp_offset_y = pb.y - pa.y;
 						pos_conf = false;
 					}
 				}
+			}
+
+
+			/*!
+			@brief Configure viewport from parameters.
+			@param width The viewport width.
+			@param height The viewport height.
+			@param x The x offset.
+			@param y The y offset.
+			*/
+			void
+				configure_viewport_from_parameters(int width, int height, int x, int y)
+			{
+				viewports[0].width = width;
+				viewports[0].height = height;
+				vp_offset_x = x;
+				vp_offset_y = y;
 			}
 
 
@@ -690,18 +807,18 @@ namespace data
 					break;
 				case 'v':
 					vp_conf = true;
-					action_begin = std::clock();
+					reset_action_timer();
 					break;
 				case 'a':
 					set_min_cntr_area = true;
 					break;
 				case 'p':
 					pos_conf = true;
-					action_begin = std::clock();
+					reset_action_timer();
 					break;
 				case 't':
 					train = !train;
-					action_begin = std::clock();
+					reset_action_timer();
 					break;
 				case 'd':
 					detect = !detect;
@@ -746,6 +863,8 @@ namespace data
 				cv::Mat mask, display;
 				std::vector<std::vector<cv::Point>> cntrs;
 
+				// Mirror image for natural interaction.
+				cv::flip(frame, frame, 1);
 				display = frame.clone();
 
 				x_center = frame.cols / 2;
@@ -756,7 +875,7 @@ namespace data
 
 				draw_indicators(display);
 
-				windows["frame"] = display;
+				windows["training"] = display;
 				windows["mask"] = mask;
 
 				if (detect)
@@ -775,11 +894,11 @@ namespace data
 				else
 					if (vp_conf)
 					{
-						configure_viewport(display);
+						configure_viewport_size_from_image(display);
 					}
 					else if (pos_conf)
 					{
-						configure_offset(display);
+						configure_viewport_offset_from_image(display);
 					}
 					else if (calibrated)
 					{
@@ -788,8 +907,6 @@ namespace data
 
 
 
-				// Mirror image for natural interaction.
-				cv::flip(display, display, 1);
 				draw();
 				handle_key(cv::waitKey(1) & 0xFF);
 			}
