@@ -40,17 +40,18 @@ void filter::algos::HOGLiveTrainer::startFilterThread()
 		data::DlibDetectorData output;
 		data::ImageData data;
 
+		std::vector<dlib::object_detector<data::hog_trainer::image_scanner_type> > activeDetectors;
+
 		while (pThis->_isThreadRunning)
 		{
-			if (!pThis->_inputDataStack.trypop_until(data, 30))		// Try to pop during 30s
-				continue;
+			if (pThis->_inputDataStack.trypop_until(data, 30))		// Try to pop during 30s
+			{
+				pThis->_ht.process_frame(data.getMat());
+				activeDetectors.clear();
+				pThis->_ht.get_active_detectors(activeDetectors);
+			}
 
-			pThis->_ht.process_frame(data.getMat());
-
-			//output.detectors().clear();
-			//pThis->_ht.get_active_detectors(output.detectors());
-
-			output.detectors() = pThis->_ht.get_detectors();
+			output.detectors() = activeDetectors;
 
 			if (pThis->_outputDataStack.size() != 0)
 				pThis->_outputDataStack.clear();
