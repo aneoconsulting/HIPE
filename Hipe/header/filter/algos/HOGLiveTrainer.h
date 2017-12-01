@@ -27,10 +27,28 @@ namespace filter
 				_countProcessedFrames = 0;
 
 				skip_frames = 4;
+				
+				training_images_frequency = 2;
+				configuration_interval = 5;
+				viewport_size_x = 150;
+				viewport_size_y = 150;
+				viewport_offset_x = 0;
+				viewport_offset_y = 175;
+				fhog_epsilon = 0.01;
+				training_threads = 2;
 
 				startFilterThread();
 			}
+
 			REGISTER_P(int, skip_frames);
+			REGISTER_P(int, training_images_frequency);
+			REGISTER_P(double, configuration_interval);
+			REGISTER_P(int, viewport_size_x);
+			REGISTER_P(int, viewport_size_y);
+			REGISTER_P(int, viewport_offset_x);
+			REGISTER_P(int, viewport_offset_y);
+			REGISTER_P(double, fhog_epsilon);
+			REGISTER_P(int, training_threads);
 
 		private:
 			std::atomic<bool> _isThreadRunning;								//<! boolean to know if the main thread of the filter is already running
@@ -56,6 +74,6 @@ namespace filter
 			void skipFrames();
 			data::DlibDetectorData popOutputData();
 		};
-		ADD_CLASS(HOGLiveTrainer, skip_frames);
+		ADD_CLASS(HOGLiveTrainer, skip_frames, training_images_frequency, configuration_interval, viewport_size_x, viewport_size_y, viewport_offset_x, viewport_offset_y, fhog_epsilon, training_threads);
 	}
 }

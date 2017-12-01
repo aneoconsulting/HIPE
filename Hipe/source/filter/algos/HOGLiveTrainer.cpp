@@ -7,8 +7,7 @@ HipeStatus filter::algos::HOGLiveTrainer::process()
 	skipFrames();
 	pushInputFrame(data);
 
-	data::DlibDetectorData output = popOutputData();
-	_connexData.push(output);
+	_connexData.push(popOutputData());
 
 	return OK;
 }
@@ -30,20 +29,32 @@ void filter::algos::HOGLiveTrainer::startFilterThread()
 	HOGLiveTrainer* pThis = this;
 	_pFilterThread = new boost::thread([pThis]
 	{
-		//data::DlibDetectorData output(pThis->_ht.get_detectors(), pThis->_ht.get_mutex());
+		pThis->_ht.set_training_images_per_second(pThis->training_images_frequency);
+		pThis->_ht.set_number_training_threads(pThis->training_threads);
+		pThis->_ht.set_fhog_epsilon(pThis->fhog_epsilon);
+		pThis->_ht.set_configuration_interval(pThis->configuration_interval);
+		pThis->_ht.configure_viewport_from_parameters(pThis->viewport_size_x, pThis->viewport_size_y, pThis->viewport_offset_x, pThis->viewport_offset_y);
 
 		pThis->_ht.init();
+
+		data::DlibDetectorData output;
+		data::ImageData data;
+
 		while (pThis->_isThreadRunning)
 		{
-			data::ImageData data;
 			if (!pThis->_inputDataStack.trypop_until(data, 30))		// Try to pop during 30s
 				continue;
 
 			pThis->_ht.process_frame(data.getMat());
-			data::DlibDetectorData output(pThis->_ht.get_detectors());
+
+			//output.detectors().clear();
+			//pThis->_ht.get_active_detectors(output.detectors());
+
+			output.detectors() = pThis->_ht.get_detectors();
 
 			if (pThis->_outputDataStack.size() != 0)
 				pThis->_outputDataStack.clear();
+
 			pThis->_outputDataStack.push(output);
 		}
 	});
@@ -51,7 +62,8 @@ void filter::algos::HOGLiveTrainer::startFilterThread()
 
 void filter::algos::HOGLiveTrainer::pushInputFrame(const data::ImageData& frame)
 {
-	_inputDataStack.push(frame);
+	data::ImageData frameCopy(frame.getMat().clone());
+	_inputDataStack.push(frameCopy);
 	++_countProcessedFrames;
 }
 
