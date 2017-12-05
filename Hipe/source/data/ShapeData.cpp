@@ -66,6 +66,18 @@ namespace data
 		return ret._circlesArray;
 	}
 
+	const std::vector<four_points>& ShapeData::QuadrilatereArray_const() const
+	{
+		const ShapeData &ret = This_const();
+		return ret._quadrilatere;
+	}
+
+	std::vector<four_points>& ShapeData::QuadrilatereArray()
+	{
+		ShapeData &ret = This();
+		return ret._quadrilatere;
+	}
+
 
 	/**
 	* \brief Add a point to the points container.
@@ -133,14 +145,18 @@ namespace data
 		return *this;
 	}
 
+	ShapeData& ShapeData::operator<<(const std::vector<four_points>& quads)
+	{
+		This()._quadrilatere.insert(This()._quadrilatere.end(), quads.begin(), quads.end());
+		return *this;
+	}
+
+	bool ShapeData::empty() const
+	{
+		return (This_const()._pointsArray.empty() && This_const()._circlesArray.empty() && This_const()._rectsArray.empty() && This_const()._quadrilatere.empty());
+	}
 
 
-	/**
-	* \todo
-	* \brief ShapeData assignment operator
-	* \param left The ShapeData oject to get the data from
-	* \return A reference to the object
-	*/
 	ShapeData& ShapeData::operator=(ShapeData& left)
 	{
 		_This = left._This;
@@ -151,26 +167,28 @@ namespace data
 	}
 
 
-	/**
-	* \brief Copy the data of the object to another one
-	* \param left The other object where to copy the data to. Its current data will not be overwritten
-	*/
 	void ShapeData::copyTo(ShapeData& left) const
 	{
-		left._circlesArray.clear();
-		left._pointsArray.clear();
-		left._rectsArray.clear();
+		left.This()._circlesArray.clear();
+		left.This()._pointsArray.clear();
+		left.This()._rectsArray.clear();
+		left.This()._quadrilatere.clear();
+
 		for (auto circle : CirclesArray_const())
 		{
-			left._circlesArray.push_back(circle);
+			left.This()._circlesArray.push_back(circle);
 		}
 		for (auto point : PointsArray_const())
 		{
-			left._pointsArray.push_back(point);
+			left.This()._pointsArray.push_back(point);
 		}
 		for (auto rect : RectsArray_const())
 		{
-			left._rectsArray.push_back(rect);
+			left.This()._rectsArray.push_back(rect);
+		}
+		for (auto quad : QuadrilatereArray_const())
+		{
+			left.This()._quadrilatere.push_back(quad);
 		}
 	}
 }
