@@ -1,16 +1,36 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-SET(HIPE_EXTERNAL "HIPE_EXTERNAL-NOT_FOUND" CACHE PATH "USER VARIABLE for external lib")
-if (EXISTS "$ENV{HIPE_EXTERNAL}") 
-	 
-	SET(HIPE_EXTERNAL "$ENV{HIPE_EXTERNAL}")
-else (EXISTS "$ENV{HIPE_EXTERNAL}")
-	 if("${HIPE_EXTERNAL}" MATCHES "HIPE_EXTERNAL-NOT_FOUND") 
-		message(FATAL_ERROR "Could not find HIPE_EXTERNAL variable. Please set it locally or by environement variable") 
-	endif()
-endif(EXISTS "$ENV{HIPE_EXTERNAL}")
+# Check if HIPE_EXTERNAL has been set via the command-line via
+#
+# -DHIPE_EXTERNAL=<path>
+#
+# If not, check if the environment variable of the same name has been set and
+# use that instead. If neither has been set, raise a fatal error.
 
-SET(Hipe_external "${HIPE_EXTERNAL}" CACHE PATH "ROOT of external")
+# Unset via command-line.
+IF (NOT DEFINED HIPE_EXTERNAL)
+	# Set via environment variable.
+	IF (DEFINED ENV{HIPE_EXTERNAL})
+		SET (HIPE_EXTERNAL "$ENV{HIPE_EXTERNAL}")
+	# Unset via environment variable.
+	ELSE (DEFINED ENV{HIPE_EXTERNAL})
+		MESSAGE(FATAL_ERROR "Could not find \"HIPE_EXTERNAL\". Please set it locally or by environment variable.")
+	ENDIF (DEFINED ENV{HIPE_EXTERNAL})
+ENDIF (NOT DEFINED HIPE_EXTERNAL)
+
+# Make sure that it is an absolute path.
+GET_FILENAME_COMPONENT(HIPE_EXTERNAL "${HIPE_EXTERNAL}" ABSOLUTE)
+
+# Inform the user which value was used.
+MESSAGE(STATUS "HIPE_EXTERNAL : ${HIPE_EXTERNAL}")
+
+# Make sure HIPE_EXTERNAL exists.
+IF (NOT EXISTS "${HIPE_EXTERNAL}")
+	MESSAGE(FATAL_ERROR "${HIPE_EXTERNAL} does not exist")
+ELSEIF (NOT IS_DIRECTORY "${HIPE_EXTERNAL}")
+	MESSAGE(FATAL_ERROR "${HIPE_EXTERNAL} is not a directory")
+ENDIF (NOT EXISTS "${HIPE_EXTERNAL}")
+
 
 
 if (WIN32)
@@ -25,19 +45,19 @@ SET(Boost_INCLUDE_DIR "${Boost_DIR}"  CACHE PATH "Boost_INCLUDE_DIR" FORCE )
 SET(BOOST_LIBRARYDIR "${Boost_DIR}/lib64-msvc-14.0"  CACHE PATH "BOOST_LIBRARYDIR" FORCE )
 SET(BOOST_ROOT "${Boost_DIR}/"  CACHE PATH "BOOST_ROOT" FORCE )
 
-SET(OpenCV_DIR "${Hipe_external}/${HIPE_PLATFORM}/opencv/"  CACHE PATH "OpenCV Directory" FORCE )
+	SET(OpenCV_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/opencv/"  CACHE PATH "OpenCV Directory" FORCE)
 
-SET(x264_DIR "${Hipe_external}/${HIPE_PLATFORM}/x264-devel-${HIPE_PLATFORM}/" CACHE PATH "x264" FORCE )
+	SET(x264_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/x264-devel-${HIPE_PLATFORM}/" CACHE PATH "x264" FORCE)
 
-SET(LIVE_DIR "${Hipe_external}/${HIPE_PLATFORM}/live555/install"  CACHE PATH "Live_DIR" FORCE )
+	SET(LIVE_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/live555/install"  CACHE PATH "Live_DIR" FORCE)
 
-SET(FFMPEG_DIR "${Hipe_external}/${HIPE_PLATFORM}/ffmpeg"  CACHE PATH "FFMPEG_LIBRARYDIR" FORCE )
+	SET(FFMPEG_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/ffmpeg"  CACHE PATH "FFMPEG_LIBRARYDIR" FORCE)
 
-SET(SOURCEY_DIR "${Hipe_external}/${HIPE_PLATFORM}/libsourcey"  CACHE PATH "SOURCEY_LIBRARYDIR" FORCE )
+	SET(SOURCEY_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/libsourcey"  CACHE PATH "SOURCEY_LIBRARYDIR" FORCE)
 
-SET(WEBRTC_DIR "${Hipe_external}/${HIPE_PLATFORM}/webrtc"  CACHE PATH "SOURCEY_LIBRARYDIR" FORCE )
+	SET(WEBRTC_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/webrtc"  CACHE PATH "SOURCEY_LIBRARYDIR" FORCE)
 
-SET(UV_DIR "${Hipe_external}/${HIPE_PLATFORM}/libuv"  CACHE PATH "LIBUV_LIBRARYDIR" FORCE )
+	SET(UV_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/libuv"  CACHE PATH "LIBUV_LIBRARYDIR" FORCE)
 
 
 SET(DLIB_DIR "${Hipe_external}/${HIPE_PLATFORM}/dlib/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE )
@@ -45,9 +65,9 @@ SET(PYTHON27_DIR "${Hipe_external}/${HIPE_PLATFORM}/python27/"  CACHE PATH "PYTH
 
 SET(YOLOV2_DIR "${Hipe_external}/${HIPE_PLATFORM}/yolov2/"  CACHE PATH "YOLOV2_LIBRARYDIR" FORCE )
 
-SET(USE_DLIB On  CACHE bool "Activate Dlib library" FORCE )
+	SET(USE_DLIB On  CACHE bool "Activate Dlib library" FORCE)
 
-set( OpenBLAS_DIR "${${Hipe_external}/${HIPE_PLATFORM}}/OpenBLAS/" )
+	set( OpenBLAS_DIR "${${HIPE_EXTERNAL}/${HIPE_PLATFORM}}/OpenBLAS/")
 
 else()
 
@@ -57,13 +77,14 @@ SET(Boost_INCLUDE_DIR "${Boost_DIR}/include"  CACHE PATH "Boost_INCLUDE_DIR" FOR
 SET(BOOST_LIBRARYDIR "${Boost_DIR}/lib/"  CACHE PATH "BOOST_LIBRARYDIR" FORCE )
 SET(BOOST_ROOT "${Boost_DIR}/"  CACHE PATH "BOOST_ROOT" FORCE )
 
-SET(OpenCV_DIR "${Hipe_external}/${HIPE_PLATFORM}/share/OpenCV")
+	SET(Boost_INCLUDE_DIR "${Boost_DIR}/include"  CACHE PATH "Boost_INCLUDE_DIR" FORCE)
+	SET(BOOST_LIBRARYDIR "${Boost_DIR}/lib/"  CACHE PATH "BOOST_LIBRARYDIR" FORCE)
 
-SET(x264_DIR "${Hipe_external}/${HIPE_PLATFORM}/" CACHE PATH "x264" FORCE )
+	SET(OpenCV_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/share/OpenCV" CACHE PATH "OpenCV")
 
-SET(LIVE_DIR "${Hipe_external}/${HIPE_PLATFORM}/"  CACHE PATH "Live_DIR" FORCE )
+	SET(x264_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/" CACHE PATH "x264")
 
-SET(FFMPEG_DIR "${Hipe_external}/${HIPE_PLATFORM}/"  CACHE PATH "FFMPEG_LIBRARYDIR" FORCE )
+	SET(LIVE_DIR "${HIPE_EXTERNAL}/${HIPE_PLATFORM}/"  CACHE PATH "Live_DIR")
 
 SET(DLIB_DIR "${Hipe_external}/${HIPE_PLATFORM}/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE )
 SET(PYTHON27_DIR "${Hipe_external}/${HIPE_PLATFORM}/python27/"  CACHE PATH "PYTHON_LIBRARYDIR" FORCE )

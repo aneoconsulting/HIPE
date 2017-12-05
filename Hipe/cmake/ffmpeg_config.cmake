@@ -18,13 +18,13 @@ set(_lib_list "")
 
 if (WIN32)
 file(
-    GLOB_RECURSE _lib_list 
+    GLOB_RECURSE _lib_list
     LIST_DIRECTORIES false
     "${lib_path}/*.lib"
 )
 else()
 #file(
-#    GLOB_RECURSE _lib_list 
+#    GLOB_RECURSE _lib_list
 #    LIST_DIRECTORIES false
 #    "${lib_path}/*.a"
 #)
@@ -35,7 +35,7 @@ set(_lib_list
 		${lib_path}/libavfilter.so
 		${lib_path}/libavformat.so
 		${lib_path}/libavutil.so
-		${lib_path}/libboost_wave.so
+		libboost_wave.so
 		)
 endif()
 

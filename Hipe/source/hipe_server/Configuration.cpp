@@ -47,13 +47,13 @@ namespace hipe_server
 		bpo::options_description allCat("Available options");
 		allCat.add(generalCat).add(configCat);
 
-		// Regroup all categories options that should be displayed to the user 
+		// Regroup all categories options that should be displayed to the user
 		bpo::options_description visibleCat("User available options");
 		visibleCat.add(generalCat).add(configCat);
 
 		// Parse command line
 		bpo::variables_map vm;
-		bpo::store(bpo::parse_command_line(argc, argv, allCat), vm);
+// 		bpo::store(bpo::parse_command_line(argc, argv, allCat), vm);
 		bpo::notify(vm);
 
 		// Handle custom options

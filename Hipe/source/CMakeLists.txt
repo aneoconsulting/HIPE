@@ -1,10 +1,10 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
+# add_subdirectory inherits parent scope so there is no need to re-include this.
+# include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
 
 
-if (USE_DLIB)
-  message(STATUS "UNIX IS DETECTED")
+if(USE_DLIB)
   add_definitions(-DUSE_DLIB)
   message(STATUS "Dlib : ON")
 else()
@@ -13,17 +13,19 @@ endif()
 
 
 if (WIN32)
-add_compile_options(/wd4820 /wd4668 /wd4619 /wd4626 /wd5031 /wd4365 /wd4710)
+  add_compile_options(/wd4820 /wd4668 /wd4619 /wd4626 /wd5031 /wd4365 /wd4710)
 endif()
 
 if(UNIX)
-	message(STATUS "UNIX IS DETECTED")
-  if (USE_GPERFTOOLS)
-	include_directories(${GPERFTOOLS_DIR}/include)
-	add_definitions(-DUSE_GPERFTOOLS)
-	message(STATUS "Google perftools : ON")
-  endif()
-endif()
+  message(STATUS "UNIX IS DETECTED")
+  if(USE_GPERFTOOLS)
+    # TODO
+    # Make this optional and maybe move it.
+    include_directories(${GPERFTOOLS_DIR}/include)
+    add_definitions(-DUSE_GPERFTOOLS)
+    message(STATUS "Google perftools : ON")
+  endif(USE_GPERFTOOLS)
+endif(UNIX)
 
 add_subdirectory(core)
 add_subdirectory(data)

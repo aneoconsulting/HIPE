@@ -31,44 +31,44 @@ function(define_file_basename_for_sources targetname)
 endfunction()
 
 
-include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
+# include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
 
 if (USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
-    
+
 endif()
 
 set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_filter_path ${CMAKE_CURRENT_SOURCE_DIR})
 file(
-    GLOB_RECURSE _source_list 
+    GLOB_RECURSE _source_list
     LIST_DIRECTORIES false
     "${_src_filter_path}/*.c*"
 )
 
 set(_src_filter_inc_path ${CMAKE_SOURCE_DIR}/header/filter)
 file(
-    GLOB_RECURSE _header_list 
+    GLOB_RECURSE _header_list
     LIST_DIRECTORIES false
     "${_src_filter_inc_path}/*.h*"
 )
 
 ##Generate header file of any algorithms into References.h
 # Find all the input files
-FILE(GLOB_RECURSE inFiles 
-	LIST_DIRECTORIES false 
+FILE(GLOB_RECURSE inFiles
+	LIST_DIRECTORIES false
 	RELATIVE "${_src_filter_inc_path}"
     "${_src_filter_inc_path}/*.h*")
-	
+
 set(_includes "#pragma once\n")
 foreach(_source IN ITEMS ${inFiles})
 	message(STATUS "file are : ${_source}")
 	set(_includes "${_includes}#include <filter/${_source}>\n")
-    
+
 endforeach()
 
 message(STATUS "references header is : ${_includes}")
@@ -111,7 +111,7 @@ add_library(filter SHARED
   ${_source_list} ${_header_list} ${header_ref})
 
 define_file_basename_for_sources(filter)
- 
+
 
 if (WIN32)
 
@@ -132,7 +132,7 @@ if (UNIX)
   add_custom_target(reference
 	COMMAND echo "Start generation of references"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos)
-  
+
   add_custom_command(TARGET reference
 	POST_BUILD
 	COMMAND echo "\\\#pragma once" > "${os_ref_header_path}.cmp"
@@ -141,11 +141,11 @@ if (UNIX)
 	COMMAND rsync -cr "${os_ref_header_path}.cmp" "${os_ref_header_path}"
 	COMMENT "Generate reference file"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos
-	
+
 	)
   add_dependencies(filter reference)
 
-endif (UNIX) 
+endif (UNIX)
 
 if (UNIX)
 	target_compile_options(filter PRIVATE -fPIC)
@@ -172,24 +172,24 @@ target_link_libraries(filter ${Python27_LIBRARIES} )
 if (USE_DLIB)
 	if (WIN32)
 	target_link_libraries(filter ${Dlib_LIBRARIES})
-	
+
 	#set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
 	#find_package(BLAS REQUIRED)
-	
+
 	elseif (UNIX)
 	target_link_libraries(filter ${Dlib_LIBRARIES})
 	endif()
 
-  
+
 endif()
 
 
 foreach(_source IN ITEMS ${_source_list})
-	
+
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${_src_filter_path}" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	message(STATUS "item source = ${_group_path}") 
+	message(STATUS "item source = ${_group_path}")
     source_group("source\\${_group_path}" FILES "${_source}")
 endforeach()
 
@@ -213,11 +213,11 @@ endif()
 target_link_libraries(filter ${MYLIBS} )
 
 if(WIN32) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows") 
+	message(STATUS "Test if it works with windows")
     target_link_libraries(filter ws2_32 wsock32)
-   
+
 endif()
 
 
 install(TARGETS filter DESTINATION ../../target/)
-#install(TARGETS filter DESTINATION /usr/local/lib/) 
+#install(TARGETS filter DESTINATION /usr/local/lib/)

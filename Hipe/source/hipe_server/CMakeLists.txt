@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
+# include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
@@ -10,19 +10,19 @@ set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_hipe_server_path ${CMAKE_CURRENT_SOURCE_DIR})
 file(
-    GLOB_RECURSE _source_list 
+    GLOB_RECURSE _source_list
     LIST_DIRECTORIES false
     "${_src_hipe_server_path}/*.c*"
 )
 
 set(_src_hipe_server_inc_path ${CMAKE_SOURCE_DIR}/header/hipe_server)
 file(
-    GLOB_RECURSE _header_list 
+    GLOB_RECURSE _header_list
     LIST_DIRECTORIES false
     "${_src_hipe_server_inc_path}/*.h*"
 )
 
-##Include OpenCV 
+##Include OpenCV
 find_package( OpenCV REQUIRED )
 
 if (USE_DLIB)
@@ -42,11 +42,11 @@ target_compile_definitions(hipe_server PRIVATE "-DUSE_BOOST_REGEX")
 
 
 foreach(_source IN ITEMS ${_source_list})
-	
+
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${_src_hipe_server_path}" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	message(STATUS "item source = ${_group_path}") 
+	message(STATUS "item source = ${_group_path}")
     source_group("source\\${_group_path}" FILES "${_source}")
 endforeach()
 
@@ -60,10 +60,10 @@ endforeach()
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows") 
+	message(STATUS "Test if it works with windows")
     target_link_libraries(hipe_server ws2_32 wsock32)
 	target_link_libraries(hipe_server ws2_32 wsock32)
-   
+
 endif()
 
 
@@ -88,21 +88,21 @@ target_link_libraries(hipe_server orchestrator)
 if (USE_DLIB)
 	if (WIN32)
 	target_link_libraries(hipe_server ${Dlib_LIBRARIES})
-	
+
 	#set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
 	#find_package(BLAS REQUIRED)
-	
+
 	elseif (UNIX)
 	target_link_libraries(hipe_server ${Dlib_LIBRARIES})
 	endif()
 
 endif()
 
-message(STATUS "Library ffmpeg to include ${FFmpeg_LIBRARIES}") 
-message(STATUS "Library x264 to include ${x264_LIBRARIES}") 
-message(STATUS "Library Live to include ${Live_LIBRARIES}") 
-message(STATUS "Library OpenCV to include ${OpenCV_LIBS}") 
-message(STATUS "Library Boost to include ${Boost_LIBRARIES}") 
+message(STATUS "Library ffmpeg to include ${FFmpeg_LIBRARIES}")
+message(STATUS "Library x264 to include ${x264_LIBRARIES}")
+message(STATUS "Library Live to include ${Live_LIBRARIES}")
+message(STATUS "Library OpenCV to include ${OpenCV_LIBS}")
+message(STATUS "Library Boost to include ${Boost_LIBRARIES}")
 target_link_libraries(hipe_server ${FFmpeg_LIBRARIES})
 target_link_libraries(hipe_server ${x264_LIBRARIES})
 target_link_libraries(hipe_server ${Live_LIBRARIES})

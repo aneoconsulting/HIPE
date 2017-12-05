@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
+# include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
@@ -9,22 +9,22 @@ include("${CMAKE_SOURCE_DIR}/cmake/sourcey_config.cmake")
 set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_streaming_path ${CMAKE_CURRENT_SOURCE_DIR})
-message(STATUS "Get source path = ${_src_streaming_path}" ) 
+message(STATUS "Get source path = ${_src_streaming_path}" )
 file(
-    GLOB_RECURSE _source_list 
+    GLOB_RECURSE _source_list
     LIST_DIRECTORIES false
     "${_src_streaming_path}/*.c*"
 )
 
 set(_src_streaming_inc_path ${CMAKE_SOURCE_DIR}/header/streaming)
 file(
-    GLOB_RECURSE _header_list 
+    GLOB_RECURSE _header_list
     LIST_DIRECTORIES false
     "${_src_streaming_inc_path}/*.h*"
 )
 
 
-##Include OpenCV 
+##Include OpenCV
 find_package( OpenCV REQUIRED )
 
 ##streaming LIBRARY
@@ -48,11 +48,11 @@ target_link_libraries(streaming ${Live_LIBRARIES})
 
 
 foreach(_source IN ITEMS ${_source_list})
-	message(STATUS "item source = ${_source}") 
+	message(STATUS "item source = ${_source}")
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${_src_streaming_path}" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	
+
     source_group("source\\${_group_path}" FILES "${_source}")
 endforeach()
 
@@ -72,9 +72,9 @@ include_directories(streaming ${_src_streaming_inc_path})
 
 
 if(WIN32) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows") 
+	message(STATUS "Test if it works with windows")
      target_link_libraries(streaming ws2_32 wsock32 ws2_32 wsock32 Winmm Secur32 Msdmo Dmoguids	wmcodecdspuuid strmiids	Psapi Userenv)
-   
+
 endif()
 
 

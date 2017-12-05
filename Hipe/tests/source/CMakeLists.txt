@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
+# include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/x264_config.cmake")
@@ -9,19 +9,19 @@ set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_unit_test_path ${CMAKE_CURRENT_SOURCE_DIR})
 file(
-    GLOB_RECURSE _source_list 
+    GLOB_RECURSE _source_list
     LIST_DIRECTORIES false
     "${_src_unit_test_path}/*.c*"
 )
 
 set(_src_unit_test_inc_path ${CMAKE_SOURCE_DIR}/tests/source/)
 file(
-    GLOB_RECURSE _header_list 
+    GLOB_RECURSE _header_list
     LIST_DIRECTORIES false
     "${_src_unit_test_inc_path}/*.h*"
 )
 
-##Include OpenCV 
+##Include OpenCV
 find_package( OpenCV REQUIRED )
 include_directories(unit_test ${OpenCV_INCLUDE_DIRS} )
 
@@ -37,11 +37,11 @@ target_link_libraries( unit_test ${OpenCV_LIBS} )
 
 
 foreach(_source IN ITEMS ${_source_list})
-	
+
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${_src_unit_test_path}" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	message(STATUS "item source = ${_group_path}") 
+	message(STATUS "item source = ${_group_path}")
     source_group("source\\${_group_path}" FILES "${_source}")
 endforeach()
 
@@ -55,10 +55,10 @@ endforeach()
 include_directories(unit_test ${_src_unit_test_inc_path})
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows") 
+	message(STATUS "Test if it works with windows")
     target_link_libraries(unit_test ws2_32 wsock32)
 	target_link_libraries(unit_test ws2_32 wsock32)
-   
+
 endif()
 
 

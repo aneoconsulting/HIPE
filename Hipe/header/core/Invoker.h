@@ -49,7 +49,7 @@ namespace core
 		~InvokerBase()
 		{
 			_wrap.release();
-			
+
 		}
 		template<typename return_type, typename... params>
 		return_type operator()(void* callee, params... xs)
@@ -73,7 +73,7 @@ namespace core
 			return *this;
 		}
 
-		
+
 		InvokerBase & operator=(const InvokerBase & invoMethod)
 		{
 			_wrap.reset(invoMethod._wrap.get());
@@ -122,7 +122,8 @@ namespace core
 		{
 			_wrap.release();
 
-			_wrap.reset(new Wrapper(right._wrap->fpCallbackFunction()));
+			Wrapper * wrap = static_cast<Wrapper*>(right._wrap.get());
+			_wrap.reset(new Wrapper(wrap->fpCallbackFunction));
 		}
 		template <class T, return_type(T::*TMethod)(params...)>
 		static Invoker<return_type, params...> for_function()
