@@ -28,7 +28,7 @@ namespace data
 		STRMVIDF = 0x5354524d56494446,	// Streaming video from file
 
 		PATTERN = 0x5041545445524e,		// Pattern type with crop and data source
-		DIRPATTERN = 0x444952504154,		// DIRPattern type with crop and data source
+			DIRPATTERN = 0x444952504154,		// DIRPattern type with crop and data source
 		SQR_CROP = 0x5351525f43524f50,	// Square crop
 
 		IMGB64 = 0x494d47423634,		// Image from base64 data
@@ -37,9 +37,8 @@ namespace data
 		TXT = 0x545854,
 		TXT_ARR = 0x5458545f415252,
 
-		SHAPE = 0x5348415045,			// Shape data (circle, rectangle or point)
-		MATCHER = 0x4d415443484552,
-		DLIBDTCT = 0x444c494244544354,	// dlib detectors data type (used to shared training data between filters)
+			SHAPE = 0x5348415045,			// Shape data (circle, rectangle or point)
+			MATCHER = 0x4d415443484552,
 		NONE
 	};
 
@@ -89,19 +88,19 @@ namespace data
 		static bool isSequence(const IODataType& dataType);
 
 
-		static bool isSequenceDirectory(const IODataType & dataType)
-		{
-			/*if (dataType == IODataType::LISTIO)
-			return true;*/
-			std::string typeStr = getStringFromType(dataType);
+			static bool isSequenceDirectory(const IODataType & dataType)
+			{
+				/*if (dataType == IODataType::LISTIO)
+				return true;*/
+				std::string typeStr = getStringFromType(dataType);
 
-			std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+				std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
-			if (typeStr.find("seqimgd") != std::string::npos)
-				return true;
+				if (typeStr.find("seqimgd") != std::string::npos)
+					return true;
 
-			return false;
-		}
+				return false;
+			}
 		/**
 		 * \brief Checks if a data type is a list type one
 		 * \param dataType The queried data type
@@ -122,11 +121,11 @@ namespace data
 		 * \return Returns true if the queried data type is a base64 one
 		 */
 		static bool isBase64(const IODataType& dataType);
-		/**
-		 * \brief Checks if a data type is a points one
-		 * \param dataType The queried data type
-		 * \return Returns true if the queried data type is a points one
-		 */
+			/**
+			 * \brief Checks if a data type is a points one
+			 * \param dataType The queried data type
+			 * \return Returns true if the queried data type is a points one
+			 */
 		static bool isShape(const IODataType & dataType);
 	};
 }
