@@ -28,7 +28,7 @@ filter::Model* copyFilter(filter::Model* filter)
 	{
 		std::string copyField(field);
 		{
-			__invoke(nFilter, "copy_" + copyField, filter);
+			__callfunc(nFilter, "copy_" + copyField, filter);
 		}
 	}
 	return nFilter;
@@ -41,7 +41,7 @@ filter::Model* copyAlgorithms(filter::Model* root)
 
 	filter::Model* copyParent;
 	filter::Model* parent = static_cast<filter::IFilter*>(root);
-	
+
 	std::stack<filter::Model*> heap;
 	std::stack<filter::Model*> copyHeap;
 
@@ -67,7 +67,7 @@ filter::Model* copyAlgorithms(filter::Model* root)
 			{
 				copyChild = static_cast<filter::Model*>(copyFilter(childMap.second));
 				copyChildCache[childMap.second->getName()] = copyChild;
-				
+
 			}
 			copyChild->addDependencies(copyParent);
 
@@ -76,7 +76,7 @@ filter::Model* copyAlgorithms(filter::Model* root)
 				heap.push(static_cast<filter::IFilter*>(childMap.second));
 				copyHeap.push(copyChild);
 			}
-			
+
 		}
 	}
 
@@ -87,7 +87,7 @@ filter::Model* copyAlgorithms(filter::Model* root)
 HipeStatus freeAlgorithms(filter::Model* root)
 {
 	if (root == nullptr) return OK;
-	
+
 	filter::Model* parent = static_cast<filter::IFilter*>(root);
 	std::stack<filter::Model*> heap;
 	std::map<filter::Model*, int> cacheFilter;

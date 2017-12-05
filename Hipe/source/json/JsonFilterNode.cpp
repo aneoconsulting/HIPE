@@ -30,7 +30,7 @@ namespace json
 
 			if (_params.count(field) != 0)
 			{
-				__invoke(_filter, "set_" + copyField + "_from_json", _params);
+				__callfunc(_filter, "set_" + copyField + "_from_json", _params);
 			}
 		}
 	}
