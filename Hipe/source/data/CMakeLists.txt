@@ -4,6 +4,10 @@ cmake_minimum_required (VERSION 3.7.1)
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 set(Hipe_INCLUDEDIR "../../header/")
 
+if (USE_DLIB)
+  include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
+endif()
+
 set(_src_data_path ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "Get source path = ${_src_data_path}" ) 
 file(
@@ -32,9 +36,24 @@ target_compile_definitions(data PRIVATE "-DUSE_BOOST_REGEX" "-DDATA_BUILD")
 include_directories(data ${Hipe_INCLUDEDIR})
 include_directories(data ${OpenCV_INCLUDE_DIRS} )
 
+if(USE_DLIB)
+	include_directories(data ${Dlib_INCLUDEDIR})
+endif()
+
 target_link_libraries(data ${OpenCV_LIBS})
 target_link_libraries(data ${Boost_LIBRARIES})
 target_link_libraries(data ${CMAKE_THREAD_LIBS_INIT})
+
+if (USE_DLIB)
+	if (WIN32)
+		target_link_libraries(data ${Dlib_LIBRARIES})
+	
+	elseif (UNIX)
+		target_link_libraries(data ${Dlib_LIBRARIES})
+	
+	endif()
+
+endif()
 
 
 
