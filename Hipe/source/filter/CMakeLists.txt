@@ -33,7 +33,7 @@ endfunction()
 
 # include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/livemedia_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
 
 if (USE_DLIB)

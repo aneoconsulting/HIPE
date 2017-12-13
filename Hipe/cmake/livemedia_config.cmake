@@ -15,17 +15,17 @@ macro(_Live_ADJUST_LIB_VARS basename)
 	
 endmacro()
 
-set(LIVE_DIR "LIVE-ROOT-NOTFOUND" CACHE PATH "Path to the root live directory" )
+set(LiveMedia_DIR "LIVE-ROOT-NOTFOUND" CACHE PATH "Path to the root live directory" )
 #set(LIVE_LIBRARYDIR "LIVE-LIBRARY-NOTFOUND" CACHE PATH "Path to the static live Library" )
 
 
-if (${LIVE_DIR} EQUAL "LIVE-ROOT-NOTFOUND")
-	message( FATAL_ERROR "Variable LIVE_DIR is empty")
+if (${LiveMedia_DIR} EQUAL "LIVE-ROOT-NOTFOUND")
+	message( FATAL_ERROR "Variable LiveMedia_DIR is empty")
 endif()
 
-set(Live_INCLUDEDIR "${LIVE_DIR}/include" CACHE PATH "include path for live" FORCE)
+set(Live_INCLUDEDIR "${LiveMedia_DIR}/include" CACHE PATH "include path for live" FORCE)
 
-set(Live_LIBRARDIR "${LIVE_DIR}/lib" CACHE PATH "include path for live" FORCE)
+set(Live_LIBRARDIR "${LiveMedia_DIR}/lib" CACHE PATH "include path for live" FORCE)
 
 set(COMPONENTS liveMedia groupsock  BasicUsageEnvironment UsageEnvironment )
 
