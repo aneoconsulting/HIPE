@@ -27,6 +27,7 @@ endif()
 
 add_subdirectory(core)
 add_subdirectory(data)
+add_subdirectory(pydata)
 add_subdirectory(filter)
 add_subdirectory(streaming)
 add_subdirectory(http)
@@ -37,8 +38,11 @@ add_subdirectory(streaming_rtsp)
 
 
 
-
+add_dependencies(pydata data)
+add_dependencies(pydata data)
+add_dependencies(data core)
 add_dependencies(filter core)
+add_dependencies(filter pydata)
 add_dependencies(filter streaming)
 add_dependencies(filter data)
 add_dependencies(streaming streaming_rtsp)

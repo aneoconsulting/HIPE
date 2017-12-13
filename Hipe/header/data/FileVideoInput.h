@@ -20,6 +20,7 @@ namespace data
 		 * \brief Path of the video
 		 */
 		boost::filesystem::path _filePath;
+	
 		/**
 		 * \brief Handles the reading of the video's frames
 		 */
@@ -46,8 +47,10 @@ namespace data
 		FileVideoInput(const std::string & filePath, bool loop) : VideoData(IODataType::VIDF)
 		{
 			Data::registerInstance(new FileVideoInput());
+			_filePath = filePath;
 			This()._filePath = filePath;
 			This()._loop = loop;
+			_loop = loop;
 		}
 
 		FileVideoInput(const FileVideoInput &data) : VideoData(data._type)
@@ -74,5 +77,19 @@ namespace data
 		 * \return  Returns true if the object doesn't contain any data or the video is not opened, false either.
 		 */
 		bool empty() const;
+
+	public:
+		boost::filesystem::path getFilePath() const
+		{
+			return _filePath;
+		}
+
+		void setFilePath(const boost::filesystem::path& filePath)
+		{
+			_filePath = filePath;
+			This()._filePath = filePath;
+		}
+
+	
 	};
 }

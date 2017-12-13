@@ -51,9 +51,11 @@ namespace filter
 
 		HipeStatus StreamResultFilter::process()
 		{
+			if (_connexData.empty()) return VECTOR_EMPTY;
+
 			if (computeFPS() == WAIT_FPS)	return OK;
 			
-			if (_connexData.empty()) return VECTOR_EMPTY;
+			
 			data::ImageData image_data = _connexData.pop();
 			cv::Size size = image_data.getMat().size();
 			if (!writer.isOpened()) {

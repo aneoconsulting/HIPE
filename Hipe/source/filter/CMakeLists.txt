@@ -34,6 +34,7 @@ endfunction()
 include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
 
 if (USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
@@ -100,6 +101,7 @@ include_directories(filter ${Hipe_INCLUDEDIR})
 include_directories(filter ${OpenCV_INCLUDE_DIRS} )
 include_directories(filter ${Live_INCLUDEDIR} )
 include_directories(filter ${Dlib_INCLUDEDIR} )
+include_directories(filter ${Python27_INCLUDEDIR} )
 
 
 
@@ -165,6 +167,8 @@ target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(filter ${OpenCV_LIBS} )
 target_link_libraries(filter ${Lives_LIBS} )
+target_link_libraries(filter ${Python27_LIBRARIES} )
+
 if (USE_DLIB)
 	if (WIN32)
 	target_link_libraries(filter ${Dlib_LIBRARIES})

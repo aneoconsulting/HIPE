@@ -69,3 +69,35 @@ std::string removeDirectoryName(std::string pathname)
 	return pathname.substr(pathname.find_last_of(sep), pathname.size());
 
 }
+
+std::string extractDirectoryName(const std::string& str)
+{
+	size_t found;
+	
+	found = str.find_last_of("/\\");
+	return str.substr(0, found);
+	
+}
+
+std::string removeFileExtension(const std::string&str)
+{
+	size_t found;
+
+	found = str.find_last_of(".");
+	return str.substr(0, found);
+}
+
+std::string extractFileName(const std::string&str)
+{
+	std::string tmp = removeDirectoryName(str);
+	tmp = removeFileExtension(tmp);
+	size_t found;
+
+	found = str.find_first_of("/\\");
+
+	if (found == std::string::npos) found = 0;
+	else
+		found--;
+
+	return tmp.substr(found, str.size());
+}

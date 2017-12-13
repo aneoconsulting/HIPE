@@ -44,7 +44,10 @@ namespace orchestrator
 
 	data::Data Composer::loadImagesFromDirectory(std::string strPath)
 	{
-		return static_cast<data::Data>(data::DirectoryImgData(strPath));
+		data::DirectoryImgData directory_img_data = data::DirectoryImgData(strPath);
+		directory_img_data.loadImagesData();
+
+		return static_cast<data::Data>(directory_img_data);
 	}
 
 	data::Data Composer::loadVideoFromFile(const json::JsonTree& dataNode)

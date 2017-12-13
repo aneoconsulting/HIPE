@@ -7,7 +7,7 @@ include_directories(.)
 
 find_package(Threads REQUIRED)
 
-set(BOOST_COMPONENTS system thread filesystem date_time regex log program_options)
+set(BOOST_COMPONENTS system thread filesystem date_time regex log program_options python)
 
 set(BOOST_LIBRARYDIR "BOOST-LIBRARY-NOTFOUND" CACHE PATH "Path to the static Boost Library" PARENT_SCOPE)
 

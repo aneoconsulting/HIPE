@@ -6,6 +6,6 @@ include("${CMAKE_SOURCE_DIR}/tests/boost_config_tests.cmake")
 
 add_subdirectory(source)
 
-add_dependencies(unit_test core data filter json http orchestrator )
+add_dependencies(unit_test core filter data json http orchestrator )
 
 
