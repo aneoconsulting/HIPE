@@ -41,7 +41,7 @@ target_link_libraries(core ${CMAKE_THREAD_LIBS_INIT})
 
 
 foreach(_source IN ITEMS ${_source_list})
-	message(STATUS "item source = ${_source}")
+  message(STATUS "item source = ${_source}")
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${_src_core_path}" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
@@ -60,9 +60,9 @@ include_directories(core ${_src_core_inc_path})
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows")
+  message(STATUS "Test if it works with windows")
     target_link_libraries(binary ws2_32 wsock32)
-	target_link_libraries(binary ws2_32 wsock32)
+  target_link_libraries(binary ws2_32 wsock32)
 
 endif()
 

@@ -37,11 +37,11 @@ target_compile_definitions(webrtcstreamer PUBLIC "-DUSE_BOOST_REGEX" "-DWEBRTC_W
 
 
 foreach(_source IN ITEMS ${_source_list})
-	message(STATUS "item source = ${_source}") 
+  message(STATUS "item source = ${_source}") 
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${_src_webrtcstreamer_path}" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	
+  
     source_group("source\\${_group_path}" FILES "${_source}")
 endforeach()
 
@@ -72,9 +72,9 @@ target_link_libraries(webrtcstreamer core)
 
 
 if(WIN32) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows") 
-    target_link_libraries(webrtcstreamer ws2_32 wsock32 ws2_32 wsock32 Winmm Secur32 Msdmo Dmoguids	wmcodecdspuuid strmiids	Psapi Userenv)
-	
+  message(STATUS "Test if it works with windows") 
+    target_link_libraries(webrtcstreamer ws2_32 wsock32 ws2_32 wsock32 Winmm Secur32 Msdmo Dmoguids  wmcodecdspuuid strmiids  Psapi Userenv)
+  
    
 endif()
 

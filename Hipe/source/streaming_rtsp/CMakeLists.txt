@@ -8,31 +8,31 @@ include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_streaming_rtsp_path ${CMAKE_CURRENT_SOURCE_DIR})
-message(STATUS "Get source path = ${_src_streaming_rtsp_path}" ) 
+message(STATUS "Get source path = ${_src_streaming_rtsp_path}" )
 file(
-    GLOB_RECURSE _source_list 
-    LIST_DIRECTORIES false
-    "${_src_streaming_rtsp_path}/*.c*"
+  GLOB_RECURSE _source_list
+  LIST_DIRECTORIES false
+  "${_src_streaming_rtsp_path}/*.c*"
 )
 
 set(_src_streaming_rtsp_inc_path ${CMAKE_SOURCE_DIR}/header/streaming_rtsp)
 file(
-    GLOB_RECURSE _header_list 
-    LIST_DIRECTORIES false
-    "${_src_streaming_rtsp_inc_path}/*.h*"
+  GLOB_RECURSE _header_list
+  LIST_DIRECTORIES false
+  "${_src_streaming_rtsp_inc_path}/*.h*"
 )
 
 
-##Include OpenCV 
+##Include OpenCV
 find_package( OpenCV REQUIRED )
 
 ##streaming_rtsp LIBRARY
 
 add_library(streaming_rtsp STATIC ${_source_list} ${_header_list})
 
-if (UNIX)
-	target_compile_options(streaming_rtsp PRIVATE -fPIC)
-endif()
+if(UNIX)
+  target_compile_options(streaming_rtsp PRIVATE -fPIC)
+endif(UNIX)
 
 
 target_compile_definitions(streaming_rtsp PRIVATE "-DUSE_BOOST_REGEX" "-DSTREAMING_RTSP_BUILD")
@@ -47,20 +47,20 @@ target_link_libraries(streaming_rtsp ${FFmpeg_LIBRARIES})
 
 
 foreach(_source IN ITEMS ${_source_list})
-	message(STATUS "item source = ${_source}") 
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${_src_streaming_rtsp_path}" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	
-    source_group("source\\${_group_path}" FILES "${_source}")
-endforeach()
+  message(STATUS "item source = ${_source}")
+  get_filename_component(_source_path "${_source}" PATH)
+  file(RELATIVE_PATH _source_path_rel "${_src_streaming_rtsp_path}" "${_source_path}")
+  string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+
+  source_group("source\\${_group_path}" FILES "${_source}")
+endforeach(_source IN ITEMS ${_source_list})
 
 foreach(_source IN ITEMS ${_header_list})
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${_src_streaming_rtsp_inc_path}" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-    source_group("header\\${_group_path}" FILES "${_source}")
-endforeach()
+  get_filename_component(_source_path "${_source}" PATH)
+  file(RELATIVE_PATH _source_path_rel "${_src_streaming_rtsp_inc_path}" "${_source_path}")
+  string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+  source_group("header\\${_group_path}" FILES "${_source}")
+endforeach(_source IN ITEMS ${_header_list})
 
 include_directories(streaming_rtsp ${Hipe_INCLUDEDIR})
 include_directories(streaming_rtsp ${OpenCV_INCLUDE_DIRS} )
@@ -70,11 +70,10 @@ include_directories(streaming_rtsp ${_src_streaming_rtsp_inc_path})
 
 
 if(WIN32) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows") 
-    target_link_libraries(streaming_rtsp ws2_32 wsock32)
-	target_link_libraries(streaming_rtsp ws2_32 shlwapi )
-   
-endif()
+  message(STATUS "Test if it works with windows")
+  target_link_libraries(streaming_rtsp ws2_32 wsock32)
+  target_link_libraries(streaming_rtsp ws2_32 shlwapi )
+endif(WIN32)
 
 install(TARGETS streaming_rtsp DESTINATION ../../target/)
 #install(TARGETS streaming_rtsp DESTINATION /usr/local/lib/)

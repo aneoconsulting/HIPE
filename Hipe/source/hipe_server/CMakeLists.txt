@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.7.1)
+cmake_minimum_required(VERSION 3.7.1)
 
 # include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
@@ -10,31 +10,31 @@ set(Hipe_INCLUDEDIR "../../header/")
 
 set(_src_hipe_server_path ${CMAKE_CURRENT_SOURCE_DIR})
 file(
-    GLOB_RECURSE _source_list
-    LIST_DIRECTORIES false
-    "${_src_hipe_server_path}/*.c*"
+  GLOB_RECURSE _source_list
+  LIST_DIRECTORIES false
+  "${_src_hipe_server_path}/*.c*"
 )
 
 set(_src_hipe_server_inc_path ${CMAKE_SOURCE_DIR}/header/hipe_server)
 file(
-    GLOB_RECURSE _header_list
-    LIST_DIRECTORIES false
-    "${_src_hipe_server_inc_path}/*.h*"
+  GLOB_RECURSE _header_list
+  LIST_DIRECTORIES false
+  "${_src_hipe_server_inc_path}/*.h*"
 )
 
 ##Include OpenCV
 find_package( OpenCV REQUIRED )
 
-if (USE_DLIB)
+if(USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
-endif()
+endif(USE_DLIB)
 
 
 
 ##hipe_server LIBRARY
 add_executable(hipe_server ${_source_list} ${_header_list})
 if(UNIX)
-	set_target_properties(hipe_server PROPERTIES SUFFIX ".bin")
+  set_target_properties(hipe_server PROPERTIES SUFFIX ".bin")
 endif(UNIX)
 
 target_compile_definitions(hipe_server PRIVATE "-DUSE_BOOST_REGEX")
@@ -42,29 +42,27 @@ target_compile_definitions(hipe_server PRIVATE "-DUSE_BOOST_REGEX")
 
 
 foreach(_source IN ITEMS ${_source_list})
-
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${_src_hipe_server_path}" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	message(STATUS "item source = ${_group_path}")
-    source_group("source\\${_group_path}" FILES "${_source}")
-endforeach()
+  get_filename_component(_source_path "${_source}" PATH)
+  file(RELATIVE_PATH _source_path_rel "${_src_hipe_server_path}" "${_source_path}")
+  string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+  message(STATUS "item source = ${_group_path}")
+  source_group("source\\${_group_path}" FILES "${_source}")
+endforeach(_source IN ITEMS ${_source_list})
 
 foreach(_source IN ITEMS ${_header_list})
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${_src_hipe_server_inc_path}" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-    source_group("header\\${_group_path}" FILES "${_source}")
-endforeach()
+  get_filename_component(_source_path "${_source}" PATH)
+  file(RELATIVE_PATH _source_path_rel "${_src_hipe_server_inc_path}" "${_source_path}")
+  string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+  source_group("header\\${_group_path}" FILES "${_source}")
+endforeach(_source IN ITEMS ${_header_list})
 
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows")
-    target_link_libraries(hipe_server ws2_32 wsock32)
-	target_link_libraries(hipe_server ws2_32 wsock32)
-
-endif()
+  message(STATUS "Test if it works with windows")
+  target_link_libraries(hipe_server ws2_32 wsock32)
+  target_link_libraries(hipe_server ws2_32 wsock32)
+endif(MSYS)
 
 
 
@@ -85,18 +83,18 @@ target_link_libraries(hipe_server orchestrator)
 
 
 
-if (USE_DLIB)
-	if (WIN32)
-	target_link_libraries(hipe_server ${Dlib_LIBRARIES})
+if(USE_DLIB)
+  if(WIN32)
+  target_link_libraries(hipe_server ${Dlib_LIBRARIES})
 
-	#set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
-	#find_package(BLAS REQUIRED)
+  #set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
+  #find_package(BLAS REQUIRED)
 
-	elseif (UNIX)
-	target_link_libraries(hipe_server ${Dlib_LIBRARIES})
-	endif()
+  elseif(UNIX)
+  target_link_libraries(hipe_server ${Dlib_LIBRARIES})
 
-endif()
+  endif(WIN32)
+endif(USE_DLIB)
 
 message(STATUS "Library ffmpeg to include ${FFmpeg_LIBRARIES}")
 message(STATUS "Library x264 to include ${x264_LIBRARIES}")
@@ -110,9 +108,9 @@ target_link_libraries(hipe_server ${OpenCV_LIBS})
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
 
-if (USE_GPERFTOOLS)
+if(USE_GPERFTOOLS)
   target_link_libraries(hipe_server ${GPERFTOOLS_DIR}/lib/libtcmalloc.a /usr/lib/aarch64-linux-gnu/libunwind.a /usr/lib/aarch64-linux-gnu/liblzma.a)
-endif()
+endif(USE_GPERFTOOLS)
 
 
 

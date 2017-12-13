@@ -38,11 +38,11 @@ target_link_libraries(json data)
 
 
 foreach(_source IN ITEMS ${_source_list})
-	message(STATUS "item source = ${_source}") 
+  message(STATUS "item source = ${_source}") 
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${_src_json_path}" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	
+  
     source_group("source\\${_group_path}" FILES "${_source}")
 endforeach()
 
@@ -57,9 +57,9 @@ include_directories(json ${_src_json_inc_path})
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows") 
+  message(STATUS "Test if it works with windows") 
     target_link_libraries(binary ws2_32 wsock32)
-	target_link_libraries(binary ws2_32 wsock32)
+  target_link_libraries(binary ws2_32 wsock32)
    
 endif()
 

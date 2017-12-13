@@ -11,16 +11,16 @@ set(Hipe_INCLUDEDIR "../../header/")
 set(_src_streaming_path ${CMAKE_CURRENT_SOURCE_DIR})
 message(STATUS "Get source path = ${_src_streaming_path}" )
 file(
-    GLOB_RECURSE _source_list
-    LIST_DIRECTORIES false
-    "${_src_streaming_path}/*.c*"
+  GLOB_RECURSE _source_list
+  LIST_DIRECTORIES false
+  "${_src_streaming_path}/*.c*"
 )
 
 set(_src_streaming_inc_path ${CMAKE_SOURCE_DIR}/header/streaming)
 file(
-    GLOB_RECURSE _header_list
-    LIST_DIRECTORIES false
-    "${_src_streaming_inc_path}/*.h*"
+  GLOB_RECURSE _header_list
+  LIST_DIRECTORIES false
+  "${_src_streaming_inc_path}/*.h*"
 )
 
 
@@ -30,9 +30,9 @@ find_package( OpenCV REQUIRED )
 ##streaming LIBRARY
 
 add_library(streaming STATIC ${_source_list} ${_header_list})
-if (UNIX)
-	target_compile_options(streaming PRIVATE -fPIC)
-endif()
+if(UNIX)
+  target_compile_options(streaming PRIVATE -fPIC)
+endif(UNIX)
 
 target_compile_definitions(streaming PRIVATE "-DUSE_BOOST_REGEX" "-DSTREAMING_BUILD" "-DSINGLETON_EXPORT")
 
@@ -48,20 +48,19 @@ target_link_libraries(streaming ${Live_LIBRARIES})
 
 
 foreach(_source IN ITEMS ${_source_list})
-	message(STATUS "item source = ${_source}")
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${_src_streaming_path}" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-
-    source_group("source\\${_group_path}" FILES "${_source}")
-endforeach()
+  message(STATUS "item source = ${_source}")
+  get_filename_component(_source_path "${_source}" PATH)
+  file(RELATIVE_PATH _source_path_rel "${_src_streaming_path}" "${_source_path}")
+  string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+  source_group("source\\${_group_path}" FILES "${_source}")
+endforeach(_source IN ITEMS ${_source_list})
 
 foreach(_source IN ITEMS ${_header_list})
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${_src_streaming_inc_path}" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
     source_group("header\\${_group_path}" FILES "${_source}")
-endforeach()
+endforeach(_source IN ITEMS ${_header_list})
 
 include_directories(streaming ${Hipe_INCLUDEDIR})
 include_directories(streaming ${OpenCV_INCLUDE_DIRS} )
@@ -72,10 +71,9 @@ include_directories(streaming ${_src_streaming_inc_path})
 
 
 if(WIN32) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows")
-     target_link_libraries(streaming ws2_32 wsock32 ws2_32 wsock32 Winmm Secur32 Msdmo Dmoguids	wmcodecdspuuid strmiids	Psapi Userenv)
-
-endif()
+  message(STATUS "Test if it works with windows")
+  target_link_libraries(streaming ws2_32 wsock32 ws2_32 wsock32 Winmm Secur32 Msdmo Dmoguids  wmcodecdspuuid strmiids  Psapi Userenv)
+endif(WIN32)
 
 
 install(TARGETS streaming DESTINATION ../../target/)

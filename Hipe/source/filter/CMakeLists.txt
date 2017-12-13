@@ -20,8 +20,8 @@ function(define_file_basename_for_sources targetname)
             PROPERTY COMPILE_DEFINITIONS)
         # Add the FILE_BASENAME=filename compile definition to the list.
         get_filename_component(basename "${sourcefile}" NAME)
-		string(REGEX MATCH "^(.*)\\.[^.]*$" dummy ${basename})
-		set(MYFILE_WITHOUT_EXT ${CMAKE_MATCH_1})
+    string(REGEX MATCH "^(.*)\\.[^.]*$" dummy ${basename})
+    set(MYFILE_WITHOUT_EXT ${CMAKE_MATCH_1})
         list(APPEND defs "FILE_BASENAME=${MYFILE_WITHOUT_EXT}")
         # Set the updated compile definitions on the source file.
         set_property(
@@ -59,38 +59,38 @@ file(
 
 ##Generate header file of any algorithms into References.h
 # Find all the input files
-FILE(GLOB_RECURSE inFiles
-	LIST_DIRECTORIES false
-	RELATIVE "${_src_filter_inc_path}"
+file(GLOB_RECURSE inFiles
+  LIST_DIRECTORIES false
+  RELATIVE "${_src_filter_inc_path}"
     "${_src_filter_inc_path}/*.h*")
 
 set(_includes "#pragma once\n")
 foreach(_source IN ITEMS ${inFiles})
-	message(STATUS "file are : ${_source}")
-	set(_includes "${_includes}#include <filter/${_source}>\n")
+  message(STATUS "file are : ${_source}")
+  set(_includes "${_includes}#include <filter/${_source}>\n")
 
 endforeach()
 
 message(STATUS "references header is : ${_includes}")
 set(header_ref ${CMAKE_SOURCE_DIR}/header/filter/References.h)
-FILE(WRITE ${CMAKE_SOURCE_DIR}/header/filter/References.h "#pragma once\n #error \"TO GENERATE IS THE BUILD\"")
+file(WRITE ${CMAKE_SOURCE_DIR}/header/filter/References.h "#pragma once\n #error \"TO GENERATE IS THE BUILD\"")
 message(STATUS "WRITE header into : ${header_ref}")
 
 if (UNIX)
-  SET(script_path "${CMAKE_SOURCE_DIR}/scripts/headerList.sh")
+  set(script_path "${CMAKE_SOURCE_DIR}/scripts/headerList.sh")
 endif (UNIX)
 if (WIN32)
-  SET(script_path "${CMAKE_SOURCE_DIR}/scripts/headerList.bat")
-  SET(script_compy "${CMAKE_SOURCE_DIR}/scripts/compy.bat")
-  FILE(TO_NATIVE_PATH "${script_compy}" os_path)
-  SET(script_compy ${os_path})
+  set(script_path "${CMAKE_SOURCE_DIR}/scripts/headerList.bat")
+  set(script_compy "${CMAKE_SOURCE_DIR}/scripts/compy.bat")
+  file(TO_NATIVE_PATH "${script_compy}" os_path)
+  set(script_compy ${os_path})
 endif (WIN32)
 
-FILE(TO_NATIVE_PATH "${script_path}" os_path)
-SET(script_path ${os_path})
+file(TO_NATIVE_PATH "${script_path}" os_path)
+set(script_path ${os_path})
 
-FILE(TO_NATIVE_PATH "${header_ref}" os_ref_header_path)
-FILE(TO_NATIVE_PATH "${header_ref}_test" os_ref_header_path_test)
+file(TO_NATIVE_PATH "${header_ref}" os_ref_header_path)
+file(TO_NATIVE_PATH "${header_ref}_test" os_ref_header_path_test)
 
 
 message(STATUS "Variable path for OpenCV [${OpenCV_DIR}]")
@@ -115,45 +115,45 @@ define_file_basename_for_sources(filter)
 
 if (WIN32)
 
-	add_custom_command(TARGET filter
-		PRE_BUILD
-		COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}.cmp"
-		COMMAND cmd /c echo ^// Algorithm header to reference  >> \"${os_ref_header_path}.cmp\"
-		COMMAND cmd /c "${script_path}" "filter/algos" >> \"${os_ref_header_path}.cmp\"
-		COMMAND cmd /c "${script_compy}" \"${os_ref_header_path}.cmp\" \"${os_ref_header_path}\"
-		COMMENT "Generate reference file"
-		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos
-	)
+  add_custom_command(TARGET filter
+    PRE_BUILD
+    COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}.cmp"
+    COMMAND cmd /c echo ^// Algorithm header to reference  >> \"${os_ref_header_path}.cmp\"
+    COMMAND cmd /c "${script_path}" "filter/algos" >> \"${os_ref_header_path}.cmp\"
+    COMMAND cmd /c "${script_compy}" \"${os_ref_header_path}.cmp\" \"${os_ref_header_path}\"
+    COMMENT "Generate reference file"
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos
+  )
 
 
 endif (WIN32)
 
 if (UNIX)
   add_custom_target(reference
-	COMMAND echo "Start generation of references"
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos)
+  COMMAND echo "Start generation of references"
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos)
 
   add_custom_command(TARGET reference
-	POST_BUILD
-	COMMAND echo "\\\#pragma once" > "${os_ref_header_path}.cmp"
-	COMMAND echo "// Algorithm header to reference"  >> "${os_ref_header_path}.cmp"
+  POST_BUILD
+  COMMAND echo "\\\#pragma once" > "${os_ref_header_path}.cmp"
+  COMMAND echo "// Algorithm header to reference"  >> "${os_ref_header_path}.cmp"
     COMMAND bash "${script_path}" "filter/algos" >> "${os_ref_header_path}.cmp"
-	COMMAND rsync -cr "${os_ref_header_path}.cmp" "${os_ref_header_path}"
-	COMMENT "Generate reference file"
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos
+  COMMAND rsync -cr "${os_ref_header_path}.cmp" "${os_ref_header_path}"
+  COMMENT "Generate reference file"
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter/algos
 
-	)
+  )
   add_dependencies(filter reference)
 
 endif (UNIX)
 
 if (UNIX)
-	target_compile_options(filter PRIVATE -fPIC)
+  target_compile_options(filter PRIVATE -fPIC)
 endif()
 
 #Visual studio isn't abble to compile with to many option this is not the default behaviour ...
 if (WIN32)
-	target_compile_options(filter PRIVATE /bigobj)
+  target_compile_options(filter PRIVATE /bigobj)
 endif()
 
 
@@ -170,15 +170,15 @@ target_link_libraries(filter ${Lives_LIBS} )
 target_link_libraries(filter ${Python27_LIBRARIES} )
 
 if (USE_DLIB)
-	if (WIN32)
-	target_link_libraries(filter ${Dlib_LIBRARIES})
+  if (WIN32)
+  target_link_libraries(filter ${Dlib_LIBRARIES})
 
-	#set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
-	#find_package(BLAS REQUIRED)
+  #set( BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
+  #find_package(BLAS REQUIRED)
 
-	elseif (UNIX)
-	target_link_libraries(filter ${Dlib_LIBRARIES})
-	endif()
+  elseif (UNIX)
+  target_link_libraries(filter ${Dlib_LIBRARIES})
+  endif()
 
 
 endif()
@@ -189,7 +189,7 @@ foreach(_source IN ITEMS ${_source_list})
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${_src_filter_path}" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	message(STATUS "item source = ${_group_path}")
+  message(STATUS "item source = ${_group_path}")
     source_group("source\\${_group_path}" FILES "${_source}")
 endforeach()
 
@@ -202,18 +202,18 @@ endforeach()
 
 include_directories(filter ${_src_filter_inc_path})
 if (UNIX)
-	#SET (MYLIBS -Wl,--whole-archive core data -Wl,--no-whole-archive)
-	SET (MYLIBS -Wl,--start-group core corefilter data json -Wl,--end-group)
+  #set (MYLIBS -Wl,--whole-archive core data -Wl,--no-whole-archive)
+  set (MYLIBS -Wl,--start-group core corefilter data json -Wl,--end-group)
 endif()
 
 if(WIN32)
-	SET (MYLIBS core corefilter data json)
+  set (MYLIBS core corefilter data json)
 endif()
 
 target_link_libraries(filter ${MYLIBS} )
 
 if(WIN32) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows")
+  message(STATUS "Test if it works with windows")
     target_link_libraries(filter ws2_32 wsock32)
 
 endif()
