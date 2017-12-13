@@ -31,7 +31,7 @@ function(define_file_basename_for_sources targetname)
 endfunction()
 
 
-# include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
+# include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")

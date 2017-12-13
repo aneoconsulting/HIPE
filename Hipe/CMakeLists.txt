@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.7.1)
 project (Hipe)
 
 # Configure external libraries.
-include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 
 # Options
 option(USE_GPERFTOOLS "Use gperftools." OFF)

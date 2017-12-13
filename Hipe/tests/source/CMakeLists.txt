@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-# include("${CMAKE_SOURCE_DIR}/cmake/OwnerConfigPath.cmake")
+# include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/live_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/x264_config.cmake")
