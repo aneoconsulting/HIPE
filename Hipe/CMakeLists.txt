@@ -6,6 +6,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 
 # Options
 option(USE_GPERFTOOLS "Use gperftools." OFF)
+option(USE_DLIB "Enable Dlib library." ON)
 
 #controls where to build the executables after "make"
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
