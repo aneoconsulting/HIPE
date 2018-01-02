@@ -5,7 +5,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/livemedia_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/x264_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-set(Hipe_INCLUDEDIR "../../header/")
+include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 
 set(_src_unit_test_path ${CMAKE_CURRENT_SOURCE_DIR})
 file(
@@ -21,8 +21,6 @@ file(
   "${_src_unit_test_inc_path}/*.h*"
 )
 
-##Include OpenCV
-find_package( OpenCV REQUIRED )
 include_directories(unit_test ${OpenCV_INCLUDE_DIRS})
 
 
@@ -30,7 +28,6 @@ include_directories(unit_test ${OpenCV_INCLUDE_DIRS})
 add_executable(unit_test ${_source_list} ${_header_list})
 
 target_compile_definitions(unit_test PUBLIC "-DUSE_BOOST_REGEX")
-include_directories(unit_test ${Hipe_INCLUDEDIR})
 target_link_libraries(unit_test ${Boost_LIBRARIES})
 target_link_libraries(unit_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries( unit_test ${OpenCV_LIBS} )

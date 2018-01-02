@@ -28,18 +28,20 @@ if(UNIX)
 endif(UNIX)
 
 add_subdirectory(core)
+add_subdirectory(streaming_rtsp)
+# add_subdirectory(streaming)
 add_subdirectory(data)
 add_subdirectory(pydata)
 add_subdirectory(corefilter)
 add_subdirectory(filter)
-#add_subdirectory(streaming)
+add_subdirectory(json)
+add_subdirectory(orchestrator)
 add_subdirectory(http)
 add_subdirectory(hipe_server)
-add_subdirectory(orchestrator)
-add_subdirectory(json)
-add_subdirectory(streaming_rtsp)
 
-
+# TODO
+# Determine if this is necessary. CMake should detect the dependencies from the
+# target_link_library commands.
 
 add_dependencies(pydata data)
 add_dependencies(pydata data)
@@ -54,5 +56,3 @@ add_dependencies(http filter data json orchestrator)
 
 add_dependencies(orchestrator core filter json data)
 add_dependencies(hipe_server core http orchestrator json)
-
-

@@ -19,23 +19,23 @@ macro(_sourcey_ADJUST_LIB_VARS basename)
   set(sourcey_${basename}_LIBRARIES optimized ${sourcey_${basename}_LIBRARY_RELEASE} debug ${sourcey_${basename}_LIBRARY_DEBUG})
 endmacro(_sourcey_ADJUST_LIB_VARS basename)
 
-set(SOURCEY_DIR "sourcey-ROOT-NOTFOUND" CACHE PATH "Path to the root sourcey directory")
+set(Sourcey_DIR "sourcey-ROOT-NOTFOUND" CACHE PATH "Path to the root sourcey directory")
 set(sourcey_LIBRARYDIR "sourcey-LIBRARY-NOTFOUND" CACHE PATH "Path to the static sourcey Library")
 
 
-if(${SOURCEY_DIR} EQUAL "sourcey-ROOT-NOTFOUND")
-  message(FATAL_ERROR "Variable SOURCEY_DIR is empty")
-endif(${SOURCEY_DIR} EQUAL "sourcey-ROOT-NOTFOUND")
+if(${Sourcey_DIR} EQUAL "sourcey-ROOT-NOTFOUND")
+  message(FATAL_ERROR "Variable Sourcey_DIR is empty")
+endif(${Sourcey_DIR} EQUAL "sourcey-ROOT-NOTFOUND")
 
-set(sourcey_INCLUDEDIR "${SOURCEY_DIR}/include;${SOURCEY_DIR}/share/scy/vendor/include" CACHE PATH "include path for sourcey" FORCE)
+set(sourcey_INCLUDEDIR "${Sourcey_DIR}/include;${Sourcey_DIR}/share/scy/vendor/include" CACHE PATH "include path for sourcey" FORCE)
 
 if(WIN32)
-  set(sourcey_LIBRARYDIR "${SOURCEY_DIR}/lib" CACHE PATH "include path for sourcey" FORCE)
-  set(sourcey_EXT_LIBRARYDIR "${SOURCEY_DIR}/share/scy/vendor/lib" CACHE PATH "include external lib path for sourcey" FORCE)
+  set(sourcey_LIBRARYDIR "${Sourcey_DIR}/lib" CACHE PATH "include path for sourcey" FORCE)
+  set(sourcey_EXT_LIBRARYDIR "${Sourcey_DIR}/share/scy/vendor/lib" CACHE PATH "include external lib path for sourcey" FORCE)
 endif(WIN32)
 
 if(UNIX)
-  set(sourcey_LIBRARYDIR "${SOURCEY_DIR}/lib" CACHE PATH "include path for sourcey" FORCE)
+  set(sourcey_LIBRARYDIR "${Sourcey_DIR}/lib" CACHE PATH "include path for sourcey" FORCE)
 endif(UNIX)
 
 

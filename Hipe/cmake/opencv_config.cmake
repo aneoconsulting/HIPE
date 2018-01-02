@@ -1,0 +1,3 @@
+message(STATUS "Variable path for OpenCV [${OpenCV_DIR}]")
+find_package(OpenCV REQUIRED PATHS "${OpenCV_DIR}")
+message(STATUS "OpenCV_INSTALL_PATH: ${OpenCV_INSTALL_PATH}\n-- OpenCV_INCLUDE_DIRS: ${OpenCV_INCLUDE_DIRS}")

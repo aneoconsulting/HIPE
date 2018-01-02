@@ -22,13 +22,19 @@ if(${LiveMedia_DIR} EQUAL "LIVE-ROOT-NOTFOUND")
   message( FATAL_ERROR "Variable LiveMedia_DIR is empty")
 endif(${LiveMedia_DIR} EQUAL "LIVE-ROOT-NOTFOUND")
 
-set(Live_INCLUDEDIR "${LiveMedia_DIR}/include" CACHE PATH "include path for live" FORCE)
+set(
+  Live_INCLUDEDIR
+  "${LiveMedia_DIR}/include/BasicUsageEnvironment"
+  "${LiveMedia_DIR}/include/groupsock"
+  "${LiveMedia_DIR}/include/liveMedia"
+  "${LiveMedia_DIR}/include/UsageEnvironment"
+  CACHE PATH "include path for live" FORCE)
 
-set(Live_LIBRARDIR "${LiveMedia_DIR}/lib" CACHE PATH "include path for live" FORCE)
+set(Live_LIBRARYDIR "${LiveMedia_DIR}/lib" CACHE PATH "include path for live" FORCE)
 
 set(COMPONENTS liveMedia groupsock  BasicUsageEnvironment UsageEnvironment )
 
-set(lib_path ${Live_LIBRARDIR})
+set(lib_path ${Live_LIBRARYDIR})
 set(_lib_list "")
 
 
@@ -100,4 +106,4 @@ foreach(COMPONENT  ${COMPONENTS})
   list(APPEND Live_LIBRARIES ${Live_${UPPERCOMPONENT}_LIBRARY})
 endforeach(COMPONENT  ${COMPONENTS})
 
-message(STATUS "Live LIBRARIES : ${Live_LIBRARIES}")
+display_pathlist("Live_LIBRARIES" "${Live_LIBRARIES}")

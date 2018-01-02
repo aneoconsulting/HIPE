@@ -2,16 +2,16 @@ cmake_minimum_required(VERSION 3.7.1)
 
 
 
-set(FFMPEG_DIR "FFMPEG-ROOT-NOTFOUND" CACHE PATH "Path to the root live directory")
+set(FFmpeg_DIR "FFMPEG-ROOT-NOTFOUND" CACHE PATH "Path to the root live directory")
 
 
-if(${FFMPEG_DIR} EQUAL "FFMPEG-ROOT-NOTFOUND")
-  message(FATAL_ERROR "Variable FFMPEG_DIR is empty")
-endif(${FFMPEG_DIR} EQUAL "FFMPEG-ROOT-NOTFOUND")
+if(${FFmpeg_DIR} EQUAL "FFMPEG-ROOT-NOTFOUND")
+  message(FATAL_ERROR "Variable FFmpeg_DIR is empty")
+endif(${FFmpeg_DIR} EQUAL "FFMPEG-ROOT-NOTFOUND")
 
-set(FFmpeg_INCLUDEDIR "${FFMPEG_DIR}/include" CACHE PATH "include path for live" FORCE)
+set(FFmpeg_INCLUDEDIR "${FFmpeg_DIR}/include" CACHE PATH "include path for live" FORCE)
 
-set(FFmpeg_LIBRARDIR "${FFMPEG_DIR}/lib" CACHE PATH "include path for live" FORCE)
+set(FFmpeg_LIBRARDIR "${FFmpeg_DIR}/lib" CACHE PATH "include path for live" FORCE)
 
 set(lib_path ${FFmpeg_LIBRARDIR})
 set(_lib_list "")
@@ -36,7 +36,7 @@ else(WIN32)
     ${lib_path}/libavfilter.so
     ${lib_path}/libavformat.so
     ${lib_path}/libavutil.so
-    libboost_wave.so
+#     libboost_wave.so
   )
 endif(WIN32)
 

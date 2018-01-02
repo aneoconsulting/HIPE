@@ -14,22 +14,22 @@ macro(_webrtc_ADJUST_LIB_VARS basename)
 
 endmacro(_webrtc_ADJUST_LIB_VARS basename)
 
-set(WEBRTC_DIR "webrtc-ROOT-NOTFOUND" CACHE PATH "Path to the root webrtc directory" )
+set(WebRTC_DIR "webrtc-ROOT-NOTFOUND" CACHE PATH "Path to the root webrtc directory" )
 set(webrtc_LIBRARYDIR "webrtc-LIBRARY-NOTFOUND" CACHE PATH "Path to the static webrtc Library" )
 
 
-if(${WEBRTC_DIR} EQUAL "webrtc-ROOT-NOTFOUND")
-  message( FATAL_ERROR "Variable WEBRTC_DIR is empty")
+if(${WebRTC_DIR} EQUAL "webrtc-ROOT-NOTFOUND")
+  message( FATAL_ERROR "Variable WebRTC_DIR is empty")
 endif()
 
-set(webrtc_INCLUDEDIR "${WEBRTC_DIR}/include;${WEBRTC_DIR}/include/third_party/boringssl/src/include" CACHE PATH "include path for webrtc" FORCE)
+set(webrtc_INCLUDEDIR "${WebRTC_DIR}/include;${WebRTC_DIR}/include/third_party/boringssl/src/include" CACHE PATH "include path for webrtc" FORCE)
 
 if(WIN32)
-  set(webrtc_LIBRARYDIR "${WEBRTC_DIR}" CACHE PATH "include path for webrtc" FORCE)
+  set(webrtc_LIBRARYDIR "${WebRTC_DIR}" CACHE PATH "include path for webrtc" FORCE)
 endif(WIN32)
 
 if(UNIX)
-  set(webrtc_LIBRARYDIR "${WEBRTC_DIR}" CACHE PATH "include path for webrtc" FORCE)
+  set(webrtc_LIBRARYDIR "${WebRTC_DIR}" CACHE PATH "include path for webrtc" FORCE)
 endif(UNIX)
 
 

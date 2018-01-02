@@ -36,7 +36,13 @@ endif(NOT EXISTS "${HIPE_EXTERNAL}")
 if(WIN32)
   set(HIPE_EXTERNAL_DIR "${HIPE_EXTERNAL}/win64")
 else(WIN32)
-  set(HIPE_EXTERNAL_DIR "${HIPE_EXTERNAL}/linux64")
+  set(HIPE_EXTERNAL_DIR "${HIPE_EXTERNAL}/linux64/install")
+  # Without this, the linker fails to find e.g. libboost_wave when building
+  # multiple libraries ("cannot find -lboost_wave"), despite correctly locating
+  # the libraries in HIPE_EXTERNAL with the find_package command. For example,
+  # building streaming_rtsp or core separately succeeds but building both at the
+  # same time results in the aforementioned error.
+#   link_libraries("-L '${HIPE_EXTERNAL_DIR}/lib'")
 endif(WIN32)
 
 if(WIN32)
@@ -45,44 +51,42 @@ if(WIN32)
   set(BOOST_LIBRARYDIR "${Boost_DIR}/lib64-msvc-14.0" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
   set(BOOST_ROOT "${Boost_DIR}/"  CACHE PATH "BOOST_ROOT" FORCE)
 
-  set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv/" CACHE PATH "OpenCV Directory" FORCE)
+  set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv" CACHE PATH "OpenCV Directory" FORCE)
 
-  set(x264_DIR "${HIPE_EXTERNAL_DIR}/x264-devel-${HIPE_PLATFORM}/" CACHE PATH "x264" FORCE)
+  set(x264_DIR "${HIPE_EXTERNAL_DIR}/x264-devel-win64" CACHE PATH "x264" FORCE)
 
   set(LiveMedia_DIR "${HIPE_EXTERNAL_DIR}/live555/install" CACHE PATH "LiveMedia_DIR" FORCE)
 
-  set(FFMPEG_DIR "${HIPE_EXTERNAL_DIR}/ffmpeg" CACHE PATH "FFMPEG_LIBRARYDIR" FORCE)
+  set(FFmpeg_DIR "${HIPE_EXTERNAL_DIR}/ffmpeg" CACHE PATH "FFMPEG_LIBRARYDIR" FORCE)
 
-  set(SOURCEY_DIR "${HIPE_EXTERNAL_DIR}/libsourcey" CACHE PATH "SOURCEY_LIBRARYDIR" FORCE)
+  set(Sourcey_DIR "${HIPE_EXTERNAL_DIR}/libsourcey" CACHE PATH "SOURCEY_LIBRARYDIR" FORCE)
 
-  set(WEBRTC_DIR "${HIPE_EXTERNAL_DIR}/webrtc" CACHE PATH "SOURCEY_LIBRARYDIR" FORCE)
+  set(WebRTC_DIR "${HIPE_EXTERNAL_DIR}/webrtc" CACHE PATH "SOURCEY_LIBRARYDIR" FORCE)
 
   set(UV_DIR "${HIPE_EXTERNAL_DIR}/libuv"  CACHE PATH "LIBUV_LIBRARYDIR" FORCE)
 
-
-  set(DLIB_DIR "${HIPE_EXTERNAL_DIR}/dlib/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE)
+  set(Dlib_DIR "${HIPE_EXTERNAL_DIR}/dlib/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE)
 
   set(PYTHON27_DIR "${HIPE_EXTERNAL_DIR}/python27/"  CACHE PATH "PYTHON_LIBRARYDIR" FORCE )
 
   set(YOLOV2_DIR "${HIPE_EXTERNAL_DIR}/yolov2/"  CACHE PATH "YOLOV2_LIBRARYDIR" FORCE )
+  set(OpenBLAS_DIR "${HIPE_EXTERNAL_DIR}/OpenBLAS")
 
-  set(USE_DLIB On  CACHE bool "Activate Dlib library" FORCE)
+else(WIN32)
+  # Set Boost hints used by FindBoost.cmake to find the boost libraries.
+  set(BOOST_ROOT "${HIPE_EXTERNAL_DIR}/boost" CACHE PATH "BOOST_ROOT")
+  set(BOOST_INCLUDEDIR "${BOOST_ROOT}/include" CACHE PATH "BOOST_INCLUDEDIR" FORCE)
+  set(BOOST_LIBRARYDIR "${BOOST_ROOT}/lib" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
 
-  set(OpenBLAS_DIR "${${HIPE_EXTERNAL_DIR}}/OpenBLAS/")
+  set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv" CACHE PATH "OpenCV")
 
-else()
-  set(Boost_DIR "${HIPE_EXTERNAL_DIR}" CACHE PATH "Boost_DIR")
-  set(Boost_INCLUDE_DIR "${Boost_DIR}/include" CACHE PATH "Boost_INCLUDE_DIR" FORCE)
-  set(BOOST_LIBRARYDIR "${Boost_DIR}/lib/" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
+  set(x264_DIR "${HIPE_EXTERNAL_DIR}/ffmpeg" CACHE PATH "x264")
 
-  set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/share/OpenCV" CACHE PATH "OpenCV")
+  set(LiveMedia_DIR "${HIPE_EXTERNAL_DIR}/livemedia" CACHE PATH "LiveMedia_DIR")
 
-  set(x264_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "x264")
+  set(FFmpeg_DIR "${HIPE_EXTERNAL_DIR}/ffmpeg" CACHE PATH "FFMPEG_LIBRARYDIR")
 
-  set(LiveMedia_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "LiveMedia_DIR")
+  set(Dlib_DIR "${HIPE_EXTERNAL_DIR}/dlib" CACHE PATH "DLIB_LIBRARYDIR")
 
-  set(FFMPEG_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "FFMPEG_LIBRARYDIR")
-
-  set(DLIB_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "DLIB_LIBRARYDIR")
   set(PYTHON27_DIR "${HIPE_EXTERNAL_DIR}/python27/"  CACHE PATH "PYTHON_LIBRARYDIR")
-endif()
+endif(WIN32)

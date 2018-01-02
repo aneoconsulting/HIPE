@@ -180,7 +180,7 @@ cv::Mat filter::algos::PPOC::matchImageToBackground(const cv::Mat & image, const
 	cv::Mat backgroundGrayscale = filter::algos::IDPlate::convertColor2Gray(imageBackground);
 	// Create SURF detector
 	int minHessian = 400;
-	
+
 	//// Compute keypoints and their descriptors for both images
 	//std::vector<cv::KeyPoint> keypoints_object, keypoints_back;
 	//cv::Mat descriptors_object, descriptors_back;
@@ -191,7 +191,7 @@ cv::Mat filter::algos::PPOC::matchImageToBackground(const cv::Mat & image, const
 	std::vector<cv::KeyPoint> kptsImage, kptsBackground;
 	detector->detect(imageGrayscale, kptsImage);
 	detector->detect(backgroundGrayscale, kptsBackground);
-	
+
 	cv::Ptr<cv::xfeatures2d::LATCH> latch = cv::xfeatures2d::LATCH::create();
 	cv::Mat descsImage, descsBackground;
 	latch->compute(imageGrayscale, kptsImage, descsImage);
@@ -320,7 +320,7 @@ void filter::algos::PPOC::findObject(const cv::Mat & referenceImage, const cv::M
 //		filter::algos::IDPlate::showImage(descsObject);
 //		filter::algos::IDPlate::showImage(descsScene);
 //	}
-//	// Matching descriptor vectors using FLANN matcher 
+//	// Matching descriptor vectors using FLANN matcher
 //	cv::FlannBasedMatcher matcher;
 //	std::vector<cv::DMatch> matches;
 //	matcher.match(descsObject, descsScene, matches);
@@ -463,7 +463,7 @@ bool filter::algos::PPOC::isObjectPresent(const cv::Mat & queryImage, const IPDe
 		return false;
 	}
 
-	// Matching descriptor vectors using FLANN matcher 
+	// Matching descriptor vectors using FLANN matcher
 	cv::FlannBasedMatcher matcher;
 	std::vector<cv::DMatch> matches;
 	matcher.match(descROI, descQuery, matches);	// <==

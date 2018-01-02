@@ -1,71 +1,30 @@
-cmake_minimum_required (VERSION 3.7.1)
-
-# include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-set(Hipe_INCLUDEDIR "../../header/")
 
-set(_src_core_path ${CMAKE_CURRENT_SOURCE_DIR})
-message(STATUS "Get source path = ${_src_core_path}" )
-file(
-    GLOB_RECURSE _source_list
-    LIST_DIRECTORIES false
-    "${_src_core_path}/*.c*"
-)
 
-set(_src_core_inc_path ${CMAKE_SOURCE_DIR}/header/core)
-file(
-    GLOB_RECURSE _header_list
-    LIST_DIRECTORIES false
-    "${_src_core_inc_path}/*.h*"
-)
+add_hipe_library(core)
+
 
 ##Get BUILD from git file
 file(STRINGS "${CMAKE_SOURCE_DIR}/BUILD_VERSION.txt" BUILD_VERSION)
 
-
-
-##core LIBRARY
-
-add_library(core STATIC ${_source_list} ${_header_list})
-
-if (UNIX)
-target_compile_options(core PRIVATE -fPIC)
-endif()
-
 target_compile_definitions(core PRIVATE "-DUSE_BOOST_REGEX" "-DCORE_BUILD" "-DBUILD_VERSION=${BUILD_VERSION}")
 
-include_directories(core ${Hipe_INCLUDEDIR})
 target_link_libraries(core ${Boost_LIBRARIES})
 target_link_libraries(core ${CMAKE_THREAD_LIBS_INIT})
 
+prepend_target_include_directories_if_necessary(core "${Boost_INCLUDE_DIR}")
 
 
-foreach(_source IN ITEMS ${_source_list})
-  message(STATUS "item source = ${_source}")
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${_src_core_path}" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-
-    source_group("source\\${_group_path}" FILES "${_source}")
-endforeach()
-
-foreach(_source IN ITEMS ${_header_list})
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${_src_core_inc_path}" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-    source_group("header\\${_group_path}" FILES "${_source}")
-endforeach()
-
-include_directories(core ${_src_core_inc_path})
-
+# FIXME
+# What is this supposed to do? Should "binary" be "core"?
+# Other files with similar blocks use different conditions while still
+# mentioning MSYS. Should they check the same condition?
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
   message(STATUS "Test if it works with windows")
-    target_link_libraries(binary ws2_32 wsock32)
   target_link_libraries(binary ws2_32 wsock32)
+  target_link_libraries(binary ws2_32 wsock32)
+endif(MSYS)
 
-endif()
-
-
-install(TARGETS core DESTINATION ../../target/)
-#install(TARGETS core DESTINATION /usr/local/lib/)
+display_target_properties(core)

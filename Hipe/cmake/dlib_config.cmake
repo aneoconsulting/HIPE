@@ -15,17 +15,17 @@ macro(_Dlib_ADJUST_LIB_VARS basename)
 
 endmacro(_Dlib_ADJUST_LIB_VARS basename)
 
-set(DLIB_DIR "DLIB-ROOT-NOTFOUND" CACHE PATH "Path to the root dlib directory")
+set(Dlib_DIR "DLIB-ROOT-NOTFOUND" CACHE PATH "Path to the root dlib directory")
 #set(DLIB_LIBRARYDIR "DLIB-LIBRARY-NOTFOUND" CACHE PATH "Path to the static dlib Library")
 
 
-if(${DLIB_DIR} EQUAL "DLIB-ROOT-NOTFOUND")
-  message(FATAL_ERROR "Variable DLIB_DIR is empty")
+if(${Dlib_DIR} EQUAL "DLIB-ROOT-NOTFOUND")
+  message(FATAL_ERROR "Variable Dlib_DIR is empty")
 endif()
 
-set(Dlib_INCLUDEDIR "${DLIB_DIR}/include" CACHE PATH "include path for dlib" FORCE)
+set(Dlib_INCLUDEDIR "${Dlib_DIR}/include" CACHE PATH "include path for dlib" FORCE)
 
-set(Dlib_LIBRARY_DIR "${DLIB_DIR}/lib" CACHE PATH "include path for dlib" FORCE)
+set(Dlib_LIBRARY_DIR "${Dlib_DIR}/lib" CACHE PATH "include path for dlib" FORCE)
 
 set(COMPONENTS dlib)
 
