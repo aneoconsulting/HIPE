@@ -2,11 +2,13 @@
 #include <data/ImageData.h>
 #include <pydata/pyImageData.h>
 
-
-template <>
-pyData* pydata::pyDataConverter::convertTo(data::ImageData& dataIn)
+namespace pydata
 {
-	pyImageData pyData();
+  template <>
+  pyData* pydata::pyDataConverter::convertTo(data::ImageData& dataIn)
+  {
+    pyImageData pyData();
 
-	return nullptr;
+    return nullptr;
+  }
 }

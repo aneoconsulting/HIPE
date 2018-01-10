@@ -25,12 +25,23 @@ if (${PYTHON27_DIR} EQUAL "PYTHON27-ROOT-NOTFOUND")
 	message( FATAL_ERROR "Variable PYTHON27_DIR is empty")
 endif()
 
+if (WIN32)
+
 set(Python27_INCLUDEDIR "${PYTHON27_DIR}/include;${PYTHON27_DIR}/lib/site-packages/numpy/core/include" CACHE PATH "include path for python27" FORCE)
 
 set(Python27_LIBRARY_DIR "${PYTHON27_DIR}/libs" CACHE PATH "include path for python27" FORCE)
+else()
+set(Python27_INCLUDEDIR "/usr/include/python2.7/;/usr/lib/python2.7/dist-packages/numpy/core/include" CACHE PATH "include path for python27" FORCE)
 
+set(Python27_LIBRARY_DIR "/usr/lib/x86_64-linux-gnu/" CACHE PATH "include path for python27" FORCE)
+
+endif()
+
+if (WIN32)
 set(COMPONENTS python27 )
-
+else()
+  set(COMPONENTS python2.7 )
+endif()
 set(lib_path ${Python27_LIBRARY_DIR})
 set(_lib_list "")
 
@@ -38,7 +49,7 @@ set(_lib_list "")
 if (WIN32)
 set(EXTENSION .lib)
 else()
-set(EXTENSION .a)
+set(EXTENSION .so)
 endif()
 
 foreach( COMPONENT  ${COMPONENTS} )
