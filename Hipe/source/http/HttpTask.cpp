@@ -203,8 +203,9 @@ void http::HttpTask::runTask() const
 			//Check if data is present
 			if (treeRequest.count("data") != 0)
 			{
-				
-				auto data = orchestrator::Composer::getDataFromComposer(treeRequest.get_child("data"));
+				boost::property_tree::ptree & pt = treeRequest.get_child("data");
+				json::JsonTree jtr(pt);
+				auto data = orchestrator::Composer::getDataFromComposer(jtr);
 				//Start processing Algorithm with data
 				data::Data outputData;
 

@@ -24,7 +24,7 @@
 	#if __GNUC__ >= 4
 		#define JSON_EXPORT __attribute__ ((visibility ("default")))
 		#define JSON_LOCAL  __attribute__ ((visibility ("hidden")))
-		#define JSON_EXTERN 
+		#define JSON_EXTERN extern
 	#else
 		#define JSON_EXPORT
 		#define JSON_LOCAL

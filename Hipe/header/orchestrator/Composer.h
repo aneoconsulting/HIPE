@@ -33,8 +33,11 @@ namespace orchestrator
 		static std::vector<T> as_vector(const json::JsonTree & pt, const char* key)
 		{
 			std::vector<T> r;
-			for (auto& item : pt.get_child(key))
-				r.push_back(item.second.get_value<T>());
+			for (auto& item : pt.allchildren(key))
+			{
+				json::JsonTree tr = item.second;
+				r.push_back(tr.get_value<T>());
+			}
 			return r;
 		}
 

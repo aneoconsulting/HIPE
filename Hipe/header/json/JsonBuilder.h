@@ -46,6 +46,8 @@ namespace json
 
 	};
 
+	template <> json::JsonTree JsonBuilder::buildJson<data::OutputData>(const data::OutputData & data);
+	
 	JSON_EXTERN template JSON_EXPORT json::JsonTree JsonBuilder::buildJson<data::OutputData>(const data::OutputData & data);
 }
 

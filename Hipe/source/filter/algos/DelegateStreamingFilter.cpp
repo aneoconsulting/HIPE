@@ -2,6 +2,7 @@
 #include <filter/algos/DelegateStreamingFilter.h>
 #include <thread>
 #include <boost/thread/thread.hpp>
+#include <chrono>
 
 namespace filter
 {
@@ -44,7 +45,6 @@ namespace filter
 		void DelegateStreamingFilter::startStreamReader()
 		{
 			DelegateStreamingFilter* This = this;
-			using namespace std::chrono_literals;
 
 			readerTask = new boost::thread([This]
 			{
@@ -54,7 +54,7 @@ namespace filter
 					if (!This->reader)
 					{
 						This->reader.reset(new data::FileVideoInput("udpsrc port=8865 ! application/x-rtp,media=video,clock-rate=90000,encoding-name=H264 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! timeoverlay shaded-background=true deltay=20 ! appsink sync=false", false));
-						std::this_thread::sleep_for(40s);
+						std::this_thread::sleep_for(std::chrono::seconds(40));
 						This->reader->openFile();
 					}
 					data::ImageData frame = This->reader->newFrame();

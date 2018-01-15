@@ -2,7 +2,6 @@
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include "PtreeIterator.h"
 
 namespace json
 {
@@ -107,7 +106,7 @@ namespace json
 		_jsonPtree = std::make_shared<boost::property_tree::ptree>(ptree);
 	}
 
-	boost::property_tree::ptree JsonTree::get_child(const char* str) const
+	boost::property_tree::ptree & JsonTree::get_child(const char* str) const
 	{
 		
 		return _jsonPtree->get_child(str);
@@ -128,9 +127,7 @@ namespace json
 	JsonTree& JsonTree::put(std::string key, std::string value)
 	{
 		auto p = _jsonPtree->put(key, value);
-		JsonTree j;
-		j.set_json_tree(p);
-		return j;
+		return *this;
 	}
 
 	//boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>>::iterator JsonTree::push_back(std::string p1, JsonTree &p2)
@@ -168,10 +165,59 @@ namespace json
 		return _jsonPtree->get<double>(path);
 	}
 
-	template <> JSON_EXPORT
+	template <> int JsonTree::get_value()
+	{
+		return _jsonPtree->get_value<int>();
+	}
+
+	template <> std::string JsonTree::get_value()
+	{
+		return _jsonPtree->get_value<std::string>();
+	}
+
+	template <> bool JsonTree::get_value()
+	{
+		return _jsonPtree->get_value<bool>();
+	}
+
+	template <> float JsonTree::get_value()
+	{
+		return _jsonPtree->get_value<float>();
+	}
+
+	template <> double JsonTree::get_value()
+	{
+		return _jsonPtree->get_value<double>();
+	}
+	
+	template <>
+	std::string JsonTree::get(std::string path) const
+	{
+		  return getString(path);
+	}
+
+	template <>
 	int JsonTree::get<int>(std::string path) const
 	{
 		return getInt(path);
+	}
+
+	template <>
+	bool JsonTree::get<bool>(std::string path) const
+	{
+		return getBool(path);
+	}
+
+	template <>
+	double JsonTree::get<double>(std::string path) const
+	{
+		return getDouble(path);
+	}
+
+	template <>
+	float JsonTree::get<float>(std::string path) const
+	{
+		return getFloat(path);
 	}
 
 
