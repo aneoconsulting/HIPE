@@ -1,5 +1,6 @@
 #include <json/JsonFilterNode/JsonFilterNode.h>
 #include <json/JsonTree.h>
+#include <boost/property_tree/ptree.hpp>
 
 namespace json
 {
@@ -29,7 +30,7 @@ namespace json
 
 			if (_params.count(field) != 0)
 			{
-				__invoke(_filter, "set_" + copyField + "_from_json", _params.get_json_ptree());
+				__invoke(_filter, "set_" + copyField + "_from_json", _params);
 			}
 		}
 	}

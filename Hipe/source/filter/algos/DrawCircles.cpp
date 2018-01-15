@@ -3,6 +3,7 @@
 #include <filter/algos/DrawCircles.h>
 #include <data/ShapeData.h>
 #include <data/ImageData.h>
+#include <opencv2/imgproc.hpp>
 
 
 namespace filter
@@ -46,7 +47,7 @@ namespace filter
 						cv::Point const center(cvRound(circles.CirclesArray()[i][0]), cvRound(circles.CirclesArray()[i][1]));
 						auto  const radius = cvRound(circles.CirclesArray()[i][2]);
 						// Draw perimeter.
-						circle(images.getMat(), center, radius, circle_color, thickness, 8, 0);
+						cv::circle(images.getMat(), center, radius, circle_color, thickness, 8, 0);
 						// Draw center.
 						circle(images.getMat(), center, center_radius, center_color, -thickness, 8, 0);
 						putText(images.getMat(), std::to_string(i), center, CV_FONT_HERSHEY_PLAIN, font_scale, text_color, 2);

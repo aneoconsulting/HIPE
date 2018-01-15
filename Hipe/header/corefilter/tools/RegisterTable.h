@@ -9,12 +9,16 @@
 #include <core/HipeException.h>
 #include <algorithm>
 #include <sstream>
-#include <filter/tools/filterMacros.h>
+#include <corefilter/tools/filterMacros.h>
 #include <data/IOData.h>
 #include <data/IODataType.h>
-#include <filter/filter_export.h>
-#include <filter/Model.h>
+#include <corefilter/filter_export.h>
+#include <corefilter/Model.h>
 
+class FILTER_EXPORT RegisterTable;
+
+
+FILTER_EXPORT RegisterTable* registerInstance();
 
 /**
  * \brief This class register every class and setter functions coming from class inheriting of Model and IFfilter
@@ -44,22 +48,18 @@ private:
 		
 	}
 
-	static RegisterTable* instance;
+	
 
 
 public:
-
+	friend RegisterTable* registerInstance();
 	/**
 	 * \brief Get only a instance of RegisterTable
 	 * \return the single instance of RegisterTable
 	 */
 	static RegisterTable& getInstance()
 	{
-		if (instance == nullptr)
-		{
-			instance = new RegisterTable();
-		}
-		return *instance;
+		return *registerInstance();
 	}
 
 public:
@@ -183,3 +183,5 @@ FILTER_EXPORT filter::Model* copyFilter(filter::Model* filter);
 FILTER_EXPORT filter::Model* copyAlgorithms(filter::Model* root);
 
 FILTER_EXPORT HipeStatus freeAlgorithms(filter::Model* root);
+
+

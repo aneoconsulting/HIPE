@@ -1,4 +1,6 @@
 #include <data/FileImageData.h>
+#include <core/base64.h>
+#include <boost/filesystem/path.hpp>
 
 namespace data
 {
@@ -7,6 +9,36 @@ namespace data
 		return cv::Mat::zeros(0, 0, CV_8UC1);
 	}
 
+	/**
+	 * \brief Default fileImage constructor for private usage only
+	 */
+	FileImageData::FileImageData() : IOData(IODataType::IMGF)
+	{
+		_filePath = std::make_shared<boost::filesystem::path>();
+	}
+
+
+	/**
+	* \brief Constructor with path to image
+	* \param filePath Complete path to the image
+	*/
+	FileImageData::FileImageData(const std::string& filePath) : IOData(IODataType::IMGF)
+	{
+		Data::registerInstance(new FileImageData());
+		This()._filePath = std::make_shared<boost::filesystem::path>(filePath);
+
+		This()._type = IMGF;
+
+		cv::Mat mat = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
+		if (mat.empty())
+		{
+			std::stringstream strbuild;
+			strbuild << "Cannot open file : " << filePath;
+
+			throw HipeException(strbuild.str());
+		}
+		This()._array.push_back(mat);
+	}
 	FileImageData::FileImageData(const std::string& base64Data, const std::string& format, int width, int height, int channels) : IOData(IODataType::IMGF)
 	{
 		// Decode base64
@@ -45,7 +77,7 @@ namespace data
 
 		// Construct FileImageData object
 		Data::registerInstance(new FileImageData());
-		This()._filePath = format;
+		This()._filePath = std::make_shared<boost::filesystem::path>(format);
 		This()._type = IMGF;
 
 		// Handle non continuous matrices (will most probably never occur)

@@ -1,13 +1,13 @@
 #pragma once
 #include <map>
-#include <filter/Model.h>
+#include <corefilter/Model.h>
 #include <json/JsonFilterNode/JsonFilterNode.h>
 #include <core/HipeException.h>
-
+#include <json/json_export.h>
 
 namespace json
 {
-	class JsonFilterTree : public filter::Model
+	class JSON_EXPORT JsonFilterTree : public filter::Model
 	{
 		std::map<std::string, Model *> _filterMap;
 

@@ -1,4 +1,5 @@
 #include <filter/algos/ReshapeImage.h>
+#include <opencv2/video/tracking.hpp>
 
 HipeStatus filter::algos::ReshapeImage::process()
 {

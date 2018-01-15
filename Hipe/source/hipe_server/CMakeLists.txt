@@ -80,7 +80,7 @@ target_link_libraries(hipe_server data)
 target_link_libraries(hipe_server http)
 target_link_libraries(hipe_server json)
 target_link_libraries(hipe_server orchestrator)
-target_link_libraries(hipe_server streaming)
+##target_link_libraries(hipe_server streaming)
 
 
 

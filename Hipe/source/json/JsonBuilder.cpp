@@ -2,6 +2,7 @@
 #include <data/OutputData.h>
 #include <data/ImageArrayData.h>
 #include <data/ImageEncodedData.h>
+#include <boost/property_tree/ptree.hpp>
 
 namespace json
 {
@@ -20,6 +21,7 @@ namespace json
 
 		auto tree = new JsonFilterTree();;
 		tree->setName(algoName);
+		
 
 		for (auto filter = filters.begin(); filter != filters.end(); ++filter)
 		{

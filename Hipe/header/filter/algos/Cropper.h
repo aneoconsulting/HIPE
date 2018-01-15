@@ -2,9 +2,9 @@
 
 
 #pragma once
-#include <filter/tools/RegisterTools.hpp>
-#include <filter/tools/RegisterClass.h>
-#include <filter/IFilter.h>
+#include <corefilter/tools/RegisterTools.hpp>
+#include <corefilter/tools/RegisterClass.h>
+#include <corefilter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <data/PatternData.h>

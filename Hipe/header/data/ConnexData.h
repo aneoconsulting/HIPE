@@ -1,14 +1,10 @@
 #pragma once
 
-#include <queue>
-#include <map>
-#include <opencv2/core/mat.hpp>
-#include "core/HipeException.h"
-#include "IOData.h"
-#include <core/queue/ConcurrentQueue.h>
-#include <data/IOData.h>
-#include <data/DataPort.h>
 
+#include <map>
+#include <core/HipeException.h>
+#include <core/queue/ConcurrentQueue.h>
+#include <data/DataPort.h>
 #include <data/data_export.h>
 
 namespace data

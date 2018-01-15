@@ -1,5 +1,7 @@
 #pragma once
 #include <data/IOData.h>
+#include <opencv2/core/mat.hpp>
+#include <vector>
 
 namespace data
 {

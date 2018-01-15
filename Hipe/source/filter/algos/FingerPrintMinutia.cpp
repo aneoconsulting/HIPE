@@ -3,15 +3,13 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <stdio.h>
-#include <iostream>
+
 #include "algorithm"
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/xfeatures2d.hpp"
-
+#include <opencv2/imgproc.hpp>
 
 
 using namespace std;

@@ -1,4 +1,6 @@
 #include <filter/algos/PPOC.h>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/video/background_segm.hpp>
 
 HipeStatus filter::algos::PPOC::process()
 {

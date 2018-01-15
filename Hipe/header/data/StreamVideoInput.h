@@ -6,9 +6,13 @@
 #include <opencv2/opencv.hpp>
 #include <boost/filesystem/path.hpp>
 #include <data/VideoData.h>
+
+#ifdef OLD_CODE
 #include <streaming/CaptureVideo.h>
+#endif
+
 #include <data/data_export.h>
-#include "ImageData.h"
+#include <data/ImageData.h>
 
 
 namespace data
@@ -25,7 +29,9 @@ namespace data
 		/**
 		 * \brief the data of the stream
 		 */
+#ifdef OLD_CODE
 		std::shared_ptr<CaptureVideo> _capture;
+#endif
 
 		cv::Mat asOutput() const;
 

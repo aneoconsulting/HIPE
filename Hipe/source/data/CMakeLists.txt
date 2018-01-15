@@ -76,11 +76,11 @@ endforeach()
 include_directories(data ${_src_data_inc_path})
 
 if (UNIX)
-	SET (MYLIBS -Wl,--whole-archive streaming core -Wl,--no-whole-archive)
+	SET (MYLIBS -Wl,--whole-archive core -Wl,--no-whole-archive)
 endif()
 
 if(WIN32)
-	SET (MYLIBS streaming core)
+	SET (MYLIBS core)
 endif()
 
 target_link_libraries(data ${MYLIBS} )

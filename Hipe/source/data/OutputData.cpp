@@ -1,5 +1,7 @@
 #include <data/OutputData.h>
-#include "core/base64.h"
+#include <core/base64.h>
+#include <vector>
+#include <opencv2/opencv.hpp>
 
 namespace data
 {

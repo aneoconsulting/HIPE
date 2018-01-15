@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include <filter/tools/functor.hpp>
-#include <filter/tools/filterMacros.h>
+#include <corefilter/tools/functor.hpp>
+#include <corefilter/tools/filterMacros.h>
 
 template <class _myC>
 class ProxyFunctor

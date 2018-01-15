@@ -1,5 +1,5 @@
 #pragma once
-#include <filter/Model.h>
+#include <corefilter/Model.h>
 #include <boost/thread.hpp>
 #include <atomic>
 

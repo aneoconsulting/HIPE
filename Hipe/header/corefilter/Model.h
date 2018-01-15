@@ -4,6 +4,12 @@
 #include <data/IOData.h>
 #include <data/DataAccess.h>
 #include <data/ConnexData.h>
+#include <corefilter/filter_export.h>
+
+
+namespace cv {
+	class Mat;
+}
 
 namespace filter
 {
@@ -11,12 +17,16 @@ namespace filter
 	 * \brief The Model class is the foundatation of every Hipe's filter. It's the base class they should implement.
 	 * \todo
 	 */
-	class Model
+	class FILTER_EXPORT Model
 	{
 	protected:
 		std::string _name;
 		std::string _constructor;
 		int _level;
+
+		std::map<std::string, Model *> _parentFilters;
+		std::map<std::string, Model *> _childFilters;
+
 
 		Model() : _level(0)
 		{

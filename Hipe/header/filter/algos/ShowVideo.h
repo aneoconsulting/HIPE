@@ -1,6 +1,6 @@
 #pragma once
-#include <filter/tools/RegisterTools.hpp>
-#include <filter/IFilter.h>
+#include <corefilter/tools/RegisterTools.hpp>
+#include <corefilter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -64,7 +64,20 @@ namespace filter
 				}
 
 				if (_connexData.size() == 0)
-					throw HipeException("There is no data to display coming from the parent node [NAME]");
+				{
+					cv::Mat myImage = cv::Mat::zeros(640, 320, CV_8UC3);
+					cv::Scalar color(255, 255, 255);
+
+					cv::putText(myImage, "No INPUT VIDEO", cv::Point(320, 160),
+						cv::HersheyFonts::FONT_HERSHEY_SIMPLEX, 1, color, 2);
+
+					::cv::imshow(_name, myImage);
+
+					if (waitkey >= 0)
+						cvWaitKey(waitkey);
+
+					return OK;
+				}
 
 				data::ImageArrayData images = _connexData.pop();
 
@@ -73,7 +86,14 @@ namespace filter
 				for (auto& myImage : images.Array())
 				{
 					if (myImage.rows <= 0 || myImage.cols <= 0)
-						throw HipeException("Image to show doesn't data");
+					{
+						myImage = cv::Mat::zeros(640, 320, CV_8UC3);
+						cv::Scalar color(255,255, 255);
+
+						cv::putText(myImage, "No INPUT VIDEO", cv::Point(320, 160),
+							cv::HersheyFonts::FONT_HERSHEY_SIMPLEX, 1, color, 2);
+
+					}
 					::cv::imshow(_name, myImage);
 
 					if (waitkey >= 0)

@@ -1,7 +1,7 @@
 #pragma once
-#include <filter/tools/RegisterClass.h>
+#include <corefilter/tools/RegisterClass.h>
 #include <core/HipeException.h>
-#include <filter/IFilter.h>
+#include <corefilter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <data/ImageArrayData.h>
 #include "opencv2/imgproc/imgproc.hpp"

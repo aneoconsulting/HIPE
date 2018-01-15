@@ -7,6 +7,7 @@
 #include <data/PatternData.h>
 #include <orchestrator/TaskInfo.h>
 #include "data/DirPatternData.h"
+#include "corefilter/tools/RegisterTable.h"
 
 
 namespace orchestrator

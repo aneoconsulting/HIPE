@@ -4,7 +4,7 @@
 #include <iostream>
 #include <type_traits>
 #include <core/Singleton.h>
-#include <filter/Model.h>
+#include <corefilter/Model.h>
 #include <core/HipeException.h>
 #include <json/JsonFilterNode/JsonFilterTree.h>
 #include <data/Data.h>

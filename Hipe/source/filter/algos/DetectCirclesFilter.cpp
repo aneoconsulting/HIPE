@@ -1,4 +1,5 @@
 #include <filter/algos/DetectCirclesFilter.h>
+#include <opencv2/imgproc.hpp>
 
 HipeStatus filter::algos::DetectCirclesFilter::process()
 {

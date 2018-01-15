@@ -1,6 +1,8 @@
 #pragma once
 #include <data/IOData.h>
 #include <data/data_export.h>
+#include <vector>
+#include <opencv2/core/mat.hpp>
 
 namespace data
 {

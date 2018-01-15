@@ -1,6 +1,7 @@
 #include <data/StreamVideoInput.h>
 #include <opencv2/core/cvdef.h>
 #include <data/IOData.h>
+#include "core/HipeStatus.h"
 
 namespace data
 {
@@ -15,14 +16,16 @@ namespace data
 
 	StreamVideoInput::StreamVideoInput(const std::string & url) : VideoData(STRMVID)
 	{
+
 		Data::registerInstance(new StreamVideoInput());
 
 		This()._filePath = url;
-
+#ifdef OLD_CODE
 		std::string instanceName = "RTSPCapture";
 		This()._capture.reset(CaptureVideoFactory::getInstance()->getCaptureVideo(instanceName, url), [](CaptureVideo*) {});
 		This()._capture.get()->create();
 		This()._capture.get()->open();
+#endif
 	}
 
 
@@ -37,27 +40,33 @@ namespace data
 
 	Data StreamVideoInput::newFrame()
 	{
+
 		cv::Mat data;
+#ifdef OLD_CODE
 		HipeStatus hipe_status = This_const()._capture.get()->read(data);
 		if (hipe_status == UNKOWN_ERROR)
 			throw HipeException("Error grabbing frame");
 		if (hipe_status == END_OF_STREAM)
 			return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
-
+#endif
 		return static_cast<Data>(ImageData(data));
 	}
 
 	bool StreamVideoInput::empty() const
 	{
 		cv::Mat data;
+#ifdef OLD_CODE
 		return This_const()._capture.get()->read(data) != OK;;
+#else
+		return false;
+#endif
 	}
 
 	StreamVideoInput::StreamVideoInput(const StreamVideoInput &data) : VideoData(data._type)
 	{
 		Data::registerInstance(data._This);
 		This()._filePath = data.This_const()._filePath;
-
+#ifdef OLD_CODE
 		std::string instanceName = "RTSPCapture";
 
 		//This()._capture.reset(CaptureVideoFactory::getInstance()->getCaptureVideo(instanceName, _filePath.string()), [](CaptureVideo*) {});
@@ -68,5 +77,6 @@ namespace data
 
 		if (This()._capture.get()->open() != OK)
 			throw HipeException("Cannot open streaming capture");
+#endif
 	}
 }

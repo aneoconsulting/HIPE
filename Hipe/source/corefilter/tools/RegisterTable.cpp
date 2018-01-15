@@ -1,14 +1,14 @@
-#include <tools/RegisterTable.h>
-#include <Model.h>
+#include <corefilter/tools/RegisterTable.h>
+#include <corefilter/Model.h>
 #include <stack>
 #include <core/Invoker.h>
-#include <filter/tools/filterMacros.h>
-#include <data/FileImageData.h>
-#include <filter/IFilter.h>
-#include <filter/Model.h>
-#include <filter/filter_export.h>
+#include <corefilter/tools/filterMacros.h>
 
-FILTER_EXPORT RegisterTable* RegisterTable::instance = nullptr;
+#include <corefilter/IFilter.h>
+#include <corefilter/filter_export.h>
+#include <mutex>
+
+RegisterTable* registerInstance_l = nullptr;
 
 
 void* newFilter(std::string className)
@@ -39,15 +39,15 @@ filter::Model* copyAlgorithms(filter::Model* root)
 	if (root == nullptr) return nullptr;
 	filter::Model* newRoot = copyFilter(root);
 
-	filter::IFilter* copyParent;
-	filter::IFilter* parent = static_cast<filter::IFilter*>(root);
+	filter::Model* copyParent;
+	filter::Model* parent = static_cast<filter::IFilter*>(root);
 	
-	std::stack<filter::IFilter*> heap;
-	std::stack<filter::IFilter*> copyHeap;
+	std::stack<filter::Model*> heap;
+	std::stack<filter::Model*> copyHeap;
 
 	heap.push(parent);
 	copyHeap.push((filter::IFilter*)newRoot);
-	std::map<std::string, filter::IFilter *> copyChildCache; //To avoid multiple instance of same object with the same name;
+	std::map<std::string, filter::Model *> copyChildCache; //To avoid multiple instance of same object with the same name;
 
 	while (!heap.empty())
 	{
@@ -58,14 +58,14 @@ filter::Model* copyAlgorithms(filter::Model* root)
 
 		for (auto childMap : parent->getChildrens())
 		{
-			filter::IFilter* copyChild = nullptr;
+			filter::Model* copyChild = nullptr;
 			if (copyChildCache.find(childMap.second->getName()) != copyChildCache.end())
 			{
 				copyChild = copyChildCache[childMap.second->getName()];
 			}
 			else
 			{
-				copyChild = static_cast<filter::IFilter*>(copyFilter(childMap.second));
+				copyChild = static_cast<filter::Model*>(copyFilter(childMap.second));
 				copyChildCache[childMap.second->getName()] = copyChild;
 				
 			}
@@ -118,7 +118,19 @@ HipeStatus freeAlgorithms(filter::Model* root)
 	return OK;
 }
 
+RegisterTable* registerInstance()
+{
+	static std::mutex _mutex;
 
+	_mutex.lock();
+	if (registerInstance_l == nullptr)
+	{
+		registerInstance_l = new RegisterTable();
+	}
+	_mutex.unlock();
+
+	return registerInstance_l;
+}
 
 
 const std::vector<std::string> getTypes(std::string className)

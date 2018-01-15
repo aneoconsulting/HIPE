@@ -7,6 +7,9 @@
 #include <http/CommandManager.h>
 #include <core/version.h>
 #include <core/Localenv.h>
+
+#include <boost/property_tree/ptree.hpp>
+
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>
 #include <assert.h>
@@ -129,10 +132,10 @@ void http::HttpTask::runTask() const
 			json::JsonTree treeResponse;
 			json::JsonTree treeResponseInfo;
 			treeRequest.read_json(_request->content);
-			//read_json(_request->content, treeRequest.get_json_ptree());
+			
 			if (treeRequest.count("command") != 0)
 			{
-				auto command = treeRequest.get_child("command").get("type");
+				auto command = treeRequest.get_child("command").get<std::string>("type");
 				json::JsonTree  ltreeResponse;// = new JsonTree;
 				auto commandFound = CommandManager::callOption(command, get_version(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, kill_command(), &ltreeResponse);
@@ -147,7 +150,7 @@ void http::HttpTask::runTask() const
 					ltreeResponse.Add(command, " command not found");
 				}
 				stringstream ldataResponse;
-				write_json(ldataResponse, ltreeResponse.get_json_ptree());
+				ltreeResponse.write_json(ldataResponse);
 				*_response << "HTTP/1.1 200 OK\r\n"
 					<< "Access-Control-Allow-Origin: *\r\n"
 					<< "Content-Type: application/json\r\n"
@@ -179,7 +182,7 @@ void http::HttpTask::runTask() const
 			dataResponse.str(std::string());
 
 			HttpTask::logger << "Check if orchestrator need to be built";
-			auto orchestrator = json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest);//core::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest->get_json_ptree());
+			auto orchestrator = json::JsonBuilder::getOrBuildOrchestrator(dataResponse, treeRequest);
 			treeResponseInfo.Add("Orchestrator", dataResponse.str());
 			dataResponse.str(std::string());
 
@@ -194,7 +197,7 @@ void http::HttpTask::runTask() const
 			treeResponse.AddChild("Status", treeResponseInfo);
 
 			std::stringstream status;
-			write_json(status, treeResponseInfo.get_json_ptree());
+			treeResponseInfo.write_json(status);
 			HttpTask::logger << "Response info :\n" << status.str();
 
 			//Check if data is present

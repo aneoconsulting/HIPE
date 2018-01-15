@@ -1,4 +1,4 @@
-#include <OrderCircles.h>
+#include <filter/algos/OrderCircles.h>
 #include <data/ShapeData.h>
 
 namespace filter

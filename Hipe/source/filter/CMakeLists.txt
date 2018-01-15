@@ -202,12 +202,12 @@ endforeach()
 
 include_directories(filter ${_src_filter_inc_path})
 if (UNIX)
-	#SET (MYLIBS -Wl,--whole-archive streaming core data -Wl,--no-whole-archive)
-	SET (MYLIBS -Wl,--start-group core streaming data -Wl,--end-group)
+	#SET (MYLIBS -Wl,--whole-archive core data -Wl,--no-whole-archive)
+	SET (MYLIBS -Wl,--start-group core corefilter data json -Wl,--end-group)
 endif()
 
 if(WIN32)
-	SET (MYLIBS streaming core data)
+	SET (MYLIBS core corefilter data json)
 endif()
 
 target_link_libraries(filter ${MYLIBS} )

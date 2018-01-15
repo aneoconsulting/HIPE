@@ -4,6 +4,7 @@
 #include <data/IOData.h>
 #include <data/ImageArrayData.h>
 #include <data/data_export.h>
+#include <opencv2/core/mat.hpp>
 
 namespace data
 {

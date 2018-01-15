@@ -1,10 +1,10 @@
 #pragma once
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/mat.hpp>
+
 #include <data/IODataType.h>
-#include <memory>
-#include <data/data_export.h>
 #include <data/Data.h>
+
+#include <data/data_export.h>
+
 
 namespace data
 {

@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
 
-#include <filter/tools/RegisterClass.h>
+#include <corefilter/tools/RegisterClass.h>
 #include <core/HipeException.h>
-#include <filter/IFilter.h>
+#include <corefilter/IFilter.h>
 #include <core/HipeStatus.h>
 
 
@@ -18,7 +18,7 @@
 #include <data/ImageArrayData.h>
 #include <data/ImageData.h>
 #include <data/ShapeData.h>
-#include <filter/filter_export.h>
+#include <corefilter/filter_export.h>
 
 namespace data {
 	class ImageData;

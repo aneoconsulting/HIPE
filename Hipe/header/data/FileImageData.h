@@ -4,10 +4,17 @@
 #include <data/IODataType.h>
 #include <string>
 #include <opencv2/opencv.hpp>
-#include <boost/filesystem/path.hpp>
-#include <core/base64.h>
+
 
 #include <data/data_export.h>
+
+
+namespace boost {
+	namespace filesystem {
+	class path;
+}
+}
+
 
 namespace data
 {
@@ -19,14 +26,15 @@ namespace data
 		/**
 		 * \brief Path to the image
 		 */
-		boost::filesystem::path _filePath;
+		std::shared_ptr<boost::filesystem::path> _filePath;
 
 		inline cv::Mat asOutput();
 	private:
-		FileImageData() : IOData(IODataType::IMGF)
-		{
 
-		}
+		/**
+		* \brief Default fileImage constructor for private usage only
+		*/
+		FileImageData();
 
 	public:
 
@@ -34,7 +42,7 @@ namespace data
 		 * \brief FileImageData copy constructor
 		 * \param right the FileImageData to copy
 		 */
-		FileImageData(const FileImageData & right) : IOData(IODataType::IMGF)
+		FileImageData(const FileImageData& right) : IOData(IODataType::IMGF)
 		{
 			Data::registerInstance(right._This);
 		}
@@ -43,22 +51,7 @@ namespace data
 		 * \brief Constructor with path to image
 		 * \param filePath Complete path to the image
 		 */
-		FileImageData(const std::string & filePath) : IOData(IODataType::IMGF)
-		{
-			Data::registerInstance(new FileImageData());
-			This()._filePath = filePath;
-			This()._type = IMGF;
-
-			cv::Mat mat = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
-			if (mat.empty())
-			{
-				std::stringstream strbuild;
-				strbuild << "Cannot open file : " << filePath;
-
-				throw HipeException(strbuild.str());
-			}
-			This()._array.push_back(mat);
-		}
+		FileImageData(const std::string& filePath);
 
 		/**
 		* \brief Constructor with raw or compressed data of image

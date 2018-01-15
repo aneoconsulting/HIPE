@@ -1,7 +1,7 @@
 #pragma once
-#include <filter/tools/RegisterTools.hpp>
-#include <filter/IFilter.h>
-#include <filter/tools/RegisterTable.h>
+#include <corefilter/tools/RegisterTools.hpp>
+#include <corefilter/IFilter.h>
+#include <corefilter/tools/RegisterTable.h>
 #include <core/HipeException.h>
 #include <data/ConnexData.h>
 

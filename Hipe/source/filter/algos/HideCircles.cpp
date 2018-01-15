@@ -1,8 +1,9 @@
 #pragma once
 
-#include "filter/algos/HideCircles.h"
-#include "data/ShapeData.h"
-#include "data/ImageData.h"
+#include <filter/algos/HideCircles.h>
+#include <data/ShapeData.h>
+#include <data/ImageData.h>
+#include <opencv2/imgproc.hpp>
 
 namespace filter
 {

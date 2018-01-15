@@ -1,5 +1,5 @@
 #include <filter/References.h>
-#include <filter/tools/RegisterTable.h>
+#include <corefilter/tools/RegisterTable.h>
 #include <iostream>
 
 #ifndef WIN32

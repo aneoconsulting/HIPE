@@ -8,8 +8,9 @@
 
 #include "FFmpegH264Encoder.h"
 #include <opencv2/core/mat.hpp>
-#include <data/FileImageData.h>
+#include <core/misc.h>
 #include <thread>
+
 
 namespace MESAI
 {

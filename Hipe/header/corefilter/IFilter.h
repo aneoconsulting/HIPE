@@ -2,8 +2,10 @@
 
 #include <map>
 #include <memory>
-#include <filter/Model.h>
+#include <corefilter/Model.h>
+#include <corefilter/filter_export.h>
 #include <core/HipeStatus.h>
+#include <json/JsonTree.h>
 
 namespace filter {
 	
@@ -11,14 +13,9 @@ namespace filter {
 	 * \brief The IFilter interface is used to specialize a filter to process image based data.
 	 * \todo
 	 */
-	class IFilter : public filter::Model
+	class FILTER_EXPORT IFilter : public filter::Model
 	{
-	protected:
-		
-		std::map<std::string, Model *> _parentFilters;
-		std::map<std::string, Model *> _childFilters;
-		
-		
+
 	public:
 		IFilter() 
 		{

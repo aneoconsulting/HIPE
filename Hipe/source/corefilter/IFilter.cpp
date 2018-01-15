@@ -1,4 +1,4 @@
-#include <filter/IFilter.h>
+#include <corefilter/IFilter.h>
 
 using namespace filter;
 

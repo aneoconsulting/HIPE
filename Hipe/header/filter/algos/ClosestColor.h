@@ -1,6 +1,6 @@
 #pragma once
-#include <filter/tools/RegisterClass.h>
-#include <filter/IFilter.h>
+#include <corefilter/tools/RegisterClass.h>
+#include <corefilter/IFilter.h>
 #include <data/ImageData.h>
 #include <core/HipeStatus.h>
 

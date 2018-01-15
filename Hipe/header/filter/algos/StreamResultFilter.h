@@ -1,12 +1,12 @@
 #pragma once
-#include <filter/tools/RegisterTools.hpp>
-#include <filter/tools/RegisterTable.h>
-#include <filter/IFilter.h>
+#include <corefilter/tools/RegisterTools.hpp>
+#include <corefilter/tools/RegisterTable.h>
+#include <corefilter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <core/queue/ConcurrentQueue.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <streaming/Streaming.h>
-#include <filter/tools/filterMacros.h>
+#include <corefilter/tools/filterMacros.h>
 #include <data/ImageData.h>
 #include <string>
 
@@ -27,7 +27,7 @@ namespace filter
 		 * \todo
 		 * \brief The StreamResultFilter filter is used to stream the result of a graph to a distant target.
 		 */
-		class StreamResultFilter : public IFilter
+		class FILTER_EXPORT StreamResultFilter : public IFilter
 		{
 			//data::ConnexOutput<data::ImageData> connData;
 			CONNECTOR_OUT(data::ImageData);

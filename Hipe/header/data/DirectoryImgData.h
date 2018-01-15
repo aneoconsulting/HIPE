@@ -3,11 +3,11 @@
 #include <boost/log/utility/setup/file.hpp>
 
 
-	namespace data {
+namespace data {
 		/**
 		* \brief DirectoryImageData is the data type used to handle a collection of images contained in a folder. Uses OpenCV.
 		*/
-		class DirectoryImgData : public IOData<ImageArrayData, DirectoryImgData>
+		class DATA_EXPORT DirectoryImgData : public IOData<ImageArrayData, DirectoryImgData>
 		{
 			/**
 			* \brief The path to the folder containing the images
@@ -46,41 +46,7 @@
 				This()._directoryPath = directoryPath;
 			}
 
-			void loadImagesData()
-			{
-				std::vector<cv::String> filenames;
-
-				cv::glob(This()._directoryPath, filenames);
-
-				for (size_t i = 0; i < filenames.size(); ++i)
-				{
-					cv::Mat mat = cv::imread(filenames[i]);
-
-					if (mat.empty())
-					{
-						std::stringstream strbuild;
-						strbuild << "Cannot open file : " << filenames[i];
-						throw HipeException(strbuild.str());
-					}
-
-					cv::putText(mat,
-						removeDirectoryName(filenames[i]),
-						cv::Point(25, 25), // Coordinates
-						cv::FONT_HERSHEY_COMPLEX_SMALL, // Font
-						1.0, // Scale. 2.0 = 2x bigger
-						cv::Scalar(255, 255, 255), // Color
-						1); // Anti-alias
-					This()._array.push_back(mat);
-				}
-				if (This()._array.empty())
-				{
-					std::stringstream iss;
-					iss << "No file loaded from directory : " << _directoryPath;
-					throw HipeException(iss.str());
-				}
-
-
-			}
+			void loadImagesData();
 
 			//DirectoryImgData(const std::string & directoryPath, bool getImages) : IOData(data::IODataType::SEQIMGD)
 			//{

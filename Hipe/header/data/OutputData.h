@@ -1,10 +1,16 @@
 #pragma once
 
 #include <data/IOData.h>
-#include <opencv2/opencv.hpp>
+#include <data/Data.h>
+
 #include <json/JsonTree.h>
 
 #include <data/data_export.h>
+
+namespace cv
+{
+	class Mat;
+}
 
 namespace data
 {
@@ -14,29 +20,26 @@ namespace data
 	 */
 	class DATA_EXPORT OutputData : public IOData<Data, OutputData>
 	{
-	
 	private:
 		Data input;
-	
+
 	public:
 		OutputData() : IOData(IODataType::IMGB64)
 		{
-
 		}
 
-		OutputData(const Data & ref) : IOData(ref.getType())
+		OutputData(const Data& ref) : IOData(ref.getType())
 		{
 			if (ref.getType() != IMGB64) throw HipeException("ERROR data::ImageArrayData::ImageArrayData - Only Connexdata should call this constructor.");
 
 			Data::registerInstance(ref);
-			
+
 			input = ref;
 			_decorate = true;
 		}
 
 		OutputData(IODataType dataType) : IOData(dataType)
 		{
-
 		}
 
 		OutputData& operator=(const Data& left);
@@ -58,7 +61,7 @@ namespace data
 			return input;
 		}
 
-		bool empty()  const
+		bool empty() const
 		{
 			if (_decorate == true)
 				return This_const().empty();

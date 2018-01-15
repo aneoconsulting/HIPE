@@ -1,6 +1,6 @@
 #pragma once
-#include <filter/Model.h>
-#include <filter/tools/RegisterTable.h>
+#include <corefilter/Model.h>
+#include <corefilter/tools/RegisterTable.h>
 #include <json/JsonTree.h>
 namespace json
 {

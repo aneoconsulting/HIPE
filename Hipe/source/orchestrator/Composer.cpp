@@ -3,6 +3,7 @@
 #include <Composer.h>
 #include <data/DirPatternData.h>
 #include <data/SquareCrop.h>
+#include <boost/property_tree/ptree.hpp>
 
 namespace orchestrator
 {
@@ -13,7 +14,7 @@ namespace orchestrator
 		auto child = dataNode.allchildren("array");
 		for (auto itarray = child.begin(); itarray != child.end(); ++itarray)
 		{
-			auto iodata = getDataFromComposer(*itarray->second);
+			auto iodata = getDataFromComposer(itarray->second);
 			res.push_back(iodata);
 		}
 
@@ -52,7 +53,7 @@ namespace orchestrator
 
 	data::Data Composer::loadVideoFromFile(const json::JsonTree& dataNode)
 	{
-		std::string path = dataNode.get("path");
+		std::string path = dataNode.get<std::string>("path");
 		bool loop = false;
 		if (dataNode.count("loop") != 0)
 		{
@@ -78,16 +79,16 @@ namespace orchestrator
 			IODataType ioDataType = DataTypeMapper::getTypeFromString(dataType);
 			if (ioDataType == SQR_CROP)
 			{
-				if (itarray->second->count("SEQIMGD") == 1) {
+				if (itarray->second.count("SEQIMGD") == 1) {
 					isDirPAtterData = true;
-					auto seqimgd = itarray->second->get_child("SEQIMGD");
+					auto seqimgd = itarray->second.get_child("SEQIMGD");
 					auto data = getDataFromComposer("SEQIMGD", seqimgd);
 					res.push_back(data);
 				}
 
-				else if (itarray->second->count("IMGF") == 1)
+				else if (itarray->second.count("IMGF") == 1)
 				{
-					auto inputData = itarray->second->get_child("IMGF");
+					auto inputData = itarray->second.get_child("IMGF");
 					auto outputData = getDataFromComposer("IMGF", inputData);
 					const cv::Mat & imageData = static_cast<const ImageData &>(outputData).getMat();
 
@@ -100,7 +101,7 @@ namespace orchestrator
 				}
 			}
 			else {
-				auto data = getDataFromComposer(dataType, *itarray->second);
+				auto data = getDataFromComposer(dataType, itarray->second);
 				res.push_back(data);
 			}
 
@@ -149,16 +150,16 @@ namespace orchestrator
 		{
 		case data::IODataType::IMGF:
 			Composer::checkJsonFieldExist(dataNode, "path");
-			return loadImageFromFile(dataNode.get("path"));
+			return loadImageFromFile(dataNode.get<std::string>("path"));
 		case data::IODataType::VIDF:
 			Composer::checkJsonFieldExist(dataNode, "path");
 			return loadVideoFromFile(dataNode);
 		case data::IODataType::SEQIMGD:
 			Composer::checkJsonFieldExist(dataNode, "path");
-			return loadImagesFromDirectory(dataNode.get("path"));
+			return loadImagesFromDirectory(dataNode.get<std::string>("path"));
 		case data::IODataType::STRMVID:
 			Composer::checkJsonFieldExist(dataNode, "path");
-			return loadVideoFromStream(dataNode.get("path"));
+			return loadVideoFromStream(dataNode.get<std::string>("path"));
 		case data::IODataType::LISTIO:
 			Composer::checkJsonFieldExist(dataNode, "array");
 			return loadListIoData(dataNode);

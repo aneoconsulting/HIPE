@@ -3,7 +3,7 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #include <boost/preprocessor/variadic/to_seq.hpp>
-#include <boost/property_tree/ptree.hpp>
+
 
 #define TO_STR(A) #A
 
@@ -43,7 +43,7 @@
 		typef params; \
 		typedef typef vartype__##params; \
 		public: \
-		void set_##params##_from_json(boost::property_tree::ptree & jsonClass) \
+		void set_##params##_from_json(::json::JsonTree & jsonClass) \
 		{\
 				this-> params = jsonClass.get<typef>(std::string (#params));\
 		}\
@@ -60,7 +60,7 @@
 #define ADD_ARGS(r, classname, elem)\
 	core::InvokerBase CONCAT4(invoke_set_ , classname, elem, EXPAND_VAR(FILE_BASENAME))  = core::Invoker<void, CONCAT2(classname::vartype__, elem)&>::for_function<classname,  & CONCAT2(classname::set_, elem) >();\
 	CONCAT4(std::string str_ , classname ## _ , elem, EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT2_STR(set_ , elem)), CONCAT4(invoke_set_ , classname, elem, EXPAND_VAR(FILE_BASENAME)));\
-	core::InvokerBase CONCAT5(invoke_set_, classname, elem, _from_json, EXPAND_VAR(FILE_BASENAME) ) = core::Invoker<void, boost::property_tree::ptree &>::for_function<classname, & CONCAT3(classname::set_, elem, _from_json)>();\
+	core::InvokerBase CONCAT5(invoke_set_, classname, elem, _from_json, EXPAND_VAR(FILE_BASENAME) ) = core::Invoker<void, json::JsonTree &>::for_function<classname, & CONCAT3(classname::set_, elem, _from_json)>();\
 	CONCAT5(std::string str_ , classname ## _ , elem, _from_json, EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT3_STR(set_ , elem , _from_json)), CONCAT5(invoke_set_ , classname, elem, _from_json, EXPAND_VAR(FILE_BASENAME)));\
 	core::InvokerBase CONCAT4(invoke_get_ , classname, elem, EXPAND_VAR(FILE_BASENAME))  = core::Invoker<CONCAT2(classname::vartype__, elem)>::for_function<classname, & CONCAT2(classname::get_, elem)>();\
 	CONCAT4(std::string str_get_ , classname ## _ , elem, EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT2_STR(get_ , elem)), CONCAT4(invoke_get_ , classname, elem, EXPAND_VAR(FILE_BASENAME)));\

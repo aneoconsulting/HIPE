@@ -1,7 +1,7 @@
 #include "LiveSourceWithx264.h"
 #include <core/misc.h>
 #include <core/queue/ConcurrentQueue.h>
-#include <data/IOData.h>
+
 #include <UsageEnvironment.hh>
 #include <FramedSource.hh>
 #include "data/ImageArrayData.h"
@@ -48,29 +48,29 @@ LiveSourceWithx264::~LiveSourceWithx264(void)
 void LiveSourceWithx264::encodeNewFrame()
 {
 	rawImage.data = NULL;
-	data::Data data;
-	_concurrent_queue.readyToListen();
+//	data::Data data;
+	//_concurrent_queue.readyToListen();
 
-	_concurrent_queue.wait_and_pop(data);
-	const std::vector<cv::Mat> & mats = static_cast<data::ImageArrayData&>(data).Array();
+	//_concurrent_queue.wait_and_pop(data);
+	//const std::vector<cv::Mat> & mats = static_cast<data::ImageArrayData&>(data).Array();
 
-	//if (mats.size() > 1 ) throw HipeException("Cannot yet stream block of matrix");
-	
-	if (mats.size() >= 1 ) 
-		rawImage = mats[0];
+	////if (mats.size() > 1 ) throw HipeException("Cannot yet stream block of matrix");
+	//
+	//if (mats.size() >= 1 ) 
+	//	rawImage = mats[0];
 
-	// Got new image to stream
-	if (rawImage.data == NULL) throw HipeException("No data found for stream");
+	//// Got new image to stream
+	//if (rawImage.data == NULL) throw HipeException("No data found for stream");
 
-	encoder->encodeFrame(rawImage);
-	// Take all nals from encoder output queue to our input queue
-	while (encoder->isNalsAvailableInOutputQueue() == true)
-	{
-		x264_nal_t nal = encoder->getNalUnit();
-		nalQueue.push(nal);
-	}
+	//encoder->encodeFrame(rawImage);
+	//// Take all nals from encoder output queue to our input queue
+	//while (encoder->isNalsAvailableInOutputQueue() == true)
+	//{
+	//	x264_nal_t nal = encoder->getNalUnit();
+	//	nalQueue.push(nal);
+	//}
 
-	envir().taskScheduler().triggerEvent(eventTriggerId, this);
+	//envir().taskScheduler().triggerEvent(eventTriggerId, this);
 }
 
 void LiveSourceWithx264::deliverFrame0(void* clientData)

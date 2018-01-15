@@ -1,7 +1,7 @@
-#include "filter/algos/Median.h"
-#include "data/ShapeData.h"
-#include "data/ImageData.h"
-
+#include <filter/algos/Median.h>
+#include <data/ShapeData.h>
+#include <data/ImageData.h>
+#include <opencv2/imgproc.hpp>
 
 namespace filter
 {
