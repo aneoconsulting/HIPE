@@ -23,6 +23,7 @@ if (WIN32)
 SET(Boost_DIR "${Hipe_external}/${HIPE_PLATFORM}/boost_1_62_0/"   CACHE PATH "Boost_DIR" FORCE )
 SET(Boost_INCLUDE_DIR "${Boost_DIR}"  CACHE PATH "Boost_INCLUDE_DIR" FORCE )
 SET(BOOST_LIBRARYDIR "${Boost_DIR}/lib64-msvc-14.0"  CACHE PATH "BOOST_LIBRARYDIR" FORCE )
+SET(BOOST_ROOT "${Boost_DIR}/"  CACHE PATH "BOOST_ROOT" FORCE )
 
 SET(OpenCV_DIR "${Hipe_external}/${HIPE_PLATFORM}/opencv/"  CACHE PATH "OpenCV Directory" FORCE )
 
@@ -42,6 +43,8 @@ SET(UV_DIR "${Hipe_external}/${HIPE_PLATFORM}/libuv"  CACHE PATH "LIBUV_LIBRARYD
 SET(DLIB_DIR "${Hipe_external}/${HIPE_PLATFORM}/dlib/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE )
 SET(PYTHON27_DIR "${Hipe_external}/${HIPE_PLATFORM}/python27/"  CACHE PATH "PYTHON_LIBRARYDIR" FORCE )
 
+SET(YOLOV2_DIR "${Hipe_external}/${HIPE_PLATFORM}/yolov2/"  CACHE PATH "YOLOV2_LIBRARYDIR" FORCE )
+
 SET(USE_DLIB On  CACHE bool "Activate Dlib library" FORCE )
 
 set( OpenBLAS_DIR "${${Hipe_external}/${HIPE_PLATFORM}}/OpenBLAS/" )
@@ -52,6 +55,7 @@ else()
 SET(Boost_DIR "${Hipe_external}/${HIPE_PLATFORM}"   CACHE PATH "Boost_DIR" FORCE )
 SET(Boost_INCLUDE_DIR "${Boost_DIR}/include"  CACHE PATH "Boost_INCLUDE_DIR" FORCE )
 SET(BOOST_LIBRARYDIR "${Boost_DIR}/lib/"  CACHE PATH "BOOST_LIBRARYDIR" FORCE )
+SET(BOOST_ROOT "${Boost_DIR}/"  CACHE PATH "BOOST_ROOT" FORCE )
 
 SET(OpenCV_DIR "${Hipe_external}/${HIPE_PLATFORM}/share/OpenCV")
 
