@@ -5,6 +5,7 @@
 #include <core/HipeStatus.h>
 #include <data/ImageArrayData.h>
 
+#include <opencv2/imgproc/imgproc.hpp>
 
 namespace filter
 {
