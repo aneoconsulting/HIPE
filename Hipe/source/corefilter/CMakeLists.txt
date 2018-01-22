@@ -1,66 +1,22 @@
-cmake_minimum_required (VERSION 3.7.1)
-
-
+include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-set(Hipe_INCLUDEDIR "../../header/")
+include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 
-set(_src_corefilter_path ${CMAKE_CURRENT_SOURCE_DIR})
-message(STATUS "Get source path = ${_src_corefilter_path}" ) 
-file(
-    GLOB_RECURSE _source_list 
-    LIST_DIRECTORIES false
-    "${_src_corefilter_path}/*.c*"
-)
-
-set(_src_corefilter_inc_path ${CMAKE_SOURCE_DIR}/header/corefilter)
-file(
-    GLOB_RECURSE _header_list 
-    LIST_DIRECTORIES false
-    "${_src_corefilter_inc_path}/*.h*"
-)
-
-find_package( OpenCV REQUIRED )
-
-##corefilter LIBRARY
-
-add_library(corefilter SHARED ${_source_list} ${_header_list})
+add_hipe_library(corefilter)
 
 target_compile_definitions(corefilter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
 
-
-include_directories(corefilter ${Hipe_INCLUDEDIR})
 include_directories(corefilter ${OpenCV_INCLUDE_DIRS} )
 target_link_libraries(corefilter ${Boost_LIBRARIES})
 target_link_libraries(corefilter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(corefilter core)
 
-
-
-foreach(_source IN ITEMS ${_source_list})
-	message(STATUS "item source = ${_source}") 
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${_src_corefilter_path}" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	
-    source_group("source\\${_group_path}" FILES "${_source}")
-endforeach()
-
-foreach(_source IN ITEMS ${_header_list})
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${_src_corefilter_inc_path}" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-    source_group("header\\${_group_path}" FILES "${_source}")
-endforeach()
-
-include_directories(corefilter ${_src_corefilter_inc_path})
-
+prepend_target_include_directories_if_necessary(corefilter "${OpenCV_INCLUDE_DIRS}")
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
-	message(STATUS "Test if it works with windows") 
-    target_link_libraries(binary ws2_32 wsock32)
-	target_link_libraries(binary ws2_32 wsock32)
-   
-endif()
+  message(STATUS "Test if it works with windows")
+  target_link_libraries(binary ws2_32 wsock32)
+  target_link_libraries(binary ws2_32 wsock32)
+endif(MSYS)
 
-install(TARGETS corefilter DESTINATION ../../target/)
-#install(TARGETS corefilter DESTINATION /usr/local/lib/)
+display_target_properties(corefilter)

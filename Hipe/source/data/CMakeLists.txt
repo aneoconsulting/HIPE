@@ -14,7 +14,7 @@ target_link_libraries(data ${CMAKE_THREAD_LIBS_INIT})
 # if (UNIX)
 #   target_link_libraries(data '-Wl,--whole-archive core streaming -Wl,--no-whole-archive')
 # endif(UNIX)
-target_link_libraries(data core streaming)
+target_link_libraries(data core)
 
 prepend_target_include_directories_if_necessary(data "${OpenCV_INCLUDE_DIRS}")
 

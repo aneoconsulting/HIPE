@@ -50,6 +50,8 @@ target_sources(filter PUBLIC ${header_ref_path})
 define_file_basename_for_sources(filter)
 
 prepend_target_include_directories_if_necessary(filter "${OpenCV_INCLUDE_DIRS}")
+prepend_target_include_directories_if_necessary(filter "${Boost_INCLUDE_DIRS}")
+prepend_target_include_directories_if_necessary(filter "${PYTHON27_INCLUDE_DIRS}")
 prepend_target_include_directories_if_necessary(filter "${Live_INCLUDEDIR}")
 if(USE_DLIB)
   prepend_target_include_directories_if_necessary(filter "${Dlib_INCLUDEDIR}")
@@ -69,7 +71,7 @@ target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(filter ${OpenCV_LIBS} opencv_xfeatures2d)
 target_link_libraries(filter ${Lives_LIBS})
-target_link_libraries(filter ${Python27_LIBRARIES} )
+target_link_libraries(filter ${PYTHON27_LIBRARIES})
 if(USE_DLIB)
   # TODO
   # Check this. The original file used the conditionals below but surely this
