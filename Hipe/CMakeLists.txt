@@ -7,7 +7,6 @@ include("${CMAKE_SOURCE_DIR}/cmake/common_config.cmake")
 # Options
 option(USE_GPERFTOOLS "Use gperftools." OFF)
 option(USE_DLIB "Enable dlib library." ON)
-option(USE_HIPE_EXTERNAL_BOOST "Use the Boost library in HIPE_EXTERNAL, if set." ON)
 option(HIPE_STATIC_LIBS "Compile static libraries." ON)
 option(HIPE_STATIC_EXES "Compile static executables." OFF)
 

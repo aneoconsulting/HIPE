@@ -23,6 +23,8 @@ endfunction(display_target_properties _target)
 # ensures that include directories in Hipe External take precedence without
 # the risk of shadowing by system directories when the user chooses to compile
 # with one or more optional host libraries.
+# This function should only be used with system directories as it will pass
+# "SYSTEM" to the target_include_directories command.
 function(prepend_target_include_directories_if_necessary _target _include_dirs)
   get_target_property(_target_include_dirs ${_target} INCLUDE_DIRECTORIES)
   set(_rev_include_dirs "${_include_dirs}")
@@ -30,7 +32,7 @@ function(prepend_target_include_directories_if_necessary _target _include_dirs)
   foreach(_include_dir ${_rev_include_dirs})
     message("CHECKING ${_include_dir} IN ${_target_include_dirs}")
     if(NOT "${_include_dir}" IN_LIST _target_include_dirs)
-      target_include_directories(${_target} BEFORE PRIVATE ${_include_dir})
+      target_include_directories(${_target} SYSTEM BEFORE PRIVATE ${_include_dir})
     endif(NOT "${_include_dir}" IN_LIST _target_include_dirs)
   endforeach(_include_dir ${_rev_include_dirs})
 endfunction(prepend_target_include_directories_if_necessary _target _include_dirs)
