@@ -53,8 +53,10 @@ prepend_target_include_directories_if_necessary(filter "${OpenCV_INCLUDE_DIRS}")
 prepend_target_include_directories_if_necessary(filter "${Boost_INCLUDE_DIRS}")
 prepend_target_include_directories_if_necessary(filter "${PYTHON27_INCLUDE_DIRS}")
 prepend_target_include_directories_if_necessary(filter "${Live_INCLUDEDIR}")
+# TODO
+# See notes for Dlib linking below.
 if(USE_DLIB)
-  prepend_target_include_directories_if_necessary(filter "${Dlib_INCLUDEDIR}")
+  prepend_target_include_directories_if_necessary(filter "${dlib_INCLUDE_DIRS}")
 endif(USE_DLIB)
 
 target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
@@ -73,19 +75,11 @@ target_link_libraries(filter ${OpenCV_LIBS} opencv_xfeatures2d)
 target_link_libraries(filter ${Lives_LIBS})
 target_link_libraries(filter ${PYTHON27_LIBRARIES})
 if(USE_DLIB)
+  target_link_libraries(filter ${dlib_LIBRARIES})
   # TODO
-  # Check this. The original file used the conditionals below but surely this
-  # is platform-independant, no?
-  target_link_libraries(filter ${Dlib_LIBRARIES})
-#   if(WIN32)
-#     target_link_libraries(filter ${Dlib_LIBRARIES})
-#
-#     #set(BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
-#     #find_package(BLAS REQUIRED)
-#
-#   elseif(UNIX)
-#     target_link_libraries(filter ${Dlib_LIBRARIES})
-#   endif(WIN32)
+  # Remove the previous line and use this without setting include_headers
+  # when we finally start using proper dlib find_package support.
+#   target_link_libraries(filter dlib:dlib) #${dlib_LIBRARIES})
 endif(USE_DLIB)
 
 # Configure Visual Studio to handle more options.

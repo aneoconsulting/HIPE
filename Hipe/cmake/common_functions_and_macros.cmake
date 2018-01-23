@@ -39,6 +39,15 @@ endfunction(prepend_target_include_directories_if_necessary _target _include_dir
 
 
 
+
+# function(prepend_path_if_necessary _list _path)
+#   if(NOT "${_path}" IN_LIST _list)
+#     list(INSERT _list 0 "${_path}")
+#   endif(NOT "${_path}" IN_LIST _list)
+# endfunction(prepend_path_if_necessary _list _path)
+
+
+
 # Create source groups for visual studio.
 function(group_for_visual_studio _root_dir _file_list)
   foreach(_file_path IN ITEMS ${_file_list})

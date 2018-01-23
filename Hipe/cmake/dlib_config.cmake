@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.7.1)
 
+# TODO
+# Use find_package support when we get it working with Hipe External.
+# find_package(dlib REQUIRED PATHS "${Dlib_DIR}")
+# message(STATUS "dlib_INCLUDE_DIRS: ${dlib_INCLUDE_DIRS}")
+# message(STATUS "dlib_LIBRARIES: ${dlib_LIBRARIES}")
 
 macro(_Dlib_ADJUST_LIB_VARS basename)
 
@@ -23,7 +28,7 @@ if(${Dlib_DIR} EQUAL "DLIB-ROOT-NOTFOUND")
   message(FATAL_ERROR "Variable Dlib_DIR is empty")
 endif()
 
-set(Dlib_INCLUDEDIR "${Dlib_DIR}/include" CACHE PATH "include path for dlib" FORCE)
+set(dlib_INCLUDE_DIRS "${Dlib_DIR}/include" CACHE PATH "include path for dlib" FORCE)
 
 set(Dlib_LIBRARY_DIR "${Dlib_DIR}/lib" CACHE PATH "include path for dlib" FORCE)
 
@@ -97,12 +102,12 @@ foreach(COMPONENT  ${COMPONENTS})
   endif(NOT TARGET dlib::${COMPONENT})
 endforeach(COMPONENT  ${COMPONENTS})
 
-set(Dlib_LIBRARIES ""  CACHE LIST "DlibMedia libraries " FORCE)
+set(dlib_LIBRARIES ""  CACHE LIST "DlibMedia libraries " FORCE)
 
 foreach(COMPONENT  ${COMPONENTS})
   string(TOUPPER ${COMPONENT} UPPERCOMPONENT)
-  list(APPEND Dlib_LIBRARIES ${Dlib_${UPPERCOMPONENT}_LIBRARY})
+  list(APPEND dlib_LIBRARIES ${Dlib_${UPPERCOMPONENT}_LIBRARY})
 endforeach(COMPONENT  ${COMPONENTS})
 
 
-message(STATUS "Dlib LIBRARIES : ${Dlib_LIBRARIES}")
+message(STATUS "Dlib LIBRARIES : ${dlib_LIBRARIES}")

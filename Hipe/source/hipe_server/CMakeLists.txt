@@ -37,12 +37,24 @@ target_link_libraries(hipe_server ${Live_LIBRARIES})
 target_link_libraries(hipe_server ${OpenCV_LIBS})
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
+if(USE_DLIB)
+  target_link_libraries(hipe_server ${dlib_LIBRARIES})
+  # TODO
+  # Remove the previous line and use this without setting include_headers
+  # when we finally start using proper dlib find_package support.
+#   target_link_libraries(hipe_server dlib:dlib) #${dlib_LIBRARIES})
+endif(USE_DLIB)
 
 prepend_target_include_directories_if_necessary(hipe_server "${FFmpeg_INCLUDEDIR}")
 prepend_target_include_directories_if_necessary(hipe_server "${Live_INCLUDEDIR}")
 prepend_target_include_directories_if_necessary(hipe_server "${x264_INCLUDEDIR}")
 prepend_target_include_directories_if_necessary(hipe_server "${OpenCV_INCLUDE_DIRS}")
 prepend_target_include_directories_if_necessary(hipe_server "${Boost_INCLUDE_DIRS}")
+# TODO
+# See notes abouve Dlib linking.
+if(USE_DLIB)
+  prepend_target_include_directories_if_necessary(filter "${dlib_INCLUDE_DIRS}")
+endif(USE_DLIB)
 
 
 
@@ -52,21 +64,6 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
   target_link_libraries(hipe_server ws2_32 wsock32)
   target_link_libraries(hipe_server ws2_32 wsock32)
 endif(MSYS)
-
-
-if(USE_DLIB)
-  target_link_libraries(hipe_server ${Dlib_LIBRARIES})
-#   if(WIN32)
-#     target_link_libraries(hipe_server ${Dlib_LIBRARIES})
-#
-#   #set(BLAS_openblas_LIBRARY ${HIPE_EXTERNAL}/OpenBLAS/)
-#   #find_package(BLAS REQUIRED)
-#
-#   elseif(UNIX)
-#     target_link_libraries(hipe_server ${Dlib_LIBRARIES})
-#
-#   endif(WIN32)
-endif(USE_DLIB)
 
 if(USE_GPERFTOOLS)
   target_link_libraries(hipe_server ${GPERFTOOLS_DIR}/lib/libtcmalloc.a /usr/lib/aarch64-linux-gnu/libunwind.a /usr/lib/aarch64-linux-gnu/liblzma.a)

@@ -46,6 +46,8 @@ else(WIN32)
 endif(WIN32)
 
 if(WIN32)
+  # TODO
+  # Update this section to enable optional use of installed system libraries.
   set(Boost_DIR "${HIPE_EXTERNAL_DIR}/boost_1_62_0/" CACHE PATH "Boost_DIR" FORCE)
   set(Boost_INCLUDE_DIR "${Boost_DIR}" CACHE PATH "Boost_INCLUDE_DIR" FORCE)
   set(BOOST_LIBRARYDIR "${Boost_DIR}/lib64-msvc-14.0" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
@@ -73,12 +75,27 @@ if(WIN32)
   set(OpenBLAS_DIR "${HIPE_EXTERNAL_DIR}/OpenBLAS")
 
 else(WIN32)
-  # Set Boost hints used by FindBoost.cmake to find the boost libraries.
-  set(BOOST_ROOT "${HIPE_EXTERNAL_DIR}/boost" CACHE PATH "BOOST_ROOT")
-  set(Boost_INCLUDE_DIR "${BOOST_ROOT}/include" CACHE PATH "BOOST_INCLUDEDIR" FORCE)
-  set(BOOST_LIBRARYDIR "${BOOST_ROOT}/lib" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
+#   set(Python27_DIR "${HIPE_EXTERNAL_DIR}/python27/usr"  CACHE PATH "PYTHON_LIBRARYDIR")
+#   set(PYTHON_LIBRARY "${Python27_DIR}/lib" CACHE PATH "PYTHON_LIBRARY")
+#   set(PYTHON_INCLUDE_DIR "${Python27_DIR}/include/python2.7" CACHE PATH "PYTHON_INCLUDE_DIR")
+  if(HIPE_EXTERNAL_PYTHON27)
+    list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/python27/usr")
+  endif(HIPE_EXTERNAL_PYTHON27)
 
-  set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv/share/OpenCV" CACHE PATH "OpenCV")
+#   set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv/share/OpenCV" CACHE PATH "OpenCV")
+  if(HIPE_EXTERNAL_OPENCV)
+    list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/cuda8")
+    set(ENV{PATH} "${HIPE_EXTERNAL_DIR}/cuda8/bin:$ENV{PATH}")
+    list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/opencv")
+  endif(HIPE_EXTERNAL_OPENCV)
+
+#   # Set Boost hints used by FindBoost.cmake to find the boost libraries.
+#   set(BOOST_ROOT "${HIPE_EXTERNAL_DIR}/boost" CACHE PATH "BOOST_ROOT")
+#   set(Boost_INCLUDE_DIR "${BOOST_ROOT}/include" CACHE PATH "BOOST_INCLUDEDIR" FORCE)
+#   set(BOOST_LIBRARYDIR "${BOOST_ROOT}/lib" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
+  if(HIPE_EXTERNAL_BOOST)
+    list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/boost")
+  endif(HIPE_EXTERNAL_BOOST)
 
   set(x264_DIR "${HIPE_EXTERNAL_DIR}/ffmpeg" CACHE PATH "x264")
 
@@ -87,6 +104,8 @@ else(WIN32)
   set(FFmpeg_DIR "${HIPE_EXTERNAL_DIR}/ffmpeg" CACHE PATH "FFMPEG_LIBRARYDIR")
 
   set(Dlib_DIR "${HIPE_EXTERNAL_DIR}/dlib" CACHE PATH "DLIB_LIBRARYDIR")
-
-  set(Python27_DIR "${HIPE_EXTERNAL_DIR}/python27/"  CACHE PATH "PYTHON_LIBRARYDIR")
+#   if(HIPE_EXTERNAL_DLIB)
+#     list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/dlib")
+#   endif(HIPE_EXTERNAL_DLIB)
+  message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 endif(WIN32)

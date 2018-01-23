@@ -22,9 +22,10 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
 endif(MSYS)
 
 
-add_custom_command(TARGET pydata
-                   POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pydata> $<TARGET_FILE_DIR:pydata>/pydata.pyd)
-
+add_custom_command(
+  TARGET pydata
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pydata> $<TARGET_FILE_DIR:pydata>/pydata.pyd
+)
 
 display_target_properties(pydata)

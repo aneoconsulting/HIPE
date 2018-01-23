@@ -1,10 +1,40 @@
-message(STATUS "Python27_DIR: ${Python27_DIR}")
-find_package(PythonLibs 2.7 REQUIRED) # PATHS "${Python27_DIR}")
+# message(STATUS "Python27_DIR: ${Python27_DIR}")
+# list(APPEND CMAKE_PREFIX_PATH "${Python27_DIR}")
+# message(STATUS "PYTHON_LIBRARY: ${PYTHON_LIBRARY}")
+# message(STATUS "PYTHON_INCLUDE_DIR: ${PYTHON_INCLUDE_DIR}")
+
+
+find_package(PythonLibs 2.7 REQUIRED)
 set(PYTHONLIBS_FOUND "${PYTHONLIBS_FOUND}")
 set(PYTHON27_INCLUDE_DIRS "${PYTHON_INCLUDE_DIRS}")
 set(PYTHON27LIBS_VERSION_STRING "${PYTHONLIBS_VERSION_STRING}")
 set(PYTHON27_LIBRARIES "${PYTHON_LIBRARIES}")
-message(STATUS "PYTHONLIBS_FOUND: ${PYTHONLIBS_FOUND}\n-- PYTHON27_INCLUDE_DIRS: ${PYTHON27_INCLUDE_DIRS}\n-- PYTHON27LIBS_VERSION_STRING: ${PYTHON27LIBS_VERSION_STRING}\n-- PYTHON27_LIBRARIES: ${PYTHON27_LIBRARIES}")
+
+# set(Python_ADDITIONAL_VERSIONS 2.7 2)
+find_package(PythonInterp 2.7 REQUIRED)
+message(STATUS "PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE}")
+
+# Add site-packages to include directories to find Numpy headers.
+execute_process(
+  COMMAND "${PYTHON_EXECUTABLE}" -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
+  OUTPUT_VARIABLE PYTHON27_SITE_PACKAGES_DIR
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+# TODO
+# Maybe generalize this with file globbing or find_path. Determine how the
+# system normally find these files first and use that approach if possible.
+list(APPEND PYTHON27_INCLUDE_DIRS "${PYTHON27_SITE_PACKAGES_DIR}/numpy/core/include")
+
+
+# message(STATUS "PYTHONLIBS_FOUND: ${PYTHONLIBS_FOUND}")
+# message(STATUS "PYTHON27LIBS_VERSION_STRING: ${PYTHON27LIBS_VERSION_STRING}")
+display_pathlist("PYTHON27_INCLUDE_DIRS" "${PYTHON27_INCLUDE_DIRS}")
+display_pathlist("PYTHON27_LIBRARIES" "${PYTHON27_LIBRARIES}")
+display_pathlist("PYTHON27_SITE_PACKAGES_DIR" "${PYTHON27_SITE_PACKAGES_DIR}")
+
+
+
+
 
 # cmake_minimum_required (VERSION 3.7.1)
 #
