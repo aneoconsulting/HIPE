@@ -2,7 +2,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 
 
-add_hipe_library(core)
+add_hipe_library(core STATIC)
 
 
 ##Get BUILD from git file

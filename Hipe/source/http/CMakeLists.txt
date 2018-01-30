@@ -3,7 +3,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 
 #http LIBRARY
 
-add_hipe_library(http)
+add_hipe_library(http STATIC)
 
 target_compile_definitions(http PRIVATE "-DUSE_BOOST_REGEX" "-DHTTP_BUILD")
 target_link_libraries(http ${Boost_LIBRARIES})

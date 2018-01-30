@@ -14,7 +14,7 @@ endif (WIN32)
 
 #streaming LIBRARY
 
-add_hipe_library(streaming)
+add_hipe_library(streaming STATIC)
 
 target_compile_definitions(streaming PRIVATE "-DUSE_BOOST_REGEX" "-DSTREAMING_BUILD" "-DSINGLETON_EXPORT")
 

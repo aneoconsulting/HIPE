@@ -2,7 +2,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 
 #orchestrator LIBRARY
-add_hipe_library(orchestrator)
+add_hipe_library(orchestrator STATIC)
 target_compile_definitions(orchestrator PRIVATE "-DUSE_BOOST_REGEX" "-DORCHESTRATOR_BUILD")
 
 target_link_libraries(orchestrator ${Boost_LIBRARIES})

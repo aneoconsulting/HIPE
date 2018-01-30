@@ -2,7 +2,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 
-add_hipe_library(corefilter)
+add_hipe_library(corefilter SHARED)
 
 target_compile_definitions(corefilter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
 

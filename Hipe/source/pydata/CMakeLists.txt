@@ -3,7 +3,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
 
-add_hipe_library(pydata)
+add_hipe_library(pydata SHARED)
 
 target_compile_definitions(pydata PRIVATE "-DCV_VERSION_EPOCH=3" "-DUSE_BOOST_REGEX" "-DPYDATA_BUILD")
 

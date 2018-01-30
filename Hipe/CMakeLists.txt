@@ -4,7 +4,7 @@ project (Hipe)
 # Options
 option(USE_GPERFTOOLS "Use gperftools." OFF)
 option(USE_DLIB "Enable dlib library." ON)
-option(HIPE_STATIC_LIBS "Compile static libraries." ON)
+# option(HIPE_STATIC_LIBS "Compile static libraries." ON)
 option(HIPE_STATIC_EXES "Compile static executables." OFF)
 
 option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." ON)

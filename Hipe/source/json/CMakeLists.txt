@@ -1,7 +1,7 @@
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 
-add_hipe_library(json)
+add_hipe_library(json SHARED)
 
 target_compile_definitions(json PRIVATE "-DUSE_BOOST_REGEX" "-DJSON_BUILD")
 

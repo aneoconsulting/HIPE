@@ -6,7 +6,7 @@ if(USE_DLIB)
 endif(USE_DLIB)
 #data LIBRARY
 
-add_hipe_library(data)
+add_hipe_library(data SHARED)
 
 target_compile_definitions(data PRIVATE "-DUSE_BOOST_REGEX" "-DDATA_BUILD")
 

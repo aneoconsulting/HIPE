@@ -94,7 +94,7 @@ endfunction(message_header)
 # Refactor. The current version is directly inhereted and was only slightly
 # modified to create the macro.
 
-macro(add_hipe_library _hipe_lib_name)
+macro(add_hipe_library _hipe_lib_name _lib_type)
   message_header("HIPE LIBRARY: ${_hipe_lib_name}")
 
   set(_src_lib_path ${CMAKE_CURRENT_SOURCE_DIR})
@@ -115,11 +115,11 @@ macro(add_hipe_library _hipe_lib_name)
   )
 
   # LIBRARY
-  if(HIPE_STATIC_LIBS)
-    set(_lib_type "STATIC")
-  else(HIPE_STATIC_LIBS)
-    set(_lib_type "SHARED")
-  endif(HIPE_STATIC_LIBS)
+#   if(HIPE_STATIC_LIBS)
+#     set(_lib_type "STATIC")
+#   else(HIPE_STATIC_LIBS)
+#     set(_lib_type "SHARED")
+#   endif(HIPE_STATIC_LIBS)
 
   add_library(${_hipe_lib_name} ${_lib_type} ${_source_list} ${_header_list})
   target_include_directories(${_hipe_lib_name} BEFORE PRIVATE ${_src_lib_inc_path})

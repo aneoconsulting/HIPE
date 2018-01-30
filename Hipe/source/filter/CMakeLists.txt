@@ -54,7 +54,7 @@ file(WRITE ${header_ref_path} "// Reset by CMake.")
 # endif(EXISTS "${header_ref_path}")
 
 
-add_hipe_library(filter)
+add_hipe_library(filter SHARED)
 target_sources(filter PUBLIC ${header_ref_path})
 define_file_basename_for_sources(filter)
 

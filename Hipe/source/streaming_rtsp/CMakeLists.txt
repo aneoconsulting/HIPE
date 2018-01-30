@@ -4,7 +4,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/livemedia_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 
-add_hipe_library(streaming_rtsp)
+add_hipe_library(streaming_rtsp STATIC)
 
 target_compile_definitions(streaming_rtsp PRIVATE "-DUSE_BOOST_REGEX" "-DSTREAMING_RTSP_BUILD")
 
