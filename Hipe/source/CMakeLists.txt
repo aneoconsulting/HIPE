@@ -28,7 +28,7 @@ if(UNIX)
 endif(UNIX)
 
 add_subdirectory(core)
-add_subdirectory(streaming_rtsp)
+# add_subdirectory(streaming_rtsp)
 # add_subdirectory(streaming)
 add_subdirectory(data)
 add_subdirectory(pydata)

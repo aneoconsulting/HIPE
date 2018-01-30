@@ -8,6 +8,14 @@ endif(USE_DLIB)
 
 add_hipe_library(data SHARED)
 
+if(USE_DLIB)
+  target_link_libraries(data ${dlib_LIBRARIES})
+  # TODO
+  # Remove the previous line and use this without setting include_headers
+  # when we finally start using proper dlib find_package support.
+#   target_link_libraries(filter dlib:dlib) #${dlib_LIBRARIES})
+endif(USE_DLIB)
+
 target_compile_definitions(data PRIVATE "-DUSE_BOOST_REGEX" "-DDATA_BUILD")
 
 target_link_libraries(data ${OpenCV_LIBS})
