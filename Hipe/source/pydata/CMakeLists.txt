@@ -1,5 +1,6 @@
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
 
 add_hipe_library(pydata)
@@ -9,6 +10,7 @@ target_compile_definitions(pydata PRIVATE "-DCV_VERSION_EPOCH=3" "-DUSE_BOOST_RE
 target_link_libraries(pydata core)
 target_link_libraries(pydata ${Boost_LIBRARIES})
 target_link_libraries(pydata ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(pydata ${OpenCV_LIBS})
 target_link_libraries(pydata ${PYTHON27_LIBRARIES})
 
 

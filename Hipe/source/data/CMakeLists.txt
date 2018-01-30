@@ -1,7 +1,9 @@
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
-
+if(USE_DLIB)
+  include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
+endif(USE_DLIB)
 #data LIBRARY
 
 add_hipe_library(data)
