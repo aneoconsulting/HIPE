@@ -28,11 +28,12 @@ target_link_libraries(streaming ${Live_LIBRARIES})
 target_link_libraries(streaming core)
 target_link_libraries(streaming streaming_rtsp)
 
+prepend_target_include_directories_if_necessary(streaming "${Boost_INCLUDE_DIRS}")
 prepend_target_include_directories_if_necessary(streaming "${OpenCV_INCLUDE_DIRS}")
 prepend_target_include_directories_if_necessary(streaming "${FFmpeg_INCLUDEDIR}")
-prepend_target_include_directories_if_necessary(streaming "${Live_INCLUDEDIR}")
 prepend_target_include_directories_if_necessary(streaming "${x264_INCLUDEDIR}")
-prepend_target_include_directories_if_necessary(streaming "${_src_streaming_inc_path}")
+prepend_target_include_directories_if_necessary(streaming "${Live_INCLUDEDIR}")
+# prepend_target_include_directories_if_necessary(streaming "${_src_streaming_inc_path}")
 
 
 if(WIN32) #TODO: Is MSYS true when MSVC is true?

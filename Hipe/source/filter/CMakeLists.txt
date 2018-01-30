@@ -60,8 +60,8 @@ define_file_basename_for_sources(filter)
 
 prepend_target_include_directories_if_necessary(filter "${OpenCV_INCLUDE_DIRS}")
 prepend_target_include_directories_if_necessary(filter "${Boost_INCLUDE_DIRS}")
-prepend_target_include_directories_if_necessary(filter "${PYTHON27_INCLUDE_DIRS}")
 prepend_target_include_directories_if_necessary(filter "${Live_INCLUDEDIR}")
+prepend_target_include_directories_if_necessary(filter "${PYTHON27_INCLUDE_DIRS}")
 # TODO
 # See notes for Dlib linking below.
 if(USE_DLIB)
@@ -78,9 +78,9 @@ target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
 # target_link_libraries(filter -Wl,--start-group core streaming data -Wl,--end-group)
 target_link_libraries(filter core corefilter data json)
 
+target_link_libraries(filter ${OpenCV_LIBS} opencv_xfeatures2d)
 target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(filter ${OpenCV_LIBS} opencv_xfeatures2d)
 target_link_libraries(filter ${Lives_LIBS})
 target_link_libraries(filter ${PYTHON27_LIBRARIES})
 if(USE_DLIB)

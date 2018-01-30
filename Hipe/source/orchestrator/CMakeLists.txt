@@ -12,6 +12,8 @@ target_link_libraries(orchestrator data)
 target_link_libraries(orchestrator filter)
 target_link_libraries(orchestrator json)
 
+prepend_target_include_directories_if_necessary(orchestrator "${Boost_INCLUDE_DIRS}")
+
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
   message(STATUS "Test if it works with windows")
     target_link_libraries(binary ws2_32 wsock32)
