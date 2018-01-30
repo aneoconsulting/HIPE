@@ -155,3 +155,5 @@ set(PYTHON27_LIBRARIES ""  CACHE LIST "Python27Media libraries " FORCE)
 message(STATUS "Python27 LIBRARIES : ${PYTHON27_LIBRARIES}")
 
 endif(UNIX)
+
+prepend_include_directories_if_necessary("${PYTHON27_INCLUDE_DIRS}")

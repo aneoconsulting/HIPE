@@ -16,8 +16,6 @@ target_link_libraries(data ${CMAKE_THREAD_LIBS_INIT})
 # endif(UNIX)
 target_link_libraries(data core)
 
-prepend_target_include_directories_if_necessary(data "${OpenCV_INCLUDE_DIRS}")
-prepend_target_include_directories_if_necessary(data "${Boost_INCLUDE_DIRS}")
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
   message(STATUS "Test if it works with windows")

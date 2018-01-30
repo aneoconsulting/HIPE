@@ -45,15 +45,9 @@ if(USE_DLIB)
 #   target_link_libraries(hipe_server dlib:dlib) #${dlib_LIBRARIES})
 endif(USE_DLIB)
 
-prepend_target_include_directories_if_necessary(hipe_server "${FFmpeg_INCLUDEDIR}")
-prepend_target_include_directories_if_necessary(hipe_server "${Live_INCLUDEDIR}")
-prepend_target_include_directories_if_necessary(hipe_server "${x264_INCLUDEDIR}")
-prepend_target_include_directories_if_necessary(hipe_server "${OpenCV_INCLUDE_DIRS}")
-prepend_target_include_directories_if_necessary(hipe_server "${Boost_INCLUDE_DIRS}")
 # TODO
 # See notes abouve Dlib linking.
 if(USE_DLIB)
-  prepend_target_include_directories_if_necessary(filter "${dlib_INCLUDE_DIRS}")
 endif(USE_DLIB)
 
 

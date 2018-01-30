@@ -41,3 +41,4 @@ else(WIN32)
 endif(WIN32)
 
 set(FFmpeg_LIBRARIES "${_lib_list}" CACHE STRING "libraries" FORCE)
+prepend_include_directories_if_necessary("${FFmpeg_INCLUDEDIR}")

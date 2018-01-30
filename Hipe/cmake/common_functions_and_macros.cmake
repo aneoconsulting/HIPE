@@ -37,6 +37,19 @@ function(prepend_target_include_directories_if_necessary _target _include_dirs)
 endfunction(prepend_target_include_directories_if_necessary _target _include_dirs)
 
 
+# Same as prepend_target_include_directories_if_necessary but for the whole
+# project.
+function(prepend_include_directories_if_necessary _include_dirs)
+  set(_rev_include_dirs "${_include_dirs}")
+  list(REVERSE _rev_include_dirs)
+  foreach(_include_dir ${_rev_include_dirs})
+    if(NOT "${_include_dir}" IN_LIST INCLUDE_DIRECTORIES)
+      include_directories(BEFORE SYSTEM ${_include_dir})
+    endif(NOT "${_include_dir}" IN_LIST INCLUDE_DIRECTORIES)
+  endforeach(_include_dir ${_rev_include_dirs})
+endfunction(prepend_include_directories_if_necessary _include_dirs)
+
+
 
 
 # function(prepend_path_if_necessary _list _path)

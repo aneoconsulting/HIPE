@@ -119,3 +119,4 @@ endforeach(COMPONENT  ${COMPONENTS})
 
 list(APPEND sourcey_LIBRARIES ${sourcey_EXT_LIBRARIES})
 message(STATUS "sourcey LIBRARIES : ${sourcey_LIBRARIES}")
+prepend_include_directories_if_necessary("${sourcey_INCLUDEDIR}")

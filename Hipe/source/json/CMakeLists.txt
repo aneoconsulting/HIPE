@@ -9,7 +9,6 @@ target_link_libraries(json ${Boost_LIBRARIES})
 target_link_libraries(json ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(json core corefilter data)
 
-prepend_target_include_directories_if_necessary(core "${Boost_INCLUDE_DIR}")
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
   message(STATUS "Test if it works with windows")

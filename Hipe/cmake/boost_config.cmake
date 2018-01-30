@@ -31,3 +31,4 @@ endif(NOT ${Boost_FOUND})
 
 display_pathlist("Boost_INCLUDE_DIR" "${Boost_INCLUDE_DIR}")
 display_pathlist("Boost_LIBRARIES" "${Boost_LIBRARIES}")
+prepend_include_directories_if_necessary("${Boost_INCLUDE_DIR}")

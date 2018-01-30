@@ -58,15 +58,10 @@ add_hipe_library(filter)
 target_sources(filter PUBLIC ${header_ref_path})
 define_file_basename_for_sources(filter)
 
-prepend_target_include_directories_if_necessary(filter "${OpenCV_INCLUDE_DIRS}")
-prepend_target_include_directories_if_necessary(filter "${Boost_INCLUDE_DIRS}")
-prepend_target_include_directories_if_necessary(filter "${Live_INCLUDEDIR}")
-prepend_target_include_directories_if_necessary(filter "${PYTHON27_INCLUDE_DIRS}")
 # TODO
 # See notes for Dlib linking below.
-if(USE_DLIB)
-  prepend_target_include_directories_if_necessary(filter "${dlib_INCLUDE_DIRS}")
-endif(USE_DLIB)
+# if(USE_DLIB)
+# endif(USE_DLIB)
 
 target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
 

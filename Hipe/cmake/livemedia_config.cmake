@@ -107,3 +107,4 @@ foreach(COMPONENT  ${COMPONENTS})
 endforeach(COMPONENT  ${COMPONENTS})
 
 display_pathlist("Live_LIBRARIES" "${Live_LIBRARIES}")
+prepend_include_directories_if_necessary("${Live_INCLUDEDIR}")

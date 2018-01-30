@@ -13,7 +13,6 @@ target_compile_definitions(core PRIVATE "-DUSE_BOOST_REGEX" "-DCORE_BUILD" "-DBU
 target_link_libraries(core ${Boost_LIBRARIES})
 target_link_libraries(core ${CMAKE_THREAD_LIBS_INIT})
 
-prepend_target_include_directories_if_necessary(core "${Boost_INCLUDE_DIR}")
 
 
 # FIXME

@@ -131,3 +131,4 @@ foreach(COMPONENT  ${COMPONENTS})
 endforeach(COMPONENT  ${COMPONENTS})
 
 message(STATUS "webrtc LIBRARIES : ${webrtc_LIBRARIES}")
+prepend_include_directories_if_necessary("${webrtc_INCLUDEDIR}")

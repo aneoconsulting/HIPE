@@ -108,3 +108,4 @@ set(uv_LIBRARIES ""  CACHE LIST "uvMedia libraries " FORCE)
 list(APPEND uv_LIBRARIES ${uv_EXTERNAL_LIBRARY})
 
 message(STATUS "uv LIBRARIES : ${uv_LIBRARIES}")
+prepend_include_directories_if_necessary("${uv_INCLUDEDIR}")

@@ -14,7 +14,6 @@ target_link_libraries(http filter)
 target_link_libraries(http json)
 target_link_libraries(http orchestrator)
 
-prepend_target_include_directories_if_necessary(http "${Boost_INCLUDE_DIRS}")
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
   message(STATUS "Test if it works with windows")

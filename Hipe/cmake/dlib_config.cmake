@@ -111,3 +111,4 @@ endforeach(COMPONENT  ${COMPONENTS})
 
 
 message(STATUS "Dlib LIBRARIES : ${dlib_LIBRARIES}")
+prepend_include_directories_if_necessary("${dlib_INCLUDE_DIRS}")

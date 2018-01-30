@@ -106,3 +106,4 @@ foreach(COMPONENT  ${COMPONENTS})
 endforeach(COMPONENT  ${COMPONENTS})
 
 message(STATUS "x264 LIBRARIES : ${x264_LIBRARIES}")
+prepend_include_directories_if_necessary("${x264_INCLUDEDIR}")
