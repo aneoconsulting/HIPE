@@ -4,7 +4,6 @@ if(UNIX)
 # message(STATUS "PYTHON_LIBRARY: ${PYTHON_LIBRARY}")
 # message(STATUS "PYTHON_INCLUDE_DIR: ${PYTHON_INCLUDE_DIR}")
 
-
 find_package(PythonLibs 2.7 REQUIRED)
 set(PYTHONLIBS_FOUND "${PYTHONLIBS_FOUND}")
 set(PYTHON27_INCLUDE_DIRS "${PYTHON_INCLUDE_DIRS}")
@@ -52,19 +51,19 @@ macro(_Python27_ADJUST_LIB_VARS basename)
 
 endmacro()
 
-set(PYTHON27_DIR "PYTHON27-ROOT-NOTFOUND" CACHE PATH "Path to the root python27 directory" )
+set(Python27_DIR "PYTHON27-ROOT-NOTFOUND" CACHE PATH "Path to the root python27 directory" )
 #set(PYTHON27_LIBRARYDIR "PYTHON27-LIBRARY-NOTFOUND" CACHE PATH "Path to the static python27 Library" )
 
 
-if (${PYTHON27_DIR} EQUAL "PYTHON27-ROOT-NOTFOUND")
-	message( FATAL_ERROR "Variable PYTHON27_DIR is empty")
+if (${Python27_DIR} EQUAL "PYTHON27-ROOT-NOTFOUND")
+	message( FATAL_ERROR "Variable Python27_DIR is empty")
 endif()
 
 if (WIN32)
 
-set(PYTHON27_INCLUDE_DIRS "${PYTHON27_DIR}/include;${PYTHON27_DIR}/lib/site-packages/numpy/core/include" CACHE PATH "include path for python27" FORCE)
+set(PYTHON27_INCLUDE_DIRS "${Python27_DIR}/include;${Python27_DIR}/lib/site-packages/numpy/core/include" CACHE PATH "include path for python27" FORCE)
 
-set(Python27_LIBRARY_DIR "${PYTHON27_DIR}/libs" CACHE PATH "include path for python27" FORCE)
+set(Python27_LIBRARY_DIR "${Python27_DIR}/libs" CACHE PATH "include path for python27" FORCE)
 else()
 set(PYTHON27_INCLUDE_DIRS "/usr/include/python2.7/;/usr/lib/python2.7/dist-packages/numpy/core/include" CACHE PATH "include path for python27" FORCE)
 
