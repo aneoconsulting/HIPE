@@ -16,7 +16,7 @@
 #include <boost/log/sources/logger.hpp>
 #include <boost/log/sinks/async_frontend.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
-#include <boost/utility/empty_deleter.hpp>
+#include <boost/core/null_deleter.hpp>
 #include <fstream>
 
 namespace core
@@ -41,7 +41,7 @@ namespace core
 
 		boost::shared_ptr<text_sink> m_sink(new text_sink);
 
-		boost::shared_ptr<std::ostream> stream_out(&std::clog, boost::empty_deleter());
+		boost::shared_ptr<std::ostream> stream_out(&std::clog, boost::null_deleter());
 		boost::shared_ptr<std::ostream> stream_file(new std::ofstream(LOG_PATH(), std::ostream::app));
 		m_sink->locked_backend()->add_stream(stream_out);
 		m_sink->locked_backend()->add_stream(stream_file);
