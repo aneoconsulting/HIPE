@@ -16,17 +16,18 @@ message(STATUS "HIPE_EXTERNAL_BOOST: ${HIPE_EXTERNAL_BOOST}")
 option(HIPE_EXTERNAL_OPENCV "Use OpenCV libraries in Hipe External." ON)
 message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 
-option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
-message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")
 
+# Dlib is not supported by find_package, so "Dlib_DIR" must be set to the installation path.
+# option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
+# message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")
 
-# x264 is not supported by find_package, so "x264_DIR" must be used.
+# x264 is not supported by find_package, so "x264_DIR" must be set to the installation path.
 # option(HIPE_EXTERNAL_X264 "Use x264 libraries in Hipe External." ON)
 
-# LiveMedia is not supported by find_package, so "LiveMedia_DIR" must be used.
+# LiveMedia is not supported by find_package, so "LiveMedia_DIR" must be set to the installation path.
 # option(HIPE_EXTERNAL_LIVEMEDIA "Use Live-Media libraries in Hipe External." ON)
 
-# FFmpeg is not supported by find_package, so "FFmpeg_DIR" must be used.
+# FFmpeg is not supported by find_package, so "FFmpeg_DIR" must be set to the installation path.
 # option(HIPE_EXTERNAL_FFMPEG "Use FFmpeg libraries in Hipe External." ON)
 
 # Configure common settings.

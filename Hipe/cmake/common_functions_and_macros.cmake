@@ -61,7 +61,7 @@ endfunction(prepend_include_directories_if_necessary _include_dirs)
 
 
 # Create source groups for visual studio.
-function(group_for_visual_studio _root_dir _file_list)
+function(group_for_visual_studio _subgroup _root_dir _file_list)
   foreach(_file_path IN ITEMS ${_file_list})
     message(STATUS "grouping for visual studio: ${_file_path}")
     # Get the directory. Replace PATH with DIRECTORY for CMake > 2.8.11
@@ -132,8 +132,8 @@ macro(add_hipe_library _hipe_lib_name _lib_type)
 
 
   # Group source files for Visual Studio
-  group_for_visual_studio(${_src_lib_path} ${_source_list})
-  group_for_visual_studio(${_src_lib_inc_path} ${_header_list})
+  group_for_visual_studio("source" "${_src_lib_path}" "${_source_list}")
+  group_for_visual_studio("header" "${_src_lib_inc_path}" "${_header_list}")
 
 endmacro(add_hipe_library)
 
@@ -176,8 +176,8 @@ macro(add_hipe_executable _hipe_exe_name)
 
 
   # Group source files for Visual Studio
-  group_for_visual_studio(${_src_exe_path} ${_source_list})
-  group_for_visual_studio(${_src_exe_inc_path} ${_header_list})
+  group_for_visual_studio("source" "${_src_exe_path}" "${_source_list}")
+  group_for_visual_studio("header" "${_src_exe_inc_path}" "${_header_list}")
 
 endmacro(add_hipe_executable)
 
