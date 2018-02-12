@@ -4,6 +4,7 @@
 #include <data/DirPatternData.h>
 #include <data/SquareCrop.h>
 #include <boost/property_tree/ptree.hpp>
+#include "data/NoneData.h"
 
 namespace orchestrator
 {
@@ -196,6 +197,12 @@ namespace orchestrator
 	data::Data Composer::getDataFromComposer(const json::JsonTree& dataNode)
 	{
 		using namespace data;
+
+		//Ignore the composer if there datasource inside data node. 
+		// This is next form to load data
+		if (dataNode.count("datasource") != 0)
+			return NoneData();
+
 		checkJsonFieldExist(dataNode, "type");
 		auto datatype = dataNode.get("type");
 

@@ -27,6 +27,7 @@ class FILTER_EXPORT RegisterTable
 {
 	// Here is the core of the solution: this map of lambdas does all the "magic"
 	std::map<std::string, std::function<filter::Model*()>> functionTable;
+	std::map<std::string, std::function<filter::Model*()>> functionPrealoadTable;
 
 	std::map<std::string, std::map<std::string, core::InvokerBase>> setterTable;
 
@@ -80,6 +81,20 @@ public:
 
 
 	/**
+	* \brief Add class to reflection mapping Key = classname ; value = Contructor method
+	* \param className the class name of the class to register
+	* \param constructor the method to delegate a new operator
+	* \return the class name to be called outside function
+	*/
+	const std::string addPreloadClass(std::string className, std::function<filter::Model*()> constructor)
+	{
+		if (functionPrealoadTable[className] == nullptr)
+			functionPrealoadTable[className] = constructor;
+
+		return className;
+	}
+
+	/**
 	 * \brief Add setter to set field by reflection from any other language
 	 * \param classname 
 	 * \param functionName 
@@ -131,6 +146,20 @@ public:
 		}
 
 		return varNames;
+	}
+
+	const std::string getNamespace(std::string className)
+	{
+		if (functionPrealoadTable.find(className) == functionPrealoadTable.end())
+		{
+			return "UNKNOWN_ISSUE";
+		}
+
+		filter::Model* ret = functionPrealoadTable[className]();
+
+		std::string _namespace = ret->getNamespace();
+
+		return _namespace;
 	}
 
 	template <typename...Args>

@@ -1,4 +1,7 @@
 #include <core/misc.h>
+#include <string>
+#include <boost/filesystem/operations.hpp>
+#include <sstream>
 
 #ifdef WIN32
 #include <windows.h>
@@ -54,3 +57,14 @@ void hipe_usleep(long long usec)
 }
 #endif
 
+bool isFileExist(std::string filename)
+{
+	if (!(boost::filesystem::exists(boost::filesystem::path(filename)) && boost::filesystem::is_regular_file(boost::filesystem::path(filename))))
+	{
+		std::stringstream buildMsg;
+		buildMsg << "file [";
+		buildMsg << filename;
+		buildMsg << "] not found";
+		throw std::invalid_argument(buildMsg.str());
+	}
+}

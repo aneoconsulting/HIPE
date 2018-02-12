@@ -373,7 +373,19 @@ namespace http
 		public:
 		std::thread run() 
 		{
-			std::thread thread = std::thread([this] { this->start(); });
+			std::thread thread = std::thread([this] 
+			{ 
+				try
+				{
+					this->start(); 
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr << "Fail to start Server on port : " << this->config.port << "Message : " << e.what() << std::endl;
+						
+					
+				}
+			});
 			//Wait for server to start so that the client can connect
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 			return thread;

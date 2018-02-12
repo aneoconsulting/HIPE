@@ -21,6 +21,9 @@ message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 # option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
 # message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")
 
+if (WIN32)
+option(CMAKE_USE_WIN32_THREADS_INIT "using WIN32 threads" ON)
+endif(WIN32)
 # x264 is not supported by find_package, so "x264_DIR" must be set to the installation path.
 # option(HIPE_EXTERNAL_X264 "Use x264 libraries in Hipe External." ON)
 

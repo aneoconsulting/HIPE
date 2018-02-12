@@ -33,12 +33,6 @@ namespace filter {
 
 		virtual void getPreviousFilter();
 
-		/**
-		 * \brief Get the RootFilter node (head) of the current graph
-		 * \return A pointer to the RootFilter node of the graph
-		 */
-		virtual IFilter * getRootFilter();
-
 		virtual void getParent();
 
 		virtual void getNextChildren();

@@ -17,6 +17,9 @@ namespace data
 	std::string DataTypeMapper::getStringFromType(const IODataType& dataType)
 	{
 		//convert string to hexa long value;
+		if (dataType == IODataType::NONE)
+			return "NONE";
+
 		std::string value = ToString(dataType);
 
 		return value;
@@ -117,6 +120,18 @@ namespace data
 		std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
 		if (typeStr.find("shape") != std::string::npos)
+			return true;
+
+		return false;
+	}
+
+	bool DataTypeMapper::isNoneData(IODataType dataType)
+	{
+		std::string typeStr = getStringFromType(dataType);
+
+		std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
+
+		if (typeStr.find("none") != std::string::npos)
 			return true;
 
 		return false;

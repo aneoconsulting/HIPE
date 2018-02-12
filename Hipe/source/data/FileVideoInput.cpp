@@ -11,6 +11,7 @@ namespace data
 	{
 		if (This()._capture.isOpened() && !This()._capture.grab())
 		{
+			This()._capture.release();
 			This()._capture.open(This()._filePath.string());
 			This()._capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
 			This()._capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
@@ -38,6 +39,10 @@ namespace data
 
 	Data FileVideoInput::newFrame()
 	{
+		
+		if (This()._capture.isOpened() && !This()._capture.grab())
+			return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
+		
 		openFile();
 
 		bool OK = This()._capture.grab();
@@ -49,7 +54,7 @@ namespace data
 			}
 			else
 			{
-				return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
+				
 			}
 		}
 

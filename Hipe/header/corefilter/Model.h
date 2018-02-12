@@ -13,6 +13,10 @@ namespace cv {
 
 namespace filter
 {
+	struct _protectPreInit
+	{
+	};
+
 	/**
 	 * \brief The Model class is the foundatation of every Hipe's filter. It's the base class they should implement.
 	 * \todo
@@ -57,6 +61,10 @@ namespace filter
 			_name = algoName;
 		}
 
+		virtual std::string getNamespace() const
+		{
+			return "Unkown";
+		}
 
 
 		virtual void addDependencies(Model *filter) = 0;
@@ -70,7 +78,12 @@ namespace filter
 
 		virtual std::map<std::string, Model *> getChildrens() const = 0;
 
-		virtual Model * getRootFilter() = 0;
+		Model * getRootFilter()
+		{
+			if (_parentFilters.empty()) return this;
+			std::map<std::string, Model*>::iterator pair = _parentFilters.begin();
+			return pair->second->getRootFilter();
+		}
 
 		virtual HipeStatus process() = 0;
 

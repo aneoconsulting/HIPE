@@ -11,7 +11,7 @@ namespace filter
 {
 	namespace algos
 	{
-		/**
+		 /**
 		 * \var Resize::ratio
 		 * The factor by which the image must be rescaled.
 		 *
@@ -20,14 +20,15 @@ namespace filter
 		 *
 		 * \var Resize::height
 		 * If a width and height is provided the image will be rescaled to these values. The height to which the image must be rescaled.
-		
-		/**
+		 *
 		 * \brief The Resize filter will resize an image (downscale or upscale).
 		 */
 		class Resize : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
 			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
+
+			SET_NAMESPACE("vision/preprocessing")
 
 			REGISTER(Resize, ()), _connexData(data::INOUT)
 			{

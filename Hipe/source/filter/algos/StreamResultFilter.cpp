@@ -53,8 +53,8 @@ namespace filter
 		{
 			if (_connexData.empty()) return VECTOR_EMPTY;
 
-			if (computeFPS() == WAIT_FPS)	return OK;
-			
+			//if (computeFPS() == WAIT_FPS)	return OK;
+			fps_avg = 12;
 			
 			data::ImageData image_data = _connexData.pop();
 			cv::Size size = image_data.getMat().size();

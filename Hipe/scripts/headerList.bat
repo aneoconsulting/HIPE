@@ -1,6 +1,7 @@
 @echo off
 set prefix=%1
 set mypath=
+cd %prefix%
 call :treeProcess
 goto :eof
 echo test

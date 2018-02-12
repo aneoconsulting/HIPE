@@ -21,6 +21,34 @@ namespace json
 
 		auto tree = new JsonFilterTree();;
 		tree->setName(algoName);
+
+		//Look for datasource from data
+		auto datas = treeRequest.get_child("data");
+		if (datas.count("datasource") != 0)
+		{
+			datas = datas.get_child("datasource");
+			for (auto data = datas.begin(); data != datas.end(); ++data)
+			{
+				auto element = data->second.begin(); //first and unique element of filter
+				auto child = new JsonTree(element->second);
+				auto type = element->first;
+				auto name = child->get("name");
+				auto res = static_cast<filter::Model *>(newFilter(type));
+				res->setName(name);
+				auto json_filter_node = JsonFilterNode(res, *child);
+				json_filter_node.applyClassParameter();
+
+				tree->add(json_filter_node);
+
+
+				//TESTER
+				dataResponse << type;
+				dataResponse << " ";
+				dataResponse << child->get("name");
+
+				dataResponse << "; ";
+			}
+		}
 		
 
 		for (auto filter = filters.begin(); filter != filters.end(); ++filter)

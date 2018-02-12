@@ -133,7 +133,7 @@ namespace json
 	//boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>>::iterator JsonTree::push_back(std::string p1, JsonTree &p2)
 	void JsonTree::push_back(std::string p1, JsonTree& p2)
 	{
-		auto r = _jsonPtree->push_back(std::make_pair(p1, *_jsonPtree));
+		auto r = _jsonPtree->push_back(std::make_pair(p1, *p2._jsonPtree));
 	}
 
 	std::map<std::string, JsonTree> JsonTree::allchildren(const char* name) const

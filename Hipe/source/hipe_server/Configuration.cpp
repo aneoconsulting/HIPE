@@ -53,7 +53,7 @@ namespace hipe_server
 
 		// Parse command line
 		bpo::variables_map vm;
-// 		bpo::store(bpo::parse_command_line(argc, argv, allCat), vm);
+ 		bpo::store(bpo::parse_command_line(argc, argv, allCat), vm);
 		bpo::notify(vm);
 
 		// Handle custom options

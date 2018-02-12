@@ -75,10 +75,39 @@ namespace json
 		{
 			if (isFreezed == false) throw HipeException("Cannot compute dependencies of tree if the tree is not freezed");
 
+			filter::Model* root = nullptr;
+
+			//Find the root object
 			for (auto& it : _filterMap)
 			{
 				filter::Model* filterNode = it.second;
 				const std::string name = it.first;
+				if (filterNode->getParents().empty() && 
+					filterNode->getConstructorName().find("RootFilter") != std::string::npos)
+				{
+					root = filterNode;
+					break;
+				}
+			}
+			if (root == nullptr)
+			{
+				root = static_cast<filter::Model *>(newFilter("RootFilter"));
+				root->setName("__fake_root___");
+				_filterMap[root->getName()] = root;
+			}
+
+			for (auto& it : _filterMap)
+			{
+				filter::Model* filterNode = it.second;
+				const std::string name = it.first;
+
+				//Check if there is no parents and it's not a RootFilter
+				if (filterNode->getParents().empty() && 
+					filterNode->getConstructorName().find("RootFilter") == std::string::npos)
+				{
+					filterNode->addDependencies(root);
+				}
+				
 
 				for (auto& parent : filterNode->getParents())
 				{
@@ -151,11 +180,7 @@ namespace json
 		{
 			return std::map<std::string, Model*>();
 		}
-
-		Model* getRootFilter() override
-		{
-			return nullptr;
-		}
+		
 
 		HipeStatus process() override
 		{

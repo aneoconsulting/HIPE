@@ -15,12 +15,6 @@ void filter::IFilter::getPreviousFilter()
 	throw "Not yet implemented";
 }
 
-filter::IFilter * filter::IFilter::getRootFilter()
-{
-	if (_parentFilters.empty()) return this;
-
-	return getRootFilter();
-}
 
 void filter::IFilter::getParent()
 {

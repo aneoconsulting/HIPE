@@ -37,7 +37,7 @@ namespace filter
 				isStart = false;
 				//setenv("GST_DEBUG", "cat:level...", 1);
 				uri << "appsrc ! videoconvert ! openh264enc ! video/x-h264, stream-format=(string)byte-stream ! h264parse ! rtph264pay mtu=1400 ! udpsink host=@address port=@port sync=false async=false";
-
+				readerTask = nullptr;
 			}
 
 			REGISTER_P(std::string, cmd);

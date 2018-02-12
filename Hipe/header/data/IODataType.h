@@ -122,11 +122,19 @@ namespace data
 		* \return Returns true if the queried data type is a base64 one
 		*/
 		static bool isBase64(const IODataType& dataType);
+
 		/**
 		* \brief Checks if a data type is a points one
 		* \param dataType The queried data type
 		* \return Returns true if the queried data type is a points one
 		*/
 		static bool isShape(const IODataType & dataType);
+
+		/**
+		* \brief Checks if a data type is a NoneData
+		* \param dataType The queried data type
+		* \return Returns true if the queried data type is a points one
+		*/
+		static bool isNoneData(IODataType dataType);
 	};
 }

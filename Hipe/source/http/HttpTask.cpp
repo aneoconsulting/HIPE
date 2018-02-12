@@ -58,12 +58,15 @@ std::function<bool(std::string, json::JsonTree *)> get_filters() {
 			{
 				json::JsonTree parameters;
 				json::JsonTree child;
+				json::JsonTree info;
 				for (auto &varName : reg.getVarNames(name))
 				{
 					child.put(varName, "");
 				}
-
-				parameters.push_back("", child);
+				info.put("namespace", reg.getNamespace(name));
+				parameters.push_back("fields", child);
+				parameters.push_back("info", info);
+				
 				lptree->AddChild(name, parameters);
 				++i;
 			}
