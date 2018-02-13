@@ -68,7 +68,7 @@ function(group_for_visual_studio _subgroup _root_dir _file_list)
     get_filename_component(_dir_path "${_file_path}" PATH)
     file(RELATIVE_PATH _dir_path_rel "${_root_dir}" "${_dir_path}")
     string(REPLACE "/" "\\" _group_path "${_dir_path_rel}")
-    source_group("source\\${_group_path}" FILES "${_file_path}")
+    source_group("${_subgroup}\\${_group_path}" FILES "${_file_path}")
   endforeach(_file_path IN ITEMS ${_file_list})
 endfunction(group_for_visual_studio)
 
