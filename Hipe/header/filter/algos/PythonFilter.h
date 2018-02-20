@@ -5,6 +5,8 @@
 
 #include <corefilter/filter_export.h>
 #include <opencv2/core/mat.hpp>
+#include <data/PyContextData.h>
+
 
 
 namespace filter
@@ -13,16 +15,18 @@ namespace filter
 	{
 		class FILTER_EXPORT PythonFilter : public filter::IFilter
 		{
-			CONNECTOR(data::Data, data::Data);
+			CONNECTOR(data::Data, data::PyContextData);
 
-			REGISTER(PythonFilter, ()), _connexData(data::INOUT)
+			REGISTER(PythonFilter, ()), _connexData(data::INDATA)
 			{
 				_init = false;
 			}
+			data::PyContextData l_pythonContext;
 
 			REGISTER_P(std::string, script_path);
+			REGISTER_P(std::string, function_name);
 			
-			cv::Mat test;
+			REGISTER_P(std::string, jsonParams);
 
 			std::atomic<bool> _init;
 
@@ -35,6 +39,6 @@ namespace filter
 
 		};
 
-		ADD_CLASS(PythonFilter, script_path);
+		ADD_CLASS(PythonFilter, script_path, function_name, jsonParams);
 	}
 }

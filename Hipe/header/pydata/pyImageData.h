@@ -18,7 +18,7 @@ public:
 		
 	}
 	
-	pyImageData(data::ImageData & data) //: _data(data)
+	pyImageData(data::ImageData & data) 
 	{
 		img = data.getMat();
 	}

@@ -77,7 +77,7 @@ target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD" "
 #   set(MYLIBS -Wl,--start-group core streaming data -Wl,--end-group)
 # endif()
 # target_link_libraries(filter -Wl,--start-group core streaming data -Wl,--end-group)
-target_link_libraries(filter core corefilter data json)
+target_link_libraries(filter core corefilter data json pydata)
 
 target_link_libraries(filter ${OpenCV_LIBS} opencv_xfeatures2d)
 target_link_libraries(filter ${Boost_LIBRARIES})

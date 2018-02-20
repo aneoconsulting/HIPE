@@ -40,6 +40,7 @@ namespace data
 		SHAPE = 0x5348415045,			// Shape data (circle, rectangle or point)
 		MATCHER = 0x4d415443484552,
 		DLIBDTCT = 0x444c494244544354,	// dlib detectors data type (used to shared training data between filters)
+		PYCTX = 0x5059435458,
 		NONE
 	};
 

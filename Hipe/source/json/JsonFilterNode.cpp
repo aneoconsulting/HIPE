@@ -27,11 +27,18 @@ namespace json
 		for (auto& field : getParameterNames(_filter->getConstructorName()))
 		{
 			std::string copyField(field);
-
+			
 			if (_params.count(field) != 0)
 			{
 				__callfunc(_filter, "set_" + copyField + "_from_json", _params);
 			}
+		}
+
+		if (_filter->getConstructorName() == "PythonFilter")
+		{
+			std::stringstream ldataResponse;
+			_params.write_json(ldataResponse);
+			__callfunc(_filter, "set_jsonParam", ldataResponse.str());
 		}
 	}
 	filter::Model* JsonFilterNode::getFilter() const

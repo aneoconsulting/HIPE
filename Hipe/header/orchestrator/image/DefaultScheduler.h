@@ -183,8 +183,21 @@ namespace orchestrator
 
 					data::Data res;
 
-					res = cpyVideo->newFrame();
 
+					try
+					{
+						res = cpyVideo->newFrame();
+					}
+					catch (HipeException& e)
+					{
+						std::cerr << "HipeException error getting the first video frame : execution. Msg : " << e.what() <<
+							". Please contact us" << std::endl;
+						cleanDataChild(cpyFilterRoot);
+						disposeChild(cpyFilterRoot);
+						if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+							throw HipeException("Cannot free properly the Streaming videocapture");
+						return;
+					}
 					//TODO manage a buffering every things is here to do it
 					//For now we just pick up one image
 					while (!res.empty() && (*isActive))

@@ -80,6 +80,17 @@ namespace pbcvt {
 
 } //end namespace pbcvt
 
+void print_arity(boost::python::object fn)
+{
+  std::size_t arity = boost::python::extract<std::size_t>(
+                        fn.attr("func_code").attr("co_argcount"));
+  std::cout << arity << std::endl;
+}
+
+BOOST_PYTHON_MODULE(hipetools)
+{
+  def("print_arity", &print_arity);
+}
 
 BOOST_PYTHON_MODULE(pydata)
 {

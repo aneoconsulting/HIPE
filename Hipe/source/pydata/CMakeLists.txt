@@ -8,6 +8,7 @@ add_hipe_library(pydata SHARED)
 target_compile_definitions(pydata PRIVATE "-DCV_VERSION_EPOCH=3" "-DUSE_BOOST_REGEX" "-DPYDATA_BUILD")
 
 target_link_libraries(pydata core)
+target_link_libraries(pydata data)
 target_link_libraries(pydata ${Boost_LIBRARIES})
 target_link_libraries(pydata ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(pydata ${OpenCV_LIBS})
