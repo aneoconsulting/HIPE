@@ -1,5 +1,3 @@
-#pragma once
-
 #include <filter/algos/DrawCircles.h>
 #include <data/ShapeData.h>
 #include <data/ImageData.h>
@@ -41,7 +39,7 @@ namespace filter
 				cv::Scalar const text_color(text_color_r, text_color_g, text_color_b);
 			
 						
-					for (auto i (0); i < s ; ++i)
+					for (auto i (0UL); i < s ; ++i)
 					{
 
 						cv::Point const center(cvRound(circles.CirclesArray()[i][0]), cvRound(circles.CirclesArray()[i][1]));

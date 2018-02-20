@@ -1,4 +1,4 @@
-#include <pydata/PyConverterData.h>
+#include <pydata/pyConverterData.h>
 #include <data/ImageData.h>
 #include <pydata/pyImageData.h>
 

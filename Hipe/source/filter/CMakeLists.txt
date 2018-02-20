@@ -110,7 +110,7 @@ if(WIN32)
     COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}.cmp"
     COMMAND cmd /c echo ^// Algorithm header to reference  >> \"${os_ref_header_path}.cmp\"
     COMMAND cmd /c "${script_path}" "filter/algos" >> \"${os_ref_header_path}.cmp\"
-		COMMAND cmd /c "${script_path}" "filter/datasource" >> \"${os_header_ref_path}.cmp\"
+	COMMAND cmd /c "${script_path}" "filter/datasource" >> \"${os_header_ref_path}.cmp\"
     COMMAND cmd /c "${script_compy}" \"${os_ref_header_path}.cmp\" \"${os_ref_header_path}\"
     COMMENT "Generate reference file"
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/
@@ -128,7 +128,7 @@ if(UNIX)
   add_custom_command(
     TARGET update_reference
     POST_BUILD
-    COMMAND bash "${script_path}" "${os_header_ref_path}"
+    COMMAND bash "${script_path}" "${os_ref_header_path}"
     COMMENT "Generate reference file"
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter
   )

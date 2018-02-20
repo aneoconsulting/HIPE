@@ -1,4 +1,3 @@
-#pragma once
 #include <filter/algos/DelegateStreamingFilter.h>
 #include <thread>
 #include <boost/thread/thread.hpp>

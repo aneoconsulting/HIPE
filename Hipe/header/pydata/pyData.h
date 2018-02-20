@@ -26,7 +26,8 @@ namespace pydata
 
 		std::string getJsonArgs()
 		{
-			
+
+			return "";
 		}
 
 	};
