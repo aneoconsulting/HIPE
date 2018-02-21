@@ -141,7 +141,7 @@ namespace filter
 						Point p1(cvRound(x_center - width / 2), cvRound(y_center - height / 2));
 						Point p2(cvRound(x_center + width / 2), cvRound(y_center + height / 2));
 						Rect object(p1, p2);
-						String className = objectClass < names.size() ? names[objectClass] : cv::format("unknown(%d)", objectClass);
+						cv::String className = (objectClass < names.size()) ? cv::String(names[objectClass]) : cv::String(cv::format("unknown(%d)", objectClass));
 						String label = format("%s: %.2f", className.c_str(), confidence);
 						
 						result.rectangles.push_back(object);

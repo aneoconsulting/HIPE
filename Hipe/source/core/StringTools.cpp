@@ -30,7 +30,7 @@ std::string HexAsString(hUInt64 value, int base, int minSize = 1)
 	static char const digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	std::string results;
-	while (value != 0 || results.size() < minSize) {
+	while (value != 0 || results.size() < (unsigned int) minSize) {
 		results += digits[value % base];
 		value /= base;
 	}

@@ -1,4 +1,3 @@
-#pragma once
 #include <data/IOData.h>
 #include <data/ShapeData.h>
 

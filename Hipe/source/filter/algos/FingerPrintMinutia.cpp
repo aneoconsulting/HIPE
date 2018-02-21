@@ -161,7 +161,7 @@ namespace filter
 				double min_dist = std::numeric_limits<double>::max();
 
 				//for (auto i = 0; i < descriptorsInput.rows; i++)
-				for (int i = 0; i < matches.size(); ++i)
+				for (unsigned int i = 0; i < matches.size(); ++i)
 				{
 					double const dist = matches[i].distance;
 					if (dist < min_dist) min_dist = dist;

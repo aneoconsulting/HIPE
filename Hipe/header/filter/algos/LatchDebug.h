@@ -110,6 +110,8 @@ namespace filter
 				cv::drawMatches(patternImage, inliers1, requestImage, inliers2, good_matches, res);
 
 				_connexData.push(data::ImageData(res));
+
+				return OK;
 			}
 		};
 

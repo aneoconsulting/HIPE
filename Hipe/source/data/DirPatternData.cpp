@@ -1,7 +1,4 @@
 #include <DirPatternData.h>
-
-
-#pragma once
 #include <data/IODataType.h>
 #include <data/IOData.h>
 #include <data/ImageData.h>
