@@ -2,7 +2,7 @@
 #include <core/HipeException.h>
 #include <json/JsonFilterNode/JsonFilterTree.h>
 #include <json/JsonTree.h>
-#include <data/OutputData.h>
+#include <coredata/OutputData.h>
 
 namespace json
 {

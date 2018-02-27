@@ -10,8 +10,8 @@
 #include <algorithm>
 #include <sstream>
 #include <corefilter/tools/filterMacros.h>
-#include <data/IOData.h>
-#include <data/IODataType.h>
+#include <coredata/IOData.h>
+#include <coredata/IODataType.h>
 #include <corefilter/filter_export.h>
 #include <corefilter/Model.h>
 
@@ -19,6 +19,11 @@ class FILTER_EXPORT RegisterTable;
 
 
 FILTER_EXPORT RegisterTable* registerInstance();
+
+extern "C"
+{
+	FILTER_EXPORT void* c_registerInstance();
+}
 
 /**
  * \brief This class register every class and setter functions coming from class inheriting of Model and IFfilter

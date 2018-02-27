@@ -1,7 +1,5 @@
 #include <JsonBuilder.h>
-#include <data/OutputData.h>
-#include <data/ImageArrayData.h>
-#include <data/ImageEncodedData.h>
+#include <coredata/OutputData.h>
 #include <boost/property_tree/ptree.hpp>
 
 namespace json
@@ -94,6 +92,8 @@ namespace json
 		json::JsonTree resultTree;
 		json::JsonTree outputTree;
 
+		throw HipeException("JsonBuilder.cpp : Need to rethink the output of a image. Since there is a core data. The child of OutputData should use JsonTree directly in the filter modules");
+		/*
 		// Case where there's no output data to process
 		if (data.empty())
 		{
@@ -159,12 +159,14 @@ namespace json
 			outputTree.Add(dataKey.str(), data.mat2str(mat));
 
 			data_index++;
+		
 		}
 
 		std::stringstream output;
 
 		resultTree.AddChild("DataResult", outputTree);
-
+		*/
 		return resultTree;
+
 	}
 }

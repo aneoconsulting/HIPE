@@ -217,11 +217,12 @@ void http::HttpTask::runTask() const
 				//after the process execution Data should be an OutputData type
 				if (outputData.getType() == data::IMGB64)
 				{
-					data::OutputData output_data;
+					throw HipeException("Need to rethink the output of a image. Since there is a core data. The child of OutputData should use JsonTree directly in the filter modules");
+				/*	data::OutputData output_data;
 					output_data = outputData;
 					auto outpd = json::JsonBuilder::buildJson(output_data);
 
-					treeResponse.AddChild("dataResponse",outpd);
+					treeResponse.AddChild("dataResponse",outpd);*/
 				}
 			}
 			

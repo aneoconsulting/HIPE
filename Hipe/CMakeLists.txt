@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.7.1)
 project (Hipe)
 
+
+
 # Options
 option(USE_GPERFTOOLS "Use gperftools." OFF)
 option(USE_DLIB "Enable dlib library." ON)
@@ -38,8 +40,15 @@ include("${CMAKE_SOURCE_DIR}/cmake/common_config.cmake")
 
 #controls where to build the executables after "make"
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/libs)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/libs)
+set(CMAKE_INCLUDE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/include)
 
+IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Installation directory" FORCE)
+ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 add_subdirectory(source)
+
+
+
 # add_subdirectory(tests)

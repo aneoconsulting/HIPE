@@ -7,7 +7,7 @@ target_compile_definitions(json PRIVATE "-DUSE_BOOST_REGEX" "-DJSON_BUILD")
 
 target_link_libraries(json ${Boost_LIBRARIES})
 target_link_libraries(json ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(json core corefilter data)
+target_link_libraries(json core corefilter coredata)
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
@@ -17,3 +17,10 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
 endif(MSYS)
 
 display_target_properties(json)
+
+
+install_header_to_target(json)
+
+install (TARGETS json RUNTIME DESTINATION bin/Release LIBRARY DESTINATION lib/Release CONFIGURATIONS Release COMPONENT library)
+install (TARGETS json RUNTIME DESTINATION bin/Debug   LIBRARY DESTINATION lib/Debug   CONFIGURATIONS Debug   COMPONENT library)
+

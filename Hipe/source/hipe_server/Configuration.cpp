@@ -19,6 +19,7 @@ namespace hipe_server
 	void ConfigurationParameters::setDefaultValues()
 	{
 		this->port = 8080;
+		this->modulePath = "filter.so";
 	}
 
 	Configuration::Configuration()
@@ -42,6 +43,10 @@ namespace hipe_server
 		configCat.add_options()
 			("port,p", bpo::value<unsigned short>(&this->configuration.port)->default_value(this->configuration.port), "Sets the port the server should be listening on")
 			;
+		configCat.add_options()
+			("module,m", bpo::value<std::string>(&this->configuration.modulePath)->default_value(this->configuration.modulePath), "Sets the path to the module to get all filters implemented")
+			;
+
 
 		// Regroup all sub catagories
 		bpo::options_description allCat("Available options");

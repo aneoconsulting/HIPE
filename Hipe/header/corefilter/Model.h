@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 #include <core/HipeStatus.h>
-#include <data/IOData.h>
-#include <data/DataAccess.h>
-#include <data/ConnexData.h>
+#include <coredata/IOData.h>
+#include <coredata/DataAccess.h>
+#include <coredata/ConnexData.h>
 #include <corefilter/filter_export.h>
 
 

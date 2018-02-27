@@ -1,16 +1,10 @@
 #pragma once
 #include <core/HipeException.h>
-#include <data/IOData.h>
-#include <data/IODataType.h>
-#include <data/FileImageData.h>
-#include <data/FileVideoInput.h>
-#include <data/StreamVideoInput.h>
-#include <data/DirectoryImgData.h>
-#include <data/ListIOData.h>
-#include <data/SquareCrop.h>
-#include <data/PatternData.h>
+#include <coredata/IOData.h>
+#include <coredata/IODataType.h>
 #include <json/JsonTree.h>
 #include <orchestrator/orchestrator_export.h>
+#include <vector>
 
 namespace orchestrator
 

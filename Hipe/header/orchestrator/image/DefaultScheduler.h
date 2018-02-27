@@ -1,14 +1,9 @@
 #pragma once
-#include <data/FileVideoInput.h>
-#include <data/ListIOData.h>
-#include <data/OutputData.h>
-#include <data/StreamVideoInput.h>
+#include <coredata/OutputData.h>
 #include <boost/thread/thread.hpp>
-#include <data/PatternData.h>
 #include <orchestrator/TaskInfo.h>
-#include "data/DirPatternData.h"
-#include "corefilter/tools/RegisterTable.h"
-#include "filter/datasource/DataSource.h"
+#include <corefilter/tools/RegisterTable.h>
+#include <corefilter/datasource/DataSource.h>
 
 
 namespace orchestrator
@@ -77,27 +72,8 @@ namespace orchestrator
 					disposeChild(childFilter.second);
 				}
 			}
-
-			/*static void pushOutputToChild(filter::IFilter* filter, data::Data& io_data)
-			{
-				if (io_data.empty())
-					return;
-
-				for (auto& childFilter : filter->getChildrens())
-				{
-					if (childFilter.second->get_protect() == DataAccess::COPY)
-					{
-						data::Data copy(io_data, true);
-						childFilter.second->setInputData(copy);
-					}
-					else
-					{
-						childFilter.second->setInputData(io_data);
-					}
-				}
-			}*/
-
-			void processStreaming(filter::Model* root, data::Data& inputData, data::Data & outputData, bool debug)
+		
+			/*void processStreaming(filter::Model* root, data::Data& inputData, data::Data & outputData, bool debug)
 			{
 				const data::StreamVideoInput & video = static_cast<const data::StreamVideoInput&>(inputData);
 				cv::Mat frame;
@@ -361,7 +337,7 @@ namespace orchestrator
 
 
 			void processPattern(filter::Model* root, data::Data data, data::Data& output_data, bool debug)
-			{}
+			{}*/
 
 			void processDataSource(filter::Model* root, data::Data& outputData, bool debug)
 			{
@@ -490,7 +466,7 @@ namespace orchestrator
 			void process(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug = false)
 			{
 
-				if (data::DataTypeMapper::isSequence(inputData.getType()))
+				/*if (data::DataTypeMapper::isSequence(inputData.getType()))
 				{
 					processSequence(root, inputData, outputData, debug);
 				}
@@ -525,7 +501,7 @@ namespace orchestrator
 					else
 						processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
 				}
-				else if (data::DataTypeMapper::isNoneData(inputData.getType()))
+				else */if (data::DataTypeMapper::isNoneData(inputData.getType()))
 				{
 					processDataSource(root, outputData, debug);
 				}
