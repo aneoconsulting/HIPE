@@ -244,29 +244,39 @@ macro(install_dependencies target_name)
 
 	install(
 			CODE "include(GetPrerequisites)
-						get_prerequisites(\"${cm_path}\" PREREQS 1 1 \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\")
-						
-						message(STATUS \"prerequisites \${PREREQS} for ${cm_path}\")
-						foreach(DEPENDENCY_FILE \${PREREQS})
-						gp_resolve_item(\"${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\" resolved_file)
-						message(STATUS \"resolved_file='\${resolved_file}'\")
-						FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Debug\")
-						endforeach()
+						if(\"\${CMAKE_INSTALL_CONFIG_NAME}\" STREQUAL \"Debug\") 
+							get_prerequisites(\"${cm_path}\" PREREQS 1 1 \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\")
+							
+							message(STATUS \"prerequisites \${PREREQS} for ${cm_path}\")
+							foreach(DEPENDENCY_FILE \${PREREQS})
+							gp_resolve_item(\"${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\" resolved_file)
+							message(STATUS \"resolved_file='\${resolved_file}'\")
+							FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Debug\")
+							endforeach()
+						else() 
+							get_prerequisites(\"${cm_path}\" PREREQS 1 1 \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\")
+							
+							message(STATUS \"prerequisites: \${PREREQS} for ${cm_path}\")
+							foreach(DEPENDENCY_FILE \${PREREQS})
+							gp_resolve_item(\"${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\" resolved_file)
+							message(STATUS \"resolved_file='\${resolved_file}'\")
+							FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Release\")
+							endforeach()
+						endif() 
 						"
-			CONFIGURATIONS Debug 
 			COMPONENT deps)
 			
-	install(CODE "include(GetPrerequisites)
-						get_prerequisites(\"${cm_path}\" PREREQS 1 1 \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\")
+	# install(CODE "include(GetPrerequisites)
+						# get_prerequisites(\"${cm_path}\" PREREQS 1 1 \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\")
 						
-						message(STATUS \"prerequisites: \${PREREQS} for ${cm_path}\")
-						foreach(DEPENDENCY_FILE \${PREREQS})
-						gp_resolve_item(\"${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\" resolved_file)
-						message(STATUS \"resolved_file='\${resolved_file}'\")
-						FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Release\")
-						endforeach()
-						"
-			CONFIGURATIONS Release 
+						# message(STATUS \"prerequisites: \${PREREQS} for ${cm_path}\")
+						# foreach(DEPENDENCY_FILE \${PREREQS})
+						# gp_resolve_item(\"${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\" resolved_file)
+						# message(STATUS \"resolved_file='\${resolved_file}'\")
+						# FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Release\")
+						# endforeach()
+						# "
+			# CONFIGURATIONS Release 
 			
-			COMPONENT deps)
+			# COMPONENT deps)
 endmacro(install_dependencies)

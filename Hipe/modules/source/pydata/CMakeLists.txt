@@ -35,12 +35,17 @@ display_target_properties(pydata)
 install (TARGETS pydata 
 		CONFIGURATIONS Debug
 		RUNTIME DESTINATION bin/Debug
+		COMPONENT runtime
 		LIBRARY DESTINATION lib/Debug
+		COMPONENT library
 		ARCHIVE DESTINATION lib/Debug
 		COMPONENT library)
 
 install (TARGETS pydata 
 		CONFIGURATIONS Release 
 		RUNTIME DESTINATION bin/Release 
+		COMPONENT runtime
 		LIBRARY DESTINATION lib/Release 
+		COMPONENT library
+		ARCHIVE DESTINATION lib/Release
 		COMPONENT library)

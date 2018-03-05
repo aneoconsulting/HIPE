@@ -43,12 +43,15 @@ display_target_properties(data)
 install (TARGETS data 
 		CONFIGURATIONS Debug
 		RUNTIME DESTINATION bin/Debug
+		COMPONENT runtime
 		LIBRARY DESTINATION lib/Debug
+		COMPONENT library
 		ARCHIVE DESTINATION lib/Debug
 		COMPONENT library)
 
 install (TARGETS data 
 		CONFIGURATIONS Release 
 		RUNTIME DESTINATION bin/Release 
+		COMPONENT runtime
 		LIBRARY DESTINATION lib/Release 
 		COMPONENT library)
