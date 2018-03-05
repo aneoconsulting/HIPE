@@ -70,5 +70,5 @@ enable_testing()
 
 display_target_properties(hipe_server)
 
-install (TARGETS hipe_server CONFIGURATIONS Debug DESTINATION bin/Debug)
-install (TARGETS hipe_server CONFIGURATIONS Release DESTINATION bin/Release)
+install (TARGETS hipe_server CONFIGURATIONS Debug DESTINATION bin/Debug COMPONENT applications)
+install (TARGETS hipe_server CONFIGURATIONS Release DESTINATION bin/Release COMPONENT applications)

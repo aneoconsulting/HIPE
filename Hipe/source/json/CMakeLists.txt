@@ -21,6 +21,16 @@ display_target_properties(json)
 
 install_header_to_target(json)
 
-install (TARGETS json RUNTIME DESTINATION bin/Release LIBRARY DESTINATION lib/Release CONFIGURATIONS Release COMPONENT library)
-install (TARGETS json RUNTIME DESTINATION bin/Debug   LIBRARY DESTINATION lib/Debug   CONFIGURATIONS Debug   COMPONENT library)
+install (TARGETS json 
+		CONFIGURATIONS Release 
+		RUNTIME DESTINATION bin/Release 
+		LIBRARY DESTINATION lib/Release 
+		COMPONENT library)
+		
+install (TARGETS json 
+		CONFIGURATIONS Debug
+		RUNTIME DESTINATION bin/Debug
+		LIBRARY DESTINATION lib/Debug
+		ARCHIVE DESTINATION lib/Debug
+		COMPONENT library)
 

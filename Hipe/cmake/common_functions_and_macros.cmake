@@ -225,7 +225,7 @@ macro(install_header_to_target targetname)
 	foreach ( file ${${targetname}_header} )
 
 		get_filename_component( dir ${file} DIRECTORY )
-		install( FILES ${CMAKE_SOURCE_DIR}/header/${targetname}/${file} DESTINATION include/${targetname}/${dir} )
+		install( FILES ${CMAKE_SOURCE_DIR}/header/${targetname}/${file} DESTINATION include/${targetname}/${dir}  COMPONENT headers )
 	endforeach()
 	
 endmacro()

@@ -22,6 +22,16 @@ display_target_properties(corefilter)
 
 install_header_to_target(corefilter)
 
-install (TARGETS corefilter RUNTIME DESTINATION bin/Release LIBRARY DESTINATION lib/Release CONFIGURATIONS Release COMPONENT library)
-install (TARGETS corefilter RUNTIME DESTINATION bin/Debug   LIBRARY DESTINATION lib/Debug   CONFIGURATIONS Debug   COMPONENT library)
+install (TARGETS corefilter 
+		CONFIGURATIONS Release 
+		RUNTIME DESTINATION bin/Release 
+		LIBRARY DESTINATION lib/Release 
+		COMPONENT library)
+		
+install (TARGETS corefilter 
+		CONFIGURATIONS Debug
+		RUNTIME DESTINATION bin/Debug
+		LIBRARY DESTINATION lib/Debug
+		ARCHIVE DESTINATION lib/Debug
+		COMPONENT library)
 

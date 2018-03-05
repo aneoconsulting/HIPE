@@ -25,6 +25,10 @@ message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 
 if (WIN32)
 option(CMAKE_USE_WIN32_THREADS_INIT "using WIN32 threads" ON)
+
+set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
+include(InstallRequiredSystemLibraries)
+
 endif(WIN32)
 # x264 is not supported by find_package, so "x264_DIR" must be set to the installation path.
 # option(HIPE_EXTERNAL_X264 "Use x264 libraries in Hipe External." ON)
@@ -47,8 +51,40 @@ set(CMAKE_INCLUDE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/include)
 IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Installation directory" FORCE)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
+
 add_subdirectory(source)
 
 
 
-# add_subdirectory(tests)
+set(CPACK_PACKAGE_NAME "Hipe-core-installer")
+set(CPACK_PACKAGE_VENDOR "Damien DUBUC (ANEO)")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Hipe Core is the platform to load modules filter")
+
+#TODO Get the version from BUILD-VERSION.txt
+set(CPACK_PACKAGE_VERSION_MAJOR "2")
+set(CPACK_PACKAGE_VERSION_MINOR "1")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Hipe")
+set(CPACK_COMPONENTS_ALL applications library headers)
+set(CPACK_COMPONENT_CTDATA_GROUP "data")
+set(CPACK_COMPONENT_INSTRUCTIONDATA_GROUP "data")
+
+set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Hiearchic Image processing engine")
+set(CPACK_COMPONENT_GROUP_DATA_DESCRIPTION "data (CT and instructions)")
+
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/../LICENSE-CORE.txt")
+
+set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\ressources\\\\logo.ico")
+set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/ressources/logo.ico")
+set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/ressources/logo.ico")
+
+
+set(CPACK_NSIS_MENU_LINKS "programs\\hipe" "Hipe")
+                          #${CT_DATA_FILE_DIR} "CT Data"
+                          #"data\\example.pdf" "documentation")
+						  
+include(CPack)
+						  
+						  

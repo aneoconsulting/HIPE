@@ -22,5 +22,5 @@ endif()
 
 install_header_to_target(orchestrator)
 
-install (TARGETS orchestrator CONFIGURATIONS Debug DESTINATION lib/Debug)
-install (TARGETS orchestrator CONFIGURATIONS Release DESTINATION lib/Release)
+install (TARGETS orchestrator CONFIGURATIONS Debug DESTINATION lib/Debug COMPONENT library)
+install (TARGETS orchestrator CONFIGURATIONS Release DESTINATION lib/Release COMPONENT library)
