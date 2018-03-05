@@ -17,9 +17,10 @@ set(header_ref_path ${CMAKE_SOURCE_DIR}/header/filter/References.h)
 file(TO_NATIVE_PATH "${header_ref_path}" os_ref_header_path)
 
 # Reset the file for debugging purposes.
-message(STATUS "Creating ${os_ref_header_path}")
-file(WRITE ${header_ref_path} "// Reset by CMake.")
-
+if ( NOT EXISTS "${header_ref_path}")
+	message(STATUS "Creating ${os_ref_header_path}")
+	file(WRITE ${header_ref_path} "// Reset by CMake.")
+endif()
 # # The References header includes all of the algorithm headers in the "algos"
 # # directory. These should be added automatically. The following commands will
 # # find the header files and update the References header if the content has
@@ -117,7 +118,7 @@ if(WIN32)
     COMMAND cmd /c echo \#pragma once > "${os_ref_header_path}.cmp"
     COMMAND cmd /c echo ^// Algorithm header to reference  >> \"${os_ref_header_path}.cmp\"
     COMMAND cmd /c "${script_path}" "filter/algos" >> \"${os_ref_header_path}.cmp\"
-	COMMAND cmd /c "${script_path}" "filter/datasource" >> \"${os_header_ref_path}.cmp\"
+	COMMAND cmd /c "${script_path}" "filter/datasource" >> \"${os_ref_header_path}.cmp\"
     COMMAND cmd /c "${script_compy}" \"${os_ref_header_path}.cmp\" \"${os_ref_header_path}\"
     COMMENT "Generate reference file"
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/
@@ -154,3 +155,20 @@ if(WIN32) #TODO: Is MSYS true when MSVC is true?
 endif(WIN32)
 
 display_target_properties(filter)
+
+
+install (TARGETS filter 
+		CONFIGURATIONS Debug
+		RUNTIME DESTINATION bin/Debug
+		LIBRARY DESTINATION lib/Debug
+		ARCHIVE DESTINATION lib/Debug
+		COMPONENT library)
+
+install (TARGETS filter 
+		CONFIGURATIONS Release 
+		RUNTIME DESTINATION bin/Release 
+		LIBRARY DESTINATION lib/Release
+		ARCHIVE DESTINATION lib/Release		
+		COMPONENT library)
+		
+install_dependencies(filter)

@@ -31,3 +31,16 @@ add_custom_command(
 )
 
 display_target_properties(pydata)
+
+install (TARGETS pydata 
+		CONFIGURATIONS Debug
+		RUNTIME DESTINATION bin/Debug
+		LIBRARY DESTINATION lib/Debug
+		ARCHIVE DESTINATION lib/Debug
+		COMPONENT library)
+
+install (TARGETS pydata 
+		CONFIGURATIONS Release 
+		RUNTIME DESTINATION bin/Release 
+		LIBRARY DESTINATION lib/Release 
+		COMPONENT library)

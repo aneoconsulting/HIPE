@@ -4,6 +4,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/livemedia_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/x264_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
+include(GetPrerequisites)
 
 if(USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
@@ -72,3 +73,49 @@ display_target_properties(hipe_server)
 
 install (TARGETS hipe_server CONFIGURATIONS Debug DESTINATION bin/Debug COMPONENT applications)
 install (TARGETS hipe_server CONFIGURATIONS Release DESTINATION bin/Release COMPONENT applications)
+
+#
+#Copy in install folder all dependencies for hipe_core
+#
+
+#create directory for 3rdParty
+install(DIRECTORY DESTINATION 3rdParty)
+
+set(EXT_BIN "") 
+if (WIN32)
+set(EXT_BIN .exe)
+endif() 
+
+file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/Debug/hipe_server${EXT_BIN}" cm_path)
+file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/Debug" cm_dir)
+set(PATH_SHAREDLIB "${HIPE_EXTERNAL_DIR}/boost_1_62_0/lib64-msvc-14.0;${HIPE_EXTERNAL_DIR}/opencv-3.4/x64/vc14/bin;${HIPE_EXTERNAL_DIR}/gstreamer/1.0/x86_64/bin;${cm_dir};${CMAKE_PREFIX_PATH}")
+#STRING(REPLACE "\\" "\\\\" cm_path ${cm_path})
+
+install(
+		CODE "include(GetPrerequisites)
+                    get_prerequisites(\"${cm_path}\" PREREQS 1 1 \"\" \"${PATH_SHAREDLIB}\")
+					
+                    message(\"---> prerequisites: \"${PREREQS}\" for ${cm_path}\")
+					foreach(DEPENDENCY_FILE \${PREREQS})
+					gp_resolve_item(\"${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"${PATH_SHAREDLIB}\" resolved_file)
+					message(\"resolved_file='\${resolved_file}'\")
+					FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Debug\")
+					endforeach()
+					"
+		CONFIGURATIONS Debug 
+		COMPONENT applications)
+		
+install(CODE "include(GetPrerequisites)
+                    get_prerequisites(\"${cm_path}\" PREREQS 1 1 \"\" \"${PATH_SHAREDLIB}\")
+					
+                    message(\"---> prerequisites: \"${PREREQS}\" for ${cm_path}\")
+					foreach(DEPENDENCY_FILE \${PREREQS})
+					gp_resolve_item(\"${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"${PATH_SHAREDLIB}\" resolved_file)
+					message(\"resolved_file='\${resolved_file}'\")
+					FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Release\")
+					endforeach()
+					"
+		CONFIGURATIONS Release 
+		
+		COMPONENT applications)
+

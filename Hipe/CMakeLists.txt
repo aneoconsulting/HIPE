@@ -56,7 +56,6 @@ ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 add_subdirectory(source)
 
 
-
 set(CPACK_PACKAGE_NAME "Hipe-core-installer")
 set(CPACK_PACKAGE_VENDOR "Damien DUBUC (ANEO)")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Hipe Core is the platform to load modules filter")
@@ -71,12 +70,14 @@ set(CPACK_COMPONENTS_ALL applications library headers)
 set(CPACK_COMPONENT_CTDATA_GROUP "data")
 set(CPACK_COMPONENT_INSTRUCTIONDATA_GROUP "data")
 
-set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Hiearchic Image processing engine")
+set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Hipe-core")
 set(CPACK_COMPONENT_GROUP_DATA_DESCRIPTION "data (CT and instructions)")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/../LICENSE-CORE.txt")
 
 set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\ressources\\\\logo.ico")
+
+if (WIN32)
 set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/ressources/logo.ico")
 set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/ressources/logo.ico")
 
@@ -84,7 +85,8 @@ set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/ressources/logo.ico")
 set(CPACK_NSIS_MENU_LINKS "programs\\hipe" "Hipe")
                           #${CT_DATA_FILE_DIR} "CT Data"
                           #"data\\example.pdf" "documentation")
-						  
+endif(WIN32)
+			  
 include(CPack)
 						  
 						  

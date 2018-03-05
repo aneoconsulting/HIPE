@@ -47,7 +47,8 @@ endif(WIN32)
 
 if(WIN32)
   set(Hipecore_DIR "${HIPE_EXTERNAL_DIR}/hipecore" CACHE PATH "hipecore")
-
+  list(APPEND CMAKE_PREFIX_PATH "${Hipecore_DIR}")
+    
   # TODO
   # Update this section to enable optional use of installed system libraries.
   set(Boost_DIR "${HIPE_EXTERNAL_DIR}/boost_1_62_0/" CACHE PATH "Boost_DIR" FORCE)

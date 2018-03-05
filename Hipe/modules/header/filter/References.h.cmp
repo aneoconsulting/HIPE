@@ -65,3 +65,5 @@
 #include <filter/algos/Surf.h>
 #include <filter/algos/IDPlate\IDPlateTools.h>
 #include <filter/algos/yolo\ObjectRecognitionYolo.h>
+#include <filter/datasource/ImageDataSource.h>
+#include <filter/datasource/VideoDataSource.h>

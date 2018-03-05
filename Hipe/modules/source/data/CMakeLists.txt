@@ -39,3 +39,16 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
 endif(MSYS)
 
 display_target_properties(data)
+
+install (TARGETS data 
+		CONFIGURATIONS Debug
+		RUNTIME DESTINATION bin/Debug
+		LIBRARY DESTINATION lib/Debug
+		ARCHIVE DESTINATION lib/Debug
+		COMPONENT library)
+
+install (TARGETS data 
+		CONFIGURATIONS Release 
+		RUNTIME DESTINATION bin/Release 
+		LIBRARY DESTINATION lib/Release 
+		COMPONENT library)

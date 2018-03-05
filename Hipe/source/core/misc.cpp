@@ -18,6 +18,7 @@ void hipe_usleep(long long usec)
 	WaitForSingleObject(timer, INFINITE);
 	CloseHandle(timer);
 }
+
 #include <windows.h>
 
 int hipe_gettimeofday(struct timeval* p, void* tz)
@@ -43,6 +44,18 @@ int hipe_gettimeofday(struct timeval* p, void* tz)
 
 	return 0;
 }
+
+#include <cstdlib>
+#include <stdlib.h>
+void addEnv(std::string path)
+{
+	char env_p[163840];
+	GetEnvironmentVariable("PATH", env_p, 163840);
+
+
+
+}
+
 #else
 #include <sys/time.h>
 #include <unistd.h>
@@ -55,6 +68,12 @@ void hipe_usleep(long long usec)
 {
 	usleep(usec);
 }
+
+void addEnv(std::string path)
+{
+
+}
+
 #endif
 
 bool isFileExist(std::string filename)

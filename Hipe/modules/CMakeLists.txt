@@ -51,3 +51,57 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/libs)
 
 add_subdirectory(source)
 # add_subdirectory(tests)
+
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./"
+		COMPONENT sources
+        PATTERN "cmake" 
+		PATTERN "bin" 
+		PATTERN "source"
+		PATTERN "header"
+		PATTERN "*.txt"
+		PATTERN "build" EXCLUDE
+		)
+
+
+set(CPACK_PACKAGE_NAME "Hipe-Plugins-imageFilterMod")
+set(CPACK_PACKAGE_VENDOR "Damien DUBUC (ANEO)")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Hipe Image processing Filter module to use with Hipe core service")
+
+#TODO Get the version from BUILD-VERSION.txt
+set(CPACK_PACKAGE_VERSION_MAJOR "2")
+set(CPACK_PACKAGE_VERSION_MINOR "1")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Hipe-Modules")
+set(CPACK_COMPONENTS_ALL library sources bin deps)
+set(CPACK_COMPONENT_CTDATA_GROUP "data")
+set(CPACK_COMPONENT_INSTRUCTIONDATA_GROUP "data")
+
+set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Hipe-ImageProcessing-mod")
+set(CPACK_COMPONENT_GROUP_DATA_DESCRIPTION "data (CT and instructions)")
+
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/../../LICENSE-MODULES.txt")
+
+set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\..\\\\ressources\\\\logo.ico")
+
+if (WIN32)
+set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/../ressources/logo.ico")
+set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/../ressources/logo.ico")
+
+
+set(CPACK_NSIS_MENU_LINKS "programs\\hipe" "Hipe")
+                          #${CT_DATA_FILE_DIR} "CT Data"
+                          #"data\\example.pdf" "documentation")
+set(CPACK_NSIS_MODIFY_PATH ON)
+endif(WIN32)
+			  
+include(CPack)
+						  
+						  
+#
+#Copy in install folder all dependencies for hipe_core
+#
+
+#create directory for 3rdParty
+
+
