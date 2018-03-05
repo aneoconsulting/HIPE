@@ -47,11 +47,11 @@ int main(int argc, char* argv[]) {
 	buildstring << config.configuration.port;
 
 	core::getLocalEnv().setValue("http_port", buildstring.str());
-
-	http::HttpServer server(config.configuration.port, 1);
-
 	std::shared_ptr<core::ModuleLoader> module = std::make_shared<core::ModuleLoader>(config.configuration.modulePath);
 	module->loadLibrary();
+	http::HttpServer server(config.configuration.port, 1);
+
+
 	//function<RegisterTable*()> call_function = module->callFunction<RegisterTable*()>("c_registerInstance");
 	//RegisterTable * res = call_function();
 	orchestrator::OrchestratorFactory::start_orchestrator();
