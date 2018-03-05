@@ -22,3 +22,6 @@ Simple-Web-Server-master/*
 *.opensdf
 Hipe/source/header/filter/References.h
 Hipe/header/filter/References.h.cmp
+/Hipe/modules/build/ALL_BUILD.vcxproj
+/Hipe/modules/build/*
+/Hipe/modules/header/.cmp

@@ -142,7 +142,9 @@ if(UNIX)
   add_dependencies(filter update_reference)
 endif(UNIX)
 
-
+if(WIN32)
+target_compile_options(filter PRIVATE "/MP")
+endif()
 
 target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
 #target_link_libraries(filter ${yolov2_LIBRARIES} )

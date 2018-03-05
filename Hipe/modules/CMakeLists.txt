@@ -1,4 +1,11 @@
 cmake_minimum_required (VERSION 3.7.1)
+
+#Add some multithreaded build support =====================================================================================================
+if(WIN32)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+
+endif()
+
 project (Hipe_module)
 
 # Options
@@ -20,7 +27,7 @@ message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 # Dlib is not supported by find_package, so "Dlib_DIR" must be set to the installation path.
 # option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
 # message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")
-set(Hipecore_DIR "${CMAKE_SOURCE_DIR}/../build/install")
+
 if (WIN32)
 option(CMAKE_USE_WIN32_THREADS_INIT "using WIN32 threads" ON)
 endif(WIN32)
@@ -35,6 +42,7 @@ endif(WIN32)
 
 # Configure common settings.
 include("${CMAKE_SOURCE_DIR}/cmake/common_config.cmake")
+
 
 #controls where to build the executables after "make"
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
