@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	orchestrator::OrchestratorFactory::start_orchestrator();
 
 	std::thread thread;
-	int port = http::start_http_server(config.configuration.port, server, thread);
+	http::start_http_server(config.configuration.port, server, thread);
 
 	std::shared_ptr<core::ModuleLoader> module = std::make_shared<core::ModuleLoader>(config.configuration.modulePath);
 	if (!config.configuration.modulePath.empty())

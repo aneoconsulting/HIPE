@@ -16,7 +16,7 @@ then
   # This was uncommented in the original script but serves no purpose as it is
   # immediately overridden by the following line.
   #export HIPE_EXTERNAL=/mnt/ssd/hipeExternal
-  export HIPE_EXTERNAL=/work/external/
+  export HIPE_EXTERNAL=/work/external_mod/
 fi
 
 # Create the build directory and change into it.
@@ -27,9 +27,16 @@ cd build
 # This also contains a hard-coded path which should presumably agree with the
 # path given for HIPE_EXTERNAL above (i.e. both should point to /mnt/ssd or
 # /work.
+#BUILD HIPE CORE
 cmake \
   -DCMAKE_BUILD_TYPE=Release \
   -DUSE_DLIB=ON \
   -DUSE_GPERFTOOLS=OFF \
-  -DGPERFTOOLS_DIR=/mnt/ssd/gperftools/install/ ..
-make VERBOSE=1 -j$(nproc)
+  -DGPERFTOOLS_DIR=/mnt/ssd/gperftools/install/ \
+  -DHIPE_EXTERNAL=${HIPE_EXTERNAL} \
+  -DCMAKE_INSTALL_PREFIX=~/hipecore \
+  ..
+
+make VERBOSE=1 -j8
+make VERBOSE=1 install
+make VERBOSE=1 package

@@ -4,32 +4,46 @@
 #include <boost/function_types/function_pointer.hpp>
 #include <core/misc.h>
 
-namespace core
-{
 #ifdef WIN32
 #include <windows.h>
+#else
+#include <dlfcn.h>
+#endif
+
+namespace core
+{
 
 	class ModuleLoader
 	{
 		std::string _filename;
+#ifdef WIN32
 		HINSTANCE dllHandle;
+#else
+		void * dllHandle;
+#endif
+
 	public:
 		ModuleLoader(std::string path) : _filename(path), dllHandle(nullptr)
 		{
 		}
 
 		//Define the function prototype
-		typedef short (CALLBACK* FindArtistType)(LPCTSTR);
-
 		void loadLibrary()
 		{
 			//Get the directory name
 			std::string dll_dir = extractDirectoryName(_filename);
 
 			addEnv(dll_dir);
-			
+
+#ifdef WIN32
+
 			//Load the dll and keep the handle to it
 			dllHandle = LoadLibrary(_filename.c_str());
+#else
+			//#FIXME
+			dllHandle = dlopen(_filename.c_str(), RTLD_NOW);
+#endif
+			
 			if (!dllHandle)
 			{
 				std::stringstream msg;
@@ -37,16 +51,21 @@ namespace core
 				std::cerr << msg.str() << std::endl;
 				throw HipeException(msg.str());
 			}
-
 			
 		}
+
 
 		template <typename T>
 		std::function<T> callFunction(const std::string& funcName)
 		{
-			// Locate function in DLL.
-			FARPROC lpfnGetProcessID = GetProcAddress(dllHandle, funcName.c_str());
 
+			// Locate function in DLL.
+#ifdef WIN32
+			
+			FARPROC lpfnGetProcessID = GetProcAddress(dllHandle, funcName.c_str());
+#else
+			void * lpfnGetProcessID = dlsym(dllHandle, funcName.c_str());
+#endif
 			// Check if function was located.
 			if (!lpfnGetProcessID)
 			{
@@ -66,13 +85,18 @@ namespace core
 			return fun_ptr;
 		}
 
-
+		
 		void freeLibrary()
 		{
+#ifdef WIN32
+			
 			BOOL freeResult = FALSE;
 			//Free the library:
 			freeResult = FreeLibrary(dllHandle);
+#else
+			//FIXME
+#endif
 		}
 	};
-#endif // WIN32
+
 }

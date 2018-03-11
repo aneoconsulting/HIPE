@@ -38,6 +38,11 @@ target_link_libraries(hipe_server ${Live_LIBRARIES})
 target_link_libraries(hipe_server ${OpenCV_LIBS})
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
+
+if (UNIX)
+  target_link_libraries(hipe_server ${CMAKE_DL_LIBS})
+endif()
+
 if(USE_DLIB)
   target_link_libraries(hipe_server ${dlib_LIBRARIES})
   # TODO

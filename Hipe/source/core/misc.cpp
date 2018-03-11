@@ -63,6 +63,7 @@ void addEnv(std::string path)
 #else
 #include <sys/time.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 int hipe_gettimeofday(struct timeval* p, void* tz) {
 	return gettimeofday(p, (struct timezone *)tz);
@@ -75,7 +76,13 @@ void hipe_usleep(long long usec)
 
 void addEnv(std::string path)
 {
-
+	char * env_p;
+	env_p = getenv("PATH");
+	std::stringstream new_path;
+	new_path << path << ";" << env_p;
+	std::string cs = new_path.str();
+	setenv("PATH", cs.c_str(), 1);
+	
 }
 
 #endif
@@ -90,4 +97,5 @@ bool isFileExist(std::string filename)
 		buildMsg << "] not found";
 		throw std::invalid_argument(buildMsg.str());
 	}
+	return true;
 }
