@@ -19,7 +19,7 @@ namespace hipe_server
 	void ConfigurationParameters::setDefaultValues()
 	{
 		this->port = 8080;
-		this->modulePath = "filter.so";
+		this->modulePath = "";
 	}
 
 	Configuration::Configuration()

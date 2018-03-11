@@ -2,6 +2,7 @@
 #include <string>
 #include <boost/function_types/components.hpp>
 #include <boost/function_types/function_pointer.hpp>
+#include <core/misc.h>
 
 namespace core
 {
@@ -22,8 +23,22 @@ namespace core
 
 		void loadLibrary()
 		{
+			//Get the directory name
+			std::string dll_dir = extractDirectoryName(_filename);
+
+			addEnv(dll_dir);
+			
 			//Load the dll and keep the handle to it
 			dllHandle = LoadLibrary(_filename.c_str());
+			if (!dllHandle)
+			{
+				std::stringstream msg;
+				msg << "Could not locate the shared library \"" << _filename + "\"";
+				std::cerr << msg.str() << std::endl;
+				throw HipeException(msg.str());
+			}
+
+			
 		}
 
 		template <typename T>

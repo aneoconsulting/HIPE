@@ -47,8 +47,7 @@ int main(int argc, char* argv[]) {
 	buildstring << config.configuration.port;
 
 	core::getLocalEnv().setValue("http_port", buildstring.str());
-	std::shared_ptr<core::ModuleLoader> module = std::make_shared<core::ModuleLoader>(config.configuration.modulePath);
-	module->loadLibrary();
+	
 	http::HttpServer server(config.configuration.port, 1);
 
 
@@ -58,6 +57,13 @@ int main(int argc, char* argv[]) {
 
 	std::thread thread;
 	int port = http::start_http_server(config.configuration.port, server, thread);
+
+	std::shared_ptr<core::ModuleLoader> module = std::make_shared<core::ModuleLoader>(config.configuration.modulePath);
+	if (!config.configuration.modulePath.empty())
+	{
+		module->loadLibrary();
+		function<void()> call_function = module->callFunction<void()>("load");
+	}
 
 	thread.join();
 

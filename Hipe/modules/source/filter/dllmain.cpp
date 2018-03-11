@@ -1,11 +1,14 @@
 #include <filter/References.h>
 #include <corefilter/tools/RegisterTable.h>
 #include <iostream>
+#include <corefilter/filter_export.h>
 
+extern "C"
+{
 #ifndef WIN32
 #define ENTRYPOINT __attribute__((constructor))
 #else
-#define ENTRYPOINT
+#define ENTRYPOINT FILTER_EXPORT
 #endif
 
 
@@ -53,3 +56,4 @@ BOOL WINAPI DllMain(
 }
 #endif
 
+}

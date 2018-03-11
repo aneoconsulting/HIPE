@@ -47,11 +47,15 @@ int hipe_gettimeofday(struct timeval* p, void* tz)
 
 #include <cstdlib>
 #include <stdlib.h>
+#include <sstream>
 void addEnv(std::string path)
 {
 	char env_p[163840];
 	GetEnvironmentVariable("PATH", env_p, 163840);
-
+	std::stringstream new_path;
+	new_path << path << ";" << env_p;
+	std::string cs = new_path.str();
+	SetEnvironmentVariable("PATH", cs.c_str());
 
 
 }

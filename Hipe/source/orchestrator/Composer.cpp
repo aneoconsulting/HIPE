@@ -203,6 +203,7 @@ namespace orchestrator
 		if (dataNode.count("datasource") != 0)
 			return NoneData();
 
+		throw HipeException("There is no datasource in the json request. The data object should be in Datasource form");
 		/*checkJsonFieldExist(dataNode, "type");
 		auto datatype = dataNode.get("type");
 
