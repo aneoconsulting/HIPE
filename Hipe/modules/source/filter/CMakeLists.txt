@@ -129,8 +129,8 @@ if(UNIX)
   set(script_path "${CMAKE_SOURCE_DIR}/../scripts/generate_References_header.sh")
   add_custom_target(
     update_reference
-    COMMAND echo "Collect algorithm headers in ${os_header_ref_path}"
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/header/filter/algos"
+    COMMAND echo "Collect algorithm headers in ${os_ref_header_path}"
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/header/filter"
   )
 
   add_custom_command(

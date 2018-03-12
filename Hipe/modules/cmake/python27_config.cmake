@@ -11,7 +11,11 @@ set(PYTHON27LIBS_VERSION_STRING "${PYTHONLIBS_VERSION_STRING}")
 set(PYTHON27_LIBRARIES "${PYTHON_LIBRARIES}")
 
 # set(Python_ADDITIONAL_VERSIONS 2.7 2)
-find_package(PythonInterp 2.7 REQUIRED)
+if(NOT HIPE_EXTERNAL_PYTHON27)
+  find_package(PythonInterp 2.7 REQUIRED)
+else()
+  set(PYTHON_EXECUTABLE "${HIPE_EXTERNAL_DIR}/python27/usr/bin/python2.7")
+endif()
 message(STATUS "PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE}")
 
 # Add site-packages to include directories to find Numpy headers.

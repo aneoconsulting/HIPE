@@ -294,4 +294,4 @@ macro(install_dependencies target_name)
 	endif() 
 	
 	install_dependencies_int(${target_name} ${EXT_BIN})
-endmacro(install_dependencies_exe)
+endmacro(install_dependencies)

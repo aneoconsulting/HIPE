@@ -1,5 +1,3 @@
-#pragma once
-
 #include <filter/algos/HideCircles.h>
 #include <data/ShapeData.h>
 #include <data/ImageData.h>

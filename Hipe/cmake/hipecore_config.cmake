@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.7.1)
 
 # TODO
 # Use find_package support when we get it working with Hipe External.
-# find_package(dlib REQUIRED PATHS "${Hipecore_DIR}")
+# find_package(hipecore REQUIRED PATHS "${Hipecore_DIR}")
 # message(STATUS "hipecore_INCLUDE_DIRS: ${hipecore_INCLUDE_DIRS}")
 # message(STATUS "hipecore_LIBRARIES: ${hipecore_LIBRARIES}")
 
