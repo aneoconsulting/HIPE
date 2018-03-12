@@ -75,10 +75,11 @@ foreach(COMPONENT  ${COMPONENTS})
 		set(Hipecore_${UPPERCOMPONENT}_LIBRARY_RELEASE "${lib_path}/Release/lib${COMPONENT}${EXTENSION_STATIC}")
 	  endif()
 
+	  set(Hipecore_${UPPERCOMPONENT}_LIBRARY_DEBUG   "${lib_path}/Debug/lib${COMPONENT}${EXTENSION_SHARED}")
 	  if (NOT EXISTS ${Hipecore_${UPPERCOMPONENT}_LIBRARY_DEBUG})
-		set(Hipecore_${UPPERCOMPONENT}_LIBRARY_DEBUG   "${lib_path}/Debug/lib${COMPONENT}${EXTENSION_SHARED}")
+		set(Hipecore_${UPPERCOMPONENT}_LIBRARY_DEBUG   "${lib_path}/Debug/lib${COMPONENT}${EXTENSION_STATIC}")
 	  endif()
-	  set(Hipecore_${UPPERCOMPONENT}_LIBRARY_DEBUG   "${lib_path}/Debug/lib${COMPONENT}${EXTENSION_STATIC}")
+	  
     endif(UNIX)
 
     _Hipecore_ADJUST_LIB_VARS(${UPPERCOMPONENT})

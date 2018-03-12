@@ -29,7 +29,7 @@ cd build
 # /work.
 #BUILD HIPE CORE
 cmake \
-  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_BUILD_TYPE=Debug \
   -DUSE_DLIB=ON \
   -DUSE_GPERFTOOLS=OFF \
   -DGPERFTOOLS_DIR=/mnt/ssd/gperftools/install/ \
@@ -45,7 +45,7 @@ cd ../modules/
 mkdir -p build
 cd build
 cmake \
-  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_BUILD_TYPE=Debug \
   -DUSE_DLIB=ON \
   -DUSE_GPERFTOOLS=OFF \
   -DGPERFTOOLS_DIR=/mnt/ssd/gperftools/install/ \
