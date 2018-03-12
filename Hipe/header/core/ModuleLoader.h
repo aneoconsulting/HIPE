@@ -41,14 +41,19 @@ namespace core
 			dllHandle = LoadLibrary(_filename.c_str());
 #else
 			//#FIXME
-			dllHandle = dlopen(_filename.c_str(), RTLD_NOW);
+			dllHandle = dlopen(_filename.c_str(), RTLD_LAZY);
 #endif
 			
 			if (!dllHandle)
 			{
 				std::stringstream msg;
 				msg << "Could not locate the shared library \"" << _filename + "\"";
+#ifdef WIN32
 				std::cerr << msg.str() << std::endl;
+#else
+				std::cerr << msg.str() << " DL message : " << dlerror() << std::endl;
+
+#endif
 				throw HipeException(msg.str());
 			}
 			
