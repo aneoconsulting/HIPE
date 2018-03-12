@@ -30,7 +30,7 @@ target_link_libraries(hipe_server http)
 target_link_libraries(hipe_server orchestrator)
 target_link_libraries(hipe_server json)
 target_link_libraries(hipe_server coredata)
-# target_link_libraries(hipe_server streaming)
+
 target_link_libraries(hipe_server core)
 target_link_libraries(hipe_server ${FFmpeg_LIBRARIES})
 target_link_libraries(hipe_server ${x264_LIBRARIES})

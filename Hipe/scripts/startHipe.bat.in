@@ -1,0 +1,7 @@
+set PATH=@HIPE_EXTERNAL_DIR@\ffmpeg\bin;@HIPE_EXTERNAL_DIR@\boost_1_62_0\lib64-msvc-14.0;@HIPE_EXTERNAL_DIR@\opencv-3.4\x64\vc14\bin;@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR@\liblept\bin;%PATH%
+set TESSDATA_PREFIX=C:\Users\ddubuc.ANEO\Dropbox (ANEO)\HIPE_GROUP\Demos\ID Plates\data\Tesseract
+
+cd %dp0%
+
+hipe_server.exe -m "%cd%\..\..\..\hipeModules\bin\@CMAKE_INSTALL_CONFIG_NAME@\filter.dll"
+

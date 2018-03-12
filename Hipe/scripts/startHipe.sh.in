@@ -1,0 +1,8 @@
+export PATH=@HIPE_EXTERNAL_DIR@/ffmpeg/bin:@HIPE_EXTERNAL_DIR@/boost_1_62_0/lib64-msvc-14.0:@HIPE_EXTERNAL_DIR@/opencv-3.4/x64/vc14/bin:@HIPE_EXTERNAL_DIR@/gstreamer/1.0/x86_64/bin:@HIPE_EXTERNAL_DIR@/liblept/bin:${PATH}
+export TESSDATA_PREFIX=~/Dropbox (ANEO)/HIPE_GROUP/Demos/ID Plates/data/Tesseract
+
+cd $(dirname $0)
+
+
+./hipe_server.bin -m "../../../hipemodule/bin/@CMAKE_INSTALL_CONFIG_NAME@/filter.so"
+
