@@ -62,7 +62,7 @@ namespace json
 		return *this;
 	}
 
-	JsonTree& JsonTree::AddChild(std::string key, JsonTree& value)
+	JsonTree& JsonTree::add_child(std::string key, JsonTree& value)
 	{
 		_jsonPtree->add_child(key, *value._jsonPtree);
 		return *this;
@@ -111,7 +111,12 @@ namespace json
 		
 		return _jsonPtree->get_child(str);
 	}
-
+	
+	JsonTree & JsonTree::add_child_to_child(std::string key1, std::string key2, JsonTree & value) 
+	{
+		_jsonPtree->get_child(key1).add_child(key2, *value._jsonPtree);
+		return *this;
+	}
 
 	bool JsonTree::getBool(std::string path) const
 	{
@@ -163,6 +168,9 @@ namespace json
 	double JsonTree::getDouble(const std::string& path) const
 	{
 		return _jsonPtree->get<double>(path);
+	}
+	bool JsonTree::empty() const {
+		return _jsonPtree->empty();
 	}
 
 	template <> int JsonTree::get_value()
