@@ -230,6 +230,8 @@ void http::HttpTask::runTask() const
 				commandFound |= CommandManager::callOption(command, exit_command(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, get_versionHashed(), &ltreeResponse);
 				commandFound |= CommandManager::callOption(command, get_commands_help(),& ltreeResponse);
+				commandFound |= CommandManager::callOption(command, get_groupFilter(), &ltreeResponse);
+
 				if(!commandFound)
 				{
 					logger << "command "<< command <<" not found", command;
