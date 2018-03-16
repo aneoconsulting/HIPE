@@ -219,7 +219,7 @@ namespace filter
 					cv::rectangle(image, boxes.rectangles[i],
 					              color, 3);
 				}
-
+				
 				_connexData.push(data::ImageData(image));
 
 				return OK;

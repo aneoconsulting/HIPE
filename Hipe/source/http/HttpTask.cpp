@@ -46,7 +46,7 @@ std::function<bool(std::string, json::JsonTree *)>  exit_command() {
 	};
 }
 
-std::function<bool(std::string, json::JsonTree *)> get_filters() {
+std::function<bool(std::string, json::JsonTree *)> get_filters_old() {
 	return [](std::string optionName, json::JsonTree *lptree)
 	{
 		const std::string filters = "Filters";
@@ -113,7 +113,7 @@ std::map < std::string, std::vector<json::JsonTree>>get_map_filters() {
 
 	//! \brief new get filters: each path is splitted on directories
 //! \todo test when all namepaces will be set => change function name to get_filters() (remove new keyword)
-std::function<bool(std::string, json::JsonTree *)> get_filters_new() {
+std::function<bool(std::string, json::JsonTree *)> get_filters() {
 	return [](std::string optionName, json::JsonTree *lptree)
 	{
 		const std::string filters = "Filters";
