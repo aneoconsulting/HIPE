@@ -46,7 +46,7 @@ std::function<bool(std::string, json::JsonTree *)>  exit_command() {
 	};
 }
 
-std::function<bool(std::string, json::JsonTree *)> get_filters_old() {
+std::function<bool(std::string, json::JsonTree *)> get_filters() {
 	return [](std::string optionName, json::JsonTree *lptree)
 	{
 		const std::string filters = "Filters";
@@ -113,10 +113,10 @@ std::map < std::string, std::vector<json::JsonTree>>get_map_filters() {
 
 	//! \brief new get filters: each path is splitted on directories
 //! \todo test when all namepaces will be set => change function name to get_filters() (remove new keyword)
-std::function<bool(std::string, json::JsonTree *)> get_filters() {
+std::function<bool(std::string, json::JsonTree *)> get_groupFilter() {
 	return [](std::string optionName, json::JsonTree *lptree)
 	{
-		const std::string filters = "Filters";
+		const std::string filters = "GroupFilters";
 		int i = 0;
 		if (filters.find(optionName) == 0)
 		{
@@ -199,6 +199,7 @@ std::function<bool(std::string, json::JsonTree *)> get_commands_help() {
 			lptree->Add("Exit",    " stop the request");
 			lptree->Add("Kill",    " kills the current request");
 			lptree->Add("Filters", " get all existing filters in the current version");
+			lptree->Add("GroupFilters", "get all existing filter in groups");
 			return true;
 		}
 		return false;
