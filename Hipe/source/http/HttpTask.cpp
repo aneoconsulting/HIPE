@@ -145,7 +145,7 @@ std::function<bool(std::string, json::JsonTree *)> get_groupFilter() {
 					}
 					else
 					{
-						lptree->add_child(keys[i + 1], element);
+						lptree->add_child(keys[i], element);
 					}
 					elements[i] = element;
 				}
