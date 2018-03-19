@@ -19,6 +19,7 @@
 #include <dlib/image_processing.h>
 #include <data/SquareCrop.h>
 #include <corefilter/filter_export.h>
+#include "data/ShapeData.h"
 
 namespace data {
 	class ImageData;
@@ -49,12 +50,12 @@ namespace filter
 
 			std::atomic<bool> isStart;										//<! [TODO] Boolean used to know when the thread is running and the faces should be detected?
 			core::queue::ConcurrentQueue<data::ImageData> imagesStack;		//<! [TODO] The queue containing the frames to process.
-			core::queue::ConcurrentQueue<data::ImageData> shapes;			//<! [TODO] The shapes of the found faces.
-			data::ImageData tosend;			//<! The image containing the drawn facial landmarks to output to the ConnexData port.
+			core::queue::ConcurrentQueue<data::ShapeData> shapes;			//<! [TODO] The shapes of the found faces.
+			data::ShapeData tosend;			//<! The image containing the drawn facial landmarks to output to the ConnexData port.
 
 			boost::thread *thr_server;		//<! [TODO] Pointer to the face detection task.
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
-			CONNECTOR(data::ImageArrayData, data::ImageData);
+			CONNECTOR(data::ImageArrayData, data::ShapeData);
 
 			REGISTER(FaceLandmark, ()), _connexData(data::INDATA)
 			{
@@ -80,9 +81,9 @@ namespace filter
 			/**
 			 * \brief Find faces, if present, then their landmarks.
 			 * \param image The image to process to try finding faces.
-			 * \return Returns the processed frame with the landmarks of the found faces drawn on it.
+			 * \return Returns the list of Shapes of landmarks of the found faces drawn on it.
 			 */
-			cv::Mat detectFaces(const data::ImageData & image);
+			data::ShapeData detectFaces(const data::ImageData & image);
 
 
 			HipeStatus process();
@@ -108,13 +109,13 @@ namespace filter
 		 * \param end [TODO] The index of the last point of the line in the container.
 		 * \param isClosed [TODO] Should it be a line or a polygon (draw a line from the last point to the first).
 		 */
-		void draw_polyline(cv::Mat &img, const dlib::full_object_detection& d, const int start, const int end, bool isClosed = false);
+		void draw_polyline(data::ShapeData &img, const dlib::full_object_detection& d, const int start, const int end, bool isClosed = false);
 		/**
 		 * \brief Draws facial landmarks on an image, using the draw_polyline method.
-		 * \param img The image on which the face was found.
+		 * \param shapes The list of shape on which the face will be stored.
 		 * \param d [TODO] The detected facial landmarks.
 		 */
-		void render_face(cv::Mat &img, const dlib::full_object_detection& d);
+		void render_face(data::ShapeData &shapes, const dlib::full_object_detection& d);
 
 		ADD_CLASS(FaceLandmark, skip_frame);
 	}

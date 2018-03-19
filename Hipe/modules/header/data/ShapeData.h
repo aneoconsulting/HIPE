@@ -12,8 +12,13 @@ namespace data
 		std::vector<cv::Point2f> _pointsArray;	//<! container of all the points. The data are handled by cv::Point2f objects 
 		std::vector<cv::Vec3f> _circlesArray;	//<! container of all the circles. The data are handled by cv::Vec3f objects
 		std::vector<cv::Rect> _rectsArray;		//<! container of all the rectangles. The data are handled by cv::Rect objects
-			//vector of array of 4 points: _quadrilatere[0][0].x or .y  
+			
 		std::vector<four_points> _quadrilatere;		//<! container of all the quadrilateres. The data are handled by cv::vec4f objects
+		std::vector<std::vector<cv::Point2f> > _freeshape;		//<! container of all the free shape. The data are handled by std::vector<cv::Point2f> objects
+
+		std::vector<std::string> _ids;				//<! container of indexed list of text for shape to dispose with it. 
+		std::vector<cv::Scalar> _colors;			//<! container of indexed list to _freeShape of color for shape to dispose. 
+
 
 		ShapeData(IOData::_Protection priv) : IOData(SHAPE)
 		{
@@ -55,6 +60,9 @@ namespace data
 			_pointsArray.clear();
 			_rectsArray.clear();
 			_quadrilatere.clear();
+			_freeshape.clear();
+			_ids.clear();
+			_colors.clear();
 
 			if (_This)
 			{
@@ -62,6 +70,9 @@ namespace data
 				This()._pointsArray.clear();
 				This()._rectsArray.clear();
 				This()._quadrilatere.clear();
+				This()._freeshape.clear();
+				This()._ids.clear();
+				This()._colors.clear();
 			}
 		}
 
@@ -69,11 +80,17 @@ namespace data
 		std::vector<cv::Rect> & RectsArray();
 		std::vector<cv::Vec3f> & CirclesArray();
 		std::vector<four_points> & QuadrilatereArray();
+		std::vector<std::vector<cv::Point2f> > & FreeshapeArray();
+		std::vector<std::string> & IdsArray();
+		std::vector<cv::Scalar> & ColorsArray();
 
 		const std::vector<cv::Point2f> & PointsArray_const() const;
 		const std::vector<cv::Rect> & RectsArray_const() const;
 		const std::vector<cv::Vec3f> & CirclesArray_const() const;
 		const std::vector<four_points> & QuadrilatereArray_const() const;
+		const std::vector<std::vector<cv::Point2f> > & FreeshapeArray_const () const;
+		const std::vector<std::string> & IdsArray_const () const;
+		const std::vector<cv::Scalar> & ColorsArray_const () const;
 
 
 		/**
@@ -96,6 +113,7 @@ namespace data
 		* \return Returns a reference to the ShapeData object
 		*/
 		ShapeData& operator<<(cv::Rect rect);
+
 		/**
 		* \brief Add rects to the rect container.
 		* \param rects The rects to add
@@ -124,6 +142,14 @@ namespace data
 		* \return Returns a reference to the ShapeData object
 		*/
 		ShapeData& operator<<(const std::vector<four_points>& quads);
+
+		/**
+		* \brief Add a free shape to a list of shapes.
+		* \param shapes The shape to add.
+		* \param ids The id to the shape to add.
+		* \return Returns a reference to the ShapeData object
+		*/
+		ShapeData& add(const std::vector<cv::Point2f>& shapes, const cv::Scalar & color = cv::Scalar(255, 255, 255), const std::string & id = std::string());
 
 		/**
 		 * \brief

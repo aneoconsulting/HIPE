@@ -43,7 +43,8 @@ install_header_to_target(coredata)
 install (TARGETS coredata 
 		CONFIGURATIONS Release 
 		RUNTIME DESTINATION bin/Release 
-		LIBRARY DESTINATION lib/Release 
+		LIBRARY DESTINATION lib/Release
+		ARCHIVE DESTINATION lib/Release
 		COMPONENT library)
 		
 install (TARGETS coredata 

@@ -25,7 +25,8 @@ install_header_to_target(corefilter)
 install (TARGETS corefilter 
 		CONFIGURATIONS Release 
 		RUNTIME DESTINATION bin/Release 
-		LIBRARY DESTINATION lib/Release 
+		LIBRARY DESTINATION lib/Release
+		ARCHIVE DESTINATION lib/Release
 		COMPONENT library)
 		
 install (TARGETS corefilter 

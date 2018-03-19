@@ -26,10 +26,10 @@ namespace filter
 
 			REGISTER(OverlayFilter, ()), _connexData(data::INDATA)
 			{
-
+				asReference = true;
 			}
 
-			REGISTER_P(char, unused);
+			REGISTER_P(bool, asReference);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
@@ -45,6 +45,6 @@ namespace filter
 
 		};
 
-		ADD_CLASS(OverlayFilter, unused);
+		ADD_CLASS(OverlayFilter, asReference);
 	}
 }

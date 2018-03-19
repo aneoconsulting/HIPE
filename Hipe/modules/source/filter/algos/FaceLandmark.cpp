@@ -28,40 +28,28 @@ namespace filter
 					if (!This->imagesStack.trypop_until(image, 300))
 						continue;
 
-					cv::Mat matShapes = This->detectFaces(image);
-					/*std::vector<cv::Rect> rects;
-
-					for (dlib::rectangle & rect : This->dets)
-					{
-						cv::Rect cvRect;
-						cvRect.x = rect.left() / 2;
-						cvRect.y = rect.top() / 2;
-						cvRect.height = (rect.bottom() - rect.top()) / 2;
-						cvRect.width = (rect.right() - rect.left()) / 2;
-						rects.push_back(cvRect);
-					}*/
-					/*data::SquareCrop crop(image, rects);*/
+					data::ShapeData lstShapes = This->detectFaces(image);
 
 					if (This->shapes.size() != 0)
 						This->shapes.clear();
 
-				This->shapes.push(data::ImageData(matShapes));
+				This->shapes.push(lstShapes);
 				}
 			});
 		}
 
-		void draw_polyline(cv::Mat &img, const dlib::full_object_detection& d, const int start, const int end, bool isClosed)
+		void draw_polyline(data::ShapeData &img, const dlib::full_object_detection& d, const int start, const int end, bool isClosed)
 		{
-			std::vector <cv::Point> points;
+			std::vector <cv::Point2f> points;
 			for (int i = start; i <= end; ++i)
 			{
-				points.push_back(cv::Point(d.part(i).x(), d.part(i).y()));
+				points.push_back(cv::Point2f(d.part(i).x(), d.part(i).y()));
 			}
-			cv::polylines(img, points, isClosed, cv::Scalar(255, 0, 0), 2, 16);
-
+			//cv::polylines(img, points, isClosed, cv::Scalar(255, 0, 0), 2, 16);
+			img.add(points);
 		}
 
-		void render_face(cv::Mat &img, const dlib::full_object_detection& d)
+		void render_face(data::ShapeData &shapes, const dlib::full_object_detection& d)
 		{
 			DLIB_CASSERT
 			(
@@ -70,19 +58,19 @@ namespace filter
 				<< "\n\t d.num_parts():  " << d.num_parts()
 			);
 
-			draw_polyline(img, d, 0, 16);           // Jaw line
-			draw_polyline(img, d, 17, 21);          // Left eyebrow
-			draw_polyline(img, d, 22, 26);          // Right eyebrow
-			draw_polyline(img, d, 27, 30);          // Nose bridge
-			draw_polyline(img, d, 30, 35, true);    // Lower nose
-			draw_polyline(img, d, 36, 41, true);    // Left eye
-			draw_polyline(img, d, 42, 47, true);    // Right Eye
-			draw_polyline(img, d, 48, 59, true);    // Outer lip
-			draw_polyline(img, d, 60, 67, true);    // Inner lip
+			draw_polyline(shapes, d, 0, 16);           // Jaw line
+			draw_polyline(shapes, d, 17, 21);          // Left eyebrow
+			draw_polyline(shapes, d, 22, 26);          // Right eyebrow
+			draw_polyline(shapes, d, 27, 30);          // Nose bridge
+			draw_polyline(shapes, d, 30, 35, true);    // Lower nose
+			draw_polyline(shapes, d, 36, 41, true);    // Left eye
+			draw_polyline(shapes, d, 42, 47, true);    // Right Eye
+			draw_polyline(shapes, d, 48, 59, true);    // Outer lip
+			draw_polyline(shapes, d, 60, 67, true);    // Inner lip
 
 		}
 
-		cv::Mat FaceLandmark::detectFaces(const data::ImageData & image)
+		data::ShapeData FaceLandmark::detectFaces(const data::ImageData & image)
 		{
 			try
 			{
@@ -91,7 +79,8 @@ namespace filter
 				dlib::assign_image(img, cimg);
 
 				std::vector<dlib::full_object_detection> local_shapes;
-				cv::Mat matShapes = cv::Mat::zeros(image.getMat().size(), image.getMat().type());
+				//cv::Mat matShapes = cv::Mat::zeros(image.getMat().size(), image.getMat().type());
+				data::ShapeData faces;
 
 				dlib::pyramid_up(img);
 
@@ -118,9 +107,9 @@ namespace filter
 					dlib::cv_image<dlib::bgr_pixel> cimg2(image.getMat());
 					dlib::full_object_detection shape = pose_model(cimg2, r);
 					local_shapes.push_back(shape);
-					render_face(matShapes, shape);
+					render_face(faces, shape);
 				}
-				return matShapes;
+				return faces;
 				
 			}
 			catch (exception& e)
@@ -129,7 +118,7 @@ namespace filter
 				cout << e.what() << endl;
 			}
 
-			return cv::Mat::zeros(image.getMat().size(), image.getMat().type());
+			return data::ShapeData();
 		}
 
 		HipeStatus FaceLandmark::process()
@@ -164,7 +153,7 @@ namespace filter
 					count_frame++;
 				}
 				//TODO manage list of SquareCrop. For now consider there only one SquareCrop
-				data::ImageData popShape;
+				data::ShapeData popShape;
 				
 				if (shapes.trypop_until(popShape, 30)) // wait 30ms no more
 				{
@@ -173,7 +162,7 @@ namespace filter
 				}
 				else if (tosend.empty())
 				{
-					_connexData.push(images.Array()[0]);
+					_connexData.push(data::ShapeData());
 				}
 				else {
 

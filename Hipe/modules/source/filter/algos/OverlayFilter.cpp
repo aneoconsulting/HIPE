@@ -23,7 +23,8 @@ HipeStatus filter::algos::OverlayFilter::process()
 		else if (isDrawableSource(data))
 		{
 			if (isSourceFound)
-				throw HipeException("Error in OverlayFilter: Overlay filter only accepts one input source to draw on. Other input data should only be ShapeData objects.");
+				throw HipeException(
+					"Error in OverlayFilter: Overlay filter only accepts one input source to draw on. Other input data should only be ShapeData objects.");
 			isSourceFound = true;
 
 			image = extractSourceImageData(data);
@@ -40,8 +41,13 @@ HipeStatus filter::algos::OverlayFilter::process()
 
 	if (image.empty() || !image.getMat().data)
 		throw HipeException("Error in OverlayFilter: No input image to draw on found.");
+	cv::Mat outputImage;
 
-	cv::Mat outputImage = image.getMat().clone();
+	if (! asReference)
+		outputImage = image.getMat().clone();
+	else
+		outputImage = image.getMat();
+
 	for (auto overlayDatum : overlayData)
 	{
 		if (overlayDatum.getType() == data::SHAPE) drawShape(outputImage, static_cast<data::ShapeData &>(overlayDatum));
@@ -73,12 +79,12 @@ bool filter::algos::OverlayFilter::isOverlayData(const data::Data& data)
 		return true;
 	case data::TXT:
 	case data::TXT_ARR:
-	{
-		std::stringstream errorMessage;
-		errorMessage << "Error in OverlayFilter: The overlay filter can't display text ATM.\n";
-		errorMessage << "\t found type: " << data::DataTypeMapper::getStringFromType(data.getType());
-		throw HipeException(errorMessage.str());
-	}
+		{
+			std::stringstream errorMessage;
+			errorMessage << "Error in OverlayFilter: The overlay filter can't display text ATM.\n";
+			errorMessage << "\t found type: " << data::DataTypeMapper::getStringFromType(data.getType());
+			throw HipeException(errorMessage.str());
+		}
 	default:
 		return false;
 	}
@@ -96,10 +102,10 @@ data::ImageData filter::algos::OverlayFilter::extractSourceImageData(data::Data&
 		data::PatternData pattern = static_cast<data::PatternData &>(data);
 		return pattern.imageRequest();
 	}
-	// Now we can extract source image directly from dirpatterndata
+		// Now we can extract source image directly from dirpatterndata
 	else if (type == data::DIRPATTERN)
 	{
-		data::DirPatternData & dirPattern = static_cast<data::DirPatternData &>(data);
+		data::DirPatternData& dirPattern = static_cast<data::DirPatternData &>(data);
 		return dirPattern.imageRequest();
 	}
 	else
@@ -132,7 +138,9 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 	// Draw rects
 	for (const cv::Rect& rect : shape.RectsArray_const())
 	{
-		cv::rectangle(image, rect, rectsColor, 2);
+		cv::Scalar color(std::rand() % 255, std::rand() % 255, std::rand() % 255);
+
+		cv::rectangle(image, rect, color, 2);
 	}
 
 	// Draw quads
@@ -144,5 +152,38 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 		}
 
 		cv::line(image, quad.front(), quad.back(), quadsColor, 2);
+	}
+
+	// Draw freeShapes
+	unsigned int nbColor = shape.ColorsArray_const().size();
+	for (int i = 0; i < shape.FreeshapeArray_const().size(); i++)
+	{
+		const std::vector<cv::Point2f>& freeShape = shape.FreeshapeArray_const()[i];
+
+		cv::Scalar color;
+
+		if (! nbColor)
+			color = shape.ColorsArray_const()[i % nbColor];
+		else
+			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);;
+
+		cv::polylines(image, freeShape, false, color, 2, 16);
+	}
+
+	unsigned int nbRect = shape.RectsArray_const().size();
+	for (int i = 0; i < shape.IdsArray_const().size(); i++)
+	{
+		std::string text = shape.IdsArray_const()[i];
+		cv::Rect rect = shape.RectsArray_const()[i % nbRect];
+
+		cv::Scalar color;
+
+		if (! nbColor)
+			color = shape.ColorsArray_const()[i % nbColor];
+		else
+			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);
+
+		cv::putText(image, text, cv::Point(rect.x, rect.y >= 3 ? rect.y - 3 : rect.y),
+		            cv::HersheyFonts::FONT_HERSHEY_SIMPLEX, 1, color, 2);
 	}
 }

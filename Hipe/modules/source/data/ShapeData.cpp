@@ -71,10 +71,40 @@ namespace data
 		return ret._quadrilatere;
 	}
 
+	const std::vector<std::vector<cv::Point2f>>& ShapeData::FreeshapeArray_const() const
+	{
+		return This_const()._freeshape;
+	}
+
+	const std::vector<std::string>& ShapeData::IdsArray_const() const
+	{
+		return This_const()._ids;
+	}
+
+	const std::vector<cv::Scalar>& ShapeData::ColorsArray_const() const
+	{
+		return This_const()._colors;
+	}
+
 	std::vector<four_points>& ShapeData::QuadrilatereArray()
 	{
 		ShapeData &ret = This();
 		return ret._quadrilatere;
+	}
+
+	std::vector<std::vector<cv::Point2f>>& ShapeData::FreeshapeArray()
+	{
+		return This()._freeshape;
+	}
+
+	std::vector<std::string>& ShapeData::IdsArray()
+	{
+		return This()._ids;
+	}
+
+	std::vector<cv::Scalar>& ShapeData::ColorsArray()
+	{
+		return This()._colors;
 	}
 
 
@@ -150,9 +180,25 @@ namespace data
 		return *this;
 	}
 
+	ShapeData& ShapeData::add(const std::vector<cv::Point2f>& shapes, const cv::Scalar & color, const std::string& id)
+	{
+		This()._freeshape.push_back(shapes);
+
+		if (!id.empty())
+			This()._ids.push_back(id);
+
+		This()._colors.push_back(color);
+
+		return *this;
+	}
+
 	bool ShapeData::empty() const
 	{
-		return (This_const()._pointsArray.empty() && This_const()._circlesArray.empty() && This_const()._rectsArray.empty() && This_const()._quadrilatere.empty());
+		return (This_const()._pointsArray.empty() && 
+			This_const()._circlesArray.empty() && 
+			This_const()._rectsArray.empty() && 
+			This_const()._quadrilatere.empty() &&
+			This_const()._freeshape.empty());
 	}
 
 
@@ -172,6 +218,8 @@ namespace data
 		left.This()._pointsArray.clear();
 		left.This()._rectsArray.clear();
 		left.This()._quadrilatere.clear();
+		left.This()._freeshape.clear();
+		left.This()._ids.clear();
 
 		for (auto circle : CirclesArray_const())
 		{
@@ -188,6 +236,16 @@ namespace data
 		for (auto quad : QuadrilatereArray_const())
 		{
 			left.This()._quadrilatere.push_back(quad);
+		}
+
+		for (auto shape : FreeshapeArray_const())
+		{
+			left.This()._freeshape.push_back(shape);
+		}
+
+		for (auto id : IdsArray_const())
+		{
+			left.This()._ids.push_back(id);
 		}
 	}
 }

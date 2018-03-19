@@ -3,5 +3,5 @@ set TESSDATA_PREFIX=C:\Users\ddubuc.ANEO\Dropbox (ANEO)\HIPE_GROUP\Demos\ID Plat
 
 cd %dp0%
 
-hipe_server.exe -m "%cd%\..\..\..\hipeModules\bin\@CMAKE_INSTALL_CONFIG_NAME@\filter.dll"
+hipe_server.exe -p 9090 -m "%cd%\..\..\..\hipemodule\bin\@CMAKE_INSTALL_CONFIG_NAME@\filter.dll"
 
