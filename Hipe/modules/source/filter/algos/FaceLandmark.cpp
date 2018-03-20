@@ -40,10 +40,10 @@ namespace filter
 
 		void draw_polyline(data::ShapeData &img, const dlib::full_object_detection& d, const int start, const int end, bool isClosed)
 		{
-			std::vector <cv::Point2f> points;
+			std::vector <cv::Point> points;
 			for (int i = start; i <= end; ++i)
 			{
-				points.push_back(cv::Point2f(d.part(i).x(), d.part(i).y()));
+				points.push_back(cv::Point(d.part(i).x(), d.part(i).y()));
 			}
 			//cv::polylines(img, points, isClosed, cv::Scalar(255, 0, 0), 2, 16);
 			img.add(points);

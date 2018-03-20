@@ -158,11 +158,11 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 	unsigned int nbColor = shape.ColorsArray_const().size();
 	for (int i = 0; i < shape.FreeshapeArray_const().size(); i++)
 	{
-		const std::vector<cv::Point2f>& freeShape = shape.FreeshapeArray_const()[i];
+		const std::vector<cv::Point>& freeShape = shape.FreeshapeArray_const()[i];
 
 		cv::Scalar color;
 
-		if (! nbColor)
+		if ( nbColor != 0)
 			color = shape.ColorsArray_const()[i % nbColor];
 		else
 			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);;

@@ -71,7 +71,7 @@ namespace data
 		return ret._quadrilatere;
 	}
 
-	const std::vector<std::vector<cv::Point2f>>& ShapeData::FreeshapeArray_const() const
+	const std::vector<std::vector<cv::Point>>& ShapeData::FreeshapeArray_const() const
 	{
 		return This_const()._freeshape;
 	}
@@ -92,7 +92,7 @@ namespace data
 		return ret._quadrilatere;
 	}
 
-	std::vector<std::vector<cv::Point2f>>& ShapeData::FreeshapeArray()
+	std::vector<std::vector<cv::Point>>& ShapeData::FreeshapeArray()
 	{
 		return This()._freeshape;
 	}
@@ -180,7 +180,7 @@ namespace data
 		return *this;
 	}
 
-	ShapeData& ShapeData::add(const std::vector<cv::Point2f>& shapes, const cv::Scalar & color, const std::string& id)
+	ShapeData& ShapeData::add(const std::vector<cv::Point>& shapes, const cv::Scalar & color, const std::string& id)
 	{
 		This()._freeshape.push_back(shapes);
 
