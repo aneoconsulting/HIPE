@@ -49,7 +49,7 @@ namespace filter
 			int count_frame;
 			bboxes_t saved_boxes;
 
-			CONNECTOR(data::ImageData, data::ImageData);
+			CONNECTOR(data::ImageData, data::ShapeData);
 		REGISTER(ObjectRecognitionYolo, ()), _connexData(data::INDATA)
 			{
 				cfg_filename = "NO FILE SET";
@@ -209,6 +209,7 @@ namespace filter
 					boxes = saved_boxes;
 				}
 
+				data::ShapeData sd;
 				for (int i = 0; i < boxes.rectangles.size(); i++)
 				{
 					cv::Scalar color(std::rand() % 255, std::rand() % 255, std::rand() % 255);
@@ -218,9 +219,11 @@ namespace filter
 
 					cv::rectangle(image, boxes.rectangles[i],
 					              color, 3);
+
+					sd.add(boxes.rectangles[i],color, boxes.names[i]);
 				}
-				
-				_connexData.push(data::ImageData(image));
+
+				_connexData.push(sd);
 
 				return OK;
 			}

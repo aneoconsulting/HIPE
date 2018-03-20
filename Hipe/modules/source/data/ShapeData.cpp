@@ -192,6 +192,18 @@ namespace data
 		return *this;
 	}
 
+	ShapeData& ShapeData::add(const cv::Rect & shapes, const cv::Scalar & color, const std::string& id)
+	{
+		This()._rectsArray.push_back(shapes);
+
+		if (!id.empty())
+			This()._ids.push_back(id);
+
+		This()._colors.push_back(color);
+
+		return *this;
+	}
+
 	bool ShapeData::empty() const
 	{
 		return (This_const()._pointsArray.empty() && 

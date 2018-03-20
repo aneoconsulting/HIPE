@@ -146,10 +146,20 @@ namespace data
 		/**
 		* \brief Add a free shape to a list of shapes.
 		* \param shapes The shape to add.
+		* \param color rectangle's color
 		* \param ids The id to the shape to add.
 		* \return Returns a reference to the ShapeData object
 		*/
 		ShapeData& add(const std::vector<cv::Point2f>& shapes, const cv::Scalar & color = cv::Scalar(255, 255, 255), const std::string & id = std::string());
+
+		/**
+		* \brief Add a rectanglee to a list of shapes.
+		* \param shapes The shape to add.
+		* \param color rectangle's color
+		* \param ids The id to the shape to add.
+		* \return Returns a reference to the ShapeData object
+		*/
+		ShapeData& add(const cv::Rect & shapes, const cv::Scalar & color = cv::Scalar(255, 255, 255), const std::string& id = std::string());
 
 		/**
 		 * \brief
