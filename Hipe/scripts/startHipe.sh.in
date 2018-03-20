@@ -6,7 +6,7 @@ local_dir=$(pwd -P)
 
 export LD_LIBRARY_PATH=${local_dir}/:${local_dir}/../../lib/@CMAKE_INSTALL_CONFIG_NAME@:${LD_LIBRARY_PATH}
 #export LD_LIBRARY_PATH=@HIPE_EXTERNAL_DIR@/ffmpeg/bin:@HIPE_EXTERNAL_DIR@/boost_1_62_0/lib64-msvc-14.0:@HIPE_EXTERNAL_DIR@/opencv-3.4/lib:@HIPE_EXTERNAL_DIR@/gstreamer/1.0/x86_64/bin:@HIPE_EXTERNAL_DIR@/liblept/lib:${LD_LIBRARY_PATH}
-export TESSDATA_PREFIX="~/Dropbox (ANEO)/HIPE_GROUP/Demos/ID Plates/data/Tesseract"
+#export TESSDATA_PREFIX="~/Dropbox (ANEO)/HIPE_GROUP/Demos/ID Plates/data/Tesseract"
 
 
 export LD_LIBRARY_PATH=$(readlink -f -n ../../../hipemodule/lib/@CMAKE_INSTALL_CONFIG_NAME@/):${LD_LIBRARY_PATH}

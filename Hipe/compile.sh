@@ -16,7 +16,7 @@ then
   # This was uncommented in the original script but serves no purpose as it is
   # immediately overridden by the following line.
   #export HIPE_EXTERNAL=/mnt/ssd/hipeExternal
-  export HIPE_EXTERNAL=/work/external_mod/
+  export HIPE_EXTERNAL=/home/sclaviere/Hipe/hipe-external
 fi
 
 # Create the build directory and change into it.
@@ -37,9 +37,9 @@ cmake \
   -DCMAKE_INSTALL_PREFIX=~/hipecore \
   ..
 
-make VERBOSE=1 -j8
-make VERBOSE=1 install
-make VERBOSE=1 package
+make VERBOSE=2 -j1
+make VERBOSE=2 install
+make VERBOSE=2 package
 
 cd ../modules/
 mkdir -p build
