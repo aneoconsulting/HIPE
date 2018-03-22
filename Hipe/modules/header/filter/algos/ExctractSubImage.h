@@ -21,9 +21,9 @@ namespace filter
 				center_circles = true;
 			}
 
-			REGISTER_P(unsigned int, debug);
-			REGISTER_P(unsigned int, expected_rows);
-			REGISTER_P(unsigned int, expected_cols);
+			REGISTER_P(int, debug);
+			REGISTER_P(int, expected_rows);
+			REGISTER_P(int, expected_cols);
 			REGISTER_P(bool, center_circles);
 
 		private:

@@ -22,8 +22,8 @@ namespace filter
 				height = 800;
 			}
 
-			REGISTER_P(unsigned int, rows);
-			REGISTER_P(unsigned int, cols);
+			REGISTER_P(int, rows);
+			REGISTER_P(int, cols);
 			REGISTER_P(float, width);
 			REGISTER_P(float, height);
 
@@ -35,7 +35,7 @@ namespace filter
 			@return A vector of Point2f objects representing the points of the regular grid, orderd by row then column.
 			*/
 		private:
-			static std::vector<cv::Point2f> compute_regular_grid(unsigned int rows, unsigned int cols, float width, float height, bool corners_only = false);
+			static std::vector<cv::Point2f> compute_regular_grid(int rows, int cols, float width, float height, bool corners_only = false);
 		};
 
 		ADD_CLASS(ComputeRegularGrid, rows, cols, width, height);
