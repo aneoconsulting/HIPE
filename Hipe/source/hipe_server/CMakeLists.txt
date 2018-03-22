@@ -4,6 +4,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/livemedia_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/x264_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
+include(GetPrerequisites)
 
 if(USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
@@ -28,8 +29,8 @@ display_pathlist("Live_LIBRARIES" "${Live_LIBRARIES}")
 target_link_libraries(hipe_server http)
 target_link_libraries(hipe_server orchestrator)
 target_link_libraries(hipe_server json)
-target_link_libraries(hipe_server data)
-# target_link_libraries(hipe_server streaming)
+target_link_libraries(hipe_server coredata)
+
 target_link_libraries(hipe_server core)
 target_link_libraries(hipe_server ${FFmpeg_LIBRARIES})
 target_link_libraries(hipe_server ${x264_LIBRARIES})
@@ -37,6 +38,11 @@ target_link_libraries(hipe_server ${Live_LIBRARIES})
 target_link_libraries(hipe_server ${OpenCV_LIBS})
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
+
+if (UNIX)
+  target_link_libraries(hipe_server ${CMAKE_DL_LIBS})
+endif()
+
 if(USE_DLIB)
   target_link_libraries(hipe_server ${dlib_LIBRARIES})
   # TODO
@@ -69,3 +75,26 @@ enable_testing()
 #add_subdirectory(tests)
 
 display_target_properties(hipe_server)
+
+install (TARGETS hipe_server CONFIGURATIONS Debug DESTINATION bin/Debug COMPONENT applications)
+install (TARGETS hipe_server CONFIGURATIONS Release DESTINATION bin/Release COMPONENT applications)
+
+#
+#Copy in install folder all dependencies for hipe_core
+#
+
+#create directory for 3rdParty
+install(DIRECTORY DESTINATION 3rdParty)
+
+set(EXT_BIN "") 
+if (WIN32)
+set(EXT_BIN .exe)
+endif() 
+
+#file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/Debug/hipe_server${EXT_BIN}" cm_path)
+#file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/Debug" cm_dir)
+#set(PATH_SHAREDLIB "${HIPE_EXTERNAL_DIR}/boost_1_62_0/lib64-msvc-14.0;${HIPE_EXTERNAL_DIR}/opencv-3.4/x64/vc14/bin;${HIPE_EXTERNAL_DIR}/gstreamer/1.0/x86_64/bin;${cm_dir};${CMAKE_PREFIX_PATH}")
+##STRING(REPLACE "\\" "\\\\" cm_path ${cm_path})
+message(STATUS "Install dependencies exe")
+install_dependencies_exe("hipe_server")
+

@@ -10,6 +10,13 @@
 
 RegisterTable* registerInstance_l = nullptr;
 
+extern "C"
+{
+	void* c_registerInstance()
+	{
+		return (void *)registerInstance();
+	}
+}
 
 void* newFilter(std::string className)
 {

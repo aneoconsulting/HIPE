@@ -27,3 +27,8 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
 endif(MSYS)
 
 display_target_properties(core)
+
+install_header_to_target(core)
+
+install (TARGETS core CONFIGURATIONS Debug DESTINATION lib/Debug)
+install (TARGETS core CONFIGURATIONS Release DESTINATION lib/Release)

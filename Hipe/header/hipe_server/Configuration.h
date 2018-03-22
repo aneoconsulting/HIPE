@@ -12,6 +12,7 @@ namespace hipe_server
 	{
 	public:
 		unsigned short port;
+		std::string modulePath;
 
 
 	public:

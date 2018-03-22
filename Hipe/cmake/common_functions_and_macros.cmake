@@ -211,3 +211,109 @@ function(define_file_basename_for_sources targetname)
     )
   endforeach(sourcefile ${source_files})
 endfunction()
+
+
+macro(install_header_to_target targetname)
+	set(_src_filter_inc_path ${CMAKE_SOURCE_DIR}/header/${targetname})
+	file(
+	   GLOB_RECURSE ${targetname}_header
+	   LIST_DIRECTORIES false
+	   RELATIVE "${_src_filter_inc_path}"
+	   "${_src_filter_inc_path}/*.h*"
+	 )
+	 message(status "Header in ${targetname} : [${${targetname}_header}]")
+	foreach ( file ${${targetname}_header} )
+
+		get_filename_component( dir ${file} DIRECTORY )
+		install( FILES ${CMAKE_SOURCE_DIR}/header/${targetname}/${file} DESTINATION include/${targetname}/${dir}  COMPONENT headers )
+	endforeach()
+	
+endmacro()
+
+macro(install_dependencies_int target_name EXT_BIN)
+
+
+	
+	
+
+	install(
+			CODE "include(GetPrerequisites)
+						if(\"\${CMAKE_INSTALL_CONFIG_NAME}\" STREQUAL \"Debug\") 
+							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Debug/${target_name}${EXT_BIN}\" cm_path)
+							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Debug\" cm_dir)
+							if (WIN32)
+								set(PATH_SHAREDLIB \"${HIPE_EXTERNAL_DIR}/boost_1_62_0/lib64-msvc-14.0;${HIPE_EXTERNAL_DIR}/opencv-3.4/x64/vc14/bin;${HIPE_EXTERNAL_DIR}/gstreamer/1.0/x86_64/bin;\${cm_dir};${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}/bin/Debug;${CMAKE_INSTALL_PREFIX}/lib/Debug\")
+							else()
+								set(PATH_SHAREDLIB \"${HIPE_EXTERNAL_DIR}/boost/lib;${HIPE_EXTERNAL_DIR}/opencv/lib;\${cm_dir};${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}/bin/Debug;${CMAKE_INSTALL_PREFIX}/lib/Debug\")
+							message(STATUS \"SEARCH PATH : ${PATH_SHAREDLIB}\")
+							endif()
+							message(STATUS \"Info file path [ \${cm_path} ] in dir [ \${cm_dir} ] \")
+							get_prerequisites(\"\${cm_path}\" PREREQS 1 1 \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\")
+							
+							message(STATUS \"prerequisites \${PREREQS} for \${cm_path}\")
+							foreach(DEPENDENCY_FILE \${PREREQS})
+							gp_resolve_item(\"\${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\" resolved_file)
+							if (UNIX)
+								get_filename_component( dep_realpath \"\${resolved_file}\" REALPATH )
+								get_filename_component( dep_name \"\${resolved_file}\" NAME )
+								FILE(COPY \"\${dep_realpath}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Debug\")
+
+							endif()
+							message(STATUS \"resolved_file='\${resolved_file}'\")
+							FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Debug\")
+							endforeach()
+							if (WIN32)
+								#FILE(COPY \"${CMAKE_SOURCE_DIR}/scripts/starthipe.bat\" DESTINATION \"\${cm_dir}\")
+								file(TO_NATIVE_PATH \"${HIPE_EXTERNAL_DIR}\" HIPE_EXTERNAL_DIR)
+								CONFIGURE_FILE(\"${CMAKE_SOURCE_DIR}/scripts/starthipe.bat.in\" \"\${cm_dir}/starthipe.bat\" @ONLY)
+							else()
+								file(TO_NATIVE_PATH \"${HIPE_EXTERNAL_DIR}\" HIPE_EXTERNAL_DIR)
+								CONFIGURE_FILE(\"${CMAKE_SOURCE_DIR}/scripts/startHipe.sh.in\" \"\${cm_dir}/startHipe.sh\" @ONLY)
+							endif()
+						else() 
+							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Release/${target_name}${EXT_BIN}\" cm_path)
+							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Release\" cm_dir)
+							if (WIN32)
+								set(PATH_SHAREDLIB \"${HIPE_EXTERNAL_DIR}/boost_1_62_0/lib64-msvc-14.0;${HIPE_EXTERNAL_DIR}/opencv-3.4/x64/vc14/bin;${HIPE_EXTERNAL_DIR}/gstreamer/1.0/x86_64/bin;\${cm_dir};${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}/bin/Release;${CMAKE_INSTALL_PREFIX}/lib/Release\")
+							else()
+								set(PATH_SHAREDLIB \"${HIPE_EXTERNAL_DIR}/boost/lib;${HIPE_EXTERNAL_DIR}/opencv/lib;\${cm_dir};${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}/bin/Release;${CMAKE_INSTALL_PREFIX}/lib/Release\")
+							endif()
+							message(STATUS \"Info file path [ \${cm_path} ] in dir [ \${cm_dir} ] \")
+							get_prerequisites(\"\${cm_path}\" PREREQS 1 1 \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\")
+							
+							message(STATUS \"prerequisites: \${PREREQS} for \${cm_path}\")
+							foreach(DEPENDENCY_FILE \${PREREQS})
+							gp_resolve_item(\"\${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\" resolved_file)
+							if (UNIX)
+								get_filename_component( dep_realpath \"\${resolved_file}\" REALPATH )
+								get_filename_component( dep_name \"\${resolved_file}\" NAME )
+								FILE(COPY \"\${dep_realpath}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Release\")
+
+							endif()
+
+							message(STATUS \"resolved_file='\${resolved_file}'\")
+							FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/bin/Release\")
+							endforeach()
+							if (WIN32)
+								file(TO_NATIVE_PATH \"${HIPE_EXTERNAL_DIR}\" HIPE_EXTERNAL_DIR)
+								CONFIGURE_FILE(\"${CMAKE_SOURCE_DIR}/scripts/starthipe.bat.in\" \"\${cm_dir}/starthipe.bat\" @ONLY)
+							else()
+								file(TO_NATIVE_PATH \"${HIPE_EXTERNAL_DIR}\" HIPE_EXTERNAL_DIR)
+								CONFIGURE_FILE(\"${CMAKE_SOURCE_DIR}/scripts/startHipe.sh.in\" \"\${cm_dir}/startHipe.sh\" @ONLY)
+							endif()
+						endif()
+						
+						"
+			COMPONENT deps)
+	
+endmacro(install_dependencies_int)
+
+macro(install_dependencies_exe target_name)
+
+	set(EXT_BIN ".bin") 
+	if (WIN32)
+	set(EXT_BIN .exe)
+	endif() 
+	
+	install_dependencies_int(${target_name} "${EXT_BIN}")
+endmacro(install_dependencies_exe)

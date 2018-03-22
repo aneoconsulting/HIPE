@@ -19,3 +19,20 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
 endif(MSYS)
 
 display_target_properties(corefilter)
+
+install_header_to_target(corefilter)
+
+install (TARGETS corefilter 
+		CONFIGURATIONS Release 
+		RUNTIME DESTINATION bin/Release 
+		LIBRARY DESTINATION lib/Release
+		ARCHIVE DESTINATION lib/Release
+		COMPONENT library)
+		
+install (TARGETS corefilter 
+		CONFIGURATIONS Debug
+		RUNTIME DESTINATION bin/Debug
+		LIBRARY DESTINATION lib/Debug
+		ARCHIVE DESTINATION lib/Debug
+		COMPONENT library)
+

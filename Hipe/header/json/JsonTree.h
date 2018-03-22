@@ -56,13 +56,15 @@ namespace json
 
 		JsonTree & AddInt(std::string key, int value) ;
 
-		JsonTree & AddChild(std::string key, JsonTree & value) ;
+		JsonTree & add_child(std::string key, JsonTree & value) ;
 
 		size_t count(std::string) const;
 
 		void set_json_tree(boost::property_tree::ptree ptree);
 
 		boost::property_tree::ptree & get_child(const char* str) const;
+		bool empty()const;
+		JsonTree& add_child_to_child(std::string key, std::string key2, JsonTree & value);
 
 	/*	std::shared_ptr<JsonTree::iterator> begin();
 
