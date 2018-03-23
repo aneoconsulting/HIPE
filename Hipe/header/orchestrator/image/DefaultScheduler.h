@@ -398,7 +398,7 @@ namespace orchestrator
 					//With C++11; may return 0 when not able detect to
 					unsigned NbminCore = 1;
 					unsigned FactCore = 1;
-					unsigned concurentThreadsSupported = std::max(NbminCore,std::thread::hardware_concurrency());
+					unsigned concurentThreadsSupported = (std::max)(NbminCore,std::thread::hardware_concurrency());
 					unsigned nbThrPoool = FactCore * concurentThreadsSupported;
 					//std::cout << nbThrPoool << "threads" <<std::endl;
 					boost::mutex mutexHipeStatus;
