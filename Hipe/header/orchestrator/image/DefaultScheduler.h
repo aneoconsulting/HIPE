@@ -1,9 +1,12 @@
 #pragma once
 #include <coredata/OutputData.h>
 #include <boost/thread/thread.hpp>
+#include <boost/thread/mutex.hpp>
 #include <orchestrator/TaskInfo.h>
 #include <corefilter/tools/RegisterTable.h>
 #include <corefilter/datasource/DataSource.h>
+#include <algorithm>
+#include <thread>
 
 
 namespace orchestrator
@@ -368,56 +371,132 @@ namespace orchestrator
 
 				
 				std::atomic<bool>* isActive = new std::atomic<bool>(true);
+				//std::thread thr1;
+				
+
 
 				boost::thread* task = new boost::thread([cpyFilterRoot, maxLevel, &outputData, sourceType, isActive]()
 				{
+					std::cout<<"start"<<std::endl;
+					// ALlocation std::vector<std::vector>>(MAXLEVEL + 1)
+					//Profondeur de graphe base sur la le plus grand nombre de dependances
 					MatrixLayerNode matrixLayer(maxLevel + 1);
 
 					//TODO insert debug layers into the matrix
 					setMatrixLayer(cpyFilterRoot, matrixLayer);
+					// | X     |
+					// | X X X |
+					// | X X   |
+					// | X X X |
+					// | X     |
+					
 					//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
 					//std::shared_ptr<data::Data> inter_output;
 					HipeStatus hipe_status = OK;
-
+					
+					//Detection du nombre core
+					//With C++11; may return 0 when not able detect to
+					unsigned NbminCore = 1;
+					unsigned FactCore = 1;
+					unsigned concurentThreadsSupported = std::max(NbminCore,std::thread::hardware_concurrency());
+					unsigned nbThrPoool = FactCore * concurentThreadsSupported;
+					//std::cout << nbThrPoool << "threads" <<std::endl;
+					boost::mutex mutexHipeStatus;
+					boost::mutex mutexcpyFilter;	
+					int range =0;
+					
+					// Creation de pool de thread == 1-2 fois le nb de core disponible hors HyperThreading 
+					std::vector<int> pool(nbThrPoool, -1);
+					/*
+					Version pour mettre en pause puis relancer les threads
+					*/
+					/*std::vector<std::vector<boost::thread*>> threadRange(matrixLayer.size() - 1)*/
+							
 					while ((hipe_status != END_OF_STREAM) && *isActive)
 					{
-
+						range +=1;
+						//std::cout << "start range: "<<range << std:: endl;
 						for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
 						{
-							for (auto& filter : matrixLayer[layer])
+							
+							std::vector<boost::thread*> threadLayer(matrixLayer[layer].size());
+							for (int i = 0; i < matrixLayer[layer].size() ; i++)
 							{
-								try
+								while(find(pool.begin(), pool.end(), -1) == pool.end())
 								{
-									hipe_status = filter->process();
-									if (hipe_status == END_OF_STREAM)
-										break;
+									std::cout<<"wait" <<std::endl;
 								}
-								catch (HipeException& e)
+								std::vector<int>::iterator it;
+								it = find(pool.begin(), pool.end(), -1);
+								auto& cpyFilter = matrixLayer[layer][i];
+								//std::cout << "start: " << it-pool.begin() << std::endl;
+								*it = i;
+								threadLayer[i] = new boost::thread([&cpyFilter, cpyFilterRoot, &outputData, &hipe_status, &pool, it, &mutexHipeStatus, &mutexcpyFilter]()
 								{
-									std::cerr << "HipeException error during the " << filter->getName() << " execution. Msg : " << e.what() <<
+									try
+									{
+										mutexHipeStatus.lock();
+										//std::cout << "start pool" <<*it   <<std::endl;
+										hipe_status = cpyFilter->process();
+										if (hipe_status == END_OF_STREAM)
+											std::cout << "end of stream" <<std::endl;
+										mutexHipeStatus.unlock();
+										*it = -1;
+										//break;
+									}
+									catch (HipeException& e)
+									{
+										std::cerr << "HipeException error during the " << cpyFilter->getName() << " execution. Msg : " << e.what() <<
 										". Please contact us" << std::endl;
-									cleanDataChild(cpyFilterRoot);
-									disposeChild(cpyFilterRoot);
-									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-										throw HipeException("Cannot free properly the Streaming videocapture");
-									return;
-								}
+										mutexcpyFilter.lock();
+										cleanDataChild(cpyFilterRoot);
+										disposeChild(cpyFilterRoot);
+										if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+											throw HipeException("Cannot free properly the Streaming videocapture");
+										mutexcpyFilter.unlock();
+										return;
+									}
 
-								catch (std::exception& e)
-								{
-									std::cerr << "Unkown error during the " << filter->getName() << " execution. Msg : " << e.what() <<
+									catch (std::exception& e)
+									{
+										std::cerr << "Unkown error during the " << cpyFilter->getName() << " execution. Msg : " << e.what() <<
 										". Please contact us" << std::endl;
-									cleanDataChild(cpyFilterRoot);
-									disposeChild(cpyFilterRoot);
-									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-										throw HipeException("Cannot free properly the Streaming videocapture");
-									return;
+										mutexcpyFilter.lock();
+										cleanDataChild(cpyFilterRoot);
+										disposeChild(cpyFilterRoot);
+										if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+											throw HipeException("Cannot free properly the Streaming videocapture");
+										mutexcpyFilter.unlock();
+										return;
+									}
+									//std::cout << "end pool"  <<std::endl;
+									
+								});
+																
+								
+								
+								
+
+								//std::cout << "changement de pool"<<std::endl;
+							}
+							
+							for (int j = 0; j < matrixLayer[layer].size() ; j++)
+							{
+								//std::cout <<"start join: "<<j <<std::endl;
+								if (threadLayer[j] ->joinable())
+								{
+									threadLayer[j]->join();
+									
 								}
 							}
-							if (hipe_status == END_OF_STREAM)
+							threadLayer.clear();	
+							
+							if (hipe_status == END_OF_STREAM){
+								//std::cout << "end of stream" <<std::endl;
 								break;
+							}
 						}
-
+								//std::cout << "start size -1 "<< range <<std::endl;
 						//Special case for final result and other filter
 						for (auto& filter : matrixLayer[matrixLayer.size() - 1])
 						{
@@ -435,18 +514,26 @@ namespace orchestrator
 								filter->process();
 							}
 						}
-
+						//std::cout << "fin size -1 "<<std::endl;
 						if (data::DataTypeMapper::isImage(sourceType))
 							break;
+						//std::cout << "fin range: "<< range <<std::endl;
 					}
+					//std::cout << "End while: "<< range <<std::endl;
 					cleanDataChild(cpyFilterRoot);
+					//std::cout << "clean" <<std::endl;
 					disposeChild(cpyFilterRoot);
+					//std::cout << "dispose"<<std::endl;
 
-					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK){
+					//std::cout << "if end thread"<<std::endl;
 						throw HipeException("Cannot free properly the videocapture");
+					}
+					//std::cout << "end thread"<<std::endl;
 				});
 				if (data::DataTypeMapper::isVideo(sourceType))
 				{
+					//std::cout << "isvideo "<<std::endl;
 					TaskInfo taskInfo;
 					taskInfo.task.reset(task);
 					taskInfo.isActive.reset(isActive);
@@ -455,6 +542,7 @@ namespace orchestrator
 				}
 				else
 				{
+					//std::cout << "is not video "<<std::endl;
 					if (task->joinable())
 						task->join();
 
@@ -525,6 +613,8 @@ namespace orchestrator
 				}
 				runningTasks.clear();
 			}
+			
+			
 		};
 	}
 }

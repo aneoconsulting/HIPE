@@ -36,11 +36,13 @@ namespace filter
 				wait_ms = 0;
 				sequential = false;
 				dedicated_window = true;
+				createdWindow = false;
 			}
 
 			~ShowImage()
 			{
-				cv::destroyWindow(_name);
+				if (createdWindow.exchange(false))
+					cv::destroyWindow(_name);
 			}
 
 			REGISTER_P(int, waitkey);
@@ -48,6 +50,8 @@ namespace filter
 			REGISTER_P(int, wait_ms);
 			REGISTER_P(bool, sequential);	// Wait for input after each image is shown
 			REGISTER_P(bool, dedicated_window); // Should the images be shown in a unique window or in different ones?
+			
+			std::atomic<bool> createdWindow;
 
 		private:
 			int count = 0;
@@ -73,6 +77,8 @@ namespace filter
 
 						cv::namedWindow(windowName);
 						cv::imshow(windowName, myImage);
+						
+						createdWindow.exchange(true);
 
 						// Here, only wait for input if the user want to (sequential mode)
 						if (sequential) waitKey();
@@ -97,15 +103,17 @@ namespace filter
 					{
 						std::string windowName = _name;
 						windowName += "_" + std::to_string(count--);
-						cv::destroyWindow(windowName);
+						if (createdWindow.exchange(false))
+							cv::destroyWindow(windowName);
 					}
 				}
 				// Destroy unique window if not
-				else
-				{
-					std::string windowName = _name;
-					cv::destroyWindow(windowName);
-				}
+				// DDU Let the destroyer does the job
+				//else
+				//{
+					//std::string windowName = _name;
+					//cv::destroyWindow(windowName);
+				//}
 			}
 
 			void waitKey()
