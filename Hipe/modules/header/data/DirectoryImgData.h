@@ -105,6 +105,10 @@ namespace data {
 			{
 				return This_const()._directoryPath;
 			}
+			void SetDirectoryPath(std::string path)
+			{
+				This()._directoryPath = path;
+			}
 			
 			bool empty() const
 			{

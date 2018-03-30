@@ -12,7 +12,7 @@ namespace filter
 			auto fullPath = pathdir.append("\\").append(filePath);
 			data::ImageData imageInput = p.imageSource();
 			cv::Mat imageLoaded = cv::imread(fullPath, CV_LOAD_IMAGE_ANYCOLOR);
-			if(imageLoaded.data)
+			if(!imageLoaded.empty())
 			{
 				std::vector<int> crop = { 0,0, imageLoaded.size().width, imageLoaded.size().height };
 				data::ImageData imagedata(imageLoaded);

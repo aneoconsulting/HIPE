@@ -38,11 +38,12 @@ HipeStatus filter::datasource::DirectoryImgDataSource::process()
 {
 	if (!atomic_state.exchange(true))
 	{
-		data::ImageArrayData images;
-		images = loadImagesData(directoryPath);
-		_connexData.push(images);
+		data::DirectoryImgData dirImageData;
+		dirImageData.SetDirectoryPath(directoryPath);
+		dirImageData.loadImagesData();
+		_connexData.push(dirImageData);
 		return OK;
 	}
-	_connexData.push(data::ImageArrayData());
+	_connexData.push(data::DirectoryImgData());
 	return END_OF_STREAM;
 }

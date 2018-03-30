@@ -83,10 +83,6 @@ namespace filter
 				}
 			
 	
-				
-
-
-
 				_connexData.push(data::ImageData(img_matches));
 
 			}

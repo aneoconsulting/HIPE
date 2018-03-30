@@ -4,6 +4,7 @@
 #include <coredata/IODataType.h>
 #include <data/ImageArrayData.h>
 #include <data/ImageData.h>
+#include <data/DirPatternData.h>
 #include <coredata/ConnexData.h>
 #include <corefilter/tools/filterMacros.h>
 #include <corefilter/tools/RegisterTools.hpp>
@@ -18,41 +19,33 @@
 #include <data/VideoData.h>
 #include <data/DirectoryImgData.h>
 
-
 namespace filter
 {
 	namespace datasource
 	{
-		class FILTER_EXPORT DirectoryImgDataSource : public filter::IFilter
+		class FILTER_EXPORT DirPatternDataSource : public filter::IFilter
 		{
-			CONNECTOR(data::NoneData, data::Data);
+			int _endOfSource;
+			CONNECTOR(data::Data, data::DirPatternData);
 
 			SET_NAMESPACE("vision/datasource");
 
-			REGISTER(DirectoryImgDataSource, ()), _connexData(data::INDATA)
+			REGISTER(DirPatternDataSource, ()), _connexData(data::INDATA)
 			{
-				eSourceType = data::IODataType::SEQIMGD;
+				eSourceType = data::IODataType::DIRPATTERN;
 				loop = false;
 				atomic_state = false;
+				_endOfSource = -1;
 			}
 
-
-			REGISTER_P(std::string, sourceType);
-
 			REGISTER_P(bool, loop);
-			REGISTER_P(std::string, directoryPath);
-
 
 			data::IODataType eSourceType;
-
-			data::ImageArrayData imgs;
-
 			std::atomic<bool> atomic_state;
-
 			HipeStatus process();
 		};
 
-		ADD_CLASS(DirectoryImgDataSource, sourceType, loop, directoryPath);
+		ADD_CLASS(DirPatternDataSource, loop);
 
 	}
 }

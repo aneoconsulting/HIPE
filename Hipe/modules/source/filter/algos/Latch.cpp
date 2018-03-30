@@ -110,7 +110,7 @@ namespace filter
 			{
 				data::MatcherData output;
 				_connexData.push(output);
-				return OK;
+				return DATA_EMPTY;
 			}
 
 			if (skip_frame <= 0 || count_frame % skip_frame == 0)
@@ -120,7 +120,7 @@ namespace filter
 				imagesStack.push(patternData);
 			}
 			count_frame++;
-
+		
 			data::MatcherData md_result;
 			cv::Mat res;
 

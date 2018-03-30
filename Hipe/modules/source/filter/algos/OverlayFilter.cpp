@@ -106,7 +106,7 @@ data::ImageData filter::algos::OverlayFilter::extractSourceImageData(data::Data&
 	else if (type == data::DIRPATTERN)
 	{
 		data::DirPatternData& dirPattern = static_cast<data::DirPatternData &>(data);
-		return dirPattern.imageRequest();
+		return dirPattern.imageSource();
 	}
 	else
 	{
