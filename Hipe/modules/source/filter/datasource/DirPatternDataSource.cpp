@@ -12,13 +12,13 @@ HipeStatus filter::datasource::DirPatternDataSource::process()
 		auto data2 = _connexData.pop();
 		if (data1.getType() == data::VIDF|| data1.getType() == data::IMGF)
 		{	
-			data::DirPatternData dirpattern(static_cast<data::ImageData>(data1), static_cast<data::DirectoryImgData>(data2));
+			data::DirPatternData dirpattern(data1, static_cast<data::DirectoryImgData>(data2));
 			_connexData.push(dirpattern);			
 		}
 		
 		else //directory
 		{
-			data::DirPatternData dirPatterData(static_cast<data::ImageData>(data2), static_cast<data::DirectoryImgData>(data1));
+			data::DirPatternData dirPatterData(data2, static_cast<data::DirectoryImgData>(data1));
 			_connexData.push(dirPatterData);
 		}
 	return OK;

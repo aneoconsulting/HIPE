@@ -123,7 +123,7 @@ namespace json
 		return _jsonPtree->get<bool>(path);
 	}
 
-	bool JsonTree::getInt(std::string path) const
+	int JsonTree::getInt(std::string path) const
 	{
 		return _jsonPtree->get<int>(path);
 	}

@@ -104,7 +104,7 @@ namespace json
 
 		
 
-		bool getInt(std::string path) const;
+		int getInt(std::string path) const;
 		
 		void read_json(std::istream& stream);
 

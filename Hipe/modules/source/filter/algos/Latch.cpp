@@ -129,16 +129,17 @@ namespace filter
 				data::MatcherData output;
 				_connexData.push(output);
 			}
+			else if (wait == true && result.trypop_until(md_result, cacahuette_time)) // wait 5 sec it's like infinite but allow to kill thread
+			{
+				tosend = md_result;
+				_connexData.push(tosend);
+			}
 			else if (result.trypop_until(md_result, 30)) // wait 30ms no more
 			{
 				tosend = md_result;
 				_connexData.push(tosend);
 			}
-			else if (wait == true && result.trypop_until(md_result, wait_time)) // wait 5 sec it's like infinite but allow to kill thread
-			{
-				tosend = md_result;
-				_connexData.push(tosend);
-			}
+			
 			else if (tosend.requestImage_const().empty())
 			{
 				data::MatcherData output;
