@@ -129,7 +129,7 @@ namespace filter
 				data::MatcherData output;
 				_connexData.push(output);
 			}
-			else if (wait == true && result.trypop_until(md_result, cacahuette_time)) // wait 5 sec it's like infinite but allow to kill thread
+			else if (wait == true && result.trypop_until(md_result, wait_time)) // wait 5 sec it's like infinite but allow to kill thread
 			{
 				tosend = md_result;
 				_connexData.push(tosend);
