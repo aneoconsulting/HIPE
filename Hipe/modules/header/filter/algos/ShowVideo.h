@@ -55,7 +55,8 @@ namespace filter
 				{
 					if (fullscreen)
 					{
-						cv::namedWindow(_name, CV_WINDOW_FULLSCREEN);
+						cv::namedWindow(_name, CV_WND_PROP_FULLSCREEN);
+						cvSetWindowProperty(_name.c_str(), CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
 					}
 					else
 					{
