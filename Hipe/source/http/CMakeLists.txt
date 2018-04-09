@@ -23,3 +23,4 @@ endif()
 
 install (TARGETS http CONFIGURATIONS Debug DESTINATION lib/Debug COMPONENT library)
 install (TARGETS http CONFIGURATIONS Release DESTINATION lib/Release COMPONENT library)
+install (TARGETS http CONFIGURATIONS RelWithDebInfo DESTINATION lib/Release COMPONENT library)

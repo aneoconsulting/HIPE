@@ -36,3 +36,9 @@ install (TARGETS corefilter
 		ARCHIVE DESTINATION lib/Debug
 		COMPONENT library)
 
+install (TARGETS corefilter 
+		CONFIGURATIONS RelWithDebInfo 
+		RUNTIME DESTINATION bin/Release 
+		LIBRARY DESTINATION lib/Release
+		ARCHIVE DESTINATION lib/Release
+		COMPONENT library)

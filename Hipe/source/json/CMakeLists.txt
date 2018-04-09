@@ -35,3 +35,9 @@ install (TARGETS json
 		ARCHIVE DESTINATION lib/Debug
 		COMPONENT library)
 
+install (TARGETS json 
+		CONFIGURATIONS RelWithDebInfo 
+		RUNTIME DESTINATION bin/Release 
+		LIBRARY DESTINATION lib/Release
+		ARCHIVE DESTINATION lib/Release
+		COMPONENT library)

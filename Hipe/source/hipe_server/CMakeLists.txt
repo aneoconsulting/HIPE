@@ -76,6 +76,7 @@ display_target_properties(hipe_server)
 
 install (TARGETS hipe_server CONFIGURATIONS Debug DESTINATION bin/Debug COMPONENT applications)
 install (TARGETS hipe_server CONFIGURATIONS Release DESTINATION bin/Release COMPONENT applications)
+install (TARGETS hipe_server CONFIGURATIONS RelWithDebInfo DESTINATION bin/Release COMPONENT applications)
 
 #
 #Copy in install folder all dependencies for hipe_core

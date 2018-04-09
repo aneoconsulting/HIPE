@@ -49,3 +49,12 @@ install (TARGETS pydata
 		COMPONENT library
 		ARCHIVE DESTINATION lib/Release
 		COMPONENT library)
+		
+install (TARGETS pydata 
+		CONFIGURATIONS RelWithDebInfo 
+		RUNTIME DESTINATION bin/Release 
+		COMPONENT runtime
+		LIBRARY DESTINATION lib/Release 
+		COMPONENT library
+		ARCHIVE DESTINATION lib/Release
+		COMPONENT library)		

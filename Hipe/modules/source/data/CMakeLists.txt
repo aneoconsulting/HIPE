@@ -53,5 +53,16 @@ install (TARGETS data
 		CONFIGURATIONS Release 
 		RUNTIME DESTINATION bin/Release 
 		COMPONENT runtime
+		LIBRARY DESTINATION lib/Release
+		COMPONENT library
+		ARCHIVE DESTINATION lib/Release
+		COMPONENT library)
+		
+install (TARGETS data 
+		CONFIGURATIONS RelWithDebInfo 
+		RUNTIME DESTINATION bin/Release 
+		COMPONENT runtime
 		LIBRARY DESTINATION lib/Release 
+		COMPONENT library
+		ARCHIVE DESTINATION lib/Release
 		COMPONENT library)

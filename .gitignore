@@ -27,3 +27,5 @@ Hipe/header/filter/References.h.cmp
 /Hipe/modules/header/.cmp
 Hipe/modules/header/filter/References.h.cmp
 Hipe/modules/header/filter/References.h
+/Hipe/module/build/CMakeCache.txt
+/Hipe/module/build/**

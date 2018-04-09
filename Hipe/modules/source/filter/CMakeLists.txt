@@ -63,7 +63,7 @@ target_sources(filter PUBLIC ${header_ref_path})
 define_file_basename_for_sources(filter)
 
 if (MSVC)
-	foreach(var HIPE_EXTERNAL_DIR CMAKE_BINARY_DIR Hipecore_DIR)
+	foreach(var HIPE_EXTERNAL_DIR CMAKE_BINARY_DIR Hipecore_DIR CMAKE_INSTALL_PREFIX)
 	  file(TO_NATIVE_PATH ${${var}} ${var}_WIN)
 	endforeach()
 	configure_file(${CMAKE_SOURCE_DIR}/cmake/filter.vcxproj.user.in ${CMAKE_BINARY_DIR}/source/filter/filter.vcxproj.user @ONLY) 
@@ -324,6 +324,15 @@ install (TARGETS filter
 
 install (TARGETS filter 
 		CONFIGURATIONS Release 
+		RUNTIME DESTINATION bin/Release 
+		COMPONENT runtime
+		LIBRARY DESTINATION lib/Release
+		COMPONENT library
+		ARCHIVE DESTINATION lib/Release		
+		COMPONENT library)
+		
+install (TARGETS filter 
+		CONFIGURATIONS RelWithDebInfo 
 		RUNTIME DESTINATION bin/Release 
 		COMPONENT runtime
 		LIBRARY DESTINATION lib/Release
