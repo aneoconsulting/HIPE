@@ -1,7 +1,4 @@
-if (MSVC)
-option(USE_PREBUILT_DEPENDENCIES "Download and use the prebuilt dependencies" ON)
-option(FORCE_USE_PREBUILT_DEPENDENCIES "Download and use the prebuilt dependencies" OFF)
-endif()
+
 
 SET(HIPE_EXTERNAL_VERSION "20180409")
 SET(FILE_HIPE_EXTERNAL_DEPS "HipeExternal_win64_${HIPE_EXTERNAL_VERSION}.tgz")

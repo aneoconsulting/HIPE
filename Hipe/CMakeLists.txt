@@ -7,7 +7,10 @@ endif()
 
 project (Hipe)
 
-
+if (MSVC)
+option(USE_PREBUILT_DEPENDENCIES "Download and use the prebuilt dependencies" ON)
+option(FORCE_USE_PREBUILT_DEPENDENCIES "Download and use the prebuilt dependencies" OFF)
+endif()
 
 # Options
 option(USE_GPERFTOOLS "Use gperftools." OFF)
