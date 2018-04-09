@@ -3,7 +3,10 @@
 
 #include <pydata/pydata_export.h>
 #include <vector>
+
+#pragma warning(push, 0)
 #include <boost/python.hpp>
+#pragma warning(pop)
 
 namespace pydata
 {

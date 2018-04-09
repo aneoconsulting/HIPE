@@ -1,7 +1,10 @@
 #pragma once
 #include <coredata/IOData.h>
-#include <opencv2/core/mat.hpp>
 #include <vector>
+
+#pragma warning(push, 0) 
+#include <opencv2/core/mat.hpp>
+#pragma warning(pop) 
 
 namespace data
 {

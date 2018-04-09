@@ -1,6 +1,10 @@
 #include <JsonBuilder.h>
 #include <coredata/OutputData.h>
+
+
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
+#pragma warning(pop)
 
 namespace json
 {

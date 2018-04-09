@@ -1,9 +1,6 @@
 #pragma once
-#include <vector>
-#include <coredata/Data.h>
-#include <stack>
 #include <core/queue/ConcurrentQueue.h>
-#include <boost/python.hpp>
+
 #include <pydata/pyData.h>
 
 class pyFilter

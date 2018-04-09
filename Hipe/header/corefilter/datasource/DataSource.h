@@ -9,6 +9,8 @@ namespace filter
 		{
 		public:
 			virtual data::IODataType getSourceType() const = 0;
+
+			virtual HipeStatus intialize() = 0;
 		};
 	}
 }

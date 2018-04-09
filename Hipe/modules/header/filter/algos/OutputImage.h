@@ -2,13 +2,16 @@
 #include <corefilter/tools/RegisterTools.hpp>
 #include <corefilter/IFilter.h>
 #include <core/HipeStatus.h>
-#include <opencv2/highgui/highgui.hpp>
-
 #include <data/ImageData.h>
+
+#pragma warning(push, 0)
+#include <opencv2/highgui/highgui.hpp>
+#pragma warning(pop)
 
 #include <iomanip>
 #include <ctime>
 #include <sstream>
+
 
 namespace filter
 {

@@ -1,7 +1,9 @@
 #pragma once
 #include <queue>
 #include <atomic>
+#pragma warning(push, 0)
 #include <boost/thread.hpp>
+#pragma warning(pop)
 
 namespace core
 {

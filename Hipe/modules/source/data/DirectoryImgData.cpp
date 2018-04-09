@@ -1,6 +1,9 @@
 #include <data/DirectoryImgData.h>
+
+#pragma warning(push, 0) 
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
+#pragma warning(pop) 
 
 namespace data
 {

@@ -1,7 +1,9 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <boost/asio.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#pragma warning(pop)
 
 #include <unordered_map>
 #include <thread>
@@ -17,7 +19,9 @@
 
 // Late 2017 TODO: remove the following checks and always use std::regex
 #ifdef USE_BOOST_REGEX
+#pragma warning(push, 0)
 #include <boost/regex.hpp>
+#pragma warning(pop)
 #define REGEX_NS boost
 #else
 #include <regex>

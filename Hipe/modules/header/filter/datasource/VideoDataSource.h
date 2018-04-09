@@ -1,8 +1,7 @@
 #pragma once
 #include <coredata/NoneData.h>
 #include <coredata/IODataType.h>
-#include <data/ImageArrayData.h>
-#include <data/ImageData.h>
+
 #include <coredata/ConnexData.h>
 #include <corefilter/tools/filterMacros.h>
 #include <corefilter/tools/RegisterTools.hpp>
@@ -16,6 +15,7 @@
 #include <data/FileImageData.h>
 #include <data/VideoData.h>
 #include <corefilter/datasource/DataSource.h>
+
 
 namespace filter
 {
@@ -44,6 +44,17 @@ namespace filter
 
 			data::IODataType eSourceType;
 
+			VideoDataSource(const VideoDataSource &left)
+			{
+				this->video = left.video;
+				this->a_isActive.exchange(left.a_isActive);
+				this->atomic_state.exchange(left.atomic_state);
+				this->url = left.url;
+				this->sourceType = left.sourceType;
+				this->loop = left.loop;
+				this->eSourceType = left.eSourceType;
+			}
+
 			virtual data::IODataType getSourceType() const
 			{
 				return eSourceType;
@@ -71,6 +82,23 @@ namespace filter
 			}
 
 			HipeStatus process();
+
+			/**
+			 * \brief Be sure to call the dispose method before to destroy the object VideoDataSource
+			 */
+			virtual void dispose()
+			{
+				if (video)
+				{
+					video->closeFile();
+					video.reset();
+					a_isActive.exchange(false);
+					atomic_state.exchange(false);
+				}
+				
+			}
+
+			HipeStatus intialize() override;
 		};
 
 		ADD_CLASS(VideoDataSource, url, sourceType, loop);

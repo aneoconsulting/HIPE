@@ -6,8 +6,9 @@
 #include <core/HipeException.h>
 #include <string>
 
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree_fwd.hpp>
-
+#pragma warning(pop)
 
 
 

@@ -1,8 +1,10 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <boost/asio.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/functional/hash.hpp>
+#pragma warning(pop)
 
 #include <http/Server.h>
 

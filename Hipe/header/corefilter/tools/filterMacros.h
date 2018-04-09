@@ -1,8 +1,10 @@
 #pragma once
 #include <core/Invoker.h>
-#include <boost/preprocessor/seq/for_each.hpp>
 
+#pragma warning(push, 0)
+#include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/variadic/to_seq.hpp>
+#pragma warning(pop)
 
 
 #define TO_STR(A) #A

@@ -4,7 +4,10 @@
 #include <string>
 #include <iostream>
 #include <core/Logger.h>
+
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree_fwd.hpp>
+#pragma warning(pop)
 
 namespace hipe_server
 {

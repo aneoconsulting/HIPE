@@ -1,6 +1,10 @@
 #define PY_ARRAY_UNIQUE_SYMBOL pbcvt_ARRAY_API
 #include <pydata/pyImageData.h>
+
+#pragma warning(push, 0)
 #include <boost/python.hpp>
+#pragma warning(pop)
+
 #include <pydata/pyboostcvconverter.hpp>
 
 

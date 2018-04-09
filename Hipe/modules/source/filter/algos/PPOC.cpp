@@ -1,6 +1,14 @@
 #include <filter/algos/PPOC.h>
+#include <filter/algos/IDPlate/IDPlateCropper.h>
+
+#pragma warning(push, 0)
 #include <opencv2/imgproc.hpp>
 #include <opencv2/video/background_segm.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
+#include <opencv2/xfeatures2d.hpp>
+#pragma warning(pop)
+
 
 HipeStatus filter::algos::PPOC::process()
 {

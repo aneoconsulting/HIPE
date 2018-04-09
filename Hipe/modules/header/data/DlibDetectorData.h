@@ -3,9 +3,11 @@
 #include <coredata/Data.h>
 #include <coredata/IODataType.h>
 
+#pragma warning(push, 0)   
 #include <boost/thread/shared_mutex.hpp>
 #include <dlib/image_processing.h>
 #include <data/HogTrainer/HogTrainer.h>
+#pragma warning(pop)
 
 namespace data
 {

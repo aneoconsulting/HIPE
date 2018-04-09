@@ -8,7 +8,9 @@
 #include <core/version.h>
 #include <core/Localenv.h>
 
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
+#pragma warning(pop)
 
 #ifdef USE_GPERFTOOLS
 #include <gperftools/heap-checker.h>

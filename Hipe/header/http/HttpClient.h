@@ -1,9 +1,11 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <boost/asio.hpp>
 #include <boost/utility/string_ref.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/functional/hash.hpp>
+#pragma warning(pop)
 
 #include <unordered_map>
 #include <map>

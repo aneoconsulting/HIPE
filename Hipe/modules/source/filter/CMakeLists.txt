@@ -3,9 +3,8 @@ include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/livemedia_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/hipecore_config.cmake")
-
-
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
+
 if(USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
 endif(USE_DLIB)
@@ -63,14 +62,18 @@ add_hipe_library(filter SHARED)
 target_sources(filter PUBLIC ${header_ref_path})
 define_file_basename_for_sources(filter)
 
-#include_directories(filter ${yolov2_INCLUDEDIR} )
-
+if (MSVC)
+	foreach(var HIPE_EXTERNAL_DIR CMAKE_BINARY_DIR Hipecore_DIR)
+	  file(TO_NATIVE_PATH ${${var}} ${var}_WIN)
+	endforeach()
+	configure_file(${CMAKE_SOURCE_DIR}/cmake/filter.vcxproj.user.in ${CMAKE_BINARY_DIR}/source/filter/filter.vcxproj.user @ONLY) 
+endif()
 # TODO
 # See notes for Dlib linking below.
 # if(USE_DLIB)
 # endif(USE_DLIB)
 
-target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD" "-DOPENCV")
+
 
 
 # if(UNIX)
@@ -78,6 +81,8 @@ target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD" "
 #   set(MYLIBS -Wl,--start-group core streaming data -Wl,--end-group)
 # endif()
 # target_link_libraries(filter -Wl,--start-group core streaming data -Wl,--end-group)
+
+
 target_link_libraries(filter data pydata)
 
 message(STATUS "List of libraries : ${hipecore_LIBRARIES}")
@@ -87,17 +92,165 @@ target_link_libraries(filter ${hipecore_LIBRARIES})
 message(STATUS "List of include dir : ${hipecore_INCLUDE_DIRS}")
 target_include_directories(filter PUBLIC ${hipecore_INCLUDE_DIRS})
 
+
 target_link_libraries(filter ${OpenCV_LIBS} opencv_xfeatures2d)
 target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(filter ${Lives_LIBS})
 target_link_libraries(filter ${PYTHON27_LIBRARIES})
+
+
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${HIPE_EXTERNAL_DIR}/libraries/cmake")
+set(USE_OPENBLAS "")
+set(USE_GFLAGS "")
+set(USE_GLOG "")
+set(USE_HDF5 "")
+set(USE_LMDB "")
+set(USE_LEVELDB "")
+set(USE_SNAPPY "")
+set(USE_PROTOBUF "")
+set(USE_CAFFE "")
+set(USE_CUDA "")
+set(USE_CUBLAS "")
+
+if (WITH_OPENBLAS)
+	include("${CMAKE_SOURCE_DIR}/cmake/FindOpenblas.cmake")
+	target_link_libraries(filter ${OPENBLAS_LIBRARIES})
+	target_include_directories(filter PRIVATE ${OPENBLAS_INCLUDE_DIR})
+	set(USE_OPENBLAS "-DUSE_OPENBLAS")
+	message(STATUS "OPENBLAS IS INCLUDED")
+endif()
+
+if (WITH_GFLAGS)
+	message(STATUS "Get Gflags from ${Caffe_DIR}/share/Caffe/")
+	find_package(Gflags 
+				REQUIRED
+				PATHS "${HIPE_EXTERNAL_DIR}/gflags/lib/cmake"
+				NO_DEFAULT_PATH)
+	message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
+	target_link_libraries(filter ${GFLAGS_LIBRARIES})
+	target_include_directories(filter PRIVATE ${GFLAGS_INCLUDE_DIRS})
+	set(USE_GFLAGS "-DUSE_GFLAGS")
+	message(STATUS "GFLAGS IS INCLUDED")
+endif()
+
+if (WITH_GLOG)
+	message(STATUS "Get Glog from ${GLOG_ROOT_DIR}")
+	list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+	find_package(Glog 
+				REQUIRED
+				PATHS "${GLOG_ROOT_DIR}/lib/cmake/glog"
+				NO_DEFAULT_PATH)
+	
+	message(STATUS "Gflags include dir : ${GLOG_LIBRARIES}")
+	message(STATUS "Gflags include dir : ${GLOG_LIBRARY}")
+
+	target_include_directories(filter PRIVATE ${GLOG_INCLUDE_DIR})
+	target_link_libraries(filter glog::glog)
+	set(USE_GLOG "-DUSE_GLOG")
+	message(STATUS "GLOG IS INCLUDED")
+
+endif()
+
+if (WITH_HDF5)
+	find_package(HDF5 
+				REQUIRED
+				PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake"
+				NO_DEFAULT_PATH)
+	target_link_libraries(filter hdf5-shared)
+	target_link_libraries(filter hdf5_hl-shared)
+	set(USE_HDF5 "-DUSE_HDF5")
+	message(STATUS "HDF5 IS INCLUDED")
+endif()
+		
+if (WITH_LMDB)		
+	find_package(LMDB 
+			REQUIRED
+			PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake")
+	set(USE_LMDB "-DUSE_LMDB")
+	target_link_libraries(filter lmdb)
+	message(STATUS "LMDB IS INCLUDED")
+endif()
+
+if (WITH_LEVELDB)			
+	find_package(LevelDB 
+			REQUIRED
+			PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake"
+			)
+	target_link_libraries(filter leveldb)
+	set(USE_LEVELDB "-DUSE_LEVELDB")
+	message(STATUS "LEVELDB IS INCLUDED")
+endif()
+
+if (WITH_SNAPPY)
+	find_package(Snappy 
+				REQUIRED
+				PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake")
+    set(USE_SNAPPY "-DUSE_SNAPPY")
+	message(STATUS "SNAPPY IS INCLUDED")
+endif()			
+			
+if (WITH_PROTOBUF)
+	message(STATUS "Get Protobuf from ${HIPE_EXTERNAL_DIR}/libraries/cmake")
+	set(protobuf_VERBOSE 1)
+	set(Protobuf_DEBUG 1)
+	message(STATUS "Protobuf find_path : ${Protobuf_INCLUDE_DIR}")
+	find_package(Protobuf 
+				REQUIRED
+				PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake"
+				NO_DEFAULT_PATH)
+
+				
+	target_link_libraries(filter protobuf::libprotobuf-lite protobuf::libprotoc)
+	target_include_directories(filter PRIVATE ${Protobuf_INCLUDE_DIRS})
+	set(USE_PROTOBUF "-DUSE_PROTOBUF")
+	message(STATUS "PROTOBUF IS INCLUDED")
+endif()
+
+if (WITH_CAFFE)
+	set(ZLIB_LIBRARY_DEBUG "${HIPE_EXTERNAL_DIR}/libraries/lib/snappyd.lib" CACHE PATH "ZLIB_LIBRARY_DEBUG" FORCE)
+	set(ZLIB_LIBRARY_RELEASE "${HIPE_EXTERNAL_DIR}/libraries/lib/snappy.lib"  CACHE PATH "ZLIB_LIBRARY_RELEASE" FORCE)
+	set(ZLIB_INCLUDE_DIR "${HIPE_EXTERNAL_DIR}/libraries/include"  CACHE PATH "ZLIB_INCLUDE_DIR" FORCE)
+	find_package(Caffe 
+			REQUIRED
+			PATHS "${Caffe_DIR}/share/Caffe"
+			NO_DEFAULT_PATH)
+			
+	target_link_libraries(filter caffeproto)
+	target_link_libraries(filter caffe)
+	target_include_directories(filter PRIVATE ${caffe_INCLUDE_DIRS})
+	set(USE_CAFFE "-DUSE_CAFFE")
+	message(STATUS "CAFFE IS INCLUDED")
+
+endif()
+
+if (WITH_CUBLAS OR WITH_CUDA)
+	find_package(CUDA REQUIRED)
+	target_link_libraries(filter ${CUDA_LIBRARIES})
+	target_include_directories(filter PRIVATE ${CUDA_INCLUDE_DIRS})
+		
+	set(USE_CUDA "-DUSE_CUDA")
+	message(STATUS "CUBLAS IS INCLUDED")
+endif()
+
+if (WITH_CUBLAS)
+	CUDA_ADD_CUBLAS_TO_TARGET(filter)
+	set(USE_CUBLAS "-DUSE_CUBLAS")
+	message(STATUS "CUBLAS IS INCLUDED")
+endif()
+
+
+
 if(USE_DLIB)
   target_link_libraries(filter ${dlib_LIBRARIES})
   # TODO
   # Remove the previous line and use this without setting include_headers
   # when we finally start using proper dlib find_package support.
 #   target_link_libraries(filter dlib:dlib) #${dlib_LIBRARIES})
+	set(USE_DLIB "-DUSE_DLIB")
+	message(STATUS "DLIB IS INCLUDED")
 endif(USE_DLIB)
 
 # Configure Visual Studio to handle more options.
@@ -105,6 +258,9 @@ if(WIN32)
   target_compile_options(filter PRIVATE /bigobj)
 endif(WIN32)
 
+target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD" "-DOPENCV" ${USE_DLIB} 
+							${USE_GFLAGS} ${USE_GLOG} ${USE_CUDA} ${USE_CUBLAS} ${USE_LEVELDB} ${USE_LMDB} 
+							${USE_HDF5} ${USE_SNAPPY} ${USE_PROTOBUF} ${USE_CAFFE})
 
 # Enable the addition of algorithms without forcing a rerun of CMake
 if(WIN32)

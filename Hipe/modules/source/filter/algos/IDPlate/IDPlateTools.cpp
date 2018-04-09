@@ -1,5 +1,9 @@
 #include <filter/algos/IDPlate/IDPlateTools.h>
 
+#pragma warning(push, 0)
+#include <opencv2/core/cuda.hpp>
+#include <opencv2/videostab/global_motion.hpp>
+#pragma warning(pop)
 
 cv::Mat filter::algos::IDPlate::applyBilateralFiltering(const cv::Mat & plateImage, int iterations, int diameter, double sigmaColor, double sigmaSpace, bool debug, bool useGPU)
 {

@@ -1,7 +1,10 @@
 #include <json/JsonTree.h>
+
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#pragma warning(pop)
 
 namespace json
 {

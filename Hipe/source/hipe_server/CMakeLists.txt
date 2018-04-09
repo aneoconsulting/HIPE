@@ -1,8 +1,5 @@
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/livemedia_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/x264_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 include(GetPrerequisites)
 
@@ -32,9 +29,6 @@ target_link_libraries(hipe_server json)
 target_link_libraries(hipe_server coredata)
 
 target_link_libraries(hipe_server core)
-target_link_libraries(hipe_server ${FFmpeg_LIBRARIES})
-target_link_libraries(hipe_server ${x264_LIBRARIES})
-target_link_libraries(hipe_server ${Live_LIBRARIES})
 target_link_libraries(hipe_server ${OpenCV_LIBS})
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
@@ -58,11 +52,15 @@ endif(USE_DLIB)
 
 
 
+if (MSVC)
+target_link_libraries(hipe_server Imagehlp)
+endif()
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
   message(STATUS "Test if it works with windows")
   target_link_libraries(hipe_server ws2_32 wsock32)
   target_link_libraries(hipe_server ws2_32 wsock32)
+  
 endif(MSYS)
 
 if(USE_GPERFTOOLS)
@@ -85,6 +83,9 @@ install (TARGETS hipe_server CONFIGURATIONS Release DESTINATION bin/Release COMP
 
 #create directory for 3rdParty
 install(DIRECTORY DESTINATION 3rdParty)
+install(DIRECTORY DESTINATION "project")
+
+install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake")
 
 set(EXT_BIN "") 
 if (WIN32)

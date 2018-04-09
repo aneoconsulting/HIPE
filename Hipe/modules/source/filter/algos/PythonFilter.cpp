@@ -17,7 +17,10 @@ extern "C"
 #endif
 #include<iostream>
 
+#pragma warning(push, 0)
 #include <boost/python.hpp>
+#pragma warning(pop)
+
 #include <pydata/pyImageData.h>
 
 namespace filter

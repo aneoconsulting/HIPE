@@ -1,9 +1,12 @@
 #include <coredata/IOData.h>
 #include <json/JsonTree.h>
 #include <Composer.h>
+#include <coredata/NoneData.h>
 
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
-#include "coredata/NoneData.h"
+#pragma warning(pop)
+
 
 namespace orchestrator
 {

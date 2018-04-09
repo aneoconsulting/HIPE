@@ -1,4 +1,10 @@
 cmake_minimum_required (VERSION 3.7.1)
+
+#Add some multithreaded build support =====================================================================================================
+if(WIN32)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+endif()
+
 project (Hipe)
 
 
@@ -23,7 +29,14 @@ message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 # option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
 # message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")
 
+# Configure common settings.
+include("${CMAKE_SOURCE_DIR}/cmake/common_config.cmake")
+
+
 if (WIN32)
+
+include("${CMAKE_SOURCE_DIR}/cmake/WindowsDownloadPrebuiltDependencies.cmake")
+
 option(CMAKE_USE_WIN32_THREADS_INIT "using WIN32 threads" ON)
 
 set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
@@ -39,8 +52,7 @@ endif(WIN32)
 # FFmpeg is not supported by find_package, so "FFmpeg_DIR" must be set to the installation path.
 # option(HIPE_EXTERNAL_FFMPEG "Use FFmpeg libraries in Hipe External." ON)
 
-# Configure common settings.
-include("${CMAKE_SOURCE_DIR}/cmake/common_config.cmake")
+
 
 #controls where to build the executables after "make"
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
@@ -73,7 +85,7 @@ set(CPACK_COMPONENT_INSTRUCTIONDATA_GROUP "data")
 set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Hipe-core")
 set(CPACK_COMPONENT_GROUP_DATA_DESCRIPTION "data (CT and instructions)")
 
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/../LICENSE-CORE.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/../LICENCE_AGPL.txt")
 
 set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\ressources\\\\logo.ico")
 

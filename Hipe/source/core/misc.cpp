@@ -1,7 +1,11 @@
 #include <core/misc.h>
 #include <string>
-#include <boost/filesystem/operations.hpp>
+
 #include <sstream>
+
+#pragma warning(push, 0)
+#include <boost/filesystem/operations.hpp>
+#pragma warning(pop)
 
 #ifdef WIN32
 #include <windows.h>

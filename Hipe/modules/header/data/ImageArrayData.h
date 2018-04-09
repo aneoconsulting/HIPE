@@ -2,7 +2,10 @@
 #include <coredata/IOData.h>
 #include <coredata/data_export.h>
 #include <vector>
+
+#pragma warning(push, 0) 
 #include <opencv2/core/mat.hpp>
+#pragma warning(pop) 
 
 namespace data
 {

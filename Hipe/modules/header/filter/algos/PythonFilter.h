@@ -4,8 +4,11 @@
 #include <corefilter/IFilter.h>
 
 #include <corefilter/filter_export.h>
-#include <opencv2/core/mat.hpp>
 #include <data/PyContextData.h>
+
+#pragma warning(push, 0)
+#include <opencv2/core/mat.hpp>
+#pragma warning(pop)
 
 
 

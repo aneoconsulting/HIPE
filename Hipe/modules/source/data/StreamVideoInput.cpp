@@ -1,7 +1,10 @@
 #include <data/StreamVideoInput.h>
+
+#pragma warning(push, 0) 
 #include <opencv2/core/cvdef.h>
+#pragma warning(pop) 
+
 #include <coredata/IOData.h>
-#include "core/HipeStatus.h"
 
 namespace data
 {

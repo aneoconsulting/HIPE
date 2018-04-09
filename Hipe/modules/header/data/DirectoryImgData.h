@@ -1,6 +1,8 @@
 #pragma once 
 #include <data/ImageArrayData.h>
+#pragma warning(push, 0)
 #include <boost/log/utility/setup/file.hpp>
+#pragma warning(pop)
 
 
 namespace data {

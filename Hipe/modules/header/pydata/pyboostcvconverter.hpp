@@ -11,10 +11,14 @@
 #define CVBOOSTCONVERTER_HPP_
 
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+
+#pragma warning(push, 0)
 #include <Python.h>
 #include <numpy/ndarrayobject.h>
 #include <opencv2/core/core.hpp>
 #include <boost/python.hpp>
+#pragma warning(pop)
+
 #include <cstdio>
 
 namespace pbcvt{

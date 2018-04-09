@@ -1,8 +1,10 @@
 #include <hipe_server/Configuration.h>
+
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/program_options.hpp>
-#include <core/HipeException.h>
+#pragma warning(pop)
 
 
 namespace bpo = boost::program_options;
