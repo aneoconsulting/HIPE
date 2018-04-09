@@ -25,7 +25,7 @@ if (MSVC)
 					message(STATUS "Extract Archives to ${HIPE_EXTERNAL}. Please wait...")
 					execute_process(
 									COMMAND ${CMAKE_COMMAND} -E tar xzf "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
-									WORKING_DIRECTORY "${HIPE_EXTERNAL}/../"
+									WORKING_DIRECTORY "${HIPE_EXTERNAL}/"
 									)
 					set(FORCE_USE_PREBUILT_DEPENDENCIES OFF CACHE BOOL "Download and use the prebuilt dependencies" FORCE)
 				endif()

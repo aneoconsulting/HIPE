@@ -93,10 +93,6 @@ if (WIN32)
 set(EXT_BIN .exe)
 endif() 
 
-#file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/Debug/hipe_server${EXT_BIN}" cm_path)
-#file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/Debug" cm_dir)
-#set(PATH_SHAREDLIB "${HIPE_EXTERNAL_DIR}/boost_1_62_0/lib64-msvc-14.0;${HIPE_EXTERNAL_DIR}/opencv-3.4/x64/vc14/bin;${HIPE_EXTERNAL_DIR}/gstreamer/1.0/x86_64/bin;${cm_dir};${CMAKE_PREFIX_PATH}")
-##STRING(REPLACE "\\" "\\\\" cm_path ${cm_path})
 message(STATUS "Install dependencies exe")
 install_dependencies_exe("hipe_server")
 
