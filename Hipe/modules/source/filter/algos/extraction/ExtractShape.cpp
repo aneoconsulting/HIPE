@@ -37,6 +37,10 @@ data::ImageArrayData filter::algos::ExtractShape::extractMask(data::ImageData& i
 
 	for (cv::Rect rect : datas.RectsArray())
 	{
+		if ((rect.x + rect.width ) >= mask.size().width ||
+			(rect.y + rect.height)  >= mask.size().height)
+			
+			continue;
 		cv::rectangle(mask, rect, cv::Scalar(255), CV_FILLED);
 		cv::Mat res(img.getMat().clone(), rect);
 		arrays.Array().push_back(res);

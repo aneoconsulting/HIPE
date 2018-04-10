@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <core/misc.h>
+#include <core/StringTools.h>
+#include <core/HipeException.h>
 
 #ifdef WIN32
 #include <windows.h>

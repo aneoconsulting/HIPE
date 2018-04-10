@@ -3,9 +3,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerEnvironment>GST_DEBUG=*:1
 GST_PLUGIN_PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\lib\gstreamer-1.0
-PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR_WIN@\bin\Release;@CMAKE_INSTALL_PREFIX_WIN@\bin\Release;@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;%PATH%</LocalDebuggerEnvironment>
+PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR_WIN@\bin\Debug;@CMAKE_INSTALL_PREFIX_WIN@\bin\Debug;@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;%PATH%</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommand>@CMAKE_BINARY_DIR_WIN@\target\Debug\hipe_server.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>@Hipecore_DIR_WIN@\bin\Debug\hipe_server.exe</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments>-p 9090 -m "@CMAKE_BINARY_DIR_WIN@\target\Debug\filter.dll"</LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory>@Hipecore_DIR_WIN@\bin\Debug</LocalDebuggerWorkingDirectory>
   </PropertyGroup>

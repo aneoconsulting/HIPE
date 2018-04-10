@@ -6,6 +6,7 @@ call "C:\Program Files\nodejs\nodevars.bat"
 set "PATH=%APPDATA%\npm;%~dp0;%PATH%"
 
 cd "c:\xampp\mysql\bin"
+mysqld.exe --uninstall "mysql_hipe"
 mysqld.exe --install "mysql_hipe"
 net start "mysql_hipe"
 
