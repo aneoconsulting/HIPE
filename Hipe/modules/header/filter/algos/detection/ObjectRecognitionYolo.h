@@ -126,7 +126,7 @@ namespace filter
 					const int probability_size = detectionMat.cols - probability_index;
 					float* prob_array_ptr = &detectionMat.at<float>(i, probability_index);
 
-					size_t objectClass = max_element(prob_array_ptr, prob_array_ptr + probability_size) - prob_array_ptr;
+					size_t objectClass = std::max_element(prob_array_ptr, prob_array_ptr + probability_size) - prob_array_ptr;
 					float confidence = detectionMat.at<float>(i, (int)objectClass + probability_index);
 
 					if (confidence > confidenceThreshold)
@@ -135,11 +135,11 @@ namespace filter
 						float y_center = detectionMat.at<float>(i, 1) * frame.rows;
 						float width = detectionMat.at<float>(i, 2) * frame.cols;
 						float height = detectionMat.at<float>(i, 3) * frame.rows;
-						Point p1(cvRound(x_center - width / 2), cvRound(y_center - height / 2));
-						Point p2(cvRound(x_center + width / 2), cvRound(y_center + height / 2));
-						Rect object(p1, p2);
+						cv::Point p1(cvRound(x_center - width / 2), cvRound(y_center - height / 2));
+						cv::Point p2(cvRound(x_center + width / 2), cvRound(y_center + height / 2));
+						cv::Rect object(p1, p2);
 						cv::String className = (objectClass < names.size()) ? cv::String(names[objectClass]) : cv::String(cv::format("unknown(%d)", objectClass));
-						String label = format("%s: %.2f", className.c_str(), confidence);
+						cv::String label = cv::format("%s: %.2f", className.c_str(), confidence);
 						
 						result.rectangles.push_back(object);
 						result.names.push_back(label);
@@ -192,10 +192,10 @@ namespace filter
 
 					//FIXME
 					//Get NEW Boxes
-					Mat inputBlob = cv::dnn::blobFromImage(image, 1 / 255.F, Size(416, 416), Scalar(), true, false);
+					cv::Mat inputBlob = cv::dnn::blobFromImage(image, 1 / 255.F, cv::Size(416, 416), cv::Scalar(), true, false);
 					//Convert Mat to batch of images
 					detect->net.setInput(inputBlob, "data"); //set the network input
-					Mat detectionMat = detect->net.forward("detection_out"); //compute output
+					cv::Mat detectionMat = detect->net.forward("detection_out"); //compute output
 
 					boxes = getBoxes(image, detectionMat);
 					saved_boxes = boxes;
