@@ -118,7 +118,7 @@ HipeStatus filter::algos::ConcatToShow::process()
 	
 	data::ImageData result = data::ImageData(show_many_images);
 
-	_connexData.push(result);
+	PUSH_DATA(result);
 
 
 	return OK;

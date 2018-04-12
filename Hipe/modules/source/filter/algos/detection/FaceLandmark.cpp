@@ -155,16 +155,16 @@ namespace filter
 				
 				if (shapes.trypop_until(popShape, 30)) // wait 30ms no more
 				{
-					_connexData.push(popShape);
+					PUSH_DATA(popShape);
 					tosend = popShape;
 				}
 				else if (tosend.empty())
 				{
-					_connexData.push(data::ShapeData());
+					PUSH_DATA(data::ShapeData());
 				}
 				else {
 
-					_connexData.push(tosend);
+					PUSH_DATA(tosend);
 				}
 			}
 			return OK;

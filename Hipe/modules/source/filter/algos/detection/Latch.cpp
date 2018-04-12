@@ -114,7 +114,7 @@ namespace filter
 			if (patternData.crops().getSquareCrop().empty())
 			{
 				data::MatcherData output;
-				_connexData.push(output);
+				PUSH_DATA(output);
 				return DATA_EMPTY;
 			}
 
@@ -132,29 +132,29 @@ namespace filter
 			if (patternData.imageRequest().getMat().empty())
 			{
 				data::MatcherData output;
-				_connexData.push(output);
+				PUSH_DATA(output);
 			}
 			else if (wait == true && result.trypop_until(md_result, wait_time)) // wait 5 sec it's like infinite but allow to kill thread
 			{
 				tosend = md_result;
-				_connexData.push(tosend);
+				PUSH_DATA(tosend);
 			}
 			else if (result.trypop_until(md_result, 30)) // wait 30ms no more
 			{
 				tosend = md_result;
-				_connexData.push(tosend);
+				PUSH_DATA(tosend);
 			}
 			
 			else if (tosend.requestImage_const().empty())
 			{
 				data::MatcherData output;
-				_connexData.push(output);
+				PUSH_DATA(output);
 			}
 			else
 			{
 				md_result = tosend; //Use backup because the algorithme is too late
 
-				_connexData.push(tosend);
+				PUSH_DATA(tosend);
 			}
 
 			return OK;

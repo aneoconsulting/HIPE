@@ -62,7 +62,7 @@ namespace filter
 
 				data::ImageEncodedData out(m, image.rows, image.cols, image.channels(), type);
 
-				_connexData.push(out);
+				PUSH_DATA(out);
 
 				return OK;
 			}

@@ -57,7 +57,7 @@ namespace filter
 				cv::erode(image, output, erodeKernel, anchor, iterations);
 
 
-				_connexData.push(data::ImageData(output));
+				PUSH_DATA(data::ImageData(output));
 
 				return OK;
 			}

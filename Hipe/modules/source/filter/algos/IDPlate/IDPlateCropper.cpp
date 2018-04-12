@@ -13,7 +13,7 @@ HipeStatus filter::algos::IDPlateCropper::process()
 			cv::Mat roi = processPlateImage(image);
 			output << roi;
 		}
-		_connexData.push(output);
+		PUSH_DATA(output);
 	}
 	return OK;
 }

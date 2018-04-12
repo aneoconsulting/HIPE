@@ -124,7 +124,7 @@ namespace filter
 
 				if (_debug) debugShow("found matches", resultImage, true);
 
-				_connexData.push(data::ImageData(resultImage));
+				PUSH_DATA(data::ImageData(resultImage));
 			}
 
 			return OK;

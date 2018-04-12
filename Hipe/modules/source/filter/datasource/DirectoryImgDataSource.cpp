@@ -40,10 +40,10 @@ HipeStatus filter::datasource::DirectoryImgDataSource::process()
 	{
 		data::DirectoryImgData dirImageData;
 		dirImageData.SetDirectoryPath(directoryPath);
-		dirImageData.loadImagesData();
-		_connexData.push(dirImageData);
+		//dirImageData.loadImagesData();
+		PUSH_DATA(dirImageData);
 		return OK;
 	}
-	_connexData.push(data::DirectoryImgData());
+	PUSH_DATA(data::DirectoryImgData());
 	return END_OF_STREAM;
 }

@@ -159,7 +159,7 @@ HipeStatus filter::algos::ExtractShape::process()
 	for (data::ShapeData shape : shapes)
 	{
 		data::ImageArrayData image_array_data = extractMask(image, shape);
-		_connexData.push(image_array_data.Array()[0]);
+		PUSH_DATA(data::ImageData(image_array_data.Array()[0]));
 	}
 
 	return OK;

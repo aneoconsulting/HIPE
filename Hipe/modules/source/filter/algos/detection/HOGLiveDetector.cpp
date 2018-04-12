@@ -40,7 +40,7 @@ HipeStatus filter::algos::HOGLiveDetector::process()
 		pushInputDetector(detectorsCopy);
 
 		data::ShapeData output = popOutputData();
-		_connexData.push(output);
+		PUSH_DATA(output);
 		_currentInputFrame = nullptr;
 		return OK;
 	}

@@ -190,7 +190,7 @@ namespace filter
 
 				debugShow("matches", img_matches, true);
 
-				_connexData.push(data::ImageData(img_matches));
+				PUSH_DATA(data::ImageData(img_matches));
 			}
 			return OK;
 		}

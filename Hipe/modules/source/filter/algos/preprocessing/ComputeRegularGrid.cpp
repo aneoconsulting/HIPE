@@ -16,7 +16,7 @@ namespace filter {
 			data::ShapeData output;
 			output << grid_points;
 
-			_connexData.push(output);
+			PUSH_DATA(output);
 
 			return OK;
 		}

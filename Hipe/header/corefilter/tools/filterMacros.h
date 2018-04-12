@@ -21,6 +21,11 @@
 	data::ConnexInput<DataIn> _connexData;\
 	inline virtual data::ConnexDataBase & getConnector() { return _connexData; }
 
+#define PUSH_DATA(DataIn)\
+	DataIn.setLabel(this->getName() + "__dataOut");\
+	_connexData.push(DataIn)
+
+
 #define SET_NAMESPACE(_namespace)\
 	virtual std::string getNamespace() const\
 	{\

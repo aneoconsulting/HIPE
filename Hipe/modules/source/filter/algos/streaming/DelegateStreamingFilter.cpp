@@ -71,14 +71,14 @@ namespace filter
 		{
 			if (_connexData.empty())
 			{
-				_connexData.push(data::ImageData(cv::Mat::zeros(0, 0, CV_8UC3)));
+				PUSH_DATA(data::ImageData(cv::Mat::zeros(0, 0, CV_8UC3)));
 				return VECTOR_EMPTY;
 			}
 			data::ImageData image_data = _connexData.pop();
 
 			if (computeFPS() == WAIT_FPS)
 			{
-				_connexData.push(image_data);
+				PUSH_DATA(image_data);
 				return OK;
 			}
 
@@ -114,11 +114,11 @@ namespace filter
 
 			if (queue.trypop_until(data, 30))
 			{
-				_connexData.push(data);
+				PUSH_DATA(data);
 			}
 			else
 			{
-				_connexData.push(image_data);
+				PUSH_DATA(image_data);
 			}
 
 			

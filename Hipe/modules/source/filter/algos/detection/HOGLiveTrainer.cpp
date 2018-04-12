@@ -7,7 +7,7 @@ HipeStatus filter::algos::HOGLiveTrainer::process()
 	skipFrames();
 	pushInputFrame(data);
 
-	_connexData.push(popOutputData());
+	PUSH_DATA(popOutputData());
 
 	return OK;
 }

@@ -57,7 +57,7 @@ namespace filter
 			if (!circles.empty()) {
 				data::ShapeData output;
 				output << circles;
-				_connexData.push(output);
+				PUSH_DATA(output);
 				return OK;
 			}
 			return EMPTY_RESULT;

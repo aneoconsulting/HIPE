@@ -112,7 +112,7 @@ namespace filter
 					cv::drawContours(contoursImage, contours, static_cast<int>(i), color, contourThickness, lineType, hierarchy, 0, cv::Point(0, 0));
 				}
 
-				_connexData.push(contoursImage);
+				PUSH_DATA(data::ImageData(contoursImage));
 
 				return OK;
 			}

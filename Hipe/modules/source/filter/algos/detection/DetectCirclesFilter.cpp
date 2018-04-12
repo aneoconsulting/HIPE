@@ -26,7 +26,7 @@ HipeStatus filter::algos::DetectCirclesFilter::process()
 	data::ShapeData output;
 	output << circles;
 
-	_connexData.push(output);
+	PUSH_DATA(output);
 
 	return OK;
 }

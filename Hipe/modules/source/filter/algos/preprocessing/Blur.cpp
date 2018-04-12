@@ -36,7 +36,7 @@ namespace filter
 				blur(inputImage, outputImage, cv::Size(kernelSize, kernelSize)); //gaussian filter
 
 
-				_connexData.push(outputImage); //push output image
+				PUSH_DATA(data::ImageData(outputImage)); //push output image
 			}
 			return OK;
 		}

@@ -34,7 +34,7 @@ HipeStatus filter::algos::ReshapeImage::process()
 
 	cv::Mat outputImage = reshapeImage(image, circles, cv::Size(target_image_width, target_image_height), cv::Size(target_grid_width, target_grid_height));
 
-	_connexData.push(data::ImageData(outputImage));
+	PUSH_DATA(data::ImageData(outputImage));
 
 	return OK;
 }

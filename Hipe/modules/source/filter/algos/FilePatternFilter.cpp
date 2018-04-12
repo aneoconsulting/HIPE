@@ -9,7 +9,11 @@ namespace filter
 		{
 			auto p = _connexData.pop();
 			auto pathdir = static_cast<data::DirectoryImgData>(p.DirectoryImg()).DirectoryPath();
-			auto fullPath = pathdir.append("\\").append(filePath);
+#ifdef WIN32
+			auto fullPath = pathdir.append("\\").append(filePath); 
+#else
+			auto fullPath = pathdir.append("/").append(filePath); 
+#endif
 			data::ImageData imageInput = p.imageSource();
 			cv::Mat imageLoaded = cv::imread(fullPath, CV_LOAD_IMAGE_ANYCOLOR);
 			if(!imageLoaded.empty())
@@ -20,7 +24,7 @@ namespace filter
 				squarecrop << imagedata;
 				squarecrop << crop;
 				data::PatternData pattern(imageInput, squarecrop);
-				_connexData.push(pattern);
+				PUSH_DATA(pattern);
 			}
 			else
 			{

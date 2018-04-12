@@ -38,7 +38,7 @@ namespace filter
 
 				cv::Mat output;
 				cv::equalizeHist(image, output);
-				_connexData.push(data::ImageData(output));
+				PUSH_DATA(data::ImageData(output));
 				return OK;
 			}
 

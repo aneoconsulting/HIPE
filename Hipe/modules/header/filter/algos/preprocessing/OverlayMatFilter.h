@@ -65,7 +65,7 @@ namespace filter
 					cv::Mat matImg = image.getMat();
 					if (overMat.empty())
 					{
-						_connexData.push(data::ImageData(matImg));
+						PUSH_DATA(data::ImageData(matImg));
 						return OK;
 					}
 
@@ -86,7 +86,7 @@ namespace filter
 								result.at<cv::Vec3b>(y, x)[2] = overMat.at<cv::Vec3b>(y, x)[2];
 							}
 						}
-					_connexData.push(data::ImageData(result));
+					PUSH_DATA(data::ImageData(result));
 				}
 				return OK;
 			}

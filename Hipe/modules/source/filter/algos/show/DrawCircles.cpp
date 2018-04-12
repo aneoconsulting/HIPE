@@ -53,7 +53,7 @@ namespace filter
 						circle(images.getMat(), center, center_radius, center_color, -thickness, 8, 0);
 						putText(images.getMat(), std::to_string(i), center, CV_FONT_HERSHEY_PLAIN, font_scale, text_color, 2);
 					}
-					_connexData.push(images);
+					PUSH_DATA(images);
 			}
 			return OK;
 		}

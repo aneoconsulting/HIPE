@@ -18,7 +18,7 @@ HipeStatus filter::datasource::VideoDataSource::process()
 
 	if (!new_frame.empty())
 	{
-		_connexData.push(new_frame);
+		PUSH_DATA(new_frame);
 
 		return OK;
 	}
@@ -27,7 +27,7 @@ HipeStatus filter::datasource::VideoDataSource::process()
 	
 	return END_OF_STREAM;
 	
-	_connexData.push(data::ImageData());
+	PUSH_DATA(data::ImageData());
 	return END_OF_STREAM;
 }
 

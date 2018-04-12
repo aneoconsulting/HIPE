@@ -279,7 +279,7 @@ HipeStatus filter::algos::AgeGender::process()
 		sd.add(saved_boxes.rectangles[i], color, saved_boxes.names[i]);
 	}
 
-	_connexData.push(sd);
+	PUSH_DATA(sd);
 
 	return OK;
 }

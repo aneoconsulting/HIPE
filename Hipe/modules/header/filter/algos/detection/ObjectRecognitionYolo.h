@@ -111,7 +111,7 @@ namespace filter
 						color, 3);
 				}
 
-				_connexData.push(data::ImageData(image));
+				PUSH_DATA(data::ImageData(image));
 
 				return OK;
 			}
@@ -220,7 +220,7 @@ namespace filter
 					sd.add(boxes.rectangles[i],color, boxes.names[i]);
 				}
 
-				_connexData.push(sd);
+				PUSH_DATA(sd);
 
 				return OK;
 			}

@@ -2,13 +2,24 @@
 
 namespace data
 {
+	std::string Data::getLabel() const
+	{
+		return _label;
+	}
+
+	void Data::setLabel(const std::string& cs)
+	{
+		_label = cs;
+	}
+
 	Data::Data(IODataType datatype): _type(datatype)
 	{
 		_decorate = false;
 	}
 
-	Data::Data(): _type(NONE), _decorate(false)
+	Data::Data(): _type(NONE), _decorate(false), _label("no_label")
 	{
+
 	}
 
 	Data::Data(const Data& data): _type(data._type), _This(data._This), _decorate(true)

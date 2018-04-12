@@ -80,7 +80,7 @@ namespace filter
 			std::cout << "# Inliers Ratio:                      \t" << inlier_ratio << std::endl;
 			std::cout << std::endl;*/
 
-			_connexData.push(res);
+			PUSH_DATA(data::ImageData(res));
 			return OK;
 		}
 	}

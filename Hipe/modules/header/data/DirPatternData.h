@@ -61,7 +61,7 @@ namespace data
 			Data::registerInstance(new DirPatternData(IOData::_Protection()));
 
 			This()._inputSource = static_cast<Data>(inputData);
-			This().dir = static_cast<Data>(directoryImgData);
+			This().dir = static_cast<DirectoryImgData>(directoryImgData);
 		}
 
 

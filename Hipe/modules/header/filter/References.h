@@ -14,6 +14,7 @@
 #include <filter/algos/agegender\GenderClassification.h>
 #include <filter/algos/detection\Akaze.h>
 #include <filter/algos/detection\DetectCirclesFilter.h>
+#include <filter/algos/detection\DirLatch.h>
 #include <filter/algos/detection\FaceDetection.h>
 #include <filter/algos/detection\FaceLandmark.h>
 #include <filter/algos/detection\FingerPrint.h>
@@ -70,6 +71,7 @@
 #include <filter/algos/show\ShowVideo.h>
 #include <filter/algos/streaming\DelegateStreamingFilter.h>
 #include <filter/algos/streaming\EncodeDataFilter.h>
+#include <filter/algos/tracker\Tracker.h>
 #include <filter/datasource/DirectoryImgDataSource.h>
 #include <filter/datasource/DirPatternDataSource.h>
 #include <filter/datasource/ImageDataSource.h>

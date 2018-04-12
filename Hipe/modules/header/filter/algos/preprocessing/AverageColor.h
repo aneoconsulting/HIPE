@@ -38,7 +38,7 @@ namespace filter
 				cv::Scalar averageColor = cv::mean(img);
 				cv::Mat output(cv::Size(1, 1), img.type(), averageColor);
 
-				_connexData.push(output);
+				PUSH_DATA(data::ImageData(output));
 				return OK;
 			}
 		};

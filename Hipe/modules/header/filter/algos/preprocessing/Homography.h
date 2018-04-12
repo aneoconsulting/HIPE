@@ -44,7 +44,7 @@ namespace filter
 				// No keypoints found means no homography matrix
 				if (md.goodMatches().empty())
 				{
-					_connexData.push(data::ShapeData());
+					PUSH_DATA(data::ShapeData());
 					return OK;
 				}
 
@@ -68,7 +68,7 @@ namespace filter
 					if (!H.data)
 					{
 						if (_debug) std::cout << "Warning in Homography filter: Couldn't compute homography matrix. Not enough keypoints (" << obj.size() << ")." << std::endl;
-						_connexData.push(data::ShapeData());
+						PUSH_DATA(data::ShapeData());
 						return OK;;
 					}
 
@@ -101,7 +101,7 @@ namespace filter
 						res.PointsArray() = transformedPoints;
 					}
 
-					_connexData.push(res);
+					PUSH_DATA(res);
 				}
 				catch (const std::exception& e)
 				{
@@ -112,7 +112,7 @@ namespace filter
 						//throw HipeException(errorMessage.str());
 						std::cout << errorMessage.str();
 					}
-					_connexData.push(data::ShapeData());
+					PUSH_DATA(data::ShapeData());
 				}
 
 				return OK;

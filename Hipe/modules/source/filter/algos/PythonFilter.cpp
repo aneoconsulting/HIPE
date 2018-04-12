@@ -127,7 +127,7 @@ namespace filter
 					PyErr_Print();
 				return OK;
 			}
-			_connexData.push(l_pythonContext);
+			PUSH_DATA(l_pythonContext);
 
 			return OK;
 		}

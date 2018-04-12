@@ -76,7 +76,7 @@ namespace filter
 				cv::Mat output;
 				cv::adaptiveThreshold(image, output, value, convertedMethod, convertedType, block, c);
 
-				_connexData.push(data::ImageData(output));
+				PUSH_DATA(data::ImageData(output));
 				return OK;
 			}
 

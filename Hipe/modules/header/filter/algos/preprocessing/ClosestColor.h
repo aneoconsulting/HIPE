@@ -35,7 +35,7 @@ namespace filter
 
 					cv::Mat result(cv::Size(32, 32), img.type(), closestColor.value);
 
-					_connexData.push(data::ImageData(result));
+					PUSH_DATA(data::ImageData(result));
 				}
 				else
 				{

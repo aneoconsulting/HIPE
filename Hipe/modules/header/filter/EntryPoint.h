@@ -48,7 +48,7 @@ namespace filter {
 			*/
 			EntryPoint &operator<<(data::Data & element)
 			{
-				_connexData.push(data::NoneData()); //Here COPY constructor data bug with fields
+				PUSH_DATA(data::NoneData()); //Here COPY constructor data bug with fields
 				return *this;
 			}
 

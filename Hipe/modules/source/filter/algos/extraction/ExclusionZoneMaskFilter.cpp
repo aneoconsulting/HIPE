@@ -10,9 +10,9 @@ HipeStatus filter::algos::ExclusionZoneMaskFilter::process()
 
 	compute_exclusion_zone_mask(output);
 
-	_connexData.push(output);
+	PUSH_DATA(data::ImageData(output));
 
-	_connexData.push(image);
+	PUSH_DATA(data::ImageData(image));
 	return OK;
 }
 

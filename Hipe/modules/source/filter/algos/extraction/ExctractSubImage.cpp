@@ -158,7 +158,7 @@ namespace filter
 				return EMPTY_RESULT;
 			}
 
-			_connexData.push(res);
+			PUSH_DATA(res);
 			return OK;
 		}
 

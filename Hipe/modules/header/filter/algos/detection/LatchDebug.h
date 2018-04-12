@@ -112,7 +112,7 @@ namespace filter
 				cv::Mat res;
 				cv::drawMatches(patternImage, inliers1, requestImage, inliers2, good_matches, res);
 
-				_connexData.push(data::ImageData(res));
+				PUSH_DATA(data::ImageData(res));
 
 				return OK;
 			}

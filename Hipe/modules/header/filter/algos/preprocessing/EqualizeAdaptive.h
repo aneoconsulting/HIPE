@@ -52,7 +52,7 @@ namespace filter
 				cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(clip, cv::Size(kernel, kernel));
 				clahe->apply(image, output);
 
-				_connexData.push(data::ImageData(output));
+				PUSH_DATA(data::ImageData(output));
 				return OK;
 			}
 

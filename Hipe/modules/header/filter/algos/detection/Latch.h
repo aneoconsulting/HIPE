@@ -57,7 +57,7 @@ namespace filter
 				hessianThreshold = 100;
 				skip_frame = -1;
 				isStart = false;
-				wait = false;
+				wait = true;
 				thr_server = nullptr;
 			}
 

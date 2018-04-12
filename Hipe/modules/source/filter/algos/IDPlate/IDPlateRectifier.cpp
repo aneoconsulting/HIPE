@@ -50,7 +50,7 @@ HipeStatus filter::algos::IDPlateRectifier::process()
 			outputData << rectifiedPlate;
 		}
 
-		_connexData.push(outputData);
+		PUSH_DATA(outputData);
 	}
 	return OK;
 }

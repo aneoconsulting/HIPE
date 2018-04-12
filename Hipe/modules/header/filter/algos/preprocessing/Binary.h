@@ -62,7 +62,7 @@ namespace filter
 
 				double computedThreshold = cv::threshold(image, output, threshold, value, convertedType);
 
-				_connexData.push(data::ImageData(output));
+				PUSH_DATA(data::ImageData(output));
 				return OK;
 			}
 

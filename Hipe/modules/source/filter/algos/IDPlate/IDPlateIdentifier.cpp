@@ -46,7 +46,7 @@ HipeStatus filter::algos::IDPlateIdentifier::process()
 			outputData << outputImage;
 		}
 
-		_connexData.push(outputData);
+		PUSH_DATA(outputData);
 	}
 
 	return OK;

@@ -85,7 +85,7 @@ namespace filter
 				}
 
 
-				_connexData.push(data::ImageData(imageOutput));
+				PUSH_DATA(data::ImageData(imageOutput));
 
 			}
 			return OK;

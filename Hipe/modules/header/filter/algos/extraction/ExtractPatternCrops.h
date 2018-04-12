@@ -43,7 +43,7 @@ namespace filter
 						output << crop.clone();
 					}
 
-					_connexData.push(output);
+					PUSH_DATA(output);
 				}
 
 				return OK;

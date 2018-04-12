@@ -3,14 +3,13 @@
 #pragma warning(push, 0) 
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
+#include "ImageData.h"
 #pragma warning(pop) 
 
 namespace data
 {
 	void DirectoryImgData::loadImagesData()
 	{
-		std::vector<cv::String> filenames;
-
 		cv::glob(This()._directoryPath, filenames);
 
 		for (size_t i = 0; i < filenames.size(); ++i)
@@ -39,6 +38,23 @@ namespace data
 			iss << "No file loaded from directory : " << _directoryPath;
 			throw HipeException(iss.str());
 		}
+	}
+
+	void DirectoryImgData::refreshDirectory()
+	{
+		filenames.clear();
+		cv::glob(This()._directoryPath, filenames);
+	}
+
+	ImageData DirectoryImgData::nextImageFile()
+	{
+		if (_idxFile >= filenames.size())
+			return data::ImageData();
+
+		cv::Mat mat = cv::imread(filenames[_idxFile]);
+
+		return ImageData(mat);
+
 	}
 
 	std::vector<cv::Mat>& DirectoryImgData::images()

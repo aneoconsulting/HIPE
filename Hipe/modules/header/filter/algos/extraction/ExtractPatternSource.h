@@ -39,7 +39,7 @@ namespace filter
 
 
 					// Copy data to match INDATA intended mode
-					_connexData.push(output);
+					PUSH_DATA(output);
 				}
 
 				return OK;

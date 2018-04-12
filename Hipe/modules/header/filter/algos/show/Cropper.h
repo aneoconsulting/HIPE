@@ -211,7 +211,7 @@ namespace filter
 					(*_pattern) << image;
 					data::PatternData pattern(image);
 					(*_pattern).copyTo(pattern);
-					_connexData.push(pattern);
+					PUSH_DATA(pattern);
 
 					return OK;
 				}
@@ -234,19 +234,19 @@ namespace filter
 				if (wait)
 				{
 					_cvCropperData->arrayCrop.wait_and_pop(rect);
-					_connexData.push(_cvCropperData->pattern);
+					PUSH_DATA(_cvCropperData->pattern);
 					_pattern = std::make_shared<data::PatternData>(_cvCropperData->pattern);
 				}
 				else if (_cvCropperData->arrayCrop.trypop_until(rect, 10) == false)
 				{
 					data::PatternData pattern(image);
 
-					_connexData.push(pattern);
+					PUSH_DATA(pattern);
 
 				}
 				else
 				{
-					_connexData.push(_cvCropperData->pattern);
+					PUSH_DATA(_cvCropperData->pattern);
 					_pattern = std::make_shared<data::PatternData>(_cvCropperData->pattern);
 				}
 

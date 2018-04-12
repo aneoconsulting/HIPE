@@ -57,7 +57,7 @@ namespace filter
 				cv::Mat dilateKernel = cv::getStructuringElement(shape, cv::Size(kernelSizeX, kernelSizeY), anchor);
 				cv::dilate(image, output, dilateKernel, anchor, iterations);
 
-				_connexData.push(data::ImageData(output));
+				PUSH_DATA(data::ImageData(output));
 
 				return OK;
 			}

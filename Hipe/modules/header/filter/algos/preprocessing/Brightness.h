@@ -91,7 +91,7 @@ namespace filter
 				cv::Mat output;
 				cv::cvtColor(imageHSV, output, CV_HSV2BGR);
 				
-				_connexData.push(data::ImageData(output));
+				PUSH_DATA(data::ImageData(output));
 				return OK;
 			}
 
