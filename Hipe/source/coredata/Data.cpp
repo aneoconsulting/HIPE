@@ -4,11 +4,16 @@ namespace data
 {
 	std::string Data::getLabel() const
 	{
+		if (_This)
+			return _This->getLabel();
+
 		return _label;
 	}
 
 	void Data::setLabel(const std::string& cs)
 	{
+		if (_This) 
+			_This->setLabel(cs);
 		_label = cs;
 	}
 
