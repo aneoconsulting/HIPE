@@ -56,12 +56,12 @@ namespace data
 			This()._inputSource = static_cast<Data>(inputImage);
 		}
 
-		DirPatternData(Data &inputData, DirectoryImgData &directoryImgData) : VideoData(IODataType::DIRPATTERN)
+		DirPatternData(Data &inputData, Data &directoryImgData) : VideoData(IODataType::DIRPATTERN)
 		{
 			Data::registerInstance(new DirPatternData(IOData::_Protection()));
 
-			This()._inputSource = static_cast<Data>(inputData);
-			This().dir = static_cast<DirectoryImgData>(directoryImgData);
+			This()._inputSource = inputData;
+			This().dir = static_cast<DirectoryImgData&>(directoryImgData);
 		}
 
 
