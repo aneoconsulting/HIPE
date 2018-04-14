@@ -81,10 +81,11 @@ cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<data::ImageData>
 		int m = 0;
 		for (int w_cur = 0; w_cur < w && imgIdx < nbImg; w_cur++, imgIdx++)
 		{
-			if (arrayMat[imgIdx].empty()) continue;
+			cv::Mat image = arrayData[imgIdx].getMat();
+			if (image.empty()) continue;
 
-			int x = arrayMat[imgIdx].size().width;
-			int y = arrayMat[imgIdx].size().height;
+			int x = image.size().width;
+			int y = image.size().height;
 			double scale_w = std::max(((double)x) / (double)(width_avg), 0.1);
 			double scale_h = std::max((double)y / (double)(height_avg), 0.1);
 			
@@ -93,7 +94,7 @@ cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<data::ImageData>
 
 			cv::Rect ROI(m, n, (int)(x / scale), (int)(y / scale));
 			cv::Mat temp;
-			cv::resize(arrayMat[imgIdx], temp, cv::Size(ROI.width, ROI.height));
+			cv::resize(image, temp, cv::Size(ROI.width, ROI.height));
 			temp.copyTo(disp_image(ROI));
 			m += width_avg;
 		}
