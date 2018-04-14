@@ -48,6 +48,7 @@ namespace filter
 			dlib::shape_predictor pose_model;		//<! The model (machine learning) used to identify the faces
 
 			std::atomic<bool> isStart;				//<! [TODO] Boolean used to know when the thread is running and the faces should be detected ?
+			std::atomic<bool> isInit;				//<! [TODO] Boolean used to know if the faceDetection is initialized 
 			core::queue::ConcurrentQueue<data::ImageData> imagesStack;	//<! [TODO] The queue containing the frames to process
 			core::queue::ConcurrentQueue<data::ShapeData> crops;		//<! [TODO] The queue containing the cropped faces from the images
 			data::ShapeData tosend;	//<! The found faces to output to the ConnexData port
@@ -60,18 +61,19 @@ namespace filter
 			{
 				count_frame = 0;
 				skip_frame = 4;
-				detector = dlib::get_frontal_face_detector();
-				isStart = true;
+				isStart = false;
+				isInit = false;
 				thr_server = nullptr;
 
+				file_predictor_dat = "shape_predictor_68_face_landmarks.dat";
 
+			
 
-				dlib::deserialize("shape_predictor_68_face_landmarks.dat") >> pose_model;
-
-				startDetectFace();
 			}
 
 			REGISTER_P(int, skip_frame);
+
+			REGISTER_P(std::string, file_predictor_dat);
 
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
@@ -105,6 +107,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(FaceDetection, skip_frame);
+		ADD_CLASS(FaceDetection, skip_frame, file_predictor_dat);
 	}
 }

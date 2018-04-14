@@ -507,43 +507,12 @@ namespace orchestrator
 
 			void process(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug = false)
 			{
+				if (!runningTasks.empty())
+				{
+					throw HipeException("Some previous task is stil running. Please kill it before run a new one.");
+				}
 
-				/*if (data::DataTypeMapper::isSequence(inputData.getType()))
-				{
-					processSequence(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isListIo(inputData.getType()))
-				{
-					data::ListIOData &list_io_data = static_cast<data::ListIOData&>(inputData);
-					processListData(root, list_io_data, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isImage(inputData.getType()))
-				{
-					processImages(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isVideo(inputData.getType()))
-				{
-					using videoType = data::FileVideoInput;
-
-					if (inputData.getType() == data::STRMVID)
-						using videoType = data::StreamVideoInput;
-
-					processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
-				}
-				else if (data::DataTypeMapper::isStreaming(inputData.getType()))
-				{
-					processStreaming(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isPattern(inputData.getType()))
-				{
-					using videoType = data::PatternData;
-					using videoDir = data::DirPatternData;
-					if (inputData.getType() == data::IODataType::DIRPATTERN)
-						processVideo(root, static_cast<videoDir&>(inputData), outputData, debug);
-					else
-						processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
-				}
-				else */if (data::DataTypeMapper::isNoneData(inputData.getType()))
+				if (data::DataTypeMapper::isNoneData(inputData.getType()))
 				{
 					processDataSource(root, outputData, debug);
 				}

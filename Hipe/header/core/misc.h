@@ -12,4 +12,12 @@ int hipe_gettimeofday(struct timeval* p, void* tz);
 
 bool isFileExist(std::string filename);
 
+bool isDirExist(const std::string & dirname);
+
+bool createDirectory(const std::string & dirpath);
+
+std::string PathSeparator();
+
 void addEnv(std::string path);
+
+std::string GetCurrentWorkingDir(void);

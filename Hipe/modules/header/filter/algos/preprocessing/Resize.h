@@ -59,6 +59,8 @@ namespace filter
 					//Resize all images coming from the same parent
 					for (auto &myImage : images.Array())
 					{
+						if (myImage.empty())
+							continue;
 						if (width == 0 || height == 0)
 						{
 							int l_iwidth = myImage.cols;

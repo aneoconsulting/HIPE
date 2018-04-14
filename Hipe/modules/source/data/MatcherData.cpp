@@ -65,35 +65,45 @@ namespace data {
 	*/
 	void MatcherData::setGoodMatches(const std::vector<cv::DMatch>& goodMatches)
 	{
+		MatcherData &ret = This();
 		_goodMatches = goodMatches;
+		ret._goodMatches = goodMatches;
 	}
 	/**
 	* \brief Set the inliers1 (pattern image inliers2_const) of the object
 	*/
 	void MatcherData::setInliers1(const std::vector<cv::KeyPoint>& patternImageInliers)
 	{
+		MatcherData &ret = This();
 		_inliers1 = patternImageInliers;
+		ret._inliers1 = patternImageInliers;
 	}
 	/**
 	* \brief Set the inliers2 (request image inliers2_const) of the object
 	*/
 	void MatcherData::setInliers2(const std::vector<cv::KeyPoint>& requestImageInliers)
 	{
+		MatcherData &ret = This();
 		_inliers2 = requestImageInliers;
+		ret._inliers1 = requestImageInliers;
 	}
 	/**
 	* \brief Set the pattern image of the object
 	*/
 	void MatcherData::setPatternImage(const cv::Mat& patternImage)
 	{
+		MatcherData &ret = This();
 		_patternImage = patternImage;
+		ret._patternImage = patternImage;
 	}
 	/**
 	* \brief Set the request image of the object
 	*/
 	void MatcherData::setRequestImage(const cv::Mat& requestImage)
 	{
+		MatcherData &ret = This();
 		_requestImage = requestImage;
+		ret._requestImage = requestImage;
 	}
 
 

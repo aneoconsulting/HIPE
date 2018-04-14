@@ -56,9 +56,13 @@ namespace filter
 
 				skip_frame = 4;
 				count_frame = 0;
-				confidenceThreshold = 0.4;
-
+				confidence_gender = 0.4;
+				confidence_age = 0.4;
+				gender_activation = true;
+				age_activation = true;
 				isStart = false;
+
+				thr_server = nullptr;
 			}
 
 			REGISTER_P(std::string, age_model_file);
@@ -69,7 +73,12 @@ namespace filter
 
 			REGISTER_P(std::string, mean_file);
 
-			REGISTER_P(float, confidenceThreshold);
+			REGISTER_P(float, confidence_gender);
+			REGISTER_P(float, confidence_age);
+
+			REGISTER_P(bool, gender_activation);
+			REGISTER_P(bool, age_activation);
+
 
 
 			bboxes_t getBoxes(cv::Mat frame, int _gender, int _age, vector<Dtype> _prob_gender, vector<Dtype> _prob_age);
@@ -97,8 +106,12 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(AgeGender, age_model_file, age_weight_file, gender_model_file, gender_weight_file, mean_file,
-			confidenceThreshold) ;
+		ADD_CLASS(AgeGender, 
+			gender_activation, age_activation, 
+			confidence_gender, confidence_age,
+			age_model_file, age_weight_file, 
+			gender_model_file, gender_weight_file, mean_file);
+
 #endif //USE_CAFFE
 	}
 }

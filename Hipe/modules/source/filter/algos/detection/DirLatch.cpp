@@ -12,6 +12,112 @@ namespace filter
 {
 	namespace algos
 	{
+		inline void cleanFilter(IFilter * filter)
+		{
+			filter->cleanUp();
+
+			data::ConnexDataBase& outRes = filter->getConnector();
+			data::DataPort & data_port = static_cast<data::DataPort &>(outRes.getPort());
+
+			while (!data_port.empty())
+			{
+				data_port.pop();
+			}
+		}
+
+		inline void cleanAndDisposeFilter(IFilter * filter)
+		{
+			filter->cleanUp();
+			filter->dispose();
+
+			data::ConnexDataBase& outRes = filter->getConnector();
+			data::DataPort & data_port = static_cast<data::DataPort &>(outRes.getPort());
+
+			while (!data_port.empty())
+			{
+				data_port.pop();
+			}
+		}
+
+		HipeStatus DirLatch::detectObject(const data::DirPatternData& dirPattern)
+		{
+			data::ConnexDataBase & connector = latch->getCast().getConnector();
+			data::DataPort & port = static_cast<data::DataPort &>(connector.getPort());
+
+
+			data::DirectoryImgData directory_img = dirPattern.DirectoryImg(); //Bug fix Return the reference from the method
+			data::ImageData source = dirPattern.imageSource(); //Bug fix Return the reference from the method
+
+			directory_img.refreshDirectory();
+			data::ImageData cropImage = directory_img.nextImageFile();
+			if (cropImage.empty())
+			{
+				cleanFilter(latch.get());
+
+				data::MatcherData matcher;
+				matcher.setPatternImage(source.getMat());
+
+				this->result.push(matcher);
+
+				return OK;
+			}
+
+			int l_good_matches = good_matches;
+			data::MatcherData best_match;
+
+
+			while (!cropImage.empty())
+			{
+
+				std::vector<int> crop = { 0,0, cropImage.getMat().size().width, cropImage.getMat().size().height };
+				data::SquareCrop squarecrop;
+				squarecrop << cropImage;
+				squarecrop << crop;
+				data::PatternData pattern(source, squarecrop);
+
+				port.push(pattern);
+				HipeStatus hipe_status = latch->process();
+				if (hipe_status != HipeStatus::OK)
+				{
+					cleanFilter(latch.get());
+					return hipe_status;
+				}
+
+
+
+				data::DataPort & resultPort = static_cast<data::DataPort &>(resultLatch->getCast().getConnector().getPort());
+				data::Data pop = resultPort.pop();
+				data::MatcherData & matcher = static_cast<data::MatcherData& >(pop);
+
+				if (l_good_matches <= (int)matcher.goodMatches().size())
+				{
+					best_match = matcher;
+					l_good_matches = (int)matcher.goodMatches().size();
+					
+				}
+				this->result.push(matcher);
+				cropImage = directory_img.nextImageFile();
+
+			}
+			if (best_match.goodMatches_const().size() >= good_matches)
+			{
+				best_match.setBest();
+				this->result.clear();
+				this->result.push(best_match);
+				return OK;
+			}
+
+			cleanFilter(latch.get());
+			cleanFilter(resultLatch.get());
+
+			data::MatcherData empty_match;
+			empty_match.setRequestImage(source.getMat());
+			this->result.clear();
+			this->result.push(empty_match);
+
+			return OK;
+		}
+
 		void DirLatch::startDetectObject()
 		{
 			DirLatch* This = this;
@@ -20,18 +126,15 @@ namespace filter
 				while (This->isStart)
 				{
 					data::DirPatternData pattern;
-					if (!This->imagesStack.trypop_until(pattern, 30))
+					if (!This->imagesStack.trypop_until(pattern, 10))
 						continue;
 
-					
-
-
-					if (This->result.size() != 0)
-						This->result.clear();
-
-					This->result.push(data::ImageData());
-
-
+					data::MatcherData res;
+					HipeStatus status = This->detectObject(pattern);
+					if (status != HipeStatus::OK)
+					{
+						throw HipeException("Issue with Latch in DirLatch filter");
+					}
 				}
 			});
 		}
@@ -39,155 +142,114 @@ namespace filter
 		HipeStatus DirLatch::process()
 		{
 			
-
-			//TODO Manage multi latch from here depends on the number of core and the number of Task to ask
-			filter::algos::Latch latch;
-			latch.set_hessianThreshold(hessianThreshold);
-			latch.set_inlier_threshold(inlier_threshold);
-			latch.set_nn_match_ratio(nn_match_ratio);
-			latch.set_skip_frame(skip_frame);
-			latch.set_wait(wait);
-			latch.set_wait_time(wait_time);
-			latch.setName(this->getCast().getName() + "__subLatch");
-			latch.setLevel(1);
-
-			data::ConnexDataBase & connector = latch.getCast().getConnector();
-			data::DataPort & port = static_cast<data::DataPort &>(connector.getPort());
-
-			data::DirPatternData dirPattern = _connexData.pop();
-			data::DirectoryImgData directory_img = dirPattern.DirectoryImg(); //Bug fix Return the reference from the method
-			data::ImageData source = dirPattern.imageSource(); //Bug fix Return the reference from the method
+			data::DirectoryImgData dirData;
+			data::ImageData source;
 			
-			directory_img.refreshDirectory();
-			data::ImageData cropImage = directory_img.nextImageFile();
-
-			ResultFilter resultFilter;
-			resultFilter.setName(this->getName() + "__resultFilter");
-			resultFilter.setLevel(1);
-			resultFilter.addDependenciesName(latch.getName());
-			resultFilter.addDependencies(&latch);
-			
-			int l_good_matches = good_matches;
-			data::MatcherData best_match;
-			data::SquareCrop best_squarecrop;
-
-			while (!cropImage.empty())
+			//Part of code is to avoid bug in Web application remove it and receive a dirPatternData later
+			while (!_connexData.empty())
 			{
-				cropImage = directory_img.nextImageFile();
-				std::vector<int> crop = { 0,0, cropImage.getMat().size().width, cropImage.getMat().size().height };
-				data::SquareCrop squarecrop;
-				squarecrop << cropImage;
-				squarecrop << crop;
-				data::PatternData pattern(source, squarecrop);
-
-				port.push(pattern);
-				HipeStatus hipe_status = latch.process();
-				if (hipe_status != HipeStatus::OK)
-					return hipe_status;
-				
-
-
-				data::DataPort & resultPort = static_cast<data::DataPort &>(resultFilter.getCast().getConnector().getPort());
-				data::Data pop = resultPort.pop();
-				data::MatcherData & matcher = static_cast<data::MatcherData& >(pop);
-
-				if(good_matches <= (int)matcher.goodMatches().size())
+				data::Data data1 = _connexData.pop();
+				if (data::DataTypeMapper::isSequenceDirectory(data1.getType()))
 				{
-					best_match = matcher;
-					best_squarecrop = squarecrop;
+					dirData = static_cast<data::DirectoryImgData &>(data1);
 				}
-
+				else if (data::DataTypeMapper::isImage(data1.getType()))
+				{
+					source = static_cast<data::ImageData>(data1);
+				}
+				else
+				{
+					
+					//Ignore other type of input data ATM
+				}
 			}
-
-			if (best_match.goodMatches_const().size() < good_matches)
+			dirData.refreshDirectory();
+			if (source.empty())
 			{
-				PUSH_DATA(data::ImageData());
+				PUSH_DATA(data::MatcherData());
 				return OK;
 			}
 
-			Homography homography;
-			homography.setName(this->getName() + "__homography");
-			homography.setLevel(1);
-			data::ConnexDataBase & connectorHomography = homography.getCast().getConnector();
-			data::DataPort & portHomography = static_cast<data::DataPort &>(connectorHomography.getPort());
-			portHomography.push(best_match);
-			
-			HipeStatus hipe_status = homography.process();
-			if (hipe_status != HipeStatus::OK)
+			if (!dirData.hasFiles())
 			{
-				PUSH_DATA(data::ImageData());
-				return hipe_status;
+				data::MatcherData matcherResult;
+				matcherResult.setRequestImage(source.getMat());
+				PUSH_DATA(matcherResult);
+
+				return OK;
 			}
-			ResultFilter resultForHomography;
-			resultForHomography.setName(this->getName() + "__resultForHomography");
-			resultForHomography.setLevel(1);
-			resultForHomography.addDependenciesName(latch.getName());
-			resultForHomography.addDependencies(&homography);
-			data::DataPort & resultPort = static_cast<data::DataPort &>(resultFilter.getCast().getConnector().getPort());
-			data::Data pop = resultPort.pop();
-			data::ShapeData & shape = static_cast<data::ShapeData & >(pop);
-			std::vector<cv::Point2f> rectangle = shape.QuadrilatereArray()[0];
 
-			//TODO Check if this form is a rectangle or square with 98° angle
+			
+			
+			if (!this->isStart.exchange(true))
+			{
+				latch = std::make_shared<filter::algos::Latch>();
+				resultLatch = std::make_shared<ResultFilter>();
+				latch->set_hessianThreshold(hessianThreshold);
+				latch->set_inlier_threshold(inlier_threshold);
+				latch->set_nn_match_ratio(nn_match_ratio);
+				latch->set_skip_frame(skip_frame);
+				bool value = true;
+				latch->set_wait(value);
+				latch->set_wait_time(wait_time);
+				latch->setName(this->getCast().getName() + "__subLatch");
+				latch->setLevel(1);
 
-			cv::Mat matchingImage;
-			cv::drawMatches(source.getMat(), best_match.inliers1(), best_squarecrop.getPicture().getMat(), best_match.inliers2(), best_match.goodMatches(), matchingImage);
+				resultLatch->setName(this->getName() + "__resultFilter");
+				resultLatch->setLevel(1);
+				resultLatch->addDependenciesName(latch->getName());
+				resultLatch->addDependencies(latch.get());
 
-			PUSH_DATA(data::ImageData(matchingImage));
-			return OK;
-			//if (!isStart.exchange(true))
-			//{
-			//	startDetectObject();
-			//}
-
-			//data::PatternData patternData = _connexData.pop();
-			//if (patternData.crops().getSquareCrop().empty())
-			//{
-			//	data::MatcherData output;
-			//	PUSH_DATA(output);
-			//	return DATA_EMPTY;
-			//}
-
-			//if (skip_frame <= 0 || count_frame % skip_frame == 0)
-			//{
-			//	if (imagesStack.size() != 0)
-			//		imagesStack.clear();
-			//	imagesStack.push(patternData);
-			//}
-			//count_frame++;
+				startDetectObject();
+			}
+	
+			data::DirPatternData dirPattern(source, dirData);
 		
-			//data::MatcherData md_result;
-			//cv::Mat res;
+			if (skip_frame <= 0 || count_frame % skip_frame == 0)
+			{
+				if (imagesStack.size() != 0)
+					imagesStack.clear();
+				imagesStack.push(dirPattern);
+				count_frame = 0;
+			}
+			count_frame++;
+		
+			data::MatcherData md_result;
 
-			//if (patternData.imageRequest().getMat().empty())
-			//{
-			//	data::MatcherData output;
-			//	PUSH_DATA(output);
-			//}
-			//else if (wait == true && result.trypop_until(md_result, wait_time)) // wait 5 sec it's like infinite but allow to kill thread
-			//{
-			//	tosend = md_result;
-			//	PUSH_DATA(tosend);
-			//}
-			//else if (result.trypop_until(md_result, 30)) // wait 30ms no more
-			//{
-			//	tosend = md_result;
-			//	PUSH_DATA(tosend);
-			//}
-			//
-			//else if (tosend.requestImage_const().empty())
-			//{
-			//	data::MatcherData output;
-			//	PUSH_DATA(output);
-			//}
-			//else
-			//{
-			//	md_result = tosend; //Use backup because the algorithme is too late
-
-			//	PUSH_DATA(tosend);
-			//}
+			if (result.trypop_until(md_result, 10)) // wait 10ms no more
+			{
+				tosend = md_result;
+				
+			}
+			
+			PUSH_DATA(tosend);
+		
 
 			return OK;
+		}
+
+		void DirLatch::dispose()
+		{
+			isStart = false;
+
+			if (thr_server != nullptr)
+			{
+				thr_server->join();
+				delete thr_server;
+				thr_server = nullptr;
+			}
+
+			if (latch)
+			{
+				cleanAndDisposeFilter(latch.get());
+				latch.reset();
+			}
+			if (resultLatch)
+			{
+				cleanAndDisposeFilter(resultLatch.get());
+				resultLatch.reset();
+
+			}
 		}
 	}
 }

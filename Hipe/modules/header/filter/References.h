@@ -25,6 +25,7 @@
 #include <filter/algos/detection\Latch.h>
 #include <filter/algos/detection\LatchDebug.h>
 #include <filter/algos/detection\ObjectRecognitionYolo.h>
+#include <filter/algos/detection\SaveIfNoMatching.h>
 #include <filter/algos/detection\Surf.h>
 #include <filter/algos/extraction\ExclusionZoneMaskFilter.h>
 #include <filter/algos/extraction\ExctractSubImage.h>
@@ -69,9 +70,12 @@
 #include <filter/algos/show\DrawCircles.h>
 #include <filter/algos/show\ShowImage.h>
 #include <filter/algos/show\ShowVideo.h>
+#include <filter/algos/show\WriteText.h>
 #include <filter/algos/streaming\DelegateStreamingFilter.h>
 #include <filter/algos/streaming\EncodeDataFilter.h>
+#include <filter/algos/tracker\IfStableTracking.h>
 #include <filter/algos/tracker\Tracker.h>
+#include <filter/algos/utils\CVUtils.h>
 #include <filter/datasource/DirectoryImgDataSource.h>
 #include <filter/datasource/DirPatternDataSource.h>
 #include <filter/datasource/ImageDataSource.h>

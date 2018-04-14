@@ -1,5 +1,6 @@
 #include <filter/algos/PythonFilter.h>
 #include <core/HipeStatus.h>
+#include <core/misc.h>
 
 
 extern "C"
@@ -8,13 +9,7 @@ extern "C"
 }
 
 // #define WINDOWS  /* uncomment this line to use it for windows.*/ 
-#ifdef WIN32
-#include <direct.h>
-#define GetCurrentDir _getcwd
-#else
-#include <unistd.h>
-#define GetCurrentDir getcwd
-#endif
+
 #include<iostream>
 
 #pragma warning(push, 0)
@@ -69,14 +64,6 @@ namespace filter
 			}
 		}
 
-
-		std::string PythonFilter::GetCurrentWorkingDir(void)
-		{
-			char buff[FILENAME_MAX];
-			GetCurrentDir(buff, FILENAME_MAX);
-			std::string current_working_dir(buff);
-			return current_working_dir;
-		}
 
 		HipeStatus PythonFilter::process()
 		{

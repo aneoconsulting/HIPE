@@ -54,11 +54,11 @@ data::ImageArrayData filter::algos::ExtractShape::extractMask(data::ImageData& i
 
 	//TODO Get the list of crop
 	cv::Mat result;
-	if (arrays.Array().empty())
+	/*if (arrays.Array().empty())
 	{
-		
-		arrays.Array().push_back(saved);
-	}
+		if (! saved.empty())
+			arrays.Array().push_back(saved);
+	}*/
 	//cv::cvtColor(mask, result, CV_GRAY2BGR);
 	//img.getMat().copyTo(result, mask);
 
@@ -159,8 +159,17 @@ HipeStatus filter::algos::ExtractShape::process()
 	for (data::ShapeData shape : shapes)
 	{
 		data::ImageArrayData image_array_data = extractMask(image, shape);
-		PUSH_DATA(data::ImageData(image_array_data.Array()[0]));
+		if (image_array_data.empty())
+		{
+			PUSH_DATA(data::ImageData());
+			
+		}
+		else
+		{
+			PUSH_DATA(data::ImageData(image_array_data.Array()[0]));
+		}
 	}
 
 	return OK;
 }
+ 

@@ -123,10 +123,10 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 	switch (_gender)
 	{
 	case(0):
-		gender = "M";
+		gender = "Male";
 		break;
 	case(1):
-		gender = "F";
+		gender = "Female";
 		break;
 	}
 
@@ -134,19 +134,19 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 	switch (_age)
 	{
 	case(0):
-		age = "0 - 2";
+		age = "?? - ??"; //0 - 2
 		break;
 	case (1):
-		age = "4 - 6";
+		age = "?? - ??";
 		break;
 	case (2):
-		age = "8 - 13";
+		age = "15 - 22";
 		break;
 	case (3):
-		age = "15 - 20";
+		age = "23 - 27";
 		break;
 	case (4):
-		age = "25 - 33";
+		age = "28 - 34";
 		break;
 	case (5):
 		age = "35 - 42";
@@ -155,10 +155,11 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 		age = "43 - 53";
 		break;
 	case (7):
-		age = "60 -";
+		age = "60 - ??";
 		break;
 	}
-
+	/*cout << " Male (" << _prob_gender[0] << " %)" << endl;
+	cout << " Female (" << _prob_gender[1] << " %)" << endl;*/
 	// Print result
 	/*cout << endl;
 	cout << " =============== Prediction ===============" << endl << endl;
@@ -192,7 +193,23 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 
 	result.rectangles.push_back(rect);
 	std::stringstream build_text;
-	build_text << "Gender : " << gender << " Age " << age;
+
+	if (!_prob_gender.empty())
+	{
+		if (_prob_gender[0] < confidence_gender * 100.f && _prob_gender[1] < confidence_gender * 100.f)
+			build_text << "Gender : " << "^_^";
+		else
+			build_text << gender << " " << _prob_gender[_gender];
+	}
+
+	if (!_prob_age.empty())
+	{
+		if (_prob_age[_age] < confidence_age * 100.f)
+			build_text << " Age : " << "^_^" << "%";
+		else
+			build_text << age << " " << _prob_age[_age] << "%";
+	}
+	
 	result.names.push_back(build_text.str());
 	return result;
 }
@@ -203,7 +220,7 @@ HipeStatus filter::algos::AgeGender::process()
 	cv::Mat image = data.getMat();
 	
 
-	if (!detectAges)
+	if (age_activation && !detectAges)
 	{
 		using namespace boost::filesystem;
 
@@ -222,7 +239,7 @@ HipeStatus filter::algos::AgeGender::process()
 		detectAges.reset(d);
 	}
 
-	if (false && !detectGenders)
+	if (gender_activation && !detectGenders)
 	{
 		using namespace boost::filesystem;
 
@@ -266,17 +283,25 @@ HipeStatus filter::algos::AgeGender::process()
 	
 
 	data::ShapeData sd;
-	for (int i = 0; i < saved_boxes.rectangles.size(); i++)
+	if (!image.empty())
 	{
-		cv::Scalar color(0, 113, 245);
+		for (int i = 0; i < saved_boxes.rectangles.size(); i++)
+		{
+			cv::Scalar color(0, 113, 245);
 
-		//cv::putText(image, saved_boxes.names[i], cv::Point(saved_boxes.rectangles[i].x, std::max<int>(saved_boxes.rectangles[i].y - 5, 0)),
-		//            cv::HersheyFonts::FONT_HERSHEY_SIMPLEX, 1, color, 2);
+			//cv::putText(image, saved_boxes.names[i], cv::Point(saved_boxes.rectangles[i].x, std::max<int>(saved_boxes.rectangles[i].y - 5, 0)),
+			//            cv::HersheyFonts::FONT_HERSHEY_SIMPLEX, 1, color, 2);
 
-		//cv::rectangle(image, saved_boxes.rectangles[i],
-		//              color, 3);
+			//cv::rectangle(image, saved_boxes.rectangles[i],
+			//              color, 3);
 
-		sd.add(saved_boxes.rectangles[i], color, saved_boxes.names[i]);
+			sd.add(saved_boxes.rectangles[i], color, saved_boxes.names[i]);
+		}
+	}
+	else
+	{
+		saved_boxes.names.clear();
+		saved_boxes.rectangles.clear();
 	}
 
 	PUSH_DATA(sd);

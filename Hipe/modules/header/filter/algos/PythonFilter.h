@@ -35,8 +35,6 @@ namespace filter
 
 			void init_python(const std::string& path);
 
-			std::string GetCurrentWorkingDir(void);
-
 			HipeStatus process() override;	
 
 

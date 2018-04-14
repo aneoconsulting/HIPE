@@ -64,7 +64,8 @@ namespace data
 
 		ImageData(const Data & ref) : IOData(IMGF)
 		{
-			if (ref.getType() != IMGF) throw HipeException("ERROR data::ImageData::ImageData - Only Connexdata should call this constructor.");
+			if (ref.getType() != IMGF) 
+				throw HipeException("ERROR data::ImageData::ImageData - Only Connexdata should call this constructor.");
 
 			Data::registerInstance(ref);
 			This()._type = ref.getType();

@@ -42,16 +42,18 @@ namespace data
 
 	void DirectoryImgData::refreshDirectory()
 	{
-		filenames.clear();
-		cv::glob(This()._directoryPath, filenames);
+		This().filenames.clear();
+		cv::glob(This()._directoryPath, This().filenames);
 	}
 
 	ImageData DirectoryImgData::nextImageFile()
 	{
-		if (_idxFile >= filenames.size())
+		if (This()._idxFile >= This().filenames.size())
 			return data::ImageData();
 
-		cv::Mat mat = cv::imread(filenames[_idxFile]);
+		cv::Mat mat = cv::imread(This().filenames[This()._idxFile]);
+
+		This()._idxFile++;
 
 		return ImageData(mat);
 

@@ -103,3 +103,45 @@ bool isFileExist(std::string filename)
 	}
 	return true;
 }
+
+bool isDirExist(const std::string & dirname)
+{
+	if (!(boost::filesystem::exists(boost::filesystem::path(dirname)) && boost::filesystem::is_directory(boost::filesystem::path(dirname))))
+	{
+		return false;
+	}
+	return true;
+
+}
+
+bool createDirectory(const std::string & dirpath)
+{
+	if (isDirExist(dirpath)) return false;
+
+	return boost::filesystem::create_directory(boost::filesystem::path(dirpath));
+}
+
+#ifdef WIN32
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
+
+std::string GetCurrentWorkingDir(void)
+{
+	char buff[BUFSIZ];
+	GetCurrentDir(buff, BUFSIZ);
+	std::string current_working_dir(buff);
+	return current_working_dir;
+}
+
+std::string PathSeparator()
+{
+#if defined _WIN32 || defined __CYGWIN__
+		return std::string("\\");
+#else
+		return std::string("/");
+#endif
+}

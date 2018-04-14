@@ -6,6 +6,8 @@
 #include <data/DirPatternData.h>
 #include <data/MatcherData.h>
 #include <atomic>
+#include "Latch.h"
+#include "algos/ResultFilter.h"
 
 
 namespace filter
@@ -29,43 +31,54 @@ namespace filter
 		 * Should we wait and show the output image?
 		 */
 
-		 /**
-		   *\todo
-		   * \brief The DirLatch filter will match similarities into two images.
-		   *
-		   * It is used to find an object from an image in another one using keypoints by using the DirLatch algorithm.
-		   * It awaits a PatternData object in input and will output an image containing the contoured computed matching simimarities.
-		   * The filter will work as a separate thread to be able to find objects in videos.
-		   * For an alternative: \see Akaze
-		  */
+		/**
+		  *\todo
+		  * \brief The DirLatch filter will match similarities into two images.
+		  *
+		  * It is used to find an object from an image in another one using keypoints by using the DirLatch algorithm.
+		  * It awaits a PatternData object in input and will output an image containing the contoured computed matching simimarities.
+		  * The filter will work as a separate thread to be able to find objects in videos.
+		  * For an alternative: \see Akaze
+		 */
 		class FILTER_EXPORT DirLatch : public filter::IFilter
 		{
-			std::atomic<bool> isStart;		//<! [TODO] Is the thread running?
-			boost::thread *thr_server;		//<! [TODO] Pointer to the DirLatch matching task.
-			core::queue::ConcurrentQueue<data::DirPatternData> imagesStack;	//<! [TODO] The queue containing the frames to process.
+			std::atomic<bool> isStart; //<! [TODO] Is the thread running?
+			boost::thread* thr_server; //<! [TODO] Pointer to the DirLatch matching task.
+			core::queue::ConcurrentQueue<data::DirPatternData> imagesStack; //<! [TODO] The queue containing the frames to process.
 
-			core::queue::ConcurrentQueue<data::ImageData> result;	//<! [TODO] The queue containing the results of all the detections to process
-			data::MatcherData tosend;									//<! The current frame's matching result to output
-			int good_matches;
-			int count_frame;										//<! The number of frames already processed 
+			core::queue::ConcurrentQueue<data::MatcherData> result; //<! [TODO] The queue containing the results of all the detections to process
+			data::MatcherData tosend; //<! The current frame's matching result to output
 
-			CONNECTOR(data::DirPatternData, data::ImageData);
+			int count_frame; //<! The number of frames already processed 
+
+			std::shared_ptr<filter::algos::Latch> latch;
+			std::shared_ptr<filter::algos::ResultFilter> resultLatch;
+
+			CONNECTOR(data::Data, data::MatcherData);
 
 			REGISTER(DirLatch, ()), _connexData(data::INDATA)
 			{
 				wait_time = 5000;
-				hessianThreshold = 100;
+
 				skip_frame = -1;
 				isStart = false;
 				wait = false;
 				thr_server = nullptr;
 				good_matches = 30;
+				inlier_threshold = 4000.f;
+				nn_match_ratio = 0.8;
+				hessianThreshold = 50;
 			}
+
+			HipeStatus DirLatch::detectObject(const data::DirPatternData& pattern);
+
+			REGISTER_P(int, good_matches);
 
 			REGISTER_P(float, inlier_threshold);
 			REGISTER_P(float, nn_match_ratio);
 
 			REGISTER_P(int, hessianThreshold);
+
 
 			REGISTER_P(int, skip_frame);
 
@@ -84,18 +97,9 @@ namespace filter
 
 			HipeStatus process();
 
-			virtual void dispose()
-			{
-				isStart = false;
-
-				if (thr_server != nullptr) {
-					thr_server->join();
-					delete thr_server;
-					thr_server = nullptr;
-				}
-			}
+			virtual void dispose() override;
 		};
 
-		ADD_CLASS(DirLatch, inlier_threshold, nn_match_ratio, hessianThreshold, wait, wait_time);
+		ADD_CLASS(DirLatch, good_matches, inlier_threshold, nn_match_ratio, hessianThreshold, wait, wait_time) ;
 	}
 }

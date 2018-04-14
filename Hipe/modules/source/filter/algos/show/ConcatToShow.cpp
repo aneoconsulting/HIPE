@@ -81,13 +81,15 @@ cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<cv::Mat> arrayMa
 		int m = 0;
 		for (int w_cur = 0; w_cur < w && imgIdx < nbImg; w_cur++, imgIdx++)
 		{
+			if (arrayMat[imgIdx].empty()) continue;
+
 			int x = arrayMat[imgIdx].size().width;
 			int y = arrayMat[imgIdx].size().height;
-			int scale_w = std::max((int)std::ceil(((double)x) / (double)(width_avg)), 1);
-			int scale_h = std::max((int)std::ceil(((double)y) / (double)(height_avg)), 1);
+			double scale_w = std::max(((double)x) / (double)(width_avg), 0.1);
+			double scale_h = std::max((double)y / (double)(height_avg), 0.1);
 			
 			//Respect form of source image
-			int scale = std::max(scale_w, scale_h);
+			double scale = std::max(scale_w, scale_h);
 
 			cv::Rect ROI(m, n, (int)(x / scale), (int)(y / scale));
 			cv::Mat temp;
@@ -110,15 +112,13 @@ HipeStatus filter::algos::ConcatToShow::process()
 		data::Data img = _connexData.pop();
 		if (data::DataTypeMapper::isImage(img.getType()))
 		{
-			data::ImageData image_data = static_cast<data::ImageData>(img);
+			data::ImageData image_data = static_cast<data::ImageData&>(img);
 			arrayData.push_back(image_data.getMat());
 		}
 	}
 	cv::Mat show_many_images = ShowManyImages(arrayData);
-	
-	data::ImageData result = data::ImageData(show_many_images);
 
-	PUSH_DATA(result);
+	PUSH_DATA(data::ImageData(show_many_images));
 
 
 	return OK;

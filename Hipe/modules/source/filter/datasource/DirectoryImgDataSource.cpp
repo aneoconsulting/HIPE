@@ -36,14 +36,9 @@ data::ImageArrayData loadImagesData(std::string _directoryPath)
 
 HipeStatus filter::datasource::DirectoryImgDataSource::process()
 {
-	if (!atomic_state.exchange(true))
-	{
-		data::DirectoryImgData dirImageData;
-		dirImageData.SetDirectoryPath(directoryPath);
-		//dirImageData.loadImagesData();
-		PUSH_DATA(dirImageData);
-		return OK;
-	}
-	PUSH_DATA(data::DirectoryImgData());
-	return END_OF_STREAM;
+	data::DirectoryImgData dirImageData;
+	dirImageData.SetDirectoryPath(directoryPath);
+	//dirImageData.loadImagesData();
+	PUSH_DATA(dirImageData);
+	return OK;
 }

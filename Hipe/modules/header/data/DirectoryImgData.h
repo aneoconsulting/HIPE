@@ -21,6 +21,21 @@ namespace data {
 
 			std::vector<cv::String> filenames;
 
+		public:
+			std::vector<cv::String> & getFilenames()
+			{
+				DirectoryImgData &ret = This();
+				return ret.filenames;
+			}
+
+			void setFilenames(const std::vector<cv::String>& filenames)
+			{
+				DirectoryImgData &ret = This();
+				ret.filenames = filenames;
+				this->filenames = filenames;
+			}
+
+		private:
 			int _idxFile;
 
 			DirectoryImgData(IOData::_Protection priv) : IOData(IODataType::SEQIMGD)
@@ -129,6 +144,12 @@ namespace data {
 			}
 			std::vector<cv::Mat>& images();
 			cv::Mat image(int indew);
+
+			bool hasFiles()
+			{
+				refreshDirectory();
+				return (!This().filenames.empty());
+			};
 		};
 	}
 

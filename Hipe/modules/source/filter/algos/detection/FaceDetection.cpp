@@ -93,11 +93,16 @@ namespace filter
 		{
 			cv::Mat im;
 			cv::Mat im_small, im_display;
-
-
-
 			std::vector<dlib::rectangle> faces;
 
+			if (!isInit.exchange(true))
+			{
+				detector = dlib::get_frontal_face_detector();
+
+				dlib::deserialize(file_predictor_dat) >> pose_model;
+				isStart = true;
+				startDetectFace();
+			}
 
 			{
 				data::ImageArrayData images = _connexData.pop();
