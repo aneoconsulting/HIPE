@@ -1,13 +1,13 @@
 #include <filter/algos/show/ConcatToShow.h>
 #include <opencv2/videostab/wobble_suppression.hpp>
 
-cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<cv::Mat> arrayMat)
+cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<data::ImageData> arrayData) const
 {
 	cv::Size size;
 	int i;
 	
 	int x, y;
-	int nArgs= arrayMat.size();
+	int nArgs= arrayData.size();
 
 	// w - Maximum number of images in a row
 	// h - Maximum number of images in a column
@@ -33,7 +33,7 @@ cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<cv::Mat> arrayMa
 	else if (nArgs == 1)
 	{
 		w = h = 1;
-		size = arrayMat[0].size();
+		size = arrayData[0].getMat().size();
 	}
 	else if (nArgs == 2)
 	{
@@ -73,7 +73,7 @@ cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<cv::Mat> arrayMa
 	int hpix_pos = 0;
 	int imgIdx = 0;
 	int n = 0;
-	int nbImg = arrayMat.size();
+	int nbImg = arrayData.size();
 
 	for (int h_cur = 0; h_cur < h; h_cur++)
 	{
@@ -103,20 +103,33 @@ cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<cv::Mat> arrayMa
 	return disp_image;
 }
 
+bool sortLabels(data::ImageData data1, data::ImageData data2)
+{
+	auto d1 = data1.getLabel();
+	auto d2 = data2.getLabel();
+	auto res = d1 < d2;
+	return res;
+}
+
 HipeStatus filter::algos::ConcatToShow::process()
 {
 	std::vector<cv::Mat> arrayData;
-
+	std::vector<data::ImageData> arrayImages;
 	while (!_connexData.empty())
 	{
-		data::Data img = _connexData.pop();
+		data::Data img = static_cast<data::Data>(_connexData.pop());
 		if (data::DataTypeMapper::isImage(img.getType()))
 		{
 			data::ImageData image_data = static_cast<data::ImageData&>(img);
-			arrayData.push_back(image_data.getMat());
+			auto label = image_data.getLabel();
+			arrayImages.push_back(image_data);
+			/*arrayData.push_back(image_data.getMat());
+			img.getLabel()*/
 		}
 	}
-	cv::Mat show_many_images = ShowManyImages(arrayData);
+	std::sort(arrayImages.begin(), arrayImages.end(), sortLabels);
+
+	cv::Mat show_many_images = ShowManyImages(arrayImages);
 
 	PUSH_DATA(data::ImageData(show_many_images));
 

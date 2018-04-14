@@ -47,7 +47,7 @@ namespace filter
 		public:
 			HipeStatus process();
 
-			cv::Mat ShowManyImages(std::vector<cv::Mat> arrayMat);
+			cv::Mat ShowManyImages(std::vector<data::ImageData> arrayMat) const;
 		};
 
 		ADD_CLASS(ConcatToShow, width, height, nb_img_by_row);
