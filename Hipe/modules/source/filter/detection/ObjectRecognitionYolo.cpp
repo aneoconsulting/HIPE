@@ -146,7 +146,7 @@ namespace filter
 			}
 			count_frame++;
 			data::ShapeData popShape;
-			if (shapes.trypop_until(popShape, 30)) // wait 30ms no more
+			if (shapes.trypop_until(popShape, 10)) // wait 30ms no more
 			{
 				PUSH_DATA(popShape);
 				tosend = popShape;
