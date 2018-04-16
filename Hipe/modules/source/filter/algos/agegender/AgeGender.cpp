@@ -85,7 +85,7 @@ void filter::algos::AgeGender::startAgeGenderDetection()
 		while (This->isStart)
 		{
 			data::ImageData image;
-			if (!This->imagesStack.trypop_until(image, 300))
+			if (!This->imagesStack.trypop_until(image, 30))
 				continue;
 
 			int age = 0;
@@ -281,10 +281,6 @@ HipeStatus filter::algos::AgeGender::process()
 		}
 	}
 	
-	
-	
-	
-
 	data::ShapeData sd;
 	if (!image.empty())
 	{

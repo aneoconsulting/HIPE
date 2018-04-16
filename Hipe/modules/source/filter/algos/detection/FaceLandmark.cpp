@@ -5,7 +5,7 @@
 #include <dlib/image_processing.h>
 #include <dlib/gui_widgets.h>
 #include <dlib/image_io.h>
-#include "data/SquareCrop.h"
+#include <data/SquareCrop.h>
 
 
 namespace filter
