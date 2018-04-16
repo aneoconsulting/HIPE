@@ -135,9 +135,11 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 	{
 	case(0):
 		age = "?? - ??"; //0 - 2
+		_prob_age[_age] = 0.;
 		break;
 	case (1):
 		age = "?? - ??";
+		_prob_age[_age] = 0.;
 		break;
 	case (2):
 		age = "15 - 22";
@@ -193,13 +195,14 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 
 	result.rectangles.push_back(rect);
 	std::stringstream build_text;
+	std::cout.precision(2);
 
 	if (!_prob_gender.empty())
 	{
 		if (_prob_gender[0] < confidence_gender * 100.f && _prob_gender[1] < confidence_gender * 100.f)
 			build_text << "Gender : " << "^_^";
 		else
-			build_text << gender << " " << _prob_gender[_gender];
+			build_text << gender << " " << _prob_gender[_gender] << "% ";
 	}
 
 	if (!_prob_age.empty())
@@ -207,7 +210,7 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 		if (_prob_age[_age] < confidence_age * 100.f)
 			build_text << " Age : " << "^_^" << "%";
 		else
-			build_text << age << " " << _prob_age[_age] << "%";
+			build_text << age << " " << _prob_age[_age] << "% ";
 	}
 	
 	result.names.push_back(build_text.str());
