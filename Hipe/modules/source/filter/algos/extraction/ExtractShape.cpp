@@ -37,6 +37,9 @@ data::ImageArrayData filter::algos::ExtractShape::extractMask(data::ImageData& i
 
 	for (cv::Rect rect : datas.RectsArray())
 	{
+		if (rect.x < 0 || rect.y < 0)
+			continue;
+
 		if ((rect.x + rect.width ) >= mask.size().width ||
 			(rect.y + rect.height)  >= mask.size().height)
 			
