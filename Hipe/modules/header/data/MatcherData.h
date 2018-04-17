@@ -27,9 +27,7 @@ namespace data
 	public:
 		bool IsBest() const
 		{
-			const MatcherData this_const = This_const();
-			
-
+			const MatcherData & this_const = This_const();
 			return this_const.isBest;
 		}
 
@@ -72,9 +70,10 @@ namespace data
 		MatcherData(const data::MatcherData &right) : IOData(right._type)
 		{
 			Data::registerInstance(right._This);
-			_type = right.This_const()._type;
 			_decorate = right._decorate;
-			isBest = right.isBest;
+			_type = right.This_const()._type;
+			
+			
 		}
 
 		MatcherData(const cv::Mat& patternImage, const cv::Mat& requestImage, const std::vector<cv::KeyPoint>& patternInliers, const std::vector<cv::KeyPoint>& requestInliers, const std::vector<cv::DMatch>& goodMatches)
@@ -178,6 +177,6 @@ namespace data
 		* \param left The ShapeData oject to get the data from
 		* \return A reference to the object
 		*/
-		MatcherData& operator=(const MatcherData& left);
+		//MatcherData& operator=(const MatcherData& left);
 	};
 }

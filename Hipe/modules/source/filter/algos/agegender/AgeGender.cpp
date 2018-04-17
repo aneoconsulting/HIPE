@@ -117,6 +117,7 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 	// multiply 100 of each probability to make it as %
 	std::for_each(_prob_gender.begin(), _prob_gender.end(), [&](Dtype& prob) { prob *= 100; });
 	std::for_each(_prob_age.begin(), _prob_age.end(), [&](Dtype& prob) { prob *= 100; });
+	
 
 	gender = "M";
 	// Convert int _gender into string
@@ -160,6 +161,12 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 		age = "60 - ??";
 		break;
 	}
+	if (!_prob_gender.empty())
+	{
+		cout << " Male (" << _prob_gender[0] << " %)" << endl;
+		cout << " Female (" << _prob_gender[1] << " %)" << endl;
+		cout << " => " << gender << endl << endl;
+	}
 	/*cout << " Male (" << _prob_gender[0] << " %)" << endl;
 	cout << " Female (" << _prob_gender[1] << " %)" << endl;*/
 	// Print result
@@ -201,16 +208,17 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 	{
 		if (_prob_gender[0] < confidence_gender * 100.f && _prob_gender[1] < confidence_gender * 100.f)
 			build_text << "Gender : " << "^_^";
-		else
-			build_text << gender << " " << _prob_gender[_gender] << "% ";
+		else {			
+			build_text << gender << " (" << std::setprecision(2) << _prob_gender[_gender] << "%) ";
+		}
 	}
 
 	if (!_prob_age.empty())
 	{
 		if (_prob_age[_age] < confidence_age * 100.f)
-			build_text << " Age : " << "^_^" << "%";
+			build_text << " Age : " << "^_^";
 		else
-			build_text << age << " " << _prob_age[_age] << "% ";
+			build_text << " Age : " << age << " (" << std::setprecision(2) << _prob_age[_age] << "%) ";
 	}
 	
 	result.names.push_back(build_text.str());

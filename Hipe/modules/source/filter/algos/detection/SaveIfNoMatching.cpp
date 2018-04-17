@@ -76,21 +76,21 @@ namespace filter
 				return OK;
 			}
 
-			Homography homography;
+			/*Homography homography;
 			homography.setName(this->getName() + "__homography");
 			homography.setLevel(1);
 			data::ConnexDataBase& connectorHomography = homography.getCast().getConnector();
 			data::DataPort& portHomography = static_cast<data::DataPort &>(connectorHomography.getPort());
-			portHomography.push(best_match);
+			portHomography.push(best_match);*/
 
-			HipeStatus hipe_status = homography.process();
+			/*HipeStatus hipe_status = homography.process();
 			if (hipe_status != HipeStatus::OK)
 			{
 				cv::Mat save = CVUtils::writeTextOnImage(saved_matchingImage, "WAIT FOR RESEARCH...");
 
 				PUSH_DATA(data::ImageData(save));
 				return hipe_status;
-			}
+			}*/
 
 			/*ResultFilter resultForHomography;
 			resultForHomography.setName(this->getName() + "__resultForHomography");

@@ -44,12 +44,16 @@ namespace data
 	{
 		This().filenames.clear();
 		cv::glob(This()._directoryPath, This().filenames);
+		This()._idxFile = 0;
 	}
 
 	ImageData DirectoryImgData::nextImageFile()
 	{
 		if (This()._idxFile >= This().filenames.size())
+		{
+			This()._idxFile = 0;
 			return data::ImageData();
+		}
 
 		cv::Mat mat = cv::imread(This().filenames[This()._idxFile]);
 

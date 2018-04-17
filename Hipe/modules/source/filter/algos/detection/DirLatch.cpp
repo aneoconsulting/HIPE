@@ -55,17 +55,20 @@ namespace filter
 				cleanFilter(latch.get());
 
 				data::MatcherData matcher;
-				matcher.setPatternImage(source.getMat());
+				matcher.setRequestImage(source.getMat());
 
 				this->result.push(matcher);
-
+				if (matcher.patternImage().empty())
+				{
+					std::cout << "Pattern Image is empty in latch thread of DirLatch" << std::endl;
+				}
 				return OK;
 			}
 
-			int l_good_matches = good_matches;
+			int l_good_matches = 6;
 			data::MatcherData best_match;
 
-
+			int nbFile = 0;
 			while (!cropImage.empty())
 			{
 
@@ -87,23 +90,33 @@ namespace filter
 
 				data::DataPort & resultPort = static_cast<data::DataPort &>(resultLatch->getCast().getConnector().getPort());
 				data::Data pop = resultPort.pop();
-				data::MatcherData & matcher = static_cast<data::MatcherData& >(pop);
+				data::MatcherData matcher = static_cast<const data::MatcherData &>(pop);
 
 				if (l_good_matches <= (int)matcher.goodMatches().size())
 				{
 					best_match = matcher;
 					l_good_matches = (int)matcher.goodMatches().size();
+					if (matcher.patternImage().empty())
+					{
+						std::cout << "Pattern Image is empty in latch thread of DirLatch" << std::endl;
+					}
 					
 				}
 				this->result.push(matcher);
 				cropImage = directory_img.nextImageFile();
-
+				nbFile++;
 			}
+			std::cout << "Nb File Read : " << nbFile << std::endl;
+
 			if (best_match.goodMatches_const().size() >= good_matches)
 			{
 				best_match.setBest();
 				this->result.clear();
 				this->result.push(best_match);
+				if (best_match.patternImage().empty())
+				{
+					std::cout << "Pattern Image is empty in latch thread of DirLatch" << std::endl;
+				}
 				return OK;
 			}
 
@@ -114,7 +127,10 @@ namespace filter
 			empty_match.setRequestImage(source.getMat());
 			this->result.clear();
 			this->result.push(empty_match);
-
+			if (best_match.patternImage().empty())
+			{
+				std::cout << "Pattern Image is empty in latch thread of DirLatch" << std::endl;
+			}
 			return OK;
 		}
 
@@ -219,6 +235,10 @@ namespace filter
 			if (result.trypop_until(md_result, 10)) // wait 10ms no more
 			{
 				tosend = md_result;
+				if (md_result.patternImage().empty())
+				{
+					std::cout << "Pattern Image is empty in parent thread of DirLatch" << std::endl;
+				}
 				
 			}
 			

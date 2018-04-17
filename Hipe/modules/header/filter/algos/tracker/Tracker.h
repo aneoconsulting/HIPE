@@ -40,6 +40,7 @@ namespace filter
 				_init = false;
 				_id = -1;
 				history_points = 20;
+				confidence = 30;
 			}
 			
 			int _id;

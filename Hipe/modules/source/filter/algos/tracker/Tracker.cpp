@@ -185,7 +185,7 @@ HipeStatus filter::algos::Tracker::process()
 		_id++;
 		trackers.clear();
 		trackers.push_back(SingleTracker(_id, image.getMat(), rect));
-		confidence = 5;
+		
 	}
 
 

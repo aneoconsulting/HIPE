@@ -158,12 +158,12 @@ namespace data {
 	* \param left The ShapeData oject to get the data from
 	* \return A reference to the object
 	*/
-	MatcherData& MatcherData::operator=(const MatcherData& left)
+	/*MatcherData& MatcherData::operator=(const MatcherData& left)
 	{
 		_This = left._This;
 		_type = left._type;
 		_decorate = left._decorate;
 
 		return *this;
-	}
+	}*/
 }
