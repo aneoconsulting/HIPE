@@ -1,8 +1,11 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <string>
+#pragma warning(push, 0)
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/sources/severity_logger.hpp>
+#pragma warning(pop)
 
 #define LOG_CONCAT2(a, b) a b
 

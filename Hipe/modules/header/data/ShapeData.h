@@ -1,7 +1,12 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <coredata/IOData.h>
 #include <vector>
+#pragma warning(push, 0) 
 #include <opencv2/core/types.hpp>
+#pragma warning(pop) 
+
+
 
 namespace data
 {

@@ -1,9 +1,13 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <coredata/OutputData.h>
-#include <boost/thread/thread.hpp>
 #include <orchestrator/TaskInfo.h>
 #include <corefilter/tools/RegisterTable.h>
 #include <corefilter/datasource/DataSource.h>
+
+#pragma warning(push, 0)
+#include <boost/thread/thread.hpp>
+#pragma warning(pop)
 
 
 namespace orchestrator
@@ -54,11 +58,28 @@ namespace orchestrator
 			static void cleanDataChild(filter::Model* filter)
 			{
 				filter->cleanUp();
+				data::ConnexDataBase& outRes = filter->getConnector();
+				data::DataPort & data_port = static_cast<data::DataPort &>(outRes.getPort());
 
+				while(! data_port.empty())
+				{
+					data_port.pop();
+				}
+				
 				for (auto& childFilter : filter->getChildrens())
 				{
 					childFilter.second->cleanUp();
+				
 					cleanDataChild(childFilter.second);
+
+					data::ConnexDataBase& outResChild = childFilter.second->getConnector();
+					data::DataPort & data_portChild = static_cast<data::DataPort &>(outResChild.getPort());
+
+					while(! data_portChild.empty())
+					{
+						data_portChild.pop();
+					}
+
 				}
 			}
 
@@ -66,10 +87,26 @@ namespace orchestrator
 			{
 				filter->dispose();
 
+				data::ConnexDataBase& outRes = filter->getConnector();
+				data::DataPort & data_port = static_cast<data::DataPort &>(outRes.getPort());
+
+				while(! data_port.empty())
+				{
+					data_port.pop();
+				}
+
 				for (auto& childFilter : filter->getChildrens())
 				{
 					childFilter.second->dispose();
 					disposeChild(childFilter.second);
+
+					data::ConnexDataBase& outResChild = childFilter.second->getConnector();
+					data::DataPort & data_portChild = static_cast<data::DataPort &>(outResChild.getPort());
+
+					while(! data_portChild.empty())
+					{
+						data_portChild.pop();
+					}
 				}
 			}
 		
@@ -350,9 +387,8 @@ namespace orchestrator
 				MatrixLayerNode matrixLayer(maxLevel + 1);
 				setMatrixLayer(filterRoot, matrixLayer);
 				//Get the Datasource type. FI : if One of data is a video then we detach the thread
+				
 				data::IODataType sourceType = data::IMGF;
-				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
-
 				for (auto dataSource : matrixLayer[1])
 				{
 					filter::datasource::DataSource* data_source = dynamic_cast<filter::datasource::DataSource*>(dataSource);
@@ -360,11 +396,14 @@ namespace orchestrator
 					{
 						if (data_source->getSourceType() == data::IODataType::VIDF)
 						{
-							sourceType = data::IODataType::VIDF;;
-							break;
+							sourceType = data::IODataType::VIDF;
+							data_source->intialize();
 						}
 					}
 				}
+
+				
+				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
 
 				
 				std::atomic<bool>* isActive = new std::atomic<bool>(true);
@@ -444,7 +483,10 @@ namespace orchestrator
 
 					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
 						throw HipeException("Cannot free properly the videocapture");
-				});
+
+					//boost::this_thread::sleep(boost::posix_time::milliseconds(2000));
+				}
+					);
 				if (data::DataTypeMapper::isVideo(sourceType))
 				{
 					TaskInfo taskInfo;
@@ -452,6 +494,7 @@ namespace orchestrator
 					taskInfo.isActive.reset(isActive);
 					taskInfo.filter.reset(cpyFilterRoot, [](filter::Model *) {});
 					runningTasks.push_back(taskInfo);
+					//boost::this_thread::sleep(boost::posix_time::milliseconds(2000));
 				}
 				else
 				{
@@ -465,43 +508,12 @@ namespace orchestrator
 
 			void process(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug = false)
 			{
+				if (!runningTasks.empty())
+				{
+					throw HipeException("Some previous task is stil running. Please kill it before run a new one.");
+				}
 
-				/*if (data::DataTypeMapper::isSequence(inputData.getType()))
-				{
-					processSequence(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isListIo(inputData.getType()))
-				{
-					data::ListIOData &list_io_data = static_cast<data::ListIOData&>(inputData);
-					processListData(root, list_io_data, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isImage(inputData.getType()))
-				{
-					processImages(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isVideo(inputData.getType()))
-				{
-					using videoType = data::FileVideoInput;
-
-					if (inputData.getType() == data::STRMVID)
-						using videoType = data::StreamVideoInput;
-
-					processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
-				}
-				else if (data::DataTypeMapper::isStreaming(inputData.getType()))
-				{
-					processStreaming(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isPattern(inputData.getType()))
-				{
-					using videoType = data::PatternData;
-					using videoDir = data::DirPatternData;
-					if (inputData.getType() == data::IODataType::DIRPATTERN)
-						processVideo(root, static_cast<videoDir&>(inputData), outputData, debug);
-					else
-						processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
-				}
-				else */if (data::DataTypeMapper::isNoneData(inputData.getType()))
+				if (data::DataTypeMapper::isNoneData(inputData.getType()))
 				{
 					processDataSource(root, outputData, debug);
 				}
@@ -519,7 +531,15 @@ namespace orchestrator
 					std::atomic<bool>* isActive = taskInfo.isActive.get();
 					*(isActive) = false;
 					if (taskInfo.task->joinable())
+					{
 						taskInfo.task->join();
+						/*cleanDataChild(cpyFilterRoot);
+						disposeChild(cpyFilterRoot);
+
+						if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+							throw HipeException("Cannot free properly the videocapture");*/
+					}
+						
 
 
 				}

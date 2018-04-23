@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <HttpServer.h>
 #include <HttpTask.h>
 

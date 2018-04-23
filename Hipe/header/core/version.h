@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 
 //Version where the source code start changes

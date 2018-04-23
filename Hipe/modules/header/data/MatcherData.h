@@ -1,7 +1,11 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <coredata/IOData.h>
-#include <opencv2/core/mat.hpp>
 #include <vector>
+
+#pragma warning(push, 0) 
+#include <opencv2/core/mat.hpp>
+#pragma warning(pop) 
 
 namespace data
 {
@@ -18,14 +22,33 @@ namespace data
 		std::vector<cv::KeyPoint> _inliers2;		//<! The inliers2_const (the pertinent information) computed from the request image.
 
 		std::vector<cv::DMatch> _goodMatches;	//<! The inliers1 and inliers2 that match (i.e. they were found on the patternImage and the requestImage).
+
+		bool isBest;
+
+	public:
+		bool IsBest() const
+		{
+			const MatcherData & this_const = This_const();
+			return this_const.isBest;
+		}
+
+		void setBest()
+		{
+			MatcherData &ret = This();
+			isBest = true;
+			ret.isBest = true;
+		}
+
+	protected:
 		MatcherData(IOData::_Protection priv) : IOData(MATCHER)
 		{
-
+			isBest = false;
 		}
 
 		MatcherData(data::IODataType type) : IOData(type)
 		{
-
+			
+			isBest = false;
 		}
 
 	public:
@@ -37,6 +60,7 @@ namespace data
 		{
 			Data::registerInstance(new MatcherData(_Protection()));
 			This()._type = MATCHER;
+			This().isBest = false;
 		}
 
 
@@ -47,8 +71,10 @@ namespace data
 		MatcherData(const data::MatcherData &right) : IOData(right._type)
 		{
 			Data::registerInstance(right._This);
-			_type = right.This_const()._type;
 			_decorate = right._decorate;
+			_type = right.This_const()._type;
+			
+			
 		}
 
 		MatcherData(const cv::Mat& patternImage, const cv::Mat& requestImage, const std::vector<cv::KeyPoint>& patternInliers, const std::vector<cv::KeyPoint>& requestInliers, const std::vector<cv::DMatch>& goodMatches)
@@ -63,6 +89,8 @@ namespace data
 			This()._inliers2 = requestInliers;
 
 			This()._goodMatches = goodMatches;
+
+			This().isBest = false;
 		}
 
 		virtual ~MatcherData()
@@ -150,6 +178,6 @@ namespace data
 		* \param left The ShapeData oject to get the data from
 		* \return A reference to the object
 		*/
-		MatcherData& operator=(const MatcherData& left);
+		//MatcherData& operator=(const MatcherData& left);
 	};
 }

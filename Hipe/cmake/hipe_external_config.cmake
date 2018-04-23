@@ -24,12 +24,19 @@ get_filename_component(HIPE_EXTERNAL "${HIPE_EXTERNAL}" ABSOLUTE)
 # Inform the user which value was used.
 message(STATUS "HIPE_EXTERNAL : ${HIPE_EXTERNAL}")
 
-# Make sure HIPE_EXTERNAL exists.
-if(NOT EXISTS "${HIPE_EXTERNAL}")
-  message(FATAL_ERROR "${HIPE_EXTERNAL} does not exist")
-elseif(NOT IS_DIRECTORY "${HIPE_EXTERNAL}")
-  message(FATAL_ERROR "${HIPE_EXTERNAL} is not a directory")
-endif(NOT EXISTS "${HIPE_EXTERNAL}")
+if (NOT (${USE_PREBUILT_DEPENDENCIES} OR ${FORCE_USE_PREBUILT_DEPENDENCIES}) )
+	# Make sure HIPE_EXTERNAL exists.
+	if(NOT EXISTS "${HIPE_EXTERNAL}")
+	  message(FATAL_ERROR "${HIPE_EXTERNAL} does not exist")
+	elseif(NOT IS_DIRECTORY "${HIPE_EXTERNAL}")
+	  message(FATAL_ERROR "${HIPE_EXTERNAL} is not a directory")
+	endif(NOT EXISTS "${HIPE_EXTERNAL}")
+else()
+if(UNIX)
+		file(MAKE_DIRECTORY "${HIPE_EXTERNAL}")
+		file(MAKE_DIRECTORY "${HIPE_EXTERNAL}/linux64/install")
+	endif()
+endif()
 
 
 

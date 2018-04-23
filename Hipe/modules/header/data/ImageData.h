@@ -1,10 +1,13 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <coredata/IODataType.h>
 
 #include <coredata/IOData.h>
 #include <data/ImageArrayData.h>
 #include <coredata/data_export.h>
+#pragma warning(push, 0) 
 #include <opencv2/core/mat.hpp>
+#pragma warning(pop)
 
 namespace data
 {
@@ -62,7 +65,8 @@ namespace data
 
 		ImageData(const Data & ref) : IOData(IMGF)
 		{
-			if (ref.getType() != IMGF) throw HipeException("ERROR data::ImageData::ImageData - Only Connexdata should call this constructor.");
+			if (ref.getType() != IMGF) 
+				throw HipeException("ERROR data::ImageData::ImageData - Only Connexdata should call this constructor.");
 
 			Data::registerInstance(ref);
 			This()._type = ref.getType();

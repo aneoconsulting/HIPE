@@ -1,7 +1,11 @@
+//@HIPE_LICENSE@
 #include <json/JsonTree.h>
+
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree_fwd.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#pragma warning(pop)
 
 namespace json
 {
@@ -123,7 +127,7 @@ namespace json
 		return _jsonPtree->get<bool>(path);
 	}
 
-	bool JsonTree::getInt(std::string path) const
+	int JsonTree::getInt(std::string path) const
 	{
 		return _jsonPtree->get<int>(path);
 	}

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 
 #if defined WIN32 || defined __CYGWIN__

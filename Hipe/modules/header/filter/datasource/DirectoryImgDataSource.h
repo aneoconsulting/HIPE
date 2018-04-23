@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once 
 #include <boost/log/utility/setup/file.hpp>
 #include <coredata/NoneData.h>
@@ -16,6 +17,8 @@
 #include <string>
 #include <data/FileImageData.h>
 #include <data/VideoData.h>
+#include <data/DirectoryImgData.h>
+
 
 namespace filter
 {

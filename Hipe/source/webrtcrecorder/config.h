@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #ifndef SCY_WebRTC_WebRTCRecorder_Config_H
 #define SCY_WebRTC_WebRTCRecorder_Config_H
 

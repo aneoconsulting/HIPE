@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <corefilter/tools/RegisterTools.hpp>
 #include <corefilter/IFilter.h>
@@ -43,7 +44,7 @@ namespace filter {
 			 */
 			RootFilter &operator<<(data::Data & element)
 			{
-				_connexData.push(element); //ICI COPY constructor data bug with fields
+				PUSH_DATA(element); //ICI COPY constructor data bug with fields
 				return *this;
 			}
 
@@ -55,7 +56,7 @@ namespace filter {
 			RootFilter &operator<<(cv::Mat & element)
 			{
 				data::ImageData image(element);
-				_connexData.push(image);
+				PUSH_DATA(image);
 				return *this;
 			}
 		};

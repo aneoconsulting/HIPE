@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <corefilter/tools/RegisterClass.h>
 #include <corefilter/IFilter.h>
@@ -8,13 +9,10 @@
 #include <data/ImageData.h>
 #include <data/ImageArrayData.h>
 
+#pragma warning(push, 0)
 #include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/features2d.hpp>
-#include <opencv2/xfeatures2d.hpp>
 #include <opencv2/calib3d.hpp>
-
-#include "filter/algos/IDPlate/IDPlateTools.h"
+#pragma warning(pop)
 
 
 namespace filter

@@ -1,6 +1,9 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <corefilter/Model.h>
+#pragma warning(push, 0)
 #include <boost/thread.hpp>
+#pragma warning(pop)
 #include <atomic>
 
 namespace orchestrator

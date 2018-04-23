@@ -1,11 +1,15 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <corefilter/tools/RegisterClass.h>
 
 #include <corefilter/IFilter.h>
 
 #include <corefilter/filter_export.h>
-#include <opencv2/core/mat.hpp>
 #include <data/PyContextData.h>
+
+#pragma warning(push, 0)
+#include <opencv2/core/mat.hpp>
+#pragma warning(pop)
 
 
 
@@ -31,8 +35,6 @@ namespace filter
 			std::atomic<bool> _init;
 
 			void init_python(const std::string& path);
-
-			std::string GetCurrentWorkingDir(void);
 
 			HipeStatus process() override;	
 

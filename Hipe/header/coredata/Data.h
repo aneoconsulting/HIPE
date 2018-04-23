@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 
 #include <coredata/IODataType.h>
@@ -13,6 +14,12 @@ namespace data
 		IODataType _type;
 		std::shared_ptr<Data> _This;
 		bool _decorate = false;
+		std::string _label;
+
+	public:
+		std::string getLabel() const;
+
+		void setLabel(const std::string& cs);
 
 	protected:
 		Data(IODataType datatype);

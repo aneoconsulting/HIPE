@@ -1,6 +1,10 @@
+//@HIPE_LICENSE@
 #include <json/JsonFilterNode/JsonFilterNode.h>
 #include <json/JsonTree.h>
+
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
+#pragma warning(pop)
 
 namespace json
 {

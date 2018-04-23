@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include "x264Encoder.h"
 
 

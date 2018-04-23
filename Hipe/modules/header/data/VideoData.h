@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <coredata/IODataType.h>
 #include <coredata/data_export.h>
@@ -11,6 +12,7 @@ namespace data {
 		
 
 		virtual void openFile() = 0;
+		virtual void closeFile() = 0;
 
 		virtual Data newFrame() = 0;
 	};
@@ -36,6 +38,8 @@ namespace data {
 
 		}
 		virtual void openFile() { };
+
+		virtual void closeFile() { };
 
 		virtual ~VideoData() {}
 

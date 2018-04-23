@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <pydata/pyConverterData.h>
 #include <data/ImageData.h>
 #include <pydata/pyImageData.h>

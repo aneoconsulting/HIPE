@@ -1,8 +1,5 @@
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/livemedia_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/ffmpeg_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/x264_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 include(GetPrerequisites)
 
@@ -32,9 +29,6 @@ target_link_libraries(hipe_server json)
 target_link_libraries(hipe_server coredata)
 
 target_link_libraries(hipe_server core)
-target_link_libraries(hipe_server ${FFmpeg_LIBRARIES})
-target_link_libraries(hipe_server ${x264_LIBRARIES})
-target_link_libraries(hipe_server ${Live_LIBRARIES})
 target_link_libraries(hipe_server ${OpenCV_LIBS})
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
@@ -58,11 +52,15 @@ endif(USE_DLIB)
 
 
 
+if (MSVC)
+target_link_libraries(hipe_server Imagehlp)
+endif()
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
   message(STATUS "Test if it works with windows")
   target_link_libraries(hipe_server ws2_32 wsock32)
   target_link_libraries(hipe_server ws2_32 wsock32)
+  
 endif(MSYS)
 
 if(USE_GPERFTOOLS)
@@ -78,23 +76,27 @@ display_target_properties(hipe_server)
 
 install (TARGETS hipe_server CONFIGURATIONS Debug DESTINATION bin/Debug COMPONENT applications)
 install (TARGETS hipe_server CONFIGURATIONS Release DESTINATION bin/Release COMPONENT applications)
+install (TARGETS hipe_server CONFIGURATIONS RelWithDebInfo DESTINATION bin/Release COMPONENT applications)
 
 #
 #Copy in install folder all dependencies for hipe_core
 #
 
-#create directory for 3rdParty
-install(DIRECTORY DESTINATION 3rdParty)
 
 set(EXT_BIN "") 
 if (WIN32)
 set(EXT_BIN .exe)
 endif() 
 
-#file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/Debug/hipe_server${EXT_BIN}" cm_path)
-#file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/Debug" cm_dir)
-#set(PATH_SHAREDLIB "${HIPE_EXTERNAL_DIR}/boost_1_62_0/lib64-msvc-14.0;${HIPE_EXTERNAL_DIR}/opencv-3.4/x64/vc14/bin;${HIPE_EXTERNAL_DIR}/gstreamer/1.0/x86_64/bin;${cm_dir};${CMAKE_PREFIX_PATH}")
-##STRING(REPLACE "\\" "\\\\" cm_path ${cm_path})
 message(STATUS "Install dependencies exe")
 install_dependencies_exe("hipe_server")
 
+install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}\")" COMPONENT applications)
+install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT applications)
+install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT applications)
+install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake" COMPONENT applications)
+
+install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/include\")" COMPONENT headers)
+install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT headers)
+install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT headers)
+install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake" COMPONENT headers)

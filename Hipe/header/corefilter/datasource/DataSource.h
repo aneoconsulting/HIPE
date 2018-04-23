@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include "corefilter/IFilter.h"
 
@@ -9,6 +10,8 @@ namespace filter
 		{
 		public:
 			virtual data::IODataType getSourceType() const = 0;
+
+			virtual HipeStatus intialize() = 0;
 		};
 	}
 }

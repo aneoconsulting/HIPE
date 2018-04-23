@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <core/Singleton.h>
 #include <map>

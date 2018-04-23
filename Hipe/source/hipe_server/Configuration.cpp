@@ -1,8 +1,12 @@
+//@HIPE_LICENSE@
 #include <hipe_server/Configuration.h>
+
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/program_options.hpp>
-#include <core/HipeException.h>
+#include "core/ModuleLoader.h"
+#pragma warning(pop)
 
 
 namespace bpo = boost::program_options;
@@ -93,6 +97,11 @@ namespace hipe_server
 		boost::property_tree::ptree configPtree;
 		try
 		{
+			if (! isFileExist(this->configFilePath))
+			{
+				this->configLogger << "Couldn't find configuration file.";
+				return 1;
+			}
 			boost::property_tree::read_json(this->configFilePath, configPtree);
 		}
 		catch (const std::exception& e)

@@ -1,6 +1,12 @@
+//@HIPE_LICENSE@
 #pragma once 
 #include <data/ImageArrayData.h>
+#include <data/ImageData.h>
+
+#pragma warning(push, 0)
 #include <boost/log/utility/setup/file.hpp>
+
+#pragma warning(pop)
 
 
 namespace data {
@@ -14,16 +20,33 @@ namespace data {
 			*/
 			std::string _directoryPath;
 
+			std::vector<cv::String> filenames;
 
+		public:
+			std::vector<cv::String> & getFilenames()
+			{
+				DirectoryImgData &ret = This();
+				return ret.filenames;
+			}
+
+			void setFilenames(const std::vector<cv::String>& filenames)
+			{
+				DirectoryImgData &ret = This();
+				ret.filenames = filenames;
+				this->filenames = filenames;
+			}
+
+		private:
+			int _idxFile;
 
 			DirectoryImgData(IOData::_Protection priv) : IOData(IODataType::SEQIMGD)
 			{
-
+				_idxFile = 0;
 			}
 
 
 		public:
-			using IOData::IOData;
+			//using IOData::IOData;
 
 		public:
 
@@ -31,8 +54,9 @@ namespace data {
 			{
 				IOData::_Protection priv;
 				Data::registerInstance(new DirectoryImgData(priv));
-
+				_idxFile = 0;
 				This()._type = SEQIMGD;
+				This()._idxFile = 0;
 			}
 			/**
 			* \brief
@@ -47,6 +71,10 @@ namespace data {
 			}
 
 			void loadImagesData();
+
+			void refreshDirectory();
+
+			ImageData nextImageFile();
 
 			//DirectoryImgData(const std::string & directoryPath, bool getImages) : IOData(data::IODataType::SEQIMGD)
 			//{
@@ -105,6 +133,10 @@ namespace data {
 			{
 				return This_const()._directoryPath;
 			}
+			void SetDirectoryPath(std::string path)
+			{
+				This()._directoryPath = path;
+			}
 			
 			bool empty() const
 			{
@@ -113,6 +145,12 @@ namespace data {
 			}
 			std::vector<cv::Mat>& images();
 			cv::Mat image(int indew);
+
+			bool hasFiles()
+			{
+				refreshDirectory();
+				return (!This().filenames.empty());
+			};
 		};
 	}
 

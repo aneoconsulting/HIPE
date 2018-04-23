@@ -77,6 +77,17 @@ if(WIN32)
   set(UV_DIR "${HIPE_EXTERNAL_DIR}/libuv"  CACHE PATH "LIBUV_LIBRARYDIR" FORCE)
 
   set(Dlib_DIR "${HIPE_EXTERNAL_DIR}/dlib-19.8/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE)
+  
+  set(Caffe_DIR "${HIPE_EXTERNAL_DIR}/caffe/"  CACHE PATH "The directory containing a CMake configuration file for Caffe." FORCE)
+  #set(Caffe_DIR "${HIPE_EXTERNAL_DIR}/caffelib/"  CACHE PATH "The directory containing a CMake configuration file for Caffe." FORCE)
+  
+  message(WARNINGS  "This is Caffe_DIR \"${Caffe_DIR}\"")
+  
+  set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/gflags/"  CACHE PATH "Folder contains Gflags" FORCE)
+  
+  set(GLOG_ROOT_DIR "${HIPE_EXTERNAL_DIR}/glog/" CACHE PATH "Folder contains Google glog" FORCE)
+  
+  set(OPENBLAS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/OpenBlas/" CACHE PATH "Folder contains openblas" FORCE)
 
   set(Python27_DIR "${HIPE_EXTERNAL_DIR}/Python2.7.14"  CACHE PATH "PYTHON_LIBRARYDIR" FORCE )
   if(HIPE_EXTERNAL_PYTHON27)

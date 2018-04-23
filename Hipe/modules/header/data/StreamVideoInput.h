@@ -1,11 +1,11 @@
+//@HIPE_LICENSE@
 #pragma once
-
-
-#pragma once
-
-#include <opencv2/opencv.hpp>
-#include <boost/filesystem/path.hpp>
 #include <data/VideoData.h>
+
+#pragma warning(push, 0) 
+#include <boost/filesystem/path.hpp>
+#include <opencv2/opencv.hpp>
+#pragma warning(pop) 
 
 #ifdef OLD_CODE
 #include <streaming/CaptureVideo.h>

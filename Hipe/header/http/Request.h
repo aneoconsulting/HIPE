@@ -1,8 +1,12 @@
+//@HIPE_LICENSE@
 #pragma once
 #include "Server.h"
 #include "Content.h"
 
+#pragma warning(push, 0)
 #include <boost/regex.hpp>
+#pragma warning(pop)
+
 #define REGEX_NM boost
 
 

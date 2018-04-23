@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <core/HipeException.h>
 #include <json/JsonFilterNode/JsonFilterTree.h>

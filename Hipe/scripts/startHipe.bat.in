@@ -1,7 +1,11 @@
-set PATH=@HIPE_EXTERNAL_DIR@\ffmpeg\bin;@HIPE_EXTERNAL_DIR@\boost_1_62_0\lib64-msvc-14.0;@HIPE_EXTERNAL_DIR@\opencv-3.4\x64\vc14\bin;@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR@\liblept\bin;%PATH%
-set TESSDATA_PREFIX=C:\Users\ddubuc.ANEO\Dropbox (ANEO)\HIPE_GROUP\Demos\ID Plates\data\Tesseract
+set TESSDATA_PREFIX=%HOMEPATH%\Dropbox (ANEO)\HIPE_GROUP\Demos\ID Plates\data\Tesseract
+set GST_PLUGIN_PATH=@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\lib\gstreamer-1.0
+PATH=@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR@\bin\Debug;@CMAKE_INSTALL_PREFIX_WIN@\bin\Debug;@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;%PATH%
+pushd %~dp0
+set script_dir=%CD%
+popd
+echo "Path to binary " %script_dir%
+cd %script_dir%
 
-cd %dp0%
-
-hipe_server.exe -p 9090 -m "%cd%\..\..\..\hipemodule\bin\@CMAKE_INSTALL_CONFIG_NAME@\filter.dll"
+hipe_server.exe -p 9090 -m "%cd%\..\..\..\hipe-modules\bin\@BUILD_CONFIG@\filter.dll"
 

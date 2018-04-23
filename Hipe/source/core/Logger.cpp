@@ -1,14 +1,14 @@
+//@HIPE_LICENSE@
 #include <core/Logger.h>
 
-#include <boost/log/core.hpp>
+#pragma warning(push, 0)
+
 #include <boost/log/trivial.hpp>
 #include <boost/log/sinks/text_file_backend.hpp>
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-
-#include <boost/log/sources/record_ostream.hpp>
 
 #include <boost/log/common.hpp>
 #include <boost/log/expressions.hpp>
@@ -17,6 +17,8 @@
 #include <boost/log/sinks/async_frontend.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <boost/core/null_deleter.hpp>
+#pragma warning(pop)
+
 #include <fstream>
 
 namespace core

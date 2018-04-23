@@ -1,10 +1,12 @@
+//@HIPE_LICENSE@
 #pragma once
 
 #include <data/ImageData.h>
 #include <coredata/IODataType.h>
 #include <string>
+#pragma warning(push, 0)
 #include <opencv2/opencv.hpp>
-
+#pragma warning(pop)
 
 #include <coredata/data_export.h>
 

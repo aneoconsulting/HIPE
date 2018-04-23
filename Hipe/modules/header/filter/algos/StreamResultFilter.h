@@ -1,13 +1,18 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <corefilter/tools/RegisterTools.hpp>
 #include <corefilter/tools/RegisterTable.h>
 #include <corefilter/IFilter.h>
 #include <core/HipeStatus.h>
 #include <core/queue/ConcurrentQueue.h>
-#include <opencv2/highgui/highgui.hpp>
+
 #include <corefilter/tools/filterMacros.h>
 #include <data/ImageData.h>
 #include <string>
+
+#pragma warning(push, 0)
+#include <opencv2/highgui/highgui.hpp>
+#pragma warning(pop)
 
 
 namespace filter
@@ -111,6 +116,11 @@ namespace filter
 				current_time.tv_sec = current_time.tv_usec = 0;
 
 				nb_frame = 0;
+
+				if(writer.isOpened())
+				{
+					writer.release();
+				}
 			}
 		};
 

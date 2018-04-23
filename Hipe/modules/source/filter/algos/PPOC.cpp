@@ -1,6 +1,15 @@
+//@HIPE_LICENSE@
 #include <filter/algos/PPOC.h>
+#include <filter/algos/IDPlate/IDPlateCropper.h>
+
+#pragma warning(push, 0)
 #include <opencv2/imgproc.hpp>
 #include <opencv2/video/background_segm.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
+#include <opencv2/xfeatures2d.hpp>
+#pragma warning(pop)
+
 
 HipeStatus filter::algos::PPOC::process()
 {
@@ -93,10 +102,12 @@ HipeStatus filter::algos::PPOC::process()
 		findObject(referenceImage, query, mask);
 	}
 
-	_connexData.push(data::ImageData(referenceImage));
-	_connexData.push(data::ImageData(background));
-	for (auto & query : queries)
-		_connexData.push(data::ImageData(query));
+	PUSH_DATA(data::ImageData(referenceImage));
+	PUSH_DATA(data::ImageData(background));
+	for (auto & query_data : queries)
+	{
+		PUSH_DATA(data::ImageData(query_data));
+	}
 
 	return OK;
 }

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <map>
 #include <corefilter/Model.h>

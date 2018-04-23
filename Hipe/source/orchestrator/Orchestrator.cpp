@@ -1,5 +1,7 @@
+//@HIPE_LICENSE@
 #include <orchestrator/Orchestrator.h>
 #include <image/DefaultScheduler.h>
+#include <image/SchedulerSimonV2.h>
 #include <core/misc.h>
 
 
@@ -14,5 +16,9 @@ namespace orchestrator
 		image::DefaultScheduler * default_scheduler = new image::DefaultScheduler();
 
 		orchestrator_factory->addOrchestrator("DefaultScheduler", default_scheduler);
+		
+		image::SchedulerSimonV2 * Version2_Scheduler_Simon = new image::SchedulerSimonV2();
+		
+		orchestrator_factory->addOrchestrator("SchedulerSimonV2", Version2_Scheduler_Simon);
 	}
 }

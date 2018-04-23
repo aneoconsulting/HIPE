@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <data/PatternData.h>
 
 namespace data

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <data/FileVideoInput.h>
 
 namespace data
@@ -13,8 +14,12 @@ namespace data
 		{
 			This()._capture.release();
 			This()._capture.open(This()._filePath.string());
-			This()._capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
-			This()._capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+
+			if (std::isdigit(This()._filePath.string().c_str()[0]))
+			{
+				This()._capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+				This()._capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+			}
 		}
 
 		if (!This()._capture.isOpened())
@@ -37,6 +42,14 @@ namespace data
 		}
 	}
 
+	void FileVideoInput::closeFile()
+	{
+		if (This()._capture.isOpened())
+		{
+			This()._capture.release();
+		}
+	}
+
 	Data FileVideoInput::newFrame()
 	{
 		
@@ -50,6 +63,7 @@ namespace data
 		{
 			if (This()._loop)
 			{
+				closeFile();
 				openFile();
 			}
 			else

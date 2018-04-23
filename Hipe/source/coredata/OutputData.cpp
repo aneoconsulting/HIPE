@@ -1,7 +1,11 @@
+//@HIPE_LICENSE@
 #include <coredata/OutputData.h>
 #include <core/base64.h>
 #include <vector>
+
+#pragma warning(push, 0)
 #include <opencv2/opencv.hpp>
+#pragma warning(pop)
 
 namespace data
 {

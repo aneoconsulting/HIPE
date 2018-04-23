@@ -1,8 +1,11 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <core/Invoker.h>
-#include <boost/preprocessor/seq/for_each.hpp>
 
+#pragma warning(push, 0)
+#include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/variadic/to_seq.hpp>
+#pragma warning(pop)
 
 
 #define TO_STR(A) #A
@@ -18,6 +21,11 @@
 #define CONNECTOR_IN(DataIn)\
 	data::ConnexInput<DataIn> _connexData;\
 	inline virtual data::ConnexDataBase & getConnector() { return _connexData; }
+
+#define PUSH_DATA(DataIn)\
+	DataIn.setLabel(this->getName() + "__dataOut");\
+	_connexData.push(DataIn)
+
 
 #define SET_NAMESPACE(_namespace)\
 	virtual std::string getNamespace() const\

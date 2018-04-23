@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 
 #include <json/json_export.h>
@@ -6,8 +7,9 @@
 #include <core/HipeException.h>
 #include <string>
 
+#pragma warning(push, 0)
 #include <boost/property_tree/ptree_fwd.hpp>
-
+#pragma warning(pop)
 
 
 
@@ -104,7 +106,7 @@ namespace json
 
 		
 
-		bool getInt(std::string path) const;
+		int getInt(std::string path) const;
 		
 		void read_json(std::istream& stream);
 

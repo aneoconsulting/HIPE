@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 //
 //  FFmpegDecoder.cpp
 //  FFmpegRTSPServer

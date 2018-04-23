@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <corefilter/tools/RegisterTable.h>
 #include <corefilter/Model.h>
 #include <stack>

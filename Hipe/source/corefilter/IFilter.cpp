@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <corefilter/IFilter.h>
 
 using namespace filter;

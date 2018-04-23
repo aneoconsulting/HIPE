@@ -42,15 +42,30 @@ install_header_to_target(coredata)
 
 install (TARGETS coredata 
 		CONFIGURATIONS Release 
+		COMPONENT applications
 		RUNTIME DESTINATION bin/Release 
+		COMPONENT applications
 		LIBRARY DESTINATION lib/Release
+		COMPONENT applications
 		ARCHIVE DESTINATION lib/Release
 		COMPONENT library)
 		
 install (TARGETS coredata 
 		CONFIGURATIONS Debug
+		COMPONENT applications
 		RUNTIME DESTINATION bin/Debug
+		COMPONENT applications
 		LIBRARY DESTINATION lib/Debug
+		COMPONENT applications
 		ARCHIVE DESTINATION lib/Debug
 		COMPONENT library)
-
+		
+install (TARGETS coredata 
+		CONFIGURATIONS RelWithDebInfo
+		COMPONENT applications
+		RUNTIME DESTINATION bin/Release 
+		COMPONENT applications
+		LIBRARY DESTINATION lib/Release
+		ARCHIVE DESTINATION lib/Release
+		COMPONENT library)
+		

@@ -1,6 +1,10 @@
+//@HIPE_LICENSE@
 #include <data/FileImageData.h>
 #include <core/base64.h>
+
+#pragma warning(push, 0)
 #include <boost/filesystem/path.hpp>
+#pragma warning(pop)
 
 namespace data
 {

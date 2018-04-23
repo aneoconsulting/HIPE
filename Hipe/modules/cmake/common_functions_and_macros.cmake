@@ -232,90 +232,18 @@ endmacro()
 
 macro(install_dependencies_int target_name EXT_BIN)
 
-
-  if (WIN32)
-	install(
-			CODE "include(GetPrerequisites)
-						if(\"\${CMAKE_INSTALL_CONFIG_NAME}\" STREQUAL \"Debug\") 
-							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Debug/${target_name}${EXT_BIN}\" cm_path)
-							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Debug\" cm_dir)
-							set(PATH_SHAREDLIB \"${HIPE_EXTERNAL_DIR}/boost_1_62_0/lib64-msvc-14.0;${HIPE_EXTERNAL_DIR}/opencv-3.4/x64/vc14/bin;${HIPE_EXTERNAL_DIR}/gstreamer/1.0/x86_64/bin;\${cm_dir};${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}/bin/Debug;${CMAKE_INSTALL_PREFIX}/lib/Debug\")
-							message(STATUS \"SEARCH PATH : ${PATH_SHAREDLIB}\")
-							message(STATUS \"Info file path [ \${cm_path} ] in dir [ \${cm_dir} ] \")
-							get_prerequisites(\"\${cm_path}\" PREREQS 1 1 \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\")
-							
-							message(STATUS \"prerequisites \${PREREQS} for \${cm_path}\")
-							foreach(DEPENDENCY_FILE \${PREREQS})
-							gp_resolve_item(\"\${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\" resolved_file)
-							message(STATUS \"resolved_file='\${resolved_file}'\")
-							FILE(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Debug\" target_dir)
-							FILE(COPY \"\${resolved_file}\" DESTINATION \"\${target_dir}\")
-							endforeach()
-						else() 
-							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Release/${target_name}${EXT_BIN}\" cm_path)
-							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Release\" cm_dir)
-							set(PATH_SHAREDLIB \"${HIPE_EXTERNAL_DIR}/boost_1_62_0/lib64-msvc-14.0;${HIPE_EXTERNAL_DIR}/opencv-3.4/x64/vc14/bin;${HIPE_EXTERNAL_DIR}/gstreamer/1.0/x86_64/bin;\${cm_dir};${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}/bin/Release;${CMAKE_INSTALL_PREFIX}/lib/Release\")
-							message(STATUS \"Info file path [ \${cm_path} ] in dir [ \${cm_dir} ] \")
-							get_prerequisites(\"\${cm_path}\" PREREQS 1 1 \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\")
-							
-							message(STATUS \"prerequisites: \${PREREQS} for \${cm_path}\")
-							foreach(DEPENDENCY_FILE \${PREREQS})
-							gp_resolve_item(\"\${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\" resolved_file)
-
-							message(STATUS \"resolved_file='\${resolved_file}'\")
-							FILE(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/bin/Release\" target_dir)
-							FILE(COPY \"\${resolved_file}\" DESTINATION \"\${target_dir}\")
-							endforeach()
-						endif()
-						
-						"
-			COMPONENT deps)
-	
-  else() #else UNIX
-	install(
-			CODE "include(GetPrerequisites)
-						if(\"\${CMAKE_INSTALL_CONFIG_NAME}\" STREQUAL \"Debug\") 
-							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/lib/Debug/lib${target_name}${EXT_BIN}\" cm_path)
-							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/lib/Debug\" cm_dir)
-							set(PATH_SHAREDLIB \"${HIPE_EXTERNAL_DIR}/boost/lib;${HIPE_EXTERNAL_DIR}/dlib/lib/;${HIPE_EXTERNAL_DIR}/opencv/lib;\${cm_dir};${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}/bin/Debug;${CMAKE_INSTALL_PREFIX}/lib/Debug\")
-							message(STATUS \"SEARCH PATH : ${PATH_SHAREDLIB}\")
-							message(STATUS \"Info file path [ \${cm_path} ] in dir [ \${cm_dir} ] \")
-							get_prerequisites(\"\${cm_path}\" PREREQS 1 1 \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\")
-							
-							message(STATUS \"prerequisites \${PREREQS} for \${cm_path}\")
-							foreach(DEPENDENCY_FILE \${PREREQS})
-							gp_resolve_item(\"\${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Debug\" resolved_file)
-							get_filename_component( dep_realpath \"\${resolved_file}\" REALPATH )
-							get_filename_component( dep_name \"\${resolved_file}\" NAME )
-							FILE(COPY \"\${dep_realpath}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/lib/Debug\")
-
-							message(STATUS \"resolved_file='\${resolved_file}'\")
-							FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/lib/Debug\")
-							endforeach()
-						else() 
-							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/lib/Debug/lib${target_name}${EXT_BIN}\" cm_path)
-							file(TO_CMAKE_PATH \"${CMAKE_INSTALL_PREFIX}/lib/Debug\" cm_dir)
-							set(PATH_SHAREDLIB \"${HIPE_EXTERNAL_DIR}/boost/lib;${HIPE_EXTERNAL_DIR}/opencv/lib;\${cm_dir};${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}/bin/Release;${CMAKE_INSTALL_PREFIX}/lib/Release\")
-							message(STATUS \"Info file path [ \${cm_path} ] in dir [ \${cm_dir} ] \")
-							get_prerequisites(\"\${cm_path}\" PREREQS 1 1 \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\")
-							
-							message(STATUS \"prerequisites: \${PREREQS} for \${cm_path}\")
-							foreach(DEPENDENCY_FILE \${PREREQS})
-							gp_resolve_item(\"\${cm_path}\" \"\${DEPENDENCY_FILE}\" \"\" \"\${PATH_SHAREDLIB};${Hipecore_DIR}/bin/Release\" resolved_file)
-							get_filename_component( dep_realpath \"\${resolved_file}\" REALPATH )
-							get_filename_component( dep_name \"\${resolved_file}\" NAME )
-							FILE(COPY \"\${dep_realpath}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/lib/Release\")
-
-							message(STATUS \"resolved_file='\${resolved_file}'\")
-							FILE(COPY \"\${resolved_file}\" DESTINATION \"${CMAKE_INSTALL_PREFIX}/lib/Release\")
-							endforeach()
-						endif()
-						
-						"
-			COMPONENT deps)
-	
-  endif()
-  
+	install(CODE "set(target_name \"${target_name}\")" COMPONENT runtime)
+	install(CODE "set(EXT_BIN \"${EXT_BIN}\")" COMPONENT runtime)
+	install(CODE "set(HIPE_EXTERNAL_DIR \"${HIPE_EXTERNAL_DIR}\")" COMPONENT runtime)
+	install(CODE "set(PROJECT_SOURCE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT runtime)
+	install(CODE "set(Hipecore_DIR \"${Hipecore_DIR}\")" COMPONENT runtime)
+	install(SCRIPT "${PROJECT_SOURCE_DIR}/cmake/installConfig.cmake" COMPONENT runtime)
+	file(TO_NATIVE_PATH "${HIPE_EXTERNAL_DIR}" HIPE_EXTERNAL_DIR)
+	if (WIN32)
+		set(SCRIPT_EXT ".bat")
+	else()
+		set(SCRIPT_EXT ".sh")
+	endif()
 	
 endmacro(install_dependencies_int)
 

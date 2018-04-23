@@ -1,13 +1,19 @@
+//@HIPE_LICENSE@
 #pragma once
 
 #include <data/ImageData.h>
 #include <coredata/IODataType.h>
 #include <string>
-#include <opencv2/opencv.hpp>
-#include <boost/filesystem/path.hpp>
-#include "VideoData.h"
+
+#include <data/VideoData.h>
 
 #include <coredata/data_export.h>
+
+#pragma warning(push, 0) 
+#include <boost/filesystem/path.hpp>
+#include <opencv2/opencv.hpp>
+#pragma warning(pop) 
+
 
 namespace data
 {
@@ -64,6 +70,11 @@ namespace data
 		 * \brief Opens a video file from its path, if valid.
 		 */
 		void openFile();
+
+		/**
+		 * \brief Close Source video file
+		 */
+		void closeFile();
 
 		/**
 		 * \brief Get the next frame of the video

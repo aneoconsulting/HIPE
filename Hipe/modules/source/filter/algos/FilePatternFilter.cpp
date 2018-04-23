@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/FilePatternFilter.h>
 
 
@@ -9,10 +10,14 @@ namespace filter
 		{
 			auto p = _connexData.pop();
 			auto pathdir = static_cast<data::DirectoryImgData>(p.DirectoryImg()).DirectoryPath();
-			auto fullPath = pathdir.append("\\").append(filePath);
+#ifdef WIN32
+			auto fullPath = pathdir.append("\\").append(filePath); 
+#else
+			auto fullPath = pathdir.append("/").append(filePath); 
+#endif
 			data::ImageData imageInput = p.imageSource();
 			cv::Mat imageLoaded = cv::imread(fullPath, CV_LOAD_IMAGE_ANYCOLOR);
-			if(imageLoaded.data)
+			if(!imageLoaded.empty())
 			{
 				std::vector<int> crop = { 0,0, imageLoaded.size().width, imageLoaded.size().height };
 				data::ImageData imagedata(imageLoaded);
@@ -20,7 +25,7 @@ namespace filter
 				squarecrop << imagedata;
 				squarecrop << crop;
 				data::PatternData pattern(imageInput, squarecrop);
-				_connexData.push(pattern);
+				PUSH_DATA(pattern);
 			}
 			else
 			{

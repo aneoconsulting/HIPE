@@ -1,7 +1,7 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <core/HipeException.h>
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/mat.hpp>
+
 #include <coredata/IODataType.h>
 #include <coredata/IOData.h>
 #include <data/ImageData.h>
@@ -10,6 +10,12 @@
 #include <data/FileVideoInput.h>
 
 #include <coredata/data_export.h>
+
+#pragma warning(push, 0) 
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/mat.hpp>
+#pragma warning(pop) 
+
 
 namespace data
 {

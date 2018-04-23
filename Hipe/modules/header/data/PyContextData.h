@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <coredata/IODataType.h>
 
@@ -5,8 +6,12 @@
 #include <coredata/Data.h>
 
 #include <coredata/data_export.h>
-#include <boost/python.hpp>
+
 #include <atomic>
+
+#pragma warning(push, 0) 
+#include <boost/python.hpp>
+#pragma warning(pop)
 
 namespace data
 {

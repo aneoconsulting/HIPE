@@ -32,3 +32,4 @@ install_header_to_target(core)
 
 install (TARGETS core CONFIGURATIONS Debug DESTINATION lib/Debug)
 install (TARGETS core CONFIGURATIONS Release DESTINATION lib/Release)
+install (TARGETS core CONFIGURATIONS RelWithDebInfo DESTINATION lib/Release)

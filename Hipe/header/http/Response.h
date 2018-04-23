@@ -1,6 +1,10 @@
+//@HIPE_LICENSE@
 #pragma once
+
+#pragma warning(push, 0)
 #include <boost/asio/basic_datagram_socket.hpp>
 #include <boost/asio/streambuf.hpp>
+#pragma warning(pop)
 
 
 namespace http

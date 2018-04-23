@@ -1,9 +1,12 @@
+//@HIPE_LICENSE@
 #pragma once
 
 #include <data/ImageData.h>
 
-
+#pragma warning(push, 0)
 #include <boost/python.hpp>
+#pragma warning(pop)
+
 #include <pydata/pyboostcvconverter.hpp>
 using namespace boost::python;
 

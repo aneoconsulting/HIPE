@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <DirPatternData.h>
 #include <coredata/IODataType.h>
 #include <coredata/IOData.h>
@@ -49,19 +50,9 @@ namespace data
 	DirPatternData& DirPatternData::operator<<(const ImageData& left)
 	{
 		This()._inputSource = static_cast<Data>(left);
-		//This()._endOfSource = -1;
 		return *this;
 	}
 
-	bool DirPatternData::isImageSource(IODataType dataType)
-	{
-		return DataTypeMapper::isImage(dataType);
-	}
-
-	ImageData DirPatternData::imageRequest() const
-	{
-		return This_const()._requestImg;
-	}
 
 	Data DirPatternData::imageSource() const
 	{
@@ -74,70 +65,17 @@ namespace data
 	}
 
 	
-	bool DirPatternData::isVideoSource(IODataType dataType)
-	{
-		return DataTypeMapper::isStreaming(dataType) || DataTypeMapper::isStreaming(dataType);
-	}
-
-	bool DirPatternData::isDirectory(IODataType dataType)
-	{
-		return DataTypeMapper::isSequenceDirectory(dataType);
-	}
-
-	
-	bool DirPatternData::isInputSource(IODataType dataType)
-	{
-		return DataTypeMapper::isImage(dataType) || DataTypeMapper::isStreaming(dataType);
-	}
-
-
 	void DirPatternData::copyTo(DirPatternData& left) const
 	{
 		left.This()._inputSource = This_const()._inputSource;
 		left.This().dir = This_const().dir;
 	}
 
-	
-	Data DirPatternData::newFrame()
-	{
-		if (isImageSource(This_const()._inputSource.getType()))
-		{
-			ImageArrayData & images = static_cast<ImageArrayData &>(This()._inputSource);
-
-			if (This_const()._endOfSource <= -1)
-				This()._endOfSource = images.Array().size();
-
-			if (This_const()._endOfSource == 0)
-			{
-				This()._requestImg = (ImageData(cv::Mat::zeros(0, 0, 0)));
-				return static_cast<Data>(*this);
-			}
-
-			cv::Mat mat = images.Array()[images.Array().size() - This()._endOfSource];
-
-			--(This()._endOfSource);
-
-			This()._requestImg = ImageData(mat);
-
-			return static_cast<Data>(*this);
-		}
-		else if (isVideoSource(This()._inputSource.getType()))
-		{
-			VideoData & video = static_cast<VideoData &>(This()._inputSource);
-			Data res = video.newFrame();
-			if (isImageSource(res.getType()) == false)
-				throw HipeException("Something is going wrong with patternData and Video source ? ");
-			This()._requestImg = static_cast<ImageData&>(res);
-
-			return static_cast<Data>(*this);
-		}
-		return Data();
-	}
 
 	
 	bool DirPatternData::empty() const
 	{
-		if (This_const()._requestImg.empty() && This_const().dir.empty()) return true;
+		if (This_const()._inputSource.empty() && This_const().dir.empty()) return true;
 
 		return false;
 	}
