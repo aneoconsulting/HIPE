@@ -71,7 +71,7 @@ namespace filter
 				hessianThreshold = 50;
 			}
 
-			HipeStatus DirLatch::detectObject(const data::DirPatternData& pattern);
+			HipeStatus detectObject(const data::DirPatternData& pattern);
 
 			REGISTER_P(int, good_matches);
 

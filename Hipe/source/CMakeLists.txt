@@ -25,6 +25,8 @@ if(UNIX)
     add_definitions(-DUSE_GPERFTOOLS)
     message(STATUS "Google perftools : ON")
   endif(USE_GPERFTOOLS)
+  add_compile_options("-Wunknown-pragmas")
+
 endif(UNIX)
 
 add_subdirectory(core)

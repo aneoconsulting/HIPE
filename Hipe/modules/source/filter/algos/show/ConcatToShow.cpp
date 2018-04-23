@@ -1,6 +1,7 @@
 //@HIPE_LICENSE@
 #include <filter/algos/show/ConcatToShow.h>
 #include <opencv2/videostab/wobble_suppression.hpp>
+#include <opencv2/imgproc.hpp>
 
 cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<data::ImageData> arrayData) const
 {

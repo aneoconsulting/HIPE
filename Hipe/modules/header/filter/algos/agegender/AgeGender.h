@@ -13,6 +13,7 @@
 
 #pragma warning(push, 0)
 #include <opencv2/core.hpp>
+#include <opencv2/dnn/dnn.hpp>
 #include <opencv2/dnn/shape_utils.hpp>
 #include <boost/filesystem/operations.hpp>
 #pragma warning(pop)
