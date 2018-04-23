@@ -2,7 +2,11 @@
 setlocal
 SETLOCAL ENABLEDELAYEDEXPANSION
 set PATH=C:\Program Files\CMake\bin;%PATH%
-cd %dp0%
+pushd %~dp0
+set script_dir=%CD%
+popd
+echo "Path to binary " %script_dir%
+cd %script_dir%
 
 cmake.exe  --build build --target INSTALL --config RelWithDebInfo
 if NOT ["%errorlevel%"]==["0"] (
@@ -10,11 +14,11 @@ if NOT ["%errorlevel%"]==["0"] (
     exit /b %errorlevel%
 )
 
-cmake.exe  --build build --target PACKAGE --config RelWithDebInfo
-if NOT ["%errorlevel%"]==["0"] (
-    pause
-    exit /b %errorlevel%
-)
+REM cmake.exe  --build build --target PACKAGE --config RelWithDebInfo
+REM if NOT ["%errorlevel%"]==["0"] (
+    REM pause
+    REM exit /b %errorlevel%
+REM )
 
 
 cd modules
