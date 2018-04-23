@@ -227,7 +227,7 @@ if (WITH_CAFFE)
 endif()
 
 if (WITH_CUBLAS OR WITH_CUDA)
-	find_package(CUDA REQUIRED "8.0")
+	find_package(CUDA)
 	target_link_libraries(filter ${CUDA_LIBRARIES})
 	target_include_directories(filter PRIVATE ${CUDA_INCLUDE_DIRS})
 		
