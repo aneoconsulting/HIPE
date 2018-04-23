@@ -77,6 +77,11 @@ namespace filter
 			std::vector<cv::DMatch> good_matches;
 			for (size_t i = 0; i < nn_matches.size(); i++)
 			{
+				if (nn_matches[i].size() == 0)
+					continue;
+				if (kpts1.empty() || kpts2.empty())
+					continue;
+
 				cv::DMatch first = nn_matches[i][0];
 				float dist1 = nn_matches[i][0].distance;
 				float dist2 = nn_matches[i][1].distance;

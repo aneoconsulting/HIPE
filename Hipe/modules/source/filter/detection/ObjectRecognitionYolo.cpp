@@ -13,7 +13,7 @@ namespace filter
 				while (This->isStart)
 				{
 					data::ImageData image;
-					if (!This->imagesStack.trypop_until(image, 30))
+					if (!This->imagesStack.trypop_until(image, 10))
 						continue;
 
 					data::ShapeData bx = This->detectBoxes(image.getMat());
@@ -113,6 +113,7 @@ namespace filter
 
 				boxes = getBoxes(image, detectionMat);
 				saved_boxes = boxes;
+				count_frame = 0;
 			}
 			else
 			{
