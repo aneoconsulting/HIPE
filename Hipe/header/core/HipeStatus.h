@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 
 enum HipeStatus

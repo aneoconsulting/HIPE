@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <coredata/OutputData.h>
 #include <boost/thread/thread.hpp>

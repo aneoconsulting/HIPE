@@ -8,6 +8,8 @@ endif()
 
 project (Hipe_module)
 
+option(INSTALL_SOURCE "Install source for future developpement" ON)
+message(STATUS "INSTALL_SOURCE: ${INSTALL_SOURCE}")
 
 # Options
 option(USE_GPERFTOOLS "Use gperftools." OFF)
@@ -111,15 +113,27 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/libs)
 add_subdirectory(source)
 # add_subdirectory(tests)
 
-install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./"
-		COMPONENT sources
-        PATTERN "cmake" 
-		PATTERN "bin" 
-		PATTERN "source"
-		PATTERN "header"
-		PATTERN "*.txt"
-		PATTERN "build" EXCLUDE
-		)
+
+install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
+install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
+install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT sources)
+
+if (${INSTALL_SOURCE})
+	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./project"
+			COMPONENT sources
+			PATTERN "cmake" 
+			PATTERN "source"
+			PATTERN "header"
+			PATTERN "*.txt"
+			PATTERN "*.cmake"
+			PATTERN "*.bat"
+			PATTERN "*.sh"
+			PATTERN "bin" EXCLUDE
+			PATTERN "build" EXCLUDE
+			)
+
+	install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake" COMPONENT sources)
+endif()
 
 
 set(CPACK_PACKAGE_NAME "Hipe-Plugins-imageFilterMod")
@@ -131,15 +145,20 @@ set(CPACK_PACKAGE_VERSION_MAJOR "2")
 set(CPACK_PACKAGE_VERSION_MINOR "1")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "Hipe-Modules")
-set(CPACK_COMPONENTS_ALL library sources bin deps runtime)
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "ANEO\\\\HIPE\\\\hipe-modules")
+set(CPACK_COMPONENTS_ALL library deps runtime)
+
+if (${INSTALL_SOURCE})
+	set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} sources)
+endif()
+
 set(CPACK_COMPONENT_CTDATA_GROUP "data")
 set(CPACK_COMPONENT_INSTRUCTIONDATA_GROUP "data")
 
 set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "Hipe-ImageProcessing-mod")
 set(CPACK_COMPONENT_GROUP_DATA_DESCRIPTION "data (CT and instructions)")
 
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/../../LICENCE_AGPL.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENCE_AGPL.txt")
 
 set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\..\\\\ressources\\\\logo.ico")
 
@@ -148,10 +167,10 @@ set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/../ressources/logo.ico")
 set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/../ressources/logo.ico")
 
 
-set(CPACK_NSIS_MENU_LINKS "programs\\hipe" "Hipe")
-                          #${CT_DATA_FILE_DIR} "CT Data"
-                          #"data\\example.pdf" "documentation")
-#set(CPACK_NSIS_MODIFY_PATH ON)
+#set(CPACK_NSIS_MENU_LINKS "programs\\hipe" "Hipe")
+set(CPACK_NSIS_CREATE_ICONS_EXTRA
+    "CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\modules.lnk' 'C:\\\\windows\\\\explorer.exe' '$INSTDIR'")
+
 endif(WIN32)
 			  
 include(CPack)

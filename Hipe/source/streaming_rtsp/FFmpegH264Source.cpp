@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 //
 //  FFmpegH264Source.cpp
 //  FFmpegRTSPServer

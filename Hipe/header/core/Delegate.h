@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 
 template<typename return_type, typename... params>

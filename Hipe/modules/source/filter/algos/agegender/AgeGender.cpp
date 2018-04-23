@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <algos/agegender/AgeGender.h>
 
 #ifdef USE_CAFFE

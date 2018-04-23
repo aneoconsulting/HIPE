@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <orchestrator/Orchestrator.h>
 #include <image/DefaultScheduler.h>
 #include <image/SchedulerSimonV2.h>

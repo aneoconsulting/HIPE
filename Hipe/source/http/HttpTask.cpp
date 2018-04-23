@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <HttpTask.h>
 #include <HttpServer.h>
 #include <json/JsonBuilder.h>

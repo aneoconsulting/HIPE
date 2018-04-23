@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/tracker/IfStableTracking.h>
 #include <data/ImageData.h>
 #include <data/PatternData.h>

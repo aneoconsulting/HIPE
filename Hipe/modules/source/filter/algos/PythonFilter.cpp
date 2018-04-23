@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/PythonFilter.h>
 #include <core/HipeStatus.h>
 #include <core/misc.h>

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <corefilter/IFilter.h>
 #include <corefilter/tools/RegisterClass.h>

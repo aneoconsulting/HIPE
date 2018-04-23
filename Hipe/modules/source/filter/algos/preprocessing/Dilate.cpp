@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <string>
 #include <algos/preprocessing/Dilate.h>
 

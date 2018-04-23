@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <coredata/DataPort.h>
 
 namespace data

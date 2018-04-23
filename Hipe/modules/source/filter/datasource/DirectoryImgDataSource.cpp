@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/datasource/DirectoryImgDataSource.h>
 data::ImageArrayData loadImagesData(std::string _directoryPath)
 {

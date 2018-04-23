@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/detection/FingerprintMinutiae.h>
 #include <data/ImageData.h>
 

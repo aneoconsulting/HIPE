@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <string>
 #include <HttpServer.h>
 #pragma warning(push, 0)

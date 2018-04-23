@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/detection/Akaze.h>
 
 

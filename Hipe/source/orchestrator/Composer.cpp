@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <coredata/IOData.h>
 #include <json/JsonTree.h>
 #include <Composer.h>

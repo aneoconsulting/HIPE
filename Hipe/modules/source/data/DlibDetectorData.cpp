@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <data/DlibDetectorData.h>
 
 const std::vector<data::DlibDetectorData::detector_type>& data::DlibDetectorData::detectors_const() const

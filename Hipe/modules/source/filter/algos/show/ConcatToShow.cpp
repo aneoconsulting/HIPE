@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/show/ConcatToShow.h>
 #include <opencv2/videostab/wobble_suppression.hpp>
 

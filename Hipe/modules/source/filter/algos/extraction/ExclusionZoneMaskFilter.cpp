@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/extraction/ExclusionZoneMaskFilter.h>
 
 HipeStatus filter::algos::ExclusionZoneMaskFilter::process()

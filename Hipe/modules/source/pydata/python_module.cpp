@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #define PY_ARRAY_UNIQUE_SYMBOL pbcvt_ARRAY_API
 #include <pydata/pyImageData.h>
 

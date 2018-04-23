@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/preprocessing/Gaussian.h>
 #include <data/ShapeData.h>
 #include <data/ImageData.h>

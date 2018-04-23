@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/datasource/ImageDataSource.h>
 
 HipeStatus filter::datasource::ImageDataSource::process()

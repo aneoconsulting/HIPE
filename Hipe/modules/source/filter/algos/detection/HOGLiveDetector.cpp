@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/detection/HOGLiveDetector.h>
 
 HipeStatus filter::algos::HOGLiveDetector::process()

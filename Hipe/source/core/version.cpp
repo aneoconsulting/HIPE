@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <core/version.h>
 #include <string>
 #include <sstream>  

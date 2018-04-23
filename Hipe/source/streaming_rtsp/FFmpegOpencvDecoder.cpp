@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <FFmpegOpencvDecoder.h>
 #include <opencv2/opencv.hpp>
 #include <core/misc.h>

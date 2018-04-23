@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <hipe_server/Configuration.h>
 
 #pragma warning(push, 0)

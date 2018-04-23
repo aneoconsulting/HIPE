@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/datasource/DirPatternDataSource.h>
 
 HipeStatus filter::datasource::DirPatternDataSource::process()

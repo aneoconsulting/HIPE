@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <scy/webrtc/multiplexmediacapturer.h>
 #include "OCVVideoCapture.h"

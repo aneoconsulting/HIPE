@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #ifndef SERVER_HTTP_HPP
 #define	SERVER_HTTP_HPP
 

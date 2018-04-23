@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/show/ShowVideo.h>
 #pragma warning(push, 0)
 #include <opencv2/highgui/highgui.hpp>

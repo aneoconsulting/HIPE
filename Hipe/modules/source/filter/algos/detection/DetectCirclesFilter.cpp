@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/detection/DetectCirclesFilter.h>
 #pragma warning(push, 0)
 #include <opencv2/imgproc.hpp>

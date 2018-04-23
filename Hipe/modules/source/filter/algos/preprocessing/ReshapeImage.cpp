@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/preprocessing/ReshapeImage.h>
 
 #pragma warning(push, 0)

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/detection/FaceLandmark.h>
 
 #include <dlib/image_processing/frontal_face_detector.h>

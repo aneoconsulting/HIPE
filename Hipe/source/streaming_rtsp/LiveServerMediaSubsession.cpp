@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 //
 //  LiveServerMediaSubsession.cpp
 //  FFmpegRTSPServer

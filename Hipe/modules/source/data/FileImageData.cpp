@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <data/FileImageData.h>
 #include <core/base64.h>
 

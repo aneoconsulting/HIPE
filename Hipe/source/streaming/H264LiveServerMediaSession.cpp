@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include "H264LiveServerMediaSession.h"
 
 

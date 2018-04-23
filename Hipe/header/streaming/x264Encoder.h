@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #ifdef __cplusplus
 #define __STDINT_MACROS
 #define __STDC_CONSTANT_MACROS

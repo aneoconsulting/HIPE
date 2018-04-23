@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 //Added for the json-example
 #define BOOST_SPIRIT_THREADSAFE
 //Added for the default_resource example
@@ -61,8 +62,15 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<core::ModuleLoader> module = std::make_shared<core::ModuleLoader>(config.configuration.modulePath);
 	if (!config.configuration.modulePath.empty())
 	{
-		module->loadLibrary();
-		function<void()> call_function = module->callFunction<void()>("load");
+		try
+		{
+			module->loadLibrary();
+			function<void()> call_function = module->callFunction<void()>("load");
+		}
+		catch (HipeException & except_loader)
+		{
+			std::cerr << "FAIL TO LOAD MODULE AT START TIME. Continue with no preloaded module" << std::endl;
+		}
 	}
 
 	thread.join();

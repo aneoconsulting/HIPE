@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/PPOC.h>
 #include <filter/algos/IDPlate/IDPlateCropper.h>
 

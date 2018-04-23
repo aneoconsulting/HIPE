@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <UsageEnvironment.hh>
 #include <BasicUsageEnvironment.hh>
 #include <RTSPServer.hh>

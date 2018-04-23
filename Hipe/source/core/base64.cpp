@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 /*
 base64.cpp and base64.h
 

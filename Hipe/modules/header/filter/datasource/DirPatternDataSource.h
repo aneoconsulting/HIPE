@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once 
 #include <boost/log/utility/setup/file.hpp>
 #include <coredata/NoneData.h>

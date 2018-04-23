@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <data/FileVideoInput.h>
 
 namespace data

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/IDPlate/IDPlateIdentifier.h>
 
 HipeStatus filter::algos::IDPlateIdentifier::process()

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/References.h>
 #include <corefilter/tools/RegisterTable.h>
 #include <iostream>

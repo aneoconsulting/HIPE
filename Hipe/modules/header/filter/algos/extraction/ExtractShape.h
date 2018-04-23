@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <corefilter/tools/RegisterTools.hpp>
 #include <corefilter/tools/RegisterTable.h>

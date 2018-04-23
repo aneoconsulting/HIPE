@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include "LiveSourceWithx264.h"
 #include <core/misc.h>
 #include <core/queue/ConcurrentQueue.h>

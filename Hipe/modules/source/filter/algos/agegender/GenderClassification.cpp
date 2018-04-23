@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <algos/agegender/GenderClassification.h>
 
 #pragma warning(push, 0)

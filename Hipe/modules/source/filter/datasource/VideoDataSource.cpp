@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/datasource/VideoDataSource.h>
 #include <data/FileVideoInput.h>
 #include <data/ImageArrayData.h>

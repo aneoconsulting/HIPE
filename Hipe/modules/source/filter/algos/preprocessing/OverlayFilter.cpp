@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/preprocessing/OverlayFilter.h>
 
 HipeStatus filter::algos::OverlayFilter::process()

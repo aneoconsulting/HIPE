@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <data/DirectoryImgData.h>
 
 #pragma warning(push, 0) 

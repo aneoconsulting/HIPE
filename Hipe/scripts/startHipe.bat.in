@@ -1,7 +1,11 @@
 set TESSDATA_PREFIX=%HOMEPATH%\Dropbox (ANEO)\HIPE_GROUP\Demos\ID Plates\data\Tesseract
 set GST_PLUGIN_PATH=@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\lib\gstreamer-1.0
 PATH=@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR@\bin\Debug;@CMAKE_INSTALL_PREFIX_WIN@\bin\Debug;@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;%PATH%
-cd %dp0%
+pushd %~dp0
+set script_dir=%CD%
+popd
+echo "Path to binary " %script_dir%
+cd %script_dir%
 
-hipe_server.exe -p 9090 -m "%cd%\..\..\..\hipemodules\bin\@BUILD_CONFIG@\filter.dll"
+hipe_server.exe -p 9090 -m "%cd%\..\..\..\hipe-modules\bin\@BUILD_CONFIG@\filter.dll"
 

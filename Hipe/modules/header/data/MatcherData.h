@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <coredata/IOData.h>
 #include <vector>

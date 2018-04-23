@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <MatcherData.h>
 
 namespace data {

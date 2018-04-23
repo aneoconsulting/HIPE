@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/IDPlate/IDPlateRectifier.h>
 
 

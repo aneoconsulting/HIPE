@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <json/JsonFilterNode/JsonFilterNode.h>
 #include <json/JsonTree.h>
 

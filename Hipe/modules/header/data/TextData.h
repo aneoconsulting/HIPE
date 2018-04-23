@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #pragma warning(push, 0) 
 #include <opencv2/opencv.hpp>

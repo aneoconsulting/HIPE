@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #ifdef WIN32
 #include <Windows.h>

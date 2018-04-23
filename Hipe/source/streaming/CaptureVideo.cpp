@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <CaptureVideo.h>
 #include <RTSPCapture.h>
 #include <core/Singleton.h>

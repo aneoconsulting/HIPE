@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <coredata/IODataType.h>
 #include <coredata/data_export.h>

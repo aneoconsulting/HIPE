@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <FFmpegDecoder.h>
 #include <opencv2/videoio.hpp>

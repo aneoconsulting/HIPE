@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <DirPatternData.h>
 #include <coredata/IODataType.h>
 #include <coredata/IOData.h>

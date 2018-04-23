@@ -82,11 +82,6 @@ install (TARGETS hipe_server CONFIGURATIONS RelWithDebInfo DESTINATION bin/Relea
 #Copy in install folder all dependencies for hipe_core
 #
 
-#create directory for 3rdParty
-install(DIRECTORY DESTINATION 3rdParty)
-install(DIRECTORY DESTINATION "project")
-
-install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake")
 
 set(EXT_BIN "") 
 if (WIN32)
@@ -96,3 +91,12 @@ endif()
 message(STATUS "Install dependencies exe")
 install_dependencies_exe("hipe_server")
 
+install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}\")" COMPONENT applications)
+install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT applications)
+install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT applications)
+install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake" COMPONENT applications)
+
+install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/include\")" COMPONENT headers)
+install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT headers)
+install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT headers)
+install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake" COMPONENT headers)

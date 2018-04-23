@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <coredata/OutputData.h>
 #include <core/base64.h>
 #include <vector>

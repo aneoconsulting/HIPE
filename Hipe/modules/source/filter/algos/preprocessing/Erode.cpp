@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/preprocessing/Erode.h>
 
 int filter::algos::Erode::convertMorphType(const std::string & name)

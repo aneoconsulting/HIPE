@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <algos/extraction/ExtractShape.h>
 
 

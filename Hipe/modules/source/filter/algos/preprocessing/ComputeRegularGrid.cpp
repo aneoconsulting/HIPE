@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 
 #include <core/HipeStatus.h>
 #include <filter/algos/preprocessing/ComputeRegularGrid.h>

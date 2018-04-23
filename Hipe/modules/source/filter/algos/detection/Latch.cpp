@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/detection/Latch.h>
 
 #pragma warning(push, 0)

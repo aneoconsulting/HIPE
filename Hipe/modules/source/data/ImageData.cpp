@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <data/ImageData.h>
 
 

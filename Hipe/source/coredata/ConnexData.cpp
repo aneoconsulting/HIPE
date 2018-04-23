@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <coredata/ConnexData.h>
 #include "core/HipeException.h"
 

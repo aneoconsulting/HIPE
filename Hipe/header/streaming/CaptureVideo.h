@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #pragma once
 #include <string>
 #include <core/HipeStatus.h>

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/preprocessing/Kmeans.h>
 namespace filter
 {

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/extraction/ExctractSubImage.h>
 #include "data/ShapeData.h"
 

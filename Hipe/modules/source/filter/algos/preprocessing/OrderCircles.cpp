@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <filter/algos/preprocessing/OrderCircles.h>
 #include <data/ShapeData.h>
 

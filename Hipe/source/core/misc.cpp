@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <core/misc.h>
 #include <string>
 

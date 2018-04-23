@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 /*
  * CV3BoostConverter.cpp
  *

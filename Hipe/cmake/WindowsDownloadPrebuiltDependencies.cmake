@@ -11,8 +11,10 @@ if (MSVC)
 			if (NOT EXISTS "${HIPE_EXTERNAL}" OR ${FORCE_USE_PREBUILT_DEPENDENCIES})
 				message(STATUS "Download prebuilt HIPE EXTERNAL dependencies...")
 				file(MAKE_DIRECTORY "${HIPE_EXTERNAL}")
-				file(MAKE_DIRECTORY "${HIPE_EXTERNAL}/win64")
-				FILE(DOWNLOAD "ftp://dupihome.ddns.net/HipeExternal/${FILE_HIPE_EXTERNAL_DEPS}" "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
+				#file(MAKE_DIRECTORY "${HIPE_EXTERNAL}/win64")
+				#file(MAKE_DIRECTORY "${HIPE_EXTERNAL}/win64")
+				#FILE(DOWNLOAD "ftp://dupihome.ddns.net/HipeExternal/${FILE_HIPE_EXTERNAL_DEPS}" "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
+				FILE(DOWNLOAD "ftp://192.168.1.107/HipeExternal/${FILE_HIPE_EXTERNAL_DEPS}" "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
 				USERPWD "public:guest01"
 				EXPECTED_MD5 ${DEPENDENCIES_SHA}
 				SHOW_PROGRESS
@@ -24,7 +26,7 @@ if (MSVC)
 					message(STATUS "Download of dependencies OK")
 					message(STATUS "Extract Archives to ${HIPE_EXTERNAL}. Please wait...")
 					execute_process(
-									COMMAND ${CMAKE_COMMAND} -E tar xzf "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
+									COMMAND ${CMAKE_COMMAND} -E tar -xzf "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
 									WORKING_DIRECTORY "${HIPE_EXTERNAL}/"
 									)
 					set(FORCE_USE_PREBUILT_DEPENDENCIES OFF CACHE BOOL "Download and use the prebuilt dependencies" FORCE)
