@@ -222,10 +222,32 @@ macro(install_header_to_target targetname)
 	   "${_src_filter_inc_path}/*.h*"
 	 )
 	 message(status "Header in ${targetname} : [${${targetname}_header}]")
+	file(READ "${CMAKE_SOURCE_DIR}/LICENCE_AGPL_short.txt" HIPE_LICENSE_FILE)
+	SET(HIPE_LICENSE "READ LICENSE BEFORE ANY USAGE\n${HIPE_LICENSE_FILE}")
+	#message(STATUS "Add header license to Header license : ${HIPE_LICENSE}")
+	
 	foreach ( file ${${targetname}_header} )
 
 		get_filename_component( dir ${file} DIRECTORY )
-		install( FILES ${CMAKE_SOURCE_DIR}/header/${targetname}/${file} DESTINATION include/${targetname}/${dir}  COMPONENT headers )
+		get_filename_component( filename ${file} NAME )
+		
+		CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/header/${targetname}/${file}" "${CMAKE_BINARY_DIR}/temp/${file}.txt" @ONLY)
+		FILE(MD5 "${CMAKE_BINARY_DIR}/temp/${file}.txt" new_file_with_header)
+		if (EXISTS "${CMAKE_INSTALL_PREFIX}/include/${targetname}/${dir}/${filename}")
+			FILE(MD5 "${CMAKE_INSTALL_PREFIX}/include/${targetname}/${dir}/${filename}" old_file_with_header)
+		else()
+			set(old_file_with_header "NOT_EXIST")
+		endif()
+		
+		if (NOT "${old_file_with_header}" STREQUAL ${new_file_with_header})
+			message(STATUS "CHECKSUM HEADER FILE DIFFER : [${CMAKE_INSTALL_PREFIX}/include/${targetname}/${dir}/${filename}] <--> [${CMAKE_BINARY_DIR}/temp/${file}.txt]")
+			message(STATUS "CHECKSUM HEADER FILE DIFFER : [${old_file_with_header}] <--> [${new_file_with_header}]")
+			install( FILES "${CMAKE_BINARY_DIR}/temp/${file}.txt" DESTINATION include/${targetname}/${file}  COMPONENT headers )
+		else()
+			install( FILES "${CMAKE_INSTALL_PREFIX}/include/${targetname}/${dir}/${filename}" DESTINATION include/${targetname}/${dir}  COMPONENT headers )
+		endif()
+		
+		
 	endforeach()
 	
 endmacro()

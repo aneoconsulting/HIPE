@@ -19,7 +19,7 @@ message(STATUS "Find all source files : ${source_header_files}")
 message(STATUS "Read file license :${LICENSE_DIR}/LICENCE_AGPL_short.txt")
 
 file(READ "${LICENSE_DIR}/LICENCE_AGPL_short.txt" HIPE_LICENSE_FILE)
-SET(HIPE_LICENSE "READ LICENSE BEFORE ANY USAGE\r\n${HIPE_LICENSE_FILE}")
+SET(HIPE_LICENSE "READ LICENSE BEFORE ANY USAGE\n${HIPE_LICENSE_FILE}")
 message(STATUS "Add header license to Header license : ${HIPE_LICENSE}")
 
 foreach(filename ${source_header_files})
