@@ -16,6 +16,7 @@ if (WIN32)
   add_compile_options(/wd4820 /wd4668 /wd4619 /wd4626 /wd5031 /wd4365 /wd4710 /wd4521 /wd4061 /wd4625 /wd5026 /wd4251 /wd4514 /wd4503 /wd4711 /wd4100 /wd5027 /wd4264)
 endif()
 
+
 if(UNIX)
   message(STATUS "UNIX IS DETECTED")
   if(USE_GPERFTOOLS)
@@ -25,6 +26,9 @@ if(UNIX)
     add_definitions(-DUSE_GPERFTOOLS)
     message(STATUS "Google perftools : ON")
   endif(USE_GPERFTOOLS)
+
+  add_compile_options("-Wunknown-pragmas")
+
 endif(UNIX)
 
 add_subdirectory(pydata)

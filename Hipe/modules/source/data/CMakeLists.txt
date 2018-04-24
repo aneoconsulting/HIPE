@@ -20,6 +20,7 @@ if(USE_DLIB)
 endif(USE_DLIB)
 
 target_compile_definitions(data PRIVATE "-DUSE_BOOST_REGEX" "-DDATA_BUILD")
+
 target_link_libraries(data ${hipecore_LIBRARIES})
 target_include_directories(data PUBLIC ${hipecore_INCLUDE_DIRS})
 target_link_libraries(data ${OpenCV_LIBS})

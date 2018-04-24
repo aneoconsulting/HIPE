@@ -227,7 +227,7 @@ if (WITH_CAFFE)
 endif()
 
 if (WITH_CUBLAS OR WITH_CUDA)
-	find_package(CUDA REQUIRED)
+	find_package(CUDA)
 	target_link_libraries(filter ${CUDA_LIBRARIES})
 	target_include_directories(filter PRIVATE ${CUDA_INCLUDE_DIRS})
 		
@@ -296,7 +296,15 @@ if(UNIX)
     COMMENT "Generate reference file"
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/header/filter
   )
-  add_dependencies(filter update_reference)
+add_dependencies(filter update_reference)
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+if(CMAKE_USE_PTHREADS_INIT)
+  set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-pthread")
+endif()
+target_link_libraries( filter ${CMAKE_THREAD_LIBS_INIT} )
+message(STATUS "LINK TO PTHREAD ${CMAKE_THREAD_LIBS_INIT}")
 endif(UNIX)
 
 if(WIN32)

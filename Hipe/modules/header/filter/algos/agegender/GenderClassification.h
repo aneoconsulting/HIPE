@@ -10,6 +10,7 @@
 #undef STRICT
 #endif
 
+#include <opencv2/dnn/dnn.hpp>
 #include <caffe/caffe.hpp>
 #include <caffe/data_transformer.hpp>
 
