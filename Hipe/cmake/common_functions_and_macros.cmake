@@ -271,7 +271,7 @@ macro(install_dependencies_int target_name EXT_BIN)
 		set(BUILD_CONFIG "Release")
 	endif()
 	CONFIGURE_FILE("${PROJECT_SOURCE_DIR}/scripts/startHipe${SCRIPT_EXT}.in" "${CMAKE_BINARY_DIR}/startHipe${SCRIPT_EXT}" @ONLY)
-	install(FILES "${CMAKE_BINARY_DIR}/startHipe${SCRIPT_EXT}" DESTINATION "bin/${BUILD_CONFIG}/" COMPONENT applications)
+	install(FILES "${CMAKE_BINARY_DIR}/starthipe${SCRIPT_EXT}" DESTINATION "bin/${BUILD_CONFIG}/" COMPONENT applications)
 	
 endmacro(install_dependencies_int)
 
