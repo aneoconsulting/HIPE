@@ -29,3 +29,5 @@ Hipe/modules/header/filter/References.h.cmp
 Hipe/modules/header/filter/References.h
 /Hipe/module/build/CMakeCache.txt
 /Hipe/module/build/**
+Hipe/tests/data/scriptPython/testhipe.pyc
+**/*.pyc

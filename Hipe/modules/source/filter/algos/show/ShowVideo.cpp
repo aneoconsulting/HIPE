@@ -37,9 +37,35 @@ HipeStatus filter::algos::ShowVideo::process()
 		return OK;
 	}
 
-	data::ImageArrayData images = _connexData.pop();
+	
+	data::ImageArrayData images;
+	while (_connexData.size() != 0)
+	{
+		data::Data d_ctx = _connexData.pop();
+		
+		if (d_ctx.getType() == data::IODataType::IMGF)
+		{
+			images = d_ctx;
+			break;
+		}
+	}
 
+	
 
+	if (images.getType() != data::IMGF || images.empty())
+	{
+		cv::Mat myImage = cv::Mat::zeros(640, 320, CV_8UC3);
+		if (myImage.rows <= 0 || myImage.cols <= 0)
+		{
+			myImage = cv::Mat::zeros(640, 320, CV_8UC3);
+			cv::Scalar color(255, 255, 255);
+
+			cv::putText(myImage, "No INPUT VIDEO", cv::Point(320, 160),
+				cv::HersheyFonts::FONT_HERSHEY_SIMPLEX, 1, color, 2);
+		}
+		::cv::imshow(_name, myImage);
+		return OK;
+	}
 	//Resize all images coming from the same parent
 	for (cv::Mat myImage : images.Array())
 	{

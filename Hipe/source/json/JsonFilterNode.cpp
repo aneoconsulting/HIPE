@@ -42,7 +42,7 @@ namespace json
 		{
 			std::stringstream ldataResponse;
 			_params.write_json(ldataResponse);
-			__callfunc(_filter, "set_jsonParam", ldataResponse.str());
+			__callfunc(_filter, "set_jsonParams", ldataResponse.str());
 		}
 	}
 	filter::Model* JsonFilterNode::getFilter() const

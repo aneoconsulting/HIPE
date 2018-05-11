@@ -8,6 +8,7 @@
 #include <corefilter/filter_export.h>
 
 
+
 namespace cv {
 	class Mat;
 }
@@ -40,7 +41,8 @@ namespace filter
 		}
 
 	public:
-		virtual ~Model() {};
+		virtual ~Model() {}
+		
 
 		const std::string & getConstructorName() const { return _constructor; }
 
@@ -85,6 +87,11 @@ namespace filter
 			std::map<std::string, Model*>::iterator pair = _parentFilters.begin();
 			return pair->second->getRootFilter();
 		}
+		virtual void onLoad(void* data) {};
+		
+		virtual void onStart(void* data) {};
+
+		virtual bool isPython() { return false; }
 
 		virtual HipeStatus process() = 0;
 

@@ -64,24 +64,23 @@ namespace pbcvt {
 #endif
         Py_Initialize();
 
-        import_array();
+        	import_array();
         return NUMPY_IMPORT_ARRAY_RETVAL;
     }
 
-    BOOST_PYTHON_MODULE (pbcvt) {
-        //using namespace XM;
-        init_ar();
+    //BOOST_PYTHON_MODULE (pbcvt) {
+    //    //using namespace XM;
+    //    init_ar();
 
-        //initialize converters
-        to_python_converter<cv::Mat,
-                pbcvt::matToNDArrayBoostConverter>();
-        pbcvt::matFromNDArrayBoostConverter();
+    //    //initialize converters
+    //    to_python_converter<cv::Mat,
+    //            pbcvt::matToNDArrayBoostConverter>();
+    //    pbcvt::matFromNDArrayBoostConverter();
 
-        //expose module-level functions
-        def("dot", dot);
-        def("dot2", dot2);
+    //    //expose module-level functions
 
-    }
+
+    //}
 
 } //end namespace pbcvt
 
@@ -92,9 +91,48 @@ void print_arity(boost::python::object fn)
   std::cout << arity << std::endl;
 }
 
+namespace boost {
+	namespace python {
+
+		struct release_gil_policy
+		{
+			// Ownership of this argument tuple will ultimately be adopted by
+			// the caller.
+			template <class ArgumentPackage>
+			static bool precall(ArgumentPackage const&)
+			{
+				// Release GIL and save PyThreadState for this thread here
+
+				return true;
+			}
+
+			// Pass the result through
+			template <class ArgumentPackage>
+			static PyObject* postcall(ArgumentPackage const&, PyObject* result)
+			{
+				// Reacquire GIL using PyThreadState for this thread here
+
+				return result;
+			}
+
+			typedef default_result_converter result_converter;
+			typedef PyObject* argument_package;
+
+			template <class Sig>
+			struct extract_return_type : mpl::front<Sig>
+			{
+			};
+
+		private:
+			// Retain pointer to PyThreadState on a per-thread basis here
+
+		};
+	}
+}
+
 BOOST_PYTHON_MODULE(hipetools)
 {
-  def("print_arity", &print_arity);
+  def("print_arity", boost::python::make_function (&print_arity, release_gil_policy()));
 }
 
 BOOST_PYTHON_MODULE(pydata)
@@ -106,6 +144,9 @@ BOOST_PYTHON_MODULE(pydata)
 		pbcvt::matToNDArrayBoostConverter>();
 	pbcvt::matFromNDArrayBoostConverter();
 
+	def("dot", pbcvt::dot);
+	def("dot2", pbcvt::dot2);
+
 	boost::python::class_<pyImageData>("imageData")
 		.def("assign", &pyImageData::assign)
 		.def("set", &pyImageData::set)
@@ -113,3 +154,23 @@ BOOST_PYTHON_MODULE(pydata)
 		.def("get", &pyImageData::get);
 		
 }
+
+//BOOST_PYTHON_MODULE(pydata)
+//{
+//	pbcvt::init_ar();
+//
+//	//initialize converters
+//	to_python_converter<cv::Mat,
+//		pbcvt::matToNDArrayBoostConverter>();
+//	pbcvt::matFromNDArrayBoostConverter();
+//
+//	def("dot", make_function(pbcvt::dot, release_gil_policy()));
+//	def("dot2", make_function(pbcvt::dot2, release_gil_policy()));
+//
+//	boost::python::class_<pyImageData>("imageData")
+//		.def("assign", make_function(&pyImageData::assign, release_gil_policy()))
+//		.def("set", make_function(&pyImageData::set, release_gil_policy()))
+//		.def_readwrite("img", &pyImageData::get)
+//		.def("get", make_function(&pyImageData::get, release_gil_policy()));
+//
+//}
