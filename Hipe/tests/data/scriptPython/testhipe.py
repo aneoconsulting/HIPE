@@ -8,7 +8,21 @@ import cv2
 import numpy as np
 
 
+def otherFunction(data):
+	mat = data.get()
+	#print("value : " + mat[0][0])
+	
+	edges = cv2.Canny(mat,100,200)
+	
+	edges = cv2.cvtColor(edges,cv2.COLOR_GRAY2RGB)
+	
+	# plt.subplot(121),plt.imshow(mat,cmap = 'gray')
+	# plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+	# plt.subplot(122),plt.imshow(edges,cmap = 'gray')
+	# plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
 
+	data.assign(edges)
+	return 1337
 
 
 

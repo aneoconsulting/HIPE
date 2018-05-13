@@ -4,6 +4,7 @@
 #include <corefilter/tools/RegisterTable.h>
 #include <corefilter/IFilter.h>
 #include <core/HipeStatus.h>
+#include <core/misc.h>
 #include <core/queue/ConcurrentQueue.h>
 
 #include <corefilter/tools/filterMacros.h>
@@ -37,7 +38,7 @@ namespace filter
 			CONNECTOR_OUT(data::ImageData);
 
 			core::queue::ConcurrentQueue<data::ImageData> queue;	//<! [TODO] unused?
-			struct timeval current_time;									//<! The current time.
+			hipetimeval current_time;									//<! The current time.
 			int fps_avg;	//<! [TODO] The average FPS at which the video is played.
 			int nb_frame;	//<! [TODO]
 

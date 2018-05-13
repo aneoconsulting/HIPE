@@ -21,7 +21,7 @@ namespace filter
 				}
 				else
 				{
-					struct timeval nextTime;
+					hipetimeval nextTime;
 					hipe_gettimeofday(&nextTime, nullptr);
 					elapse = ((nextTime.tv_sec - current_time.tv_sec) * 1000000L
 						+ nextTime.tv_usec) - current_time.tv_usec;

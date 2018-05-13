@@ -3,7 +3,8 @@
 #include <corefilter/tools/RegisterClass.h>
 #include <corefilter/IFilter.h>
 #include <core/HipeStatus.h>
-#include "data/ImageData.h"
+#include <core/misc.h>
+#include <data/ImageData.h>
 #include <data/FileVideoInput.h>
 
 namespace filter
@@ -16,7 +17,7 @@ namespace filter
 			CONNECTOR(data::ImageData, data::ImageData);
 
 			core::queue::ConcurrentQueue<data::ImageData> queue;	//<! [TODO] unused?
-			struct timeval current_time;									//<! The current time.
+			hipetimeval current_time;									//<! The current time.
 			int fps_avg;	//<! [TODO] The average FPS at which the video is played.
 			int nb_frame;	//<! [TODO]
 			std::atomic<bool> isStart;

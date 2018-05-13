@@ -1,13 +1,20 @@
 //@HIPE_LICENSE@
 #pragma once
+#include <core/python/pyThreadSupport.h>
 #include <coredata/OutputData.h>
-#include <boost/thread/thread.hpp>
-#include <boost/thread/mutex.hpp>
 #include <orchestrator/TaskInfo.h>
 #include <corefilter/tools/RegisterTable.h>
 #include <corefilter/datasource/DataSource.h>
 #include <algorithm>
 #include <thread>
+#pragma warning(push, 0)
+#include <boost/thread/thread.hpp>
+#include <boost/thread/mutex.hpp>
+#include <python.h>
+
+#include <boost/asio/io_service.hpp>
+#include <orchestrator/image/TasksPool.h>
+#pragma warning(pop)
 
 
 namespace orchestrator
@@ -19,9 +26,16 @@ namespace orchestrator
 		public:
 			typedef std::vector<std::vector<filter::Model *>> MatrixLayerNode;
 			std::vector<TaskInfo> runningTasks;
+			PyThreadState* pyMainThreaState;
+			PyThreadState* pyThreadState;
+
+			PyInterpreterState* interp;
 
 			SchedulerSimonV2()
 			{
+				pyMainThreaState = nullptr;
+				interp = nullptr;
+				pyThreadState = nullptr;
 			}
 
 			static int getMaxLevelNode(filter::Model* filter, int level = 0)
@@ -55,293 +69,244 @@ namespace orchestrator
 				return 0;
 			}
 
-			static void cleanDataChild(filter::Model* filter)
+			static void cleanDataChild(filter::Model* filter, bool recursively = true)
 			{
 				filter->cleanUp();
+				data::ConnexDataBase& outRes = filter->getConnector();
+				data::DataPort& data_port = static_cast<data::DataPort &>(outRes.getPort());
 
-				for (auto& childFilter : filter->getChildrens())
+				while (! data_port.empty())
 				{
-					childFilter.second->cleanUp();
-					cleanDataChild(childFilter.second);
+					data_port.pop();
+				}
+
+				if (recursively)
+				{
+					for (auto& childFilter : filter->getChildrens())
+					{
+						childFilter.second->cleanUp();
+						cleanDataChild(childFilter.second);
+						data::ConnexDataBase& outResChild = childFilter.second->getConnector();
+						data::DataPort& data_portChild = static_cast<data::DataPort &>(outResChild.getPort());
+
+						while (!data_portChild.empty())
+						{
+							data_portChild.pop();
+						}
+					}
 				}
 			}
 
-			static void disposeChild(filter::Model* filter)
+			static void disposeChild(filter::Model* filter, bool recursively = true)
 			{
 				filter->dispose();
 
+				data::ConnexDataBase& outRes = filter->getConnector();
+				data::DataPort& data_port = static_cast<data::DataPort &>(outRes.getPort());
+
+				while (! data_port.empty())
+				{
+					data_port.pop();
+				}
+				if (recursively)
+				{
+					for (auto& childFilter : filter->getChildrens())
+					{
+						childFilter.second->dispose();
+						disposeChild(childFilter.second);
+						data::ConnexDataBase& outResChild = childFilter.second->getConnector();
+						data::DataPort& data_portChild = static_cast<data::DataPort &>(outResChild.getPort());
+
+						while (!data_portChild.empty())
+						{
+							data_portChild.pop();
+						}
+					}
+				}
+			}
+
+			void InitPythonEngine(filter::Model* filter, int level = 0)
+			{
+				if (!Py_IsInitialized())
+				{
+					Py_Initialize();
+					// Create GIL/enable threads
+					PyEval_InitThreads();
+					pyMainThreaState = PyGILState_GetThisThreadState();
+					PyEval_ReleaseThread(pyMainThreaState);
+				}
+				//// Get the default thread state  
+
+				pyMainThreaState = PyGILState_GetThisThreadState();
+
+
+				if (level == 0 && pyThreadState == nullptr)
+				{
+					PyEval_AcquireThread(pyMainThreaState);
+					pyThreadState = Py_NewInterpreter();
+
+					PyThreadState_Swap(pyMainThreaState);
+					PyEval_ReleaseThread(pyMainThreaState);
+				}
+
+
+				if (filter->isPython())
+				{
+					PyEval_AcquireThread(pyMainThreaState);
+					interp = pyThreadState->interp;
+					filter->onLoad(interp);
+					PyEval_ReleaseThread(pyMainThreaState);
+				}
+
+
 				for (auto& childFilter : filter->getChildrens())
 				{
-					childFilter.second->dispose();
-					disposeChild(childFilter.second);
+					InitPythonEngine(childFilter.second, level + 1);
+				}
+
+				if (level == 0)
+				{
+					pyThreadState = nullptr;
 				}
 			}
+
+			static std::pair<boost::thread::id, PyExternalUser*> InitNewPythonThread(PyInterpreterState* interpreterPython)
+			{
+				std::pair<boost::thread::id, PyExternalUser *> result;
+				result.first = boost::this_thread::get_id();
+				result.second = new PyExternalUser(interpreterPython);
+				boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+				return result;
+			}
+
+			/*static void setPythonUserThreadState(filter::Model* model, PyExternalUser* py_external_user, bool recursively = true)
+			{
+				if (model->isPython())
+				{
+					model->onStart(py_external_user);
+				}
+
+				if (recursively)
+				{
+					for (auto& childFilter : model->getChildrens())
+					{
+						setPythonUserThreadState(childFilter.second, py_external_user);
+					}
+				}
+			}*/
+
+			static int setPythonUserThreadState(filter::Model* model, std::map<boost::thread::id, PyExternalUser *> & pyThreadStates)
+			{
+				if (model->isPython())
+				{
+					PyExternalUser *userThreadState = pyThreadStates[boost::this_thread::get_id()];
+					if (userThreadState == nullptr)
+					{
+						HipeException("Cannot find Python threadState for the current threadId");
+					}
+
+					model->onStart(userThreadState);
+				}
+				
+
+				return 0;
+			}
+
+			static void destroyPythonThread(std::map<boost::thread::id, PyExternalUser*> & pyExternalUsers)
+			{
+
+				for (auto &pair : pyExternalUsers)
+				{
+					PyExternalUser* pyExternalUser  = pair.second;
+
+					if (pyExternalUser)
+					{
+						delete pyExternalUser;
+						pair.second = nullptr;
+					}
+
+				}
+			}
+
 		
-			/*void processStreaming(filter::Model* root, data::Data& inputData, data::Data & outputData, bool debug)
+
+			static std::map<boost::thread::id, PyExternalUser *> startTaskPool(TasksPool &tasksPool, PyInterpreterState* interpreterPython)
 			{
-				const data::StreamVideoInput & video = static_cast<const data::StreamVideoInput&>(inputData);
-				cv::Mat frame;
-				filter::Model* filterRoot = reinterpret_cast<filter::Model *>(root);
-				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
-				std::atomic<bool> * isActive = new std::atomic<bool>(true);
+				typedef boost::packaged_task<std::pair<boost::thread::id, PyExternalUser*> >   internal_task_t;
+				typedef boost::shared_ptr<internal_task_t>                                     p_ininternal_task_t;
+				typedef std::pair<boost::thread::id, PyExternalUser*>						   result_t;
 
-				std::shared_ptr<data::StreamVideoInput> cpyVideo = std::make_shared<data::StreamVideoInput>(video);
-				boost::thread * task = new boost::thread([cpyFilterRoot, cpyVideo, isActive]()
+				std::vector<boost::shared_future<result_t> > pending_data;
+
+				//InitNewThreadState for python in c++ Thread pool
+				for (int i = 0; i < boost::thread::hardware_concurrency(); ++i)
 				{
-					int maxLevel = getMaxLevelNode(cpyFilterRoot->getRootFilter());
-					std::shared_ptr<data::Data> outputData;
+					p_ininternal_task_t task = boost::make_shared<internal_task_t>(boost::bind(&InitNewPythonThread, interpreterPython));
+					boost::shared_future<result_t> fut(task->get_future());
+					pending_data.push_back(fut);
+					tasksPool.getIoService().post(boost::bind(&internal_task_t::operator(), task));
+					
+				}
 
-					MatrixLayerNode matrixLayer(maxLevel + 1);
+				boost::wait_for_all(pending_data.begin(), pending_data.end());
+				
+				std::map<boost::thread::id, PyExternalUser *> threadStates;
 
-					//TODO : insert debug layers into the matrix
-					setMatrixLayer(cpyFilterRoot, matrixLayer);
-					data::Data frame = cpyVideo->newFrame();
-					//TODO manage a buffering every things is here to do it
-					//For now we just pick up one image
-					while (!frame.empty() && (*isActive) == true)
-					{
-						cleanDataChild(cpyFilterRoot);
-						//Special case for rootNode dispatching to any children.
-						for (filter::Model * filter : matrixLayer[0])
-						{
-							*(filter) << frame;
-						}
+				//Get all threadStates coming from Thread itself
+				for(boost::shared_future<result_t> res : pending_data)
+				{
+					result_t pair = res.get();
+					threadStates[pair.first] = pair.second;
+				}
 
-						//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
-						for (int layer = 1; layer < matrixLayer.size(); layer++)
-						{
-							for (auto& filter : matrixLayer[layer])
-							{
-								filter->process();
-							}
-						}
-
-						frame = cpyVideo->newFrame();
-					}
-
-					cleanDataChild(cpyFilterRoot);
-
-					disposeChild(cpyFilterRoot);
-
-					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-						throw HipeException("Cannot free properly the Streaming videocapture");
-				});
-				TaskInfo taskInfo;
-				taskInfo.task.reset(task);
-				taskInfo.isActive.reset(isActive);
-				taskInfo.filter.reset(cpyFilterRoot, [](filter::Model *) {});
-				runningTasks.push_back(taskInfo);
-				//task.join();
-
+				return threadStates;
 			}
 
-			template<class VideoClass>
-			void processVideo(filter::Model* root, VideoClass& inputData, data::Data & outputData, bool debug)
+			/**
+			 * \brief The task coming from the pool to delegate the filter processing
+			 * \param cpyFilter the copy of current filter to execute
+			 * \param cpyFilterRoot the copy of the entire graph
+			 * \param outputData the result if needed
+			 * \param pyThreadStates the pyhton state by all cuurent threadId
+			 * \return 0
+			 */
+			static int runThreadProcess(filter::Model *&cpyFilter, 
+				filter::Model *cpyFilterRoot, 
+				std::map<boost::thread::id, PyExternalUser *> pyThreadStates)
 			{
-				VideoClass & video = static_cast<VideoClass&>(inputData);
-				cv::Mat frame;
-				filter::Model* filterRoot = root;
-				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
-				MatrixLayerNode matrixLayer(maxLevel + 1);
-				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
-				std::atomic<bool> * isActive = new std::atomic<bool>(true);
-
-				//TODO insert debug layers into the matrix
-				setMatrixLayer(filterRoot, matrixLayer);
-
-				std::shared_ptr<VideoClass> cpyVideo = std::make_shared<VideoClass>(video);
-
-				boost::thread *task = new boost::thread([cpyFilterRoot, cpyVideo, maxLevel, isActive]()
+				setPythonUserThreadState(cpyFilter, pyThreadStates);
+				
+				try
 				{
-					//int maxLevel = getMaxLevelNode(cpyFilterRoot->getRootFilter());
-					std::shared_ptr<data::Data> thr_outputData;
+					HipeStatus hipe_status = cpyFilter->process();
+					hipe_status = hipe_status;
+					if (hipe_status == END_OF_STREAM)
+						std::cout << "end of stream" << std::endl;
+				}
+				catch (HipeException& e)
+				{
+					std::cerr << "HipeException error during the " << cpyFilter->getName() << " execution. Msg : " << e.what() <<
+						". Please contact us" << std::endl;
+					cleanDataChild(cpyFilter, false);
+					disposeChild(cpyFilter, false);
+					//TO DO FORWARD EXCEPTION !!!!
+					return -1;
+				}
 
-					MatrixLayerNode matrixLayer(maxLevel + 1);
-
-					//TODO insert debug layers into the matrix
-					setMatrixLayer(cpyFilterRoot, matrixLayer);
-
-					data::Data res;
-
-
-					try
-					{
-						res = cpyVideo->newFrame();
-					}
-					catch (HipeException& e)
-					{
-						std::cerr << "HipeException error getting the first video frame : execution. Msg : " << e.what() <<
-							". Please contact us" << std::endl;
-						cleanDataChild(cpyFilterRoot);
-						disposeChild(cpyFilterRoot);
-						if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-							throw HipeException("Cannot free properly the Streaming videocapture");
-						return;
-					}
-					//TODO manage a buffering every things is here to do it
-					//For now we just pick up one image
-					while (!res.empty() && (*isActive))
-					{
-						for (filter::Model * filter : matrixLayer[0])
-						{
-
-							*(filter) << res;
-
-						}
-						cleanDataChild(cpyFilterRoot);
-
-						//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
-						for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
-						{
-							for (auto& filter : matrixLayer[layer])
-							{
-								try
-								{
-									filter->process();
-								}
-								catch (HipeException& e) {
-									std::cerr << "HipeException error during the " << filter->getName() << " execution. Msg : " << e.what() << ". Please contact us" << std::endl;
-									cleanDataChild(cpyFilterRoot);
-									disposeChild(cpyFilterRoot);
-									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-										throw HipeException("Cannot free properly the Streaming videocapture");
-									return;
-								}
-
-								catch (std::exception& e) {
-									std::cerr << "Unkown error during the " << filter->getName() << " execution. Msg : " << e.what() << ". Please contact us" << std::endl;
-									cleanDataChild(cpyFilterRoot);
-									disposeChild(cpyFilterRoot);
-									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-										throw HipeException("Cannot free properly the Streaming videocapture");
-									return;
-								}
-
-							}
-						}
-
-						//Special case for final result and other filter
-						for (auto& filter : matrixLayer[matrixLayer.size() - 1])
-						{
-							if (filter == nullptr) continue;
-
-
-							filter->process(); // Nothing to keep we are in async and detach task. Just execute
-
-							data::ConnexDataBase & outRes = filter->getConnector();
-							data::DataPort & port = (static_cast<data::DataPort &>(outRes.getPort()));
-							while (port.size() != 0)
-							{
-								port.pop();
-							}
-						}
-						res.release();
-						res = cpyVideo->newFrame();
-					}
-
-					cleanDataChild(cpyFilterRoot);
-					disposeChild(cpyFilterRoot);
-					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-						throw HipeException("Cannot free properly the Streaming videocapture");
-				});
-				TaskInfo taskInfo;
-				taskInfo.task.reset(task);
-				taskInfo.isActive.reset(isActive);
-				taskInfo.filter.reset(cpyFilterRoot, [](filter::Model *) {});
-				runningTasks.push_back(taskInfo);
-				//task->join();
+				catch (std::exception& e)
+				{
+					std::cerr << "Unkown error during the " << cpyFilter->getName() << " execution. Msg : " << e.what() <<
+						". Please contact us" << std::endl;
+					
+					cleanDataChild(cpyFilter, false);
+					disposeChild(cpyFilter, false);
+					//TO DO FORWARD EXCEPTION !!!!
+					
+					return -1;
+				}
+				//std::cout << "end pool"  <<std::endl;
+				return 0;
 			}
-
-
-			void processSequence(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug)
-			{
-				if (data::DataTypeMapper::isVideo(inputData.getType()))
-				{
-					throw HipeException("processSequence of Video isn't yet implemented");
-				}
-
-				//TMI: HACK: Workaround FilePatternFilter
-				if (inputData.getType() == data::IODataType::SEQIMGD)
-				{
-					data::DirectoryImgData & dirImgData = static_cast<data::DirectoryImgData &>(inputData);
-					dirImgData.loadImagesData();
-				}
-				processImages(root, inputData, outputData, debug);
-			}
-
-			void processListData(filter::Model* root, data::ListIOData & inputData, data::Data& outputData, bool debug)
-			{
-				if (inputData.getType() != data::IODataType::LISTIO)
-				{
-					throw HipeException("cannot accept Data type other than List");
-				}
-				auto vecData = inputData.getListData();
-				for (auto it = vecData.begin(); it != vecData.end(); ++it)
-				{
-					if (data::DataTypeMapper::isImage(it->getType()))
-					{
-						processImages(root, *it, outputData, debug);
-					}
-					else if (data::DataTypeMapper::isVideo(it->getType()))
-					{
-						throw HipeException("processSequence of Video isn't yet implemented");
-					}
-				}
-			}
-
-			void processImages(filter::Model* root, data::Data & inputData, data::Data &outputData, bool debug)
-			{
-				filter::Model* filterRoot = reinterpret_cast<filter::Model *>(root);
-				int maxLevel = getMaxLevelNode(filterRoot->getRootFilter());
-
-				cleanDataChild(filterRoot);
-
-				MatrixLayerNode matrixLayer(maxLevel + 1);
-
-				//TODO insert debug layers into the matrix
-				setMatrixLayer(filterRoot, matrixLayer);
-
-				for (filter::Model * filter : matrixLayer[0])
-				{
-					*(filter) << inputData;
-				}
-
-				//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
-				std::shared_ptr<data::Data> inter_output;
-				for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
-				{
-					for (auto& filter : matrixLayer[layer])
-					{
-
-						filter->process();
-
-						//pushOutputToChild(filter, *(inter_output.get()));
-					}
-				}
-
-				//Special case for final result and other filter
-				for (auto& filter : matrixLayer[matrixLayer.size() - 1])
-				{
-					if (filter == nullptr) continue;
-
-					if (filter->getConstructorName().find("OutputRawDataFilter") != std::string::npos)
-					{
-						data::ConnexDataBase & outRes = filter->getConnector();
-						data::OutputData outData;
-						outData = static_cast<data::DataPort &>(outRes.getPort()).pop();
-						outputData = outData;
-
-					}
-					filter->process();
-				}
-
-				cleanDataChild(filterRoot);
-				disposeChild(filterRoot);
-			}
-
-
-			void processPattern(filter::Model* root, data::Data data, data::Data& output_data, bool debug)
-			{}*/
 
 			void processDataSource(filter::Model* root, data::Data& outputData, bool debug)
 			{
@@ -355,7 +320,6 @@ namespace orchestrator
 				setMatrixLayer(filterRoot, matrixLayer);
 				//Get the Datasource type. FI : if One of data is a video then we detach the thread
 				data::IODataType sourceType = data::IMGF;
-				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
 
 				for (auto dataSource : matrixLayer[1])
 				{
@@ -364,21 +328,23 @@ namespace orchestrator
 					{
 						if (data_source->getSourceType() == data::IODataType::VIDF)
 						{
-							sourceType = data::IODataType::VIDF;;
-							break;
+							sourceType = data::IODataType::VIDF;
+							data_source->intialize();
 						}
 					}
 				}
 
-				
+
+				filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
+				InitPythonEngine(cpyFilterRoot);
 				std::atomic<bool>* isActive = new std::atomic<bool>(true);
 				//std::thread thr1;
-				
 
+				PyInterpreterState* l_interp = interp;
 
-				boost::thread* task = new boost::thread([cpyFilterRoot, maxLevel, &outputData, sourceType, isActive]()
+				boost::thread* task = new boost::thread([cpyFilterRoot, maxLevel, &outputData, sourceType, isActive, l_interp]()
 				{
-					std::cout<<"start"<<std::endl;
+					std::cout << "start" << std::endl;
 					// ALlocation std::vector<std::vector>>(MAXLEVEL + 1)
 					//Profondeur de graphe base sur la le plus grand nombre de dependances
 					MatrixLayerNode matrixLayer(maxLevel + 1);
@@ -390,149 +356,121 @@ namespace orchestrator
 					// | X X   |
 					// | X X X |
 					// | X     |
-					
+
 					//TODO : Sort split layer when 2 nodes are trying to execute on GPU or OMP
 					//std::shared_ptr<data::Data> inter_output;
 					HipeStatus hipe_status = OK;
-					
+
+
 					//Detection du nombre core
 					//With C++11; may return 0 when not able detect to
 					unsigned NbminCore = 1;
 					unsigned FactCore = 1;
-					unsigned concurentThreadsSupported = (std::max)(NbminCore,std::thread::hardware_concurrency());
+					unsigned concurentThreadsSupported = (std::max)(NbminCore, std::thread::hardware_concurrency());
 					unsigned nbThrPoool = FactCore * concurentThreadsSupported;
 					//std::cout << nbThrPoool << "threads" <<std::endl;
 					boost::mutex mutexHipeStatus;
-					boost::mutex mutexcpyFilter;	
-					int range =0;
+					boost::mutex mutexcpyFilter;
 					
-					// Creation de pool de thread == 1-2 fois le nb de core disponible hors HyperThreading 
-					std::vector<int> pool(nbThrPoool, -1);
-					/*
-					Version pour mettre en pause puis relancer les threads
-					*/
-					/*std::vector<std::vector<boost::thread*>> threadRange(matrixLayer.size() - 1)*/
-							
-					while ((hipe_status != END_OF_STREAM) && *isActive)
+					try
 					{
-						range +=1;
-						//std::cout << "start range: "<<range << std:: endl;
-						for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
+						// Creation de pool de thread == 1-2 fois le nb de core disponible hors HyperThreading 
+						TasksPool tasksPool;
+						std::auto_ptr<boost::asio::io_service::work> work(new boost::asio::io_service::work(tasksPool.getIoService()));
+
+						std::map<boost::thread::id, PyExternalUser*> pyThreadStates = startTaskPool(tasksPool, l_interp);
+
+						while ((hipe_status != END_OF_STREAM) && *isActive)
 						{
-							
-							std::vector<boost::thread*> threadLayer(matrixLayer[layer].size());
-							for (int i = 0; i < matrixLayer[layer].size() ; i++)
+
+							//std::cout << "start range: "<<range << std:: endl;
+							for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
 							{
-								while(find(pool.begin(), pool.end(), -1) == pool.end())
+								std::vector<boost::shared_future<int>> pending_data;
+
+								for (int i = 0; i < matrixLayer[layer].size(); i++)
 								{
-									std::cout<<"wait" <<std::endl;
+
+
+
+									auto& cpyFilter = matrixLayer[layer][i];
+									//std::cout << "start: " << it-pool.begin() << std::endl;
+
+									//Run job
+									ptask_t task = boost::make_shared<task_t>(boost::bind(&runThreadProcess, cpyFilter, cpyFilterRoot, pyThreadStates));
+
+									tasksPool.push_job(task, pending_data);
+									//std::cout << "changement de pool"<<std::endl;
 								}
-								std::vector<int>::iterator it;
-								it = find(pool.begin(), pool.end(), -1);
-								auto& cpyFilter = matrixLayer[layer][i];
-								//std::cout << "start: " << it-pool.begin() << std::endl;
-								*it = i;
-								threadLayer[i] = new boost::thread([&cpyFilter, cpyFilterRoot, &outputData, &hipe_status, &pool, it, &mutexHipeStatus, &mutexcpyFilter]()
-								{
-									HipeStatus hipe_status_thread = OK;
-									try
-									{
-										//mutexHipeStatus.lock();
-										//std::cout << "start pool" <<*it   <<std::endl;
-										hipe_status_thread = cpyFilter->process();
-										if (hipe_status_thread == END_OF_STREAM)
-											std::cout << "end of stream" <<std::endl;
-										//mutexHipeStatus.unlock();
-										*it = -1;
-										//break;
-									}
-									catch (HipeException& e)
-									{
-										std::cerr << "HipeException error during the " << cpyFilter->getName() << " execution. Msg : " << e.what() <<
-										". Please contact us" << std::endl;
-										mutexcpyFilter.lock();
-										cleanDataChild(cpyFilterRoot);
-										disposeChild(cpyFilterRoot);
-										if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-											throw HipeException("Cannot free properly the Streaming videocapture");
-										mutexcpyFilter.unlock();
-										return;
-									}
 
-									catch (std::exception& e)
-									{
-										std::cerr << "Unkown error during the " << cpyFilter->getName() << " execution. Msg : " << e.what() <<
-										". Please contact us" << std::endl;
-										mutexcpyFilter.lock();
-										cleanDataChild(cpyFilterRoot);
-										disposeChild(cpyFilterRoot);
-										if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
-											throw HipeException("Cannot free properly the Streaming videocapture");
-										mutexcpyFilter.unlock();
-										return;
-									}
-									//std::cout << "end pool"  <<std::endl;
-									mutexHipeStatus.lock();
-									hipe_status = hipe_status_thread;
-									mutexHipeStatus.unlock();
-									
-								});
-																
-								
-								
-								
+								boost::wait_for_all(pending_data.begin(), pending_data.end());
 
-								//std::cout << "changement de pool"<<std::endl;
-							}
-							
-							for (int j = 0; j < matrixLayer[layer].size() ; j++)
-							{
-								//std::cout <<"start join: "<<j <<std::endl;
-								if (threadLayer[j] ->joinable())
+								if (hipe_status == END_OF_STREAM)
 								{
-									threadLayer[j]->join();
-									
+									//std::cout << "end of stream" <<std::endl;
+									break;
 								}
 							}
-							threadLayer.clear();	
-							
-							if (hipe_status == END_OF_STREAM){
-								//std::cout << "end of stream" <<std::endl;
+							//std::cout << "start size -1 "<< range <<std::endl;
+							//Special case for final result and other filter
+							for (auto& filter : matrixLayer[matrixLayer.size() - 1])
+							{
+								if (filter == nullptr) continue;
+								if (hipe_status == OK)
+								{
+									if (data::DataTypeMapper::isImage(sourceType) &&
+										filter->getConstructorName().find("OutputRawDataFilter") != std::string::npos)
+									{
+										data::ConnexDataBase& outRes = filter->getConnector();
+										data::OutputData outData;
+										outData = static_cast<data::DataPort &>(outRes.getPort()).pop();
+										outputData = static_cast<data::Data>(outData);
+									}
+									filter->process();
+								}
+							}
+							//std::cout << "fin size -1 "<<std::endl;
+							if (data::DataTypeMapper::isImage(sourceType))
 								break;
-							}
+							//std::cout << "fin range: "<< range <<std::endl;
 						}
-								//std::cout << "start size -1 "<< range <<std::endl;
-						//Special case for final result and other filter
-						for (auto& filter : matrixLayer[matrixLayer.size() - 1])
-						{
-							if (filter == nullptr) continue;
-							if (hipe_status == OK)
-							{
-								if (data::DataTypeMapper::isImage(sourceType) && 
-									filter->getConstructorName().find("OutputRawDataFilter") != std::string::npos)
-								{
-									data::ConnexDataBase& outRes = filter->getConnector();
-									data::OutputData outData;
-									outData = static_cast<data::DataPort &>(outRes.getPort()).pop();
-									outputData = static_cast<data::Data>(outData);
-								}
-								filter->process();
-							}
-						}
-						//std::cout << "fin size -1 "<<std::endl;
-						if (data::DataTypeMapper::isImage(sourceType))
-							break;
-						//std::cout << "fin range: "<< range <<std::endl;
-					}
-					//std::cout << "End while: "<< range <<std::endl;
-					cleanDataChild(cpyFilterRoot);
-					//std::cout << "clean" <<std::endl;
-					disposeChild(cpyFilterRoot);
-					//std::cout << "dispose"<<std::endl;
 
-					if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK){
-					//std::cout << "if end thread"<<std::endl;
-						throw HipeException("Cannot free properly the videocapture");
+
+						work.reset();
+						if (!tasksPool.getIoService().stopped())
+						{
+							tasksPool.getIoService().stop();
+							int retry = 100;
+							while ((!tasksPool.getIoService().stopped()) && retry >= 0)
+							{
+								boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+							}
+							if (!tasksPool.getIoService().stopped())
+							{
+								HipeException("Fail to stop MultiThread Scheduler");
+							}
+						}
+
+						destroyPythonThread(pyThreadStates);
+
+						//std::cout << "End while: "<< range <<std::endl;
+						cleanDataChild(cpyFilterRoot);
+						//std::cout << "clean" <<std::endl;
+						disposeChild(cpyFilterRoot);
+						//std::cout << "dispose"<<std::endl;
+
+						if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+						{
+							//std::cout << "if end thread"<<std::endl;
+							throw HipeException("Cannot free properly the videocapture");
+						}
+
+
+						
+					}
+					catch (std::exception &e)
+					{
+						throw HipeException(e.what());
 					}
 					//std::cout << "end thread"<<std::endl;
 				});
@@ -542,7 +480,9 @@ namespace orchestrator
 					TaskInfo taskInfo;
 					taskInfo.task.reset(task);
 					taskInfo.isActive.reset(isActive);
-					taskInfo.filter.reset(cpyFilterRoot, [](filter::Model *) {});
+					taskInfo.filter.reset(cpyFilterRoot, [](filter::Model*)
+				                      {
+				                      });
 					runningTasks.push_back(taskInfo);
 				}
 				else
@@ -553,48 +493,16 @@ namespace orchestrator
 
 					delete isActive;
 				}
-
 			}
 
-			void process(filter::Model* root, data::Data& inputData, data::Data &outputData, bool debug = false)
+			void process(filter::Model* root, data::Data& inputData, data::Data& outputData, bool debug = false)
 			{
+				if (!runningTasks.empty())
+				{
+					throw HipeException("Some previous task is stil running. Please kill it before run a new one.");
+				}
 
-				/*if (data::DataTypeMapper::isSequence(inputData.getType()))
-				{
-					processSequence(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isListIo(inputData.getType()))
-				{
-					data::ListIOData &list_io_data = static_cast<data::ListIOData&>(inputData);
-					processListData(root, list_io_data, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isImage(inputData.getType()))
-				{
-					processImages(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isVideo(inputData.getType()))
-				{
-					using videoType = data::FileVideoInput;
-
-					if (inputData.getType() == data::STRMVID)
-						using videoType = data::StreamVideoInput;
-
-					processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
-				}
-				else if (data::DataTypeMapper::isStreaming(inputData.getType()))
-				{
-					processStreaming(root, inputData, outputData, debug);
-				}
-				else if (data::DataTypeMapper::isPattern(inputData.getType()))
-				{
-					using videoType = data::PatternData;
-					using videoDir = data::DirPatternData;
-					if (inputData.getType() == data::IODataType::DIRPATTERN)
-						processVideo(root, static_cast<videoDir&>(inputData), outputData, debug);
-					else
-						processVideo(root, static_cast<videoType&>(inputData), outputData, debug);
-				}
-				else */if (data::DataTypeMapper::isNoneData(inputData.getType()))
+				if (data::DataTypeMapper::isNoneData(inputData.getType()))
 				{
 					processDataSource(root, outputData, debug);
 				}
@@ -602,24 +510,21 @@ namespace orchestrator
 				{
 					throw HipeException("Unknown type of data");
 				}
-
 			}
 
 			virtual void killall()
 			{
-				for (TaskInfo & taskInfo : runningTasks)
+				for (TaskInfo& taskInfo : runningTasks)
 				{
 					std::atomic<bool>* isActive = taskInfo.isActive.get();
 					*(isActive) = false;
 					if (taskInfo.task->joinable())
+					{
 						taskInfo.task->join();
-
-
+					}
 				}
 				runningTasks.clear();
 			}
-			
-			
 		};
 	}
 }

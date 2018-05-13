@@ -153,7 +153,7 @@ namespace filter
 					
 
 					pyImageData* py_image_data = o.get();
-					std::cout << "Nb rows " << py_image_data->get().rows << " Nb Cols :" << py_image_data->get().cols << std::endl;
+					//std::cout << "Nb rows " << py_image_data->get().rows << " Nb Cols :" << py_image_data->get().cols << std::endl;
 					data::ImageData res_process(py_image_data->get());
 
 					PUSH_DATA(res_process);

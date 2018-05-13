@@ -207,8 +207,15 @@ namespace orchestrator
 
 		void killall()
 		{
-			auto orchestrator_base = getDefaultOrchestrator();
-			orchestrator_base->killall();
+			for (auto&pair : _orchestrators)
+			{
+				OrchestratorBase* orchestrator_base = pair.second;
+				if (orchestrator_base != nullptr)
+				{
+					orchestrator_base->killall();
+				}
+
+			}
 		}
 
 		static void start_orchestrator();

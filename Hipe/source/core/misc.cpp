@@ -9,6 +9,10 @@
 #pragma warning(pop)
 
 #ifdef WIN32
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <windows.h>
 
 void hipe_usleep(long long usec)
@@ -24,9 +28,8 @@ void hipe_usleep(long long usec)
 	CloseHandle(timer);
 }
 
-#include <windows.h>
 
-int hipe_gettimeofday(struct timeval* p, void* tz)
+int hipe_gettimeofday(hipetimeval* p, void* tz)
 {
 	ULARGE_INTEGER ul; // As specified on MSDN.
 	FILETIME ft;
@@ -70,7 +73,7 @@ void addEnv(std::string path)
 #include <unistd.h>
 #include <stdlib.h>
 
-int hipe_gettimeofday(struct timeval* p, void* tz) {
+int hipe_gettimeofday(hipetimeval* p, void* tz) {
 	return gettimeofday(p, (struct timezone *)tz);
 }
 

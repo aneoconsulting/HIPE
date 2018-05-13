@@ -145,14 +145,13 @@ namespace orchestrator
 					Py_Initialize();
 					// Create GIL/enable threads
 					PyEval_InitThreads();
-
 					pyMainThreaState = PyGILState_GetThisThreadState();
-					//// Get the default thread state  
-					/*PyThreadState* state = PyThreadState_Get();*/
-
-					
 					PyEval_ReleaseThread(pyMainThreaState);
 				}
+				//// Get the default thread state  
+
+				pyMainThreaState = PyGILState_GetThisThreadState();
+				
 
 				if (level == 0 && pyThreadState == nullptr)
 				{
