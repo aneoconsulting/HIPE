@@ -1,9 +1,6 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-#Add some multithreaded build support =====================================================================================================
-if(WIN32)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-endif()
+
 
 project (Hipe)
 
@@ -59,6 +56,10 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   SET(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/../install/hipe-core" CACHE PATH "Installation directory" FORCE)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
+#Add some multithreaded build support =====================================================================================================
+if(WIN32)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+endif()
 
 add_subdirectory(source)
 
@@ -113,7 +114,7 @@ set(CPACK_COMPONENT_APPLICATIONS_GROUP "")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/../LICENCE_AGPL.txt")
 
-set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\ressources\\\\logo.ico")
+set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\..\\\\ressources\\\\logo.ico")
 
 if (WIN32)
 	set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/../ressources/logo.ico")

@@ -7,7 +7,7 @@ pushd %~dp0
 set script_dir=%CD%
 popd
 echo "Path to binary " %script_dir%
-cd %script_dir%
+cd %script_dir%/source-core
 
 call compile.bat
 if NOT ["%errorlevel%"]==["0"] (
@@ -15,7 +15,7 @@ if NOT ["%errorlevel%"]==["0"] (
     exit /b %errorlevel%
 )
 
-cd modules
+cd %script_dir%/source-modules
 call compile.bat
 
 

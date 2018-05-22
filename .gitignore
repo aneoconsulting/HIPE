@@ -31,3 +31,7 @@ Hipe/modules/header/filter/References.h
 /Hipe/module/build/**
 Hipe/tests/data/scriptPython/testhipe.pyc
 **/*.pyc
+3rdParty/**
+install/**
+source-core/build/*
+source-modules/build/*

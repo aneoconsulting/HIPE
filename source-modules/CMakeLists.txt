@@ -1,10 +1,6 @@
 cmake_minimum_required (VERSION 3.7.1)
 
-#Add some multithreaded build support =====================================================================================================
-# if(WIN32)
-# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 
-# endif()
 
 project (Hipe_module)
 
@@ -104,6 +100,12 @@ ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/libs)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target/libs)
+
+#Add some multithreaded build support =====================================================================================================
+if(WIN32)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+
+endif()
 
 add_subdirectory(source)
 
