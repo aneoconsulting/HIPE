@@ -1,0 +1,52 @@
+{
+	"name": "[YOLO] Slave listner",
+	"filters": [
+		{
+			"RootFilter": {
+				"name": "RootFilter"
+			}
+		},
+		{
+			"Resize": {
+				"name": "Resize",
+				"ratio": "1",
+				"need": [
+					"RootFilter"
+				]
+			}
+		},
+		{
+			"ObjectRecognitionYolo": {
+				"name": "ObjectRecognitionYolo",
+				"cfg_filename": "C:\\Users\\ddubuc\\workspace\\yolo-for-windows-v2-master\\yolo-for-windows-v2-master\\build\\darknet\\x64\\yolo.cfg",
+				"confidenceThreshold": "0.6",
+				"names_filename": "C:\\Users\\ddubuc\\workspace\\yolo-for-windows-v2-master\\yolo-for-windows-v2-master\\build\\darknet\\x64\\data\\coco.names",
+				"weight_filename": "C:\\Users\\ddubuc\\workspace\\yolo-for-windows-v2-master\\yolo-for-windows-v2-master\\build\\darknet\\x64\\yolo.weights",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"ShowVideo": {
+				"name": "ShowVideo",
+				"need": [
+					"ObjectRecognitionYolo"
+				]
+			}
+		},
+		{
+			"ResultFilter": {
+				"name": "ResultFilter",
+				"need": [
+					"ObjectRecognitionYolo"
+				]
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"type": "VIDF",
+		"path": "udpsrc port=8888 ! application/x-rtp,media=video,clock-rate=90000,encoding-name=H264 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! timeoverlay shaded-background=true deltay=20 ! appsink sync=false"
+	}
+}

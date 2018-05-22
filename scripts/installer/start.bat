@@ -1,0 +1,3 @@
+PATH=C:\Users\ddubuc\workspace\HipeExternal\win64\ffmpeg\bin;C:\Users\ddubuc\workspace\HipeExternal\win64\boost_1_62_0\lib64-msvc-14.0;C:\Users\ddubuc\workspace\HipeExternal\win64\opencv\x64\vc14\bin;C:\Users\ddubuc\workspace\HipeExternal\win64\gstreamer\1.0\x86_64\bin;C:\Users\ddubuc\workspace\HipeExternal\win64\liblept\bin;C:\Users\ddubuc\workspace\HipeExternal\win64\yolov2\bin\Release;C:\Users\ddubuc\workspace\HipeExternal\win64\hdf5\bin;C:\Users\ddubuc\workspace\HipeExternal\win64\intel64_win;%PATH%
+
+hipe_server.exe -p 9090

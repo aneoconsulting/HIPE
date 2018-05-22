@@ -1,0 +1,43 @@
+{
+"name"    : "ShowImage",
+"filters" : 
+[
+	{"filter" :
+		{ 
+			"type" : "RootFilter",
+			"name" : "root" 
+		} 
+	},
+	{"filter" : 
+		{
+			"type" : "ResultFilter",
+			"name" : "result",
+			"need" : ["resizing"]
+		}
+	},
+	{"filter" : 
+		{
+			"type" : "Resize",
+			"ratio" : 20.0,
+			"name" : "resizing",
+			"need" : ["root"]
+		}
+	},
+	{"filter" : 
+		{
+			"type" : "ShowImage",
+			"name" : "debug",
+			"need" : ["resizing"]
+		}
+	}],
+	
+	
+	"orchestrator" : "DefaultScheduler",
+	
+	"data" : {
+		"type" : "IMGF",
+		"path" : "C:\\workspace\\ANEO\\Project\\Poclain-Hydraulics\\Hipe\\tests\\data\\ok.jpg"
+	}
+	
+		
+}

@@ -1,0 +1,226 @@
+{
+	"name": "DDU - Demo Devox",
+	"filters": [
+		{
+			"Resize": {
+				"name": "Resize",
+				"ratio": "2",
+				"need": [
+					"VideoDataSource"
+				]
+			}
+		},
+		{
+			"WriteText": {
+				"name": "WriteText_51",
+				"text": "Video presentation",
+				"need": [
+					"VideoDataSource_50"
+				]
+			}
+		},
+		{
+			"FaceDetection": {
+				"name": "FaceDetection",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"FaceLandmark": {
+				"name": "FaceLandmark",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"Tracker": {
+				"name": "Tracker",
+				"need": [
+					"FaceDetection",
+					"Resize"
+				]
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter_17",
+				"asReference": "false",
+				"need": [
+					"Resize",
+					"FaceLandmark"
+				]
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter",
+				"asReference": "false",
+				"need": [
+					"Resize",
+					"Tracker"
+				]
+			}
+		},
+		{
+			"IfStableTracking": {
+				"name": "IfStableTracking",
+				"confidence": "10",
+				"need": [
+					"Tracker"
+				]
+			}
+		},
+		{
+			"WriteText": {
+				"name": "WriteText",
+				"text": "Face landmarks",
+				"need": [
+					"OverlayFilter_17"
+				]
+			}
+		},
+		{
+			"ExtractShape": {
+				"name": "ExtractShape",
+				"need": [
+					"IfStableTracking",
+					"Resize"
+				]
+			}
+		},
+		{
+			"WriteText": {
+				"name": "WriteText_89",
+				"text": "Motion tracker",
+				"need": [
+					"OverlayFilter"
+				]
+			}
+		},
+		{
+			"DirLatch": {
+				"name": "DirLatch",
+				"good_matches": "20",
+				"hessianThreshold": "50",
+				"inlier_threshold": "3000",
+				"nn_match_ratio": "0.8",
+				"wait": "true",
+				"need": [
+					"DirectoryImgDataSource",
+					"ExtractShape"
+				]
+			}
+		},
+		{
+			"AgeGender": {
+				"name": "AgeGender",
+				"age_model_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\deploy_age2.prototxt",
+				"age_weight_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\age_net.caffemodel",
+				"confidence_age": "0.3",
+				"confidence_gender": "0.6",
+				"gender_model_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\deploy_gender2.prototxt",
+				"gender_weight_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\gender_net.caffemodel",
+				"mean_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\mean.binaryproto",
+				"need": [
+					"ExtractShape"
+				],
+				"confidenceThreshold": "0.6"
+			}
+		},
+		{
+			"SaveIfNoMatching": {
+				"name": "SaveIfNoMatching",
+				"resend_best_during_ms": "10000",
+				"store_directory": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Identification\\Face_Pattern",
+				"need": [
+					"DirLatch"
+				]
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter_66",
+				"need": [
+					"AgeGender",
+					"Resize"
+				]
+			}
+		},
+		{
+			"ConcatToShow": {
+				"name": "ConcatToShow_67",
+				"height": "360",
+				"width": "640",
+				"need": [
+					"SaveIfNoMatching",
+					"ExtractShape"
+				]
+			}
+		},
+		{
+			"WriteText": {
+				"name": "WriteText_88",
+				"text": "Age and gender estimation",
+				"need": [
+					"OverlayFilter_66"
+				]
+			}
+		},
+		{
+			"WriteText": {
+				"name": "WriteText_90",
+				"text": "Face detection and identification",
+				"need": [
+					"ConcatToShow_67"
+				]
+			}
+		},
+		{
+			"ConcatToShow": {
+				"name": "ConcatToShow",
+				"need": [
+					"WriteText",
+					"WriteText_88",
+					"WriteText_89",
+					"WriteText_90",
+					"WriteText_51"
+				]
+			}
+		},
+		{
+			"ShowVideo": {
+				"name": "ShowVideo",
+				"need": [
+					"ConcatToShow"
+				]
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"datasource": [
+			{
+				"VideoDataSource": {
+					"url": "0",
+					"name": "VideoDataSource"
+				}
+			},
+			{
+				"DirectoryImgDataSource": {
+					"directoryPath": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Identification\\Face_Pattern",
+					"name": "DirectoryImgDataSource"
+				}
+			},
+			{
+				"VideoDataSource": {
+					"loop": true,
+					"url": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\Marketing HIPE\\VideoPres_SpeedX2.mp4",
+					"name": "VideoDataSource_50"
+				}
+			}
+		]
+	}
+}

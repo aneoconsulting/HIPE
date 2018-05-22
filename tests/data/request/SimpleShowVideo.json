@@ -1,0 +1,43 @@
+{
+"name"    : "ShowImage",
+"filters" : 
+[
+	{"filter" :
+		{ 
+			"type" : "RootFilter",
+			"name" : "root" 
+		} 
+	},
+	{"filter" : 
+		{ 
+			"type" : "ShowVideo",
+			"name" : "result",
+			"need" : ["resizing"]
+		} 
+			
+	},
+	{"filter" : 
+		{
+			"type" : "Resize",
+			"ratio" : 1.6,
+			"name" : "resizing",
+			"need" : ["root"]
+		}
+	},
+	{"filter" :
+		{ 
+			"type" : "RootFilter",
+			"name" : "resultJson",
+			"need" : ["result"]
+		} 
+	}],
+	
+	"orchestrator" : "DefaultScheduler",
+	
+	"data" : {
+		"type" : "VIDF",
+		"path" : "C:\\workspace\\ANEO\\Project\\Poclain\\Data\\video\\0507_mg21_vue2.avi"
+		}
+	
+		
+}

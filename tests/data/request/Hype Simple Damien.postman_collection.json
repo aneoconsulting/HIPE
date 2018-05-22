@@ -1,0 +1,231 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Hype Simple Damien",
+		"_postman_id": "9c71ab5c-6ed1-7bb2-1ed5-a170178faf6d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hype test without Algos",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"AlgoName\",\n\n\"orchestrator\" : \"DefaultScheduler\"\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype test with Algos",
+			"request": {
+				"url": "192.168.6.109:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"AlgoName\",\n\"filters\" : \n[\n\t{\"filter\" :\n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"toto\" \n\t\t} \n\t},\n\t{\"filter\" :\n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"tata\",\n\t\t\t\"need\" : [\"toto\"]\n\t\t} \n\t},\t\t\n\t\t{\"filter\" :\n\t\t{ \n\t\t\t\"type\" : \"Gaussian\",\n\t\t\t\"sigma\" : 15,\n\t\t\t\"name\" : \"Gauss\",\n\t\t\t\"need\" : [\"toto\", \"tata\"]\n\t\t} \n\t},\n\t{\"filter\" : \n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"toto2\",\n\t\t\t\"need\" : [\"toto\", \"tata\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"filter\" : \n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"toto2\", \"Gauss\"],\n\t\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\results\\\\result.jpg\"\n\t\t} \n\t\t\t\n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\gitlab_aneo\\\\hipe\\\\Data\\\\Images\\\\ok.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request without algo"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype test Show Image",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{ \n\t\t\n\t\t\t\"ratio\" : 3,\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"need\" : [\"root\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RotateImage\" : \n\t\t{ \n\t\t\n\t\t\t\"angle\" : 0,\n\t\t\t\"name\" : \"rotate\",\n\t\t\t\"need\" : [\"resize\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"ShowImage\" : \n\t\t{ \n\t\t\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple image from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype read file and return json",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"type\" : \"RootFilter\",\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"ResultFilter\" : \n\t\t{\n\t\t\t\"type\" : \"ResultFilter\",\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t}\n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"type\" : \"Resize\",\n\t\t\t\"ratio\" : 15.0,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"ShowImage\" : \n\t\t{\n\t\t\t\"type\" : \"ShowImage\",\n\t\t\t\"name\" : \"debug\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t}\n\t}],\n\t\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request reading a local file and return the json values"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype test Show Video",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"StreamResultFilter\" : \n\t\t{ \n\t\t\t\n\t\t\t\"port\" : 8864,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"ratio\" : 5.0,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"result\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain\\\\Data\\\\video\\\\0507_mg21_vue2.avi\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Show Video ",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 1.4,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"RotateImage\" : \n\t\t{\n\t\t\t\"angle\" : 0,\n\t\t\t\"name\" : \"rotate\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t}\n\t},\n\t{\"ShowVideo\" : \n\t\t{ \n\t\t\t\"waitkey\" : 1,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain\\\\Data\\\\video\\\\0507_mg21_vue2.avi\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype test Show Video copy",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\"ratio\" : 1,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"RotateImage\" : \n\t\t{\n\t\t\t\"angle\" : 0,\n\t\t\t\"name\" : \"rotate\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t}\n\t},\n\t{\"StreamResultFilter\" : \n\t\t{ \n\t\t\t\"port\" : 8864,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"VIDF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain\\\\Data\\\\Images\\\\Essai_du_08Juin2016\\\\vue_1.mp4\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Stream Android to stream",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\t\n\t\t\t\"ratio\" : 1,\n\t\t\t\"name\" : \"resizing\",\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"RotateImage\" : \n\t\t{\n\t\t\t\"type\" : \"RotateImage\",\n\t\t\t\"angle\" : 270,\n\t\t\t\"name\" : \"rotate\",\n\t\t\t\"need\" : [\"resizing\"]\n\t\t}\n\t},\n\t{\"StreamResultFilter\" : \n\t\t{ \n\t\t\t\n\t\t\t\"port\" : 8864,\n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"rotate\"]\n\t\t} \n\t\t\t\n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\"type\" : \"STRMVID\",\n\t\t\"path\" : \"rtsp://192.168.1.12:8086\"\n\t\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Pattern detection",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"ResizePattern\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 10,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Akaze\" : \n\t\t{\n\t\t\t\"name\" : \"akaze\",\n\t\t\t\n\t\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"ShowImage\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\n\t\t\"type\" : \"PATTERN\",\n\t\t\"desc\" : \n\t\t\t\t{ \n\t\t\t\t\t\"SQR_CROP\" :\n\t\t\t\t\t{\n\t\t\t\t\t\t\t\"crop\" : [0, 0, 1000, 1000,  \n\t\t\t\t\t\t\t\t\t\t\t0, 0, 500, 500],\n\t\t\t\t\t\t\t\"IMGF\" : \n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t \"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t\"IMGF\" : \n\t\t\t\t\t{\n\t\t\t\t\t\t \"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Pattern cropper AKAZE",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 3,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Cropper\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"cropper\",\n\t\t\t\"ratio\" : 10,\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"Akaze\" : \n\t\t{\n\t\t\t\"name\" : \"akaze\",\n\t\t\t\n\t\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\n\t\t\t\"need\" : [\"cropper\"]\n\t\t}\n\t},\n\t{\"ShowImage\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"akaze\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		},
+		{
+			"name": "Hype Pattern cropper LATCH",
+			"request": {
+				"url": "localhost:9090/json",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\"    : \"ShowImage\",\n\"filters\" : \n[\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"root\" \n\t\t} \n\t},\n\t{\"Resize\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"resize\",\n\t\t\t\"ratio\" : 3,\n\t\t\t\"need\" : [\"root\"]\n\t\t}\n\t},\n\t{\"Cropper\" : \n\t\t{\n\t\t\n\t\t\t\"name\" : \"cropper\",\n\t\t\t\"ratio\" : 10,\n\t\t\t\"need\" : [\"resize\"]\n\t\t}\n\t},\n\t{\"Latch\" : \n\t\t{\n\t\t\t\"name\" : \"latch\",\n\t\t\t\n\t\t\t\"inlier_threshold\" : 4000,\n\t\t\t\"nn_match_ratio\" : 0.8,\n\t\t\t\"hessianThreshold\" : 50,\n\t\t\t\n\t\t\t\"need\" : [\"cropper\"]\n\t\t}\n\t},\n\t{\"ShowImage\" : \n\t\t{ \n\t\t\t\"name\" : \"result\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t\t\t\n\t},\n\t{\"RootFilter\" :\n\t\t{ \n\t\t\t\"name\" : \"resultJson\",\n\t\t\t\"need\" : [\"latch\"]\n\t\t} \n\t}],\n\t\n\t\"orchestrator\" : \"DefaultScheduler\",\n\t\n\t\"data\" : {\n\t\t\n\t\t\"type\" : \"IMGF\",\n\t\t\"path\" : \"C:\\\\workspace\\\\ANEO\\\\Project\\\\Poclain-Hydraulics\\\\Hipe\\\\tests\\\\data\\\\images\\\\ok.jpg\"\n\t}\n\t\n\t\t\n}"
+				},
+				"description": "test Hype request Show a simple video from file"
+			},
+			"response": []
+		}
+	]
+}

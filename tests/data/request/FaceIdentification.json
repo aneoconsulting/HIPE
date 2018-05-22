@@ -1,0 +1,103 @@
+{
+	"name": "Bug GStreamer",
+	"filters": [
+		{
+			"Resize": {
+				"name": "Resize",
+				"ratio": "2",
+				"need": [
+					"VideoDataSource"
+				]
+			}
+		},
+		{
+			"DirLatch": {
+				"name": "DirLatch",
+				"need": [
+					"DirPatternDataSource"
+				]
+			}
+		},
+		{
+			"FaceDetection": {
+				"name": "FaceDetection",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"Tracker": {
+				"name": "Tracker",
+				"need": [
+					"FaceDetection",
+					"Resize"
+				]
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter_17",
+				"asReference": "false",
+				"need": [
+					"FaceDetection",
+					"Resize"
+				]
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter",
+				"asReference": "false",
+				"need": [
+					"Resize",
+					"Tracker"
+				]
+			}
+		},
+		{
+			"ConcatToShow": {
+				"name": "ConcatToShow",
+				"need": [
+					"OverlayFilter",
+					"OverlayFilter_17",
+					"DirLatch"
+				]
+			}
+		},
+		{
+			"ShowVideo": {
+				"name": "ShowVideo",
+				"need": [
+					"ConcatToShow"
+				]
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"datasource": [
+			{
+				"VideoDataSource": {
+					"url": "0",
+					"name": "VideoDataSource"
+				}
+			},
+			{
+				"DirPatternDataSource": {
+					"name": "DirPatternDataSource",
+                    "need": [
+						"VideoDataSource",
+						"DirectoryImgDataSource"
+				]
+				}
+			},
+			{
+				"DirectoryImgDataSource": {
+					"directoryPath": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Identification\\Face_Pattern",
+					"name": "DirectoryImgDataSource"
+				}
+			}
+		]
+	}
+}
