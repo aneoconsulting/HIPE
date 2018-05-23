@@ -37,7 +37,7 @@
 
 #pragma warning(push, 0)
 #include <boost/thread/thread.hpp>
-#include <python.h>
+#include <Python.h>
 #pragma warning(pop)
 
 

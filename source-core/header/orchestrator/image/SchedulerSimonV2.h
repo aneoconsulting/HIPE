@@ -39,7 +39,7 @@
 #pragma warning(push, 0)
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
-#include <python.h>
+#include <Python.h>
 
 #include <boost/asio/io_service.hpp>
 #include <orchestrator/image/TasksPool.h>

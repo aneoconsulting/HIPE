@@ -33,3 +33,5 @@ Hipe/tests/data/scriptPython/testhipe.pyc
 **/*.pyc
 3rdParty/**
 source-core/build/**
+install/*
+source-modules/build/*
