@@ -85,7 +85,8 @@ if(WIN32)
 
 else(WIN32)
 
-set(Hipecore_DIR "${HIPE_EXTERNAL_DIR}/hipecore" CACHE PATH "hipecore")
+  set(Hipecore_DIR "${CMAKE_SOURCE_DIR}/../install/hipe-core" CACHE PATH "hipecore")
+  list(APPEND CMAKE_PREFIX_PATH "${Hipecore_DIR}")
 
   if(HIPE_EXTERNAL_PYTHON27)
 	  set(Python27_DIR "${HIPE_EXTERNAL_DIR}/python27/usr"  CACHE PATH "PYTHON_LIBRARYDIR")
