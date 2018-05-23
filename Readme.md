@@ -1,3 +1,12 @@
+# Preview on Youtube : 
+
+# Simple model conception
+[![Simple model conception](http://img.youtube.com/vi/NgPpJBbO3K0/0.jpg)](http://www.youtube.com/watch?v=NgPpJBbO3K0)
+
+# Demo Devoxx 2018 Paris : Facial recognition
+[![Demo Devoxx 2018 Paris : Facial recognition](http://img.youtube.com/vi/zphhtP0VNTU/0.jpg)](http://www.youtube.com/watch?v=zphhtP0VNTU)
+
+
 [0]: #content
 [1]: #-build-hipe
 [11]: #-requirements
