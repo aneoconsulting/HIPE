@@ -237,28 +237,31 @@ namespace orchestrator
 				typedef std::pair<boost::thread::id, PyExternalUser*>						   result_t;
 
 				std::vector<boost::shared_future<result_t> > pending_data;
-
-				//InitNewThreadState for python in c++ Thread pool
-				for (int i = 0; i < boost::thread::hardware_concurrency(); ++i)
-				{
-					p_ininternal_task_t task = boost::make_shared<internal_task_t>(boost::bind(&InitNewPythonThread, interpreterPython));
-					boost::shared_future<result_t> fut(task->get_future());
-					pending_data.push_back(fut);
-					tasksPool.getIoService().post(boost::bind(&internal_task_t::operator(), task));
-					
-				}
-
-				boost::wait_for_all(pending_data.begin(), pending_data.end());
-				
 				std::map<boost::thread::id, PyExternalUser *> threadStates;
 
-				//Get all threadStates coming from Thread itself
-				for(boost::shared_future<result_t> res : pending_data)
+				//InitNewThreadState for python in c++ Thread pool
+				if (interpreterPython != nullptr)
 				{
-					result_t pair = res.get();
-					threadStates[pair.first] = pair.second;
-				}
+					for (int i = 0; i < boost::thread::hardware_concurrency(); ++i)
+					{
+						p_ininternal_task_t task = boost::make_shared<internal_task_t>(boost::bind(&InitNewPythonThread, interpreterPython));
+						boost::shared_future<result_t> fut(task->get_future());
+						pending_data.push_back(fut);
+						tasksPool.getIoService().post(boost::bind(&internal_task_t::operator(), task));
 
+					}
+
+					boost::wait_for_all(pending_data.begin(), pending_data.end());
+
+					
+
+					//Get all threadStates coming from Thread itself
+					for (boost::shared_future<result_t> res : pending_data)
+					{
+						result_t pair = res.get();
+						threadStates[pair.first] = pair.second;
+					}
+				}
 				return threadStates;
 			}
 

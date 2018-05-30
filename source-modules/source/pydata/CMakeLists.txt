@@ -58,3 +58,8 @@ install (TARGETS pydata
 		COMPONENT library
 		ARCHIVE DESTINATION lib/Release
 		COMPONENT library)		
+		
+install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS Release DESTINATION bin/Release)
+install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS RelWithDebInfo DESTINATION bin/Release)
+
+install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS Debug DESTINATION bin/Debug)
