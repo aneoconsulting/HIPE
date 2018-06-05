@@ -69,16 +69,16 @@ Coming soon
 
 ### 3. Build HIPE :
 ### 3.1 Build HIPE CORE
-Please follow this step to build the HIPE Core [how-to-build](wiki/howto-build/HowTo-build.md) **before to build any modules**
+Please follow this step to build the HIPE Core [how-to-build](wiki/Howto-Build/HowTo-build.md) **before to build any modules**
 ### 3.2 Build HIPE MODULES
-Please follow this step to build the HIPE Modules [how-to-build](wiki/howto-build/HowTo-build.md)
+Please follow this step to build the HIPE Modules [how-to-build](wiki/Howto-Build/HowTo-build.md)
 ##
 ### HOWTO :
 ### 3.1 How to run
-If you want test HIPE and a simple Computer vision application. Please follow this step to execute a process [how-to-build](wiki/howto-Run/HowTo-Use.md)
+If you want test HIPE and a simple Computer vision application. Please follow this step to execute a process [how-to-run](wiki/Howto-Run/HowTo-Use.md)
 
 ### 3.2 How to Develop in HIPE Core
 Coming soon...
 
 ### 3.2 How to Develop in HIPE Modules
-If you want develop in HIPE. Please follow this tutorial to implement new node and data processing. [how to develop](wiki/howto-Develop/HowTo-Develop.md)
+If you want develop in HIPE. Please follow this tutorial to implement new node and data processing. [how to develop](wiki/Howto-Develop/HowTo-Develop.md)
