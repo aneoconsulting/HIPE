@@ -3,7 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerEnvironment>GST_DEBUG=*:1
 GST_PLUGIN_PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\lib\gstreamer-1.0
-PYTHONPATH=@Hipecore_DIR_WIN@\bin\Debug;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib\site-packages
+PYTHONPATH=@Hipecore_DIR_WIN@\bin\Debug;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib\site-packages
 PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR_WIN@\bin\Debug;@CMAKE_INSTALL_PREFIX_WIN@\bin\Debug;@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14;%PATH%</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommand>@Hipecore_DIR_WIN@\bin\Debug\hipe_server.exe</LocalDebuggerCommand>
@@ -16,7 +16,7 @@ PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR_WIN@\bin\Deb
     <LocalDebuggerCommandArguments>-p 9090 -m "@CMAKE_BINARY_DIR_WIN@\target\Release\filter.dll"</LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory>@Hipecore_DIR_WIN@\bin\Release</LocalDebuggerWorkingDirectory>
     <LocalDebuggerEnvironment>GST_PLUGIN_SYSTEM_PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64
-PYTHONPATH=@Hipecore_DIR_WIN@\bin\Release;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib\site-packages
+PYTHONPATH=@Hipecore_DIR_WIN@\bin\Release;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib\site-packages
 PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR_WIN@\bin\Release;@CMAKE_INSTALL_PREFIX_WIN@\bin\Release;@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14;%PATH%</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
@@ -26,7 +26,7 @@ PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR_WIN@\bin\Rel
     <LocalDebuggerCommandArguments>-p 9090 -m "@CMAKE_BINARY_DIR_WIN@\target\RelWithDebInfo\filter.dll"</LocalDebuggerCommandArguments>
     <LocalDebuggerEnvironment>GST_DEBUG=*:2
 GST_PLUGIN_SYSTEM_PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\lib\gstreamer-1.0
-PYTHONPATH=@Hipecore_DIR_WIN@\bin\Release;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib\site-packages
+PYTHONPATH=@Hipecore_DIR_WIN@\bin\Release;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib\site-packages
 PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\lib\gstreamer-1.0;@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR_WIN@\bin\Release;@CMAKE_INSTALL_PREFIX_WIN@\bin\Release;@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14;%PATH%</LocalDebuggerEnvironment>
   </PropertyGroup>
 </Project>

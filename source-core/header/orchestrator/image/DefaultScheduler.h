@@ -171,11 +171,20 @@ namespace orchestrator
 			{
 				if (!Py_IsInitialized())
 				{
-					Py_Initialize();
-					// Create GIL/enable threads
-					PyEval_InitThreads();
-					pyMainThreaState = PyGILState_GetThisThreadState();
-					PyEval_ReleaseThread(pyMainThreaState);
+					try {
+						Py_InitializeEx(0);
+						// Create GIL/enable threads
+						PyEval_InitThreads();
+						pyMainThreaState = PyGILState_GetThisThreadState();
+						PyEval_ReleaseThread(pyMainThreaState);
+					}
+					catch (...)
+					{
+						if (PyErr_Occurred())
+							PyErr_Print();
+						throw HipeException("Cannot initialize Python");
+
+					}
 				}
 				//// Get the default thread state  
 
@@ -293,7 +302,8 @@ namespace orchestrator
 
 					//Create new python ThreadState for filter which need it
 					PyExternalUser *userThreadState = nullptr;
-					InitNewPythonThread(l_interp, userThreadState);
+					if (l_interp != nullptr)
+						InitNewPythonThread(l_interp, userThreadState);
 
 					setPythonUserThreadState(cpyFilterRoot, userThreadState);
 

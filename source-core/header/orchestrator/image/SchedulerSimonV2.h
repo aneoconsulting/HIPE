@@ -266,8 +266,11 @@ namespace orchestrator
 				typedef std::pair<boost::thread::id, PyExternalUser*>						   result_t;
 
 				std::vector<boost::shared_future<result_t> > pending_data;
+				std::map<boost::thread::id, PyExternalUser *> threadStates;
 
 				//InitNewThreadState for python in c++ Thread pool
+				if (interpreterPython != nullptr)
+				{
 				for (int i = 0; i < boost::thread::hardware_concurrency(); ++i)
 				{
 					p_ininternal_task_t task = boost::make_shared<internal_task_t>(boost::bind(&InitNewPythonThread, interpreterPython));
@@ -279,7 +282,6 @@ namespace orchestrator
 
 				boost::wait_for_all(pending_data.begin(), pending_data.end());
 				
-				std::map<boost::thread::id, PyExternalUser *> threadStates;
 
 				//Get all threadStates coming from Thread itself
 				for(boost::shared_future<result_t> res : pending_data)
@@ -287,7 +289,7 @@ namespace orchestrator
 					result_t pair = res.get();
 					threadStates[pair.first] = pair.second;
 				}
-
+				}
 				return threadStates;
 			}
 
