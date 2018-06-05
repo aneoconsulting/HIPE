@@ -42,22 +42,22 @@ How to start with HIPE
 ___________________________
 ### Content
 1. [HIPE :][1]
-1.1 [Introduction][11]
-1.2 [Video Demo][12]
+    * 1.1 [Introduction][11]
+    * 1.2 [Video Demo][12]
 
 2. [Download prebuilt Software :][2]
-2.1 [Requierements][21]
-2.2 [for Windows x86-64bits][22]
-2.3 [for Linux x86-64bits][23]
+    * 2.1 [Requierements][21]
+    * 2.2 [for Windows x86-64bits][22]
+    * 2.3 [for Linux x86-64bits][23]
 
 3. [Build HIPE :][3]
-3.1 [Build HIPE CORE][31]
-3.2 [Build HIPE MODULES][32]
+    * 3.1 [Build HIPE CORE][31]
+    * 3.2 [Build HIPE MODULES][32]
 
 4. [HOWTO : ][4]
-4.1 [How to run][41]
-4.2 [How to test][42]
-4.3 [How to develop][43]
+    * 4.1 [How to run][41]
+    * 4.2 [How to test][42]
+    * 4.3 [How to develop][43]
 
 _______________________
 
