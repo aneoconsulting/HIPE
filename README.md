@@ -1,16 +1,17 @@
-[1]: #HIPE-Hiearchic-Image-Processing-Engine
-[11]: #Introduction
-[12]: #Video-Demo
-[2]: #DOWNLOAD-PREBUILT
+[1]: #-hipe-hiearchic-image-processing-engine
+[11]: #-hipe-hiearchic-image-processing-engine
+[12]: #simple-model-conception
+[2]: #2-download-prebuilt-software-
 [21]: #Requierements
-[22]: #FOR-WINDOWS-X86-64bits
-[23]: #FOR-LINUX-X86-64bits
-[3]: #Build-HIPE
-[31]: #Build-HIPE-CORE
-[32]: #Build-HIPE-MODULES
-[4]: #HOW-TO
-[41]: #How-to-run
-[42]: #How-to-test
+[22]: #22-for-windows-x86-64bits
+[23]: #23-for-linux-x86-64bits
+[3]: #3-build-hipe-
+[31]: #31-build-hipe-core
+[32]: #32-build-hipe-modules
+[4]: #howto-
+[41]: #41-how-to-run
+[42]: #42-how-to-develop-in-hipe-core
+[43]: #43-how-to-develop-in-hipe-modules
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 ## [[..][1]] HIPE Hiearchic Image Processing Engine
@@ -41,21 +42,22 @@ How to start with HIPE
 ___________________________
 ### Content
 1. [HIPE :][1]
-    1.1 [Introduction][11]
-	1.2 [Video Demo][12]
+1.1 [Introduction][11]
+1.2 [Video Demo][12]
 
 2. [Download prebuilt Software :][2]
-    2.1 [Requierements][21]
-    2.2 [for Windows x86-64bits][22]
-    2.3 [for Linux x86-64bits][23]
+2.1 [Requierements][21]
+2.2 [for Windows x86-64bits][22]
+2.3 [for Linux x86-64bits][23]
 
 3. [Build HIPE :][3]
-    3.1 [Build HIPE CORE][31]
-    3.2 [Build HIPE MODULES][32]
+3.1 [Build HIPE CORE][31]
+3.2 [Build HIPE MODULES][32]
 
 4. [HOWTO : ][4]
-    3.1 [How to run][41]
-    3.2 [How to test][42]
+4.1 [How to run][41]
+4.2 [How to test][42]
+4.3 [How to develop][43]
 
 _______________________
 
@@ -74,11 +76,11 @@ Please follow this step to build the HIPE Core [how-to-build](wiki/Howto-Build/H
 Please follow this step to build the HIPE Modules [how-to-build](wiki/Howto-Build/HowTo-build.md)
 ##
 ### HOWTO :
-### 3.1 How to run
+### 4.1 How to run
 If you want test HIPE and a simple Computer vision application. Please follow this step to execute a process [how-to-run](wiki/Howto-Run/HowTo-Use.md)
 
-### 3.2 How to Develop in HIPE Core
+### 4.2 How to Develop in HIPE Core
 Coming soon...
 
-### 3.2 How to Develop in HIPE Modules
+### 4.3 How to Develop in HIPE Modules
 If you want develop in HIPE. Please follow this tutorial to implement new node and data processing. [how to develop](wiki/Howto-Develop/HowTo-Develop.md)
