@@ -34,6 +34,14 @@ namespace filter
 {
 	namespace algos
 	{
+		void showImage(const cv::Mat & image, std::string name, bool shouldDestroy, int waitTime)
+		{
+			cv::namedWindow(name);
+			cv::imshow(name, image);
+			if (waitTime >= 0)	cv::waitKey(waitTime);
+			if (shouldDestroy)	cv::destroyWindow(name);
+		}
+
 		void ObjectRecognitionYolo::startRecognition()
 		{
 			ObjectRecognitionYolo* This = this;
@@ -43,15 +51,18 @@ namespace filter
 				while (This->isStart)
 				{
 					data::ImageData image;
-					if (!This->imagesStack.trypop_until(image, 30))
+					if (!This->imagesStack.trypop_until(image, 10))
 						continue;
+					cv::Mat imgMat = image.getMat();
+					This->imagesStack.clear();
 
-					data::ShapeData bx = This->detectBoxes(image.getMat());
+					data::ShapeData bx = This->detectBoxes(imgMat);
 
 					if (This->shapes.size() != 0)
 						This->shapes.clear();
 
 					This->shapes.push(bx);
+
 				}
 			});
 		}
@@ -126,8 +137,6 @@ namespace filter
 				names = get_labels(names_filename);
 			}
 
-			//FIXME std::vector<bbox_t> boxes;
-			if (count_frame % skip_frame == 0)
 			{
 				if (!image.data)
 				{
@@ -136,19 +145,22 @@ namespace filter
 
 				//FIXME
 				//Get NEW Boxes
-				cv::Mat inputBlob = cv::dnn::blobFromImage(image, 1 / 255.F, cv::Size(416, 416), cv::Scalar(), true, false);
+				showImage(image, "Debug", false, 3);
+				cv::Mat inputBlob;
+				inputBlob = cv::dnn::blobFromImage(image, 1 / 255.F, cv::Size(416, 416), cv::Scalar(), true, false);
 				//Convert Mat to batch of images
 				detect->net.setInput(inputBlob, "data"); //set the network input
-				cv::Mat detectionMat = detect->net.forward("detection_out"); //compute output
+				//if (inputBlob.rows > 0 && inputBlob.cols > 0)
+				{
+					cv::Mat detectionMat = detect->net.forward("detection_out"); //compute output
+					boxes = getBoxes(image, detectionMat);
+					saved_boxes = boxes;
+				}
 
-				boxes = getBoxes(image, detectionMat);
-				saved_boxes = boxes;
+				
+
 			}
-			else
-			{
-				//REUSE OLD BOSE
-				boxes = saved_boxes;
-			}
+			
 			data::ShapeData sd;
 			for (int i = 0; i < boxes.rectangles.size(); i++)
 			{
@@ -168,15 +180,16 @@ namespace filter
 			data::ImageData data = _connexData.pop();
 			cv::Mat image = data.getMat();
 			bboxes_t boxes;
+			
 			if (count_frame % skip_frame == 0)
 			{
-				if (imagesStack.size() != 0)
-					imagesStack.clear();
 				imagesStack.push(data);
+				count_frame = 0;
 			}
 			count_frame++;
+
 			data::ShapeData popShape;
-			if (shapes.trypop_until(popShape, 10)) // wait 30ms no more
+			if (shapes.trypop_until(popShape, 30)) // wait 30ms no more
 			{
 				PUSH_DATA(popShape);
 				tosend = popShape;

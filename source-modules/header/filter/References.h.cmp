@@ -29,6 +29,7 @@
 #include <filter/algos/detection\Surf.h>
 #include <filter/algos/extraction\ExclusionZoneMaskFilter.h>
 #include <filter/algos/extraction\ExctractSubImage.h>
+#include <filter/algos/extraction\ExtractBackground.h>
 #include <filter/algos/extraction\ExtractPatternCrops.h>
 #include <filter/algos/extraction\ExtractPatternSource.h>
 #include <filter/algos/extraction\ExtractShape.h>
@@ -38,6 +39,7 @@
 #include <filter/algos/IDPlate\IDPlateRectifier.h>
 #include <filter/algos/IDPlate\IDPlateTools.h>
 #include <filter/algos/preprocessing\AverageColor.h>
+#include <filter/algos/preprocessing\BiggestBlob.h>
 #include <filter/algos/preprocessing\BilateralFilter.h>
 #include <filter/algos/preprocessing\Binary.h>
 #include <filter/algos/preprocessing\BinaryAdaptive.h>
