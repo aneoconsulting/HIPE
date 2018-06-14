@@ -50,10 +50,10 @@ namespace filter
 		class IDPlateIdentifier : public filter::IFilter
 		{
 			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
+
 			REGISTER(IDPlateIdentifier, ()), _connexData(data::INDATA)
 			{
 				_debug = 0;
-
 				minXPos = 0.05;
 				maxXPos = 0.8;
 				minLines = 4;
@@ -65,8 +65,6 @@ namespace filter
 			}
 
 			REGISTER_P(int, _debug);
-
-
 			REGISTER_P(double, minXPos);
 			REGISTER_P(double, maxXPos);
 			REGISTER_P(int, minLines);
@@ -76,12 +74,9 @@ namespace filter
 			REGISTER_P(int, fontScale);
 			REGISTER_P(int, fontThickness);
 
-
-		public:
 			HipeStatus process() override;
 
 		private:
-
 			/**
 			 * \brief Preprocess an ID plate image to help the search of its characters contours.
 			 * \param plateImage The color image of the plate

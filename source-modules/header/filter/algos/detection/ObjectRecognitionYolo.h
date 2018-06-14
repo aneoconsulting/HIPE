@@ -45,7 +45,7 @@ namespace filter
 			std::shared_ptr<Darknet> detect;
 			std::vector<std::string> names;
 
-			int skip_frame;
+			
 			int count_frame;
 			bboxes_t saved_boxes;
 			boost::thread *thr_server;
@@ -72,6 +72,7 @@ namespace filter
 		REGISTER_P(std::string, cfg_filename);
 		REGISTER_P(std::string, weight_filename);
 		REGISTER_P(float, confidenceThreshold);
+		REGISTER_P(int, skip_frame);
 
 #ifdef OLD_YOLO
 			HipeStatus process() override
@@ -144,6 +145,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(ObjectRecognitionYolo, names_filename, cfg_filename, weight_filename, confidenceThreshold) ;
+		ADD_CLASS(ObjectRecognitionYolo, names_filename, cfg_filename, weight_filename, confidenceThreshold, skip_frame) ;
 	}
 }

@@ -97,6 +97,9 @@ cv::Mat filter::algos::ConcatToShow::ShowManyImages(std::vector<data::ImageData>
 			cv::Rect ROI(m, n, (int)(x / scale), (int)(y / scale));
 			cv::Mat temp;
 			cv::resize(image, temp, cv::Size(ROI.width, ROI.height));
+			if (temp.channels() != 3)
+				cv::cvtColor(temp, temp, cv::COLOR_GRAY2RGB);
+
 			temp.copyTo(disp_image(ROI));
 			m += width_avg;
 		}

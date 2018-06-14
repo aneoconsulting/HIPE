@@ -74,7 +74,7 @@ namespace filter
 				// [TODO] Does 1 channel always means grayscale ? Handle 2 channels images (grayscale + alpha) ?
 				else if (channels == 1)
 				{
-					std::cout << "[LOG] Canny::process - Source image is already in grayscale, image will not be converted again.";
+					//std::cout << "[LOG] Canny::process - Source image is already in grayscale, image will not be converted again.";
 					gsImg = srcImg.clone();
 				}
 				else
