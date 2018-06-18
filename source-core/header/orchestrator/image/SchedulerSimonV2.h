@@ -307,6 +307,16 @@ namespace orchestrator
 					
 					return -1;
 				}
+				catch (...)
+				{
+					std::cerr << "Unkown error during the " << cpyFilter->getName() <<
+						". Please contact us" << std::endl;
+
+					cleanDataChild(cpyFilter, false);
+					disposeChild(cpyFilter, false);
+					//TO DO FORWARD EXCEPTION !!!!
+					return -1;
+				}
 				//std::cout << "end pool"  <<std::endl;
 				return 0;
 			}
@@ -474,6 +484,10 @@ namespace orchestrator
 					catch (std::exception &e)
 					{
 						throw HipeException(e.what());
+					}
+					catch (...)
+					{
+						throw HipeException("Unkown error in SchedulerSimonV2");
 					}
 					//std::cout << "end thread"<<std::endl;
 				});

@@ -316,6 +316,18 @@ namespace orchestrator
 									destroyPythonThread(userThreadState);
 									return;
 								}
+								catch (...)
+								{
+									std::cerr << "Unkown error during the " << filter->getName() <<
+										". Please contact us" << std::endl;
+									cleanDataChild(cpyFilterRoot);
+									disposeChild(cpyFilterRoot);
+
+									if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+										throw HipeException("Cannot free properly the Streaming videocapture");
+									destroyPythonThread(userThreadState);
+									return;
+								}
 							}
 							if (hipe_status == END_OF_STREAM)
 								break;

@@ -148,7 +148,7 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 		else
 			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);;
 
-		cv::rectangle(image, rect, color, 2);
+		cv::rectangle(image, rect, color, 3);
 		k++;
 	}
 
@@ -192,6 +192,6 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);
 
 		cv::putText(image, text, cv::Point(rect.x, rect.y >= 3 ? rect.y - 3 : rect.y),
-		            cv::HersheyFonts::FONT_HERSHEY_PLAIN, 1, color, 2);
+		            cv::HersheyFonts::FONT_HERSHEY_PLAIN, 2, color, 2);
 	}
 }

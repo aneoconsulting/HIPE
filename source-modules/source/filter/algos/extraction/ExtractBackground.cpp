@@ -1,7 +1,7 @@
 //@HIPE_LICENSE@
 #include <algos/extraction/ExtractBackground.h>
 #include <opencv2/video/background_segm.hpp>
-#include "algos/extraction/ExctractSubImage.h"
+#include <algos/extraction/ExctractSubImage.h>
 
 
 HipeStatus filter::algos::ExtractBackground::process()
@@ -10,18 +10,17 @@ HipeStatus filter::algos::ExtractBackground::process()
 
 	if (!background_subtractor_mog2)
 	{
-		background_subtractor_mog2 = cv::cuda::createBackgroundSubtractorMOG();
+		background_subtractor_mog2 = cv::createBackgroundSubtractorMOG2(history_frames, varThreshold, false);
 		
 	}
-	cv::cuda::GpuMat input;
-	cv::cuda::GpuMat result;
-	input.upload(data.getMat());
+	cv::Mat input;
+	cv::Mat result;
+	input = data.getMat();
 
 	background_subtractor_mog2->apply(input, result);
-	cv::Mat h_result;
-	result.download(h_result);
+	
 
-	PUSH_DATA(data::ImageData(h_result));
+	PUSH_DATA(data::ImageData(result));
 
 	return OK;
 }

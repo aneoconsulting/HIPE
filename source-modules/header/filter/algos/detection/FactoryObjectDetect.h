@@ -21,7 +21,7 @@ namespace filter
 {
 	namespace algos
 	{
-		class ObjectRecognitionYolo : public filter::IFilter
+		class FactoryObjectDetect : public filter::IFilter
 		{
 			SET_NAMESPACE("vision/detection");
 
@@ -47,7 +47,7 @@ namespace filter
 			std::shared_ptr<Darknet> detect;
 			std::vector<std::string> names;
 
-			
+
 			int count_frame;
 			bboxes_t saved_boxes;
 			boost::thread *thr_server;
@@ -60,7 +60,7 @@ namespace filter
 			void startRecognition();
 
 			CONNECTOR(data::ImageData, data::ShapeData);
-		REGISTER(ObjectRecognitionYolo, ()), _connexData(data::INDATA)
+			REGISTER(FactoryObjectDetect, ()), _connexData(data::INDATA)
 			{
 				cfg_filename = "NO FILE SET";
 				weight_filename = "NO FILE SET";
@@ -71,12 +71,12 @@ namespace filter
 				wait_ms = 30;
 			}
 
-		REGISTER_P(std::string, names_filename);
-		REGISTER_P(std::string, cfg_filename);
-		REGISTER_P(std::string, weight_filename);
-		REGISTER_P(float, confidenceThreshold);
-		REGISTER_P(int, skip_frame);
-		REGISTER_P(int, wait_ms);
+			REGISTER_P(std::string, names_filename);
+			REGISTER_P(std::string, cfg_filename);
+			REGISTER_P(std::string, weight_filename);
+			REGISTER_P(float, confidenceThreshold);
+			REGISTER_P(int, skip_frame);
+			REGISTER_P(int, wait_ms);
 
 #ifdef OLD_YOLO
 			HipeStatus process() override
@@ -89,7 +89,7 @@ namespace filter
 				{
 					if (!image.data)
 					{
-						throw HipeException("[Error] ObjectRecognitionYolo::process - No input data found.");
+						throw HipeException("[Error] FactoryObjectDetect::process - No input data found.");
 					}
 					if (!detect)
 					{
@@ -97,12 +97,12 @@ namespace filter
 
 						if (cfg_filename == "" || weight_filename == "")
 						{
-							throw HipeException("[Error] ObjectRecognitionYolo::process - No input data found.");
+							throw HipeException("[Error] FactoryObjectDetect::process - No input data found.");
 						}
 
 						isFileExist(cfg_filename);
 						isFileExist(weight_filename);
-							
+
 						Detector * d = new Detector(cfg_filename, weight_filename, 0);
 						detect.reset(d);
 						names = get_labels(names_filename);
@@ -110,7 +110,7 @@ namespace filter
 					boxes = detect->detect(image);
 					saved_boxes = boxes;
 
-					
+
 				}
 				else
 				{
@@ -149,6 +149,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(ObjectRecognitionYolo, names_filename, cfg_filename, weight_filename, confidenceThreshold, skip_frame, wait_ms) ;
+		ADD_CLASS(FactoryObjectDetect, names_filename, cfg_filename, weight_filename, confidenceThreshold, skip_frame, wait_ms);
 	}
 }

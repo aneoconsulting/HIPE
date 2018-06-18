@@ -1,5 +1,5 @@
 //@HIPE_LICENSE@
-#include <filter/algos/detection/ObjectRecognitionYolo.h>
+#include <filter/algos/detection/FactoryObjectDetect.h>
 
 namespace filter
 {
@@ -13,9 +13,9 @@ namespace filter
 			if (shouldDestroy)	cv::destroyWindow(name);
 		}
 
-		void ObjectRecognitionYolo::startRecognition()
+		void FactoryObjectDetect::startRecognition()
 		{
-			ObjectRecognitionYolo* This = this;
+			FactoryObjectDetect* This = this;
 
 			thr_server = new boost::thread([This]
 			{
@@ -38,7 +38,7 @@ namespace filter
 			});
 		}
 
-		ObjectRecognitionYolo::bboxes_t ObjectRecognitionYolo::getBoxes(cv::Mat frame, cv::Mat detectionMat)
+		FactoryObjectDetect::bboxes_t FactoryObjectDetect::getBoxes(cv::Mat frame, cv::Mat detectionMat)
 		{
 			bboxes_t result;
 			for (int i = 0; i < detectionMat.rows; i++)
@@ -88,7 +88,7 @@ namespace filter
 			return lines;
 		}
 
-		data::ShapeData ObjectRecognitionYolo::detectBoxes(cv::Mat image)
+		data::ShapeData FactoryObjectDetect::detectBoxes(cv::Mat image)
 		{
 			bboxes_t boxes;
 			if (!detect)
@@ -97,7 +97,7 @@ namespace filter
 
 				if (cfg_filename == "" || weight_filename == "")
 				{
-					throw HipeException("[Error] ObjectRecognitionYolo::process - No input data found.");
+					throw HipeException("[Error] FactoryObjectDetect::process - No input data found.");
 				}
 
 				isFileExist(cfg_filename);
@@ -113,7 +113,7 @@ namespace filter
 			{
 				if (!image.data)
 				{
-					throw HipeException("[Error] ObjectRecognitionYolo::process - No input data found.");
+					throw HipeException("[Error] FactoryObjectDetect::process - No input data found.");
 				}
 
 				//FIXME
@@ -123,17 +123,17 @@ namespace filter
 				inputBlob = cv::dnn::blobFromImage(image, 1 / 255.F, cv::Size(416, 416), cv::Scalar(), true, false);
 				//Convert Mat to batch of images
 				detect->net.setInput(inputBlob, "data"); //set the network input
-				//if (inputBlob.rows > 0 && inputBlob.cols > 0)
+														 //if (inputBlob.rows > 0 && inputBlob.cols > 0)
 				{
 					cv::Mat detectionMat = detect->net.forward("detection_out"); //compute output
 					boxes = getBoxes(image, detectionMat);
 					saved_boxes = boxes;
 				}
 
-				
+
 
 			}
-			
+
 			data::ShapeData sd;
 			for (int i = 0; i < boxes.rectangles.size(); i++)
 			{
@@ -143,7 +143,7 @@ namespace filter
 			return sd;
 		}
 
-		HipeStatus ObjectRecognitionYolo::process()
+		HipeStatus FactoryObjectDetect::process()
 		{
 			if (_connexData.size() == 0)
 			{
@@ -160,7 +160,7 @@ namespace filter
 			data::ImageData data = _connexData.pop();
 			cv::Mat image = data.getMat();
 			bboxes_t boxes;
-			
+
 			if (skip_frame == 0 || count_frame % skip_frame == 0)
 			{
 				imagesStack.push(data);

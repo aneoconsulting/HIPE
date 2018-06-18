@@ -22,25 +22,41 @@ namespace filter
 {
 	namespace algos
 	{
-		class BiggestBlob : public filter::IFilter
+		class AutoCloudOverflow : public filter::IFilter
 		{
-			SET_NAMESPACE("vision/extraction")
+			SET_NAMESPACE("vision/Cloud")
 
 				CONNECTOR(data::ImageData, data::ImageData);
 
-			REGISTER(BiggestBlob, ()), _connexData(data::INDATA)
+			REGISTER(AutoCloudOverflow, ()), _connexData(data::INDATA)
 			{
 				_debug = 0;
+				skip_frame = 0;
+				id = -1;
+				count = 0;
+				dir_path = "images";
 			}
 
+			int id;
+			int count;
 
 			REGISTER_P(int, _debug);
+
+			REGISTER_P(int, skip_frame);
+
+			REGISTER_P(std::string, dir_path);
+
+			REGISTER_P(std::string, prefix_filename);
+
+			int getLastKnownIDFromDirectory();
+
+			HipeStatus savePaternPicture(const cv::Mat& picture);
 
 			HipeStatus process() override;
 
 		};
 
-		ADD_CLASS(BiggestBlob, _debug);
+		ADD_CLASS(AutoCloudOverflow, _debug, skip_frame, dir_path, prefix_filename);
 
 
 	}

@@ -226,6 +226,21 @@ filter::algos::AgeGender::bboxes_t filter::algos::AgeGender::getBoxes(cv::Mat fr
 	return result;
 }
 
+#define cudaCheckError() {                                          \
+ cudaError_t e  = cudaGetLastError();									\
+ cudaError_t e2 = cudaDeviceSynchronize();									\
+ if(e!=cudaSuccess) {												\
+   std::stringstream error_msg;										\
+error_msg << "Cuda failure " << __FILE__ << ":" << __LINE__ << " msg: " << cudaGetErrorString(e);           \
+   throw HipeException(error_msg.str());							\
+ }																	\
+  if(e2!=cudaSuccess) {												\
+   std::stringstream error_msg;										\
+error_msg << "Cuda failure " << __FILE__ << ":" << __LINE__ << " msg: " << cudaGetErrorString(e2);           \
+   throw HipeException(error_msg.str());							\
+ }																	\
+}
+
 HipeStatus filter::algos::AgeGender::process()
 {
 	data::ImageData data = _connexData.pop();
@@ -241,11 +256,18 @@ HipeStatus filter::algos::AgeGender::process()
 			throw HipeException("[Error] AgenGender::process - No input data found.");
 		}
 
-		isFileExist(age_model_file);
-		isFileExist(age_weight_file);
-		isFileExist(mean_file);
+		bool pass = isFileExist(age_model_file) && isFileExist(age_weight_file) && isFileExist(mean_file);
 		
+		if (! pass)
+		{
+			throw HipeException("One or multiple file not found for AgeGender");
+		}
+		
+		cudaCheckError();
+
+
 		AgeNet* d = new AgeNet(age_model_file, age_weight_file, mean_file);
+
 		d->initNetwork();
 
 		detectAges.reset(d);

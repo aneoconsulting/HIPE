@@ -65,10 +65,11 @@ namespace filter
 				detector = dlib::get_frontal_face_detector();
 				isStart = false;
 				thr_server = nullptr;
+				file_predictor_dat = "shape_predictor_68_face_landmarks.dat";
 			}
 
 			REGISTER_P(int, skip_frame);
-
+			REGISTER_P(std::string, file_predictor_dat);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
@@ -118,6 +119,6 @@ namespace filter
 		 */
 		void render_face(data::ShapeData &shapes, const dlib::full_object_detection& d);
 
-		ADD_CLASS(FaceLandmark, skip_frame);
+		ADD_CLASS(FaceLandmark, skip_frame, file_predictor_dat);
 	}
 }
