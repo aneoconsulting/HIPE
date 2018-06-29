@@ -11,5 +11,7 @@ cd -- "$DIR_SCRIPT"
 cd source-core
 bash compile.sh
 
+
+cd -- "$DIR_SCRIPT"
 cd source-modules
 bash compile.sh

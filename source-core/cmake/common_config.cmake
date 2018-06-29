@@ -5,8 +5,9 @@
 
 if (UNIX)
 	include_directories("${CMAKE_SOURCE_DIR}/header" "/usr/include" "/usr/local/include")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wunknown-pragmas")
 else(WIN32)
 	include_directories("${CMAKE_SOURCE_DIR}/header")
 endif()
+
 include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
