@@ -12,27 +12,14 @@ cd -- "$DIR_SCRIPT"
 # Create the build directory and change into it.
 mkdir -p build
 cd build
+mkdir -p ../install
 
 cmake \
-  -DCMAKE_BUILD_TYPE=Debug \
-  -DUSE_DLIB=ON \
-  -DUSE_GPERFTOOLS=OFF \
-  -DGPERFTOOLS_DIR=/mnt/ssd/gperftools/install/ \
-  ..
+	-DCMAKE_BUILD_TYPE=Release \
+	-DINSTALL_PREFIX=`pwd`/../install/hipe-core \
+	..
 
 make VERBOSE=2 -j1
 make VERBOSE=2 install
 
-cd ../modules/
-mkdir -p build
-cd build
-cmake \
-  -DCMAKE_BUILD_TYPE=Debug \
-  -DUSE_DLIB=ON \
-  -DUSE_GPERFTOOLS=OFF \
-  -DGPERFTOOLS_DIR=/mnt/ssd/gperftools/install/ \
-  ..
-
-make VERBOSE=1 -j8
-make VERBOSE=1 install
 #make VERBOSE=1 package
