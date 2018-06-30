@@ -16,7 +16,7 @@ mkdir -p ../install
 
 cmake \
 	-DCMAKE_BUILD_TYPE=Release \
-	-DINSTALL_PREFIX=`pwd`/../install/hipe-core \
+	-DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-core" \
 	..
 
 make VERBOSE=2 -j1
