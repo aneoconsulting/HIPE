@@ -9,7 +9,7 @@ export LD_LIBRARY_PATH=${local_dir}/:${local_dir}/../../lib/@BUILD_CONFIG@:${LD_
 #export TESSDATA_PREFIX="~/Dropbox (ANEO)/HIPE_GROUP/Demos/ID Plates/data/Tesseract"
 
 
-export LD_LIBRARY_PATH=$(readlink -f -n ../../../hipemodule/lib/@BUILD_CONFIG@/):${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=$(readlink -f -n ../../../hipe-modules/lib/@BUILD_CONFIG@/):${LD_LIBRARY_PATH}
 echo "LD_SEARCH = $LD_LIBRARY_PATH"
-./hipe_server.bin -p 9090 -m "$(readlink -f -n ../../../hipemodule/lib/@BUILD_CONFIG@)/libfilter.so"
+./hipe_server.bin -p 9090 -m "$(readlink -f -n ../../../hipe-modules/lib/@BUILD_CONFIG@)/libfilter.so"
 
