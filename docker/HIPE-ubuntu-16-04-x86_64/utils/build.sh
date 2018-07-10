@@ -568,7 +568,7 @@ function build_opencv()
 
 function build_dlib()
 {
-  #dlib 19.3
+  #dlib 19.13
   header 'building dlib'
 
 #   if [[ $OPENCV_CUDA == ON && -d $INSTALL_DIRECTORY/cuda8 ]]
@@ -580,15 +580,25 @@ function build_dlib()
   local install_dir="$INSTALL_DIRECTORY/dlib"
   add_paths "$install_dir"
 
-  untar "$ARCHIVE_DIRECTORY/dlib-19.3.zip"
-  mkdir -p -- "$BUILD_DIRECTORY/dlib-19.3/build"
-  pushd "$BUILD_DIRECTORY/dlib-19.3/build"
+  untar "$ARCHIVE_DIRECTORY/dlib-19.13.zip"
+  mkdir -p -- "$BUILD_DIRECTORY/dlib-19.13/build"
+  pushd "$BUILD_DIRECTORY/dlib-19.13/build"
   cmake \
     -DCMAKE_INSTALL_PREFIX="$install_dir" \
     ..
   make -j "$N_THREADS" install
 #   make -j "$N_THREADS" DESTDIR="$install_dir" install
   popd
+  mkdir -p -- "$BUILD_DIRECTORY/dlib-19.13/build2"  
+  pushd "$BUILD_DIRECTORY/dlib-19.13/build2"
+  cmake \
+      -DCMAKE_INSTALL_PREFIX="$install_dir" \
+	  -DBUILD_SHARED_LIBS=ON \
+    ..
+  make -j "$N_THREADS" install
+#   make -j "$N_THREADS" DESTDIR="$install_dir" install
+  popd
+
   maybe_remove_build_files "dlib"
 }
 

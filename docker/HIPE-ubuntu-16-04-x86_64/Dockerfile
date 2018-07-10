@@ -194,8 +194,8 @@ RUN wget -c -O intel-tbb-2018_U2.tar.gz https://github.com/01org/tbb/archive/201
 RUN wget -c -O opencv-3.4.0.zip https://github.com/opencv/opencv/archive/3.4.0.zip
 # OpenCV: opencv_contrib-3.4.0.zip
 RUN wget -c -O opencv_contrib-3.4.0.zip https://github.com/opencv/opencv_contrib/archive/3.4.0.zip
-# Dlib: dlib-19.3.zip
-RUN wget -c -O dlib-19.3.zip http://dlib.net/files/dlib-19.3.zip
+# Dlib: dlib-19.13.zip
+RUN wget -c -O dlib-19.13.zip http://dlib.net/files/dlib-19.13.zip
 # Boost: boost_1_62_0.tar.gz
 RUN wget -c -O boost_1_62_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.gz
 

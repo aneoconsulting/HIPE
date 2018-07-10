@@ -3,8 +3,10 @@
 # Prepare target env
 CONTAINER_DISPLAY="10"
 CONTAINER_HOSTNAME="hipe_server"
+CONTAINER_NAME="hipe-ubuntu-16.04-x86_64"
 
 # Create a directory for the socket
+rm -rf display
 mkdir -p display/socket
 touch display/Xauthority
 
@@ -19,7 +21,17 @@ echo $AUTH_COOKIE
 xauth -f display/Xauthority add ${CONTAINER_HOSTNAME}/unix:${CONTAINER_DISPLAY} MIT-MAGIC-COOKIE-1 ${AUTH_COOKIE}
 
 # Proxy with the :0 DISPLAY
-socat TCP4:localhost:60${DISPLAY_NUMBER} UNIX-LISTEN:display/socket/X${CONTAINER_DISPLAY} &
+#socat TCP4:localhost:60${DISPLAY_NUMBER} UNIX-LISTEN:display/socket/X${CONTAINER_DISPLAY} &
+bash X11-proxy.sh ${DISPLAY_NUMBER} ${CONTAINER_DISPLAY} &
+
+echo ""
+echo "#################################################################"
+echo ""
+echo "HELLO : To Start HIPE run this script : "
+echo "bash /home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh"
+echo ""
+echo "#################################################################"
+echo ""
 
 # Launch the container
 docker run -it --rm \
@@ -28,4 +40,6 @@ docker run -it --rm \
   -v ${PWD}/display/Xauthority:/home/hipe-group/.Xauthority \
   --hostname ${CONTAINER_HOSTNAME} \
   -p 9090:9090 -p 9999:9999/udp \
-  hipe_server /bin/bash #/home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh
+  ${CONTAINER_NAME} /bin/bash
+
+kill -9 %1

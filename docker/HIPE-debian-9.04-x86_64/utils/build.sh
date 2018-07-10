@@ -560,6 +560,16 @@ function build_dlib()
   make -j "$N_THREADS" install
 #   make -j "$N_THREADS" DESTDIR="$install_dir" install
   popd
+  mkdir -p -- "$BUILD_DIRECTORY/dlib-19.13/build2"  
+  pushd "$BUILD_DIRECTORY/dlib-19.13/build2"
+  cmake \
+      -DCMAKE_INSTALL_PREFIX="$install_dir" \
+	  -DBUILD_SHARED_LIBS=ON \
+    ..
+  make -j "$N_THREADS" install
+#   make -j "$N_THREADS" DESTDIR="$install_dir" install
+  popd
+
   maybe_remove_build_files "dlib"
 }
 
