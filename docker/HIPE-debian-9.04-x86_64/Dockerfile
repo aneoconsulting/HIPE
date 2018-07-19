@@ -294,6 +294,7 @@ EXPOSE 3306/tcp
 EXPOSE 9999/udp
 EXPOSE 9090/tcp
 EXPOSE 3000/tcp
+WORKDIR /home/hipe-group
 
 #RUN mkdir /home/hipe-group/hipe-store
 #VOLUME /home/hipe-group/hipe-store

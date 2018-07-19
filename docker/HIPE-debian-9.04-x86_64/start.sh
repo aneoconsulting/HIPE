@@ -37,6 +37,15 @@ if [ "$1" == "run" ]; then
 else
 	arg=""
 fi
+
+if [ "$1" == "dev" ]; then
+	arg=""
+	dockerOpt="--mount type=bind,source=$(pwd)/../../,target=/home/hipe-group/hipe"
+else
+	dockerOpt=""
+fi
+
+
 # Launch the container
 
 #--mount type=bind,source="$(pwd)"/hipe,target=/home/hipe-group/hipe \
@@ -45,6 +54,7 @@ docker run -it --rm \
 	   -v ${PWD}/display/socket:/tmp/.X11-unix \
 	   -v ${PWD}/display/Xauthority:/home/hipe-group/.Xauthority \
 	   --hostname ${CONTAINER_HOSTNAME} \
+	   ${dockerOpt} \
 	   -p 9090:9090 -p 9999:9999/udp \
 	   -p 3000:3000 \
 	   ${CONTAINER_NAME} /bin/bash ${arg}
