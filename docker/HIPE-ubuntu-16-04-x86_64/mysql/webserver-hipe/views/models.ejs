@@ -1,0 +1,132 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Hipe</title>
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/card.css">
+
+
+    <script src="/js/jquery.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/importSystem.js"></script>
+    <script src="/js/models.js"></script>
+    <script src="/js/bootstrap-notify.js"></script>
+
+</head>
+
+<body>
+
+<div>
+    <img class="img-responsive" id="img-responsive-logo" src="images/logo_satelite.png" alt="">
+</div>
+
+<div class="col-lg-12">
+    <div id="btnContainer">
+        <a href="/parameters" class="btn btn-default btn-lg" id="paramBtn">
+            <span class="glyphicon glyphicon-cog"></span>
+        </a>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-lg-1 col-lg-offset-11">
+                    <a href="javascript:void(0)" id="addModalBtn" class="btn btn-success">
+                        Ajouter
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <% if (models.length > 0) { %>
+                <% models.forEach(function(model) { %>
+                <div class="col-xs-6 col-md-3" id="model_<%= model.id %>" style="margin: 5px 0;">
+
+                    <article class="card animated fadeInLeft">
+                        <div class="card-block">
+                            <h2 class="card-title"><%= model.name %></h2>
+                            <span class="text-muted">Version testée: <%= model.version %></span>
+                            <span>
+                            <a href="/model/<%- model.id %>" class="btn btn-default"
+                               style="position: absolute;right: 35px;bottom: 20px;">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                            <a href="javascript:void(0)" class="btn btn-danger" id="deleteModels_<%= model.id %>"
+                               model-id="<%= model.id %>" style="position: absolute;top: 20px;right: 35px;">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        </span>
+                        </div>
+                    </article>
+
+
+                </div>
+                <% }) %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal" id="confirmedDeleteModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Etes-vous sûr de vouloir supprimer cette élément ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="confirmedDeleteBtn">Confirmer</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="addModelModal">
+    <div class="modal-dialog" role="document">
+        <form class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajout d'un algorithme</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <label>Graphic Name</label>
+                    <input type="text" placeholder="Name" class="form-control" id="graphicName" required/>
+                </p>
+
+                <p>
+                    <label class="btn btn-default">
+                        Importer JSON <input id="importFile" type="file" style="display: none;">
+                    </label>
+                </p>
+
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-success" id="confirmedAddBtn" />
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -19,7 +19,7 @@ cmake \
 	-DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-core" \
 	..
 
-make VERBOSE=2 -j1
+make VERBOSE=2 -j8
 make VERBOSE=2 install
 
 #make VERBOSE=1 package

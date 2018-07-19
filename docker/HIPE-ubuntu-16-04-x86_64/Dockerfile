@@ -170,22 +170,16 @@ RUN bash ../downloads/cmake-3.11.4-Linux-x86_64.sh --skip-license
 
 ENV PATH="/home/hipe-group/utils:/home/hipe-group/utils/bin:${PATH}"
 
-WORKDIR /home/hipe-group
-RUN git clone https://github.com/aneoconsulting/HIPE.git hipe
-
-RUN mkdir -p /home/hipe-group/hipe/3rdParty/hipe_external/linux64/install
-RUN mkdir -p /home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads
-RUN mkdir -p /home/hipe-group/hipe/3rdParty/hipe_external/linux64/build
-
-ENV HIPE_EXTERNAL /home/hipe-group/hipe/3rdParty/hipe_external
-
+RUN mkdir -p /home/hipe-group/3rdParty/hipe_external/linux64/install
+RUN mkdir -p /home/hipe-group/3rdParty/hipe_external/linux64/downloads
+RUN mkdir -p /home/hipe-group/3rdParty/hipe_external/linux64/build
 
 ######
 #Download all requierements
 ######
 
-RUN mkdir -p /home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads
-WORKDIR /home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads
+RUN mkdir -p /home/hipe-group/3rdParty/hipe_external/linux64/downloads
+WORKDIR /home/hipe-group/3rdParty/hipe_external/linux64/downloads
 
 
 # Intel_TBB: intel-tbb-2018_U2.tar.gz
@@ -204,20 +198,20 @@ RUN wget -c -O boost_1_62_0.tar.gz https://sourceforge.net/projects/boost/files/
 ######
 
 WORKDIR /home/hipe-group/utils
-RUN bash build.sh -a "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" \
-	-b "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/build" \
-	-i "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/install" \
-	-g "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" -d -c boost -n 8
+RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
+	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
+	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c boost -n 8
 	
-RUN bash build.sh -a "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" \
-	-b "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/build" \
-	-i "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/install" \
-	-g "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" -d -c dlib -n 8
+RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
+	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
+	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c dlib -n 8
 
-RUN bash build.sh -a "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" \
-	-b "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/build" \
-	-i "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/install" \
-	-g "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 8
+RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
+	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
+	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 8
 
 ##Now everything is built then add user hipe-group and change all rights for him
 RUN useradd -d /home/hipe-group -ms /bin/bash -g root -G sudo -p hipe-group hipe-group
@@ -227,16 +221,54 @@ RUN echo "hipe-group ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 WORKDIR /home/hipe-group
 RUN chown -hR hipe-group:hipe-group *
+RUN chown -hR hipe-group:hipe-group /home/hipe-group
 
+COPY mysql/install-webserver.sh  /home/hipe-group/install-webserver.sh
+RUN mkdir /home/hipe-group/mysql_db
+COPY mysql/hipe.sql /home/hipe-group/mysql_db
+WORKDIR /home/hipe-group/
+
+RUN chmod +x /home/hipe-group/install-webserver.sh
+RUN bash /home/hipe-group/install-webserver.sh
+RUN ln -s /usr/bin/nodejs /usr/local/bin/node
+RUN ln -s /usr/bin/npm /usr/local/bin/npm
+
+EXPOSE 3306/tcp
 
 USER hipe-group
 
-	
+COPY mysql/webserver-hipe.tar.gz /home/hipe-group/webserver-hipe.tar.gz
+RUN tar xvzf webserver-hipe.tar.gz
+WORKDIR /home/hipe-group/webserver-hipe
+
+RUN npm install
+
+ENV PATH="/home/hipe-group/webserver-hipe/node_modules/.bin:${PATH}"
+RUN gulp js
+RUN gulp css
+RUN gulp sass
+RUN gulp fonts
+
+#run node app.js
+
+RUN echo "echo 'start database for webserver'; sudo sudo service mysql restart; sleep 2; cd /home/hipe-group/webserver-hipe/; node app.js &" >> /home/hipe-group/.bashrc
+RUN echo "sleep 2; echo 'Webserver is started'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+RUN echo "echo 'HELLO : To Start HIPE run this script : '" >> /home/hipe-group/.bashrc
+RUN echo "echo 'bash /home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+
 # Build Hipe.
+WORKDIR /home/hipe-group
+ENV HIPE_EXTERNAL /home/hipe-group/3rdParty/hipe_external
+RUN git clone https://github.com/aneoconsulting/HIPE.git hipe
 WORKDIR /home/hipe-group/hipe
-ENV HIPE_EXTERNAL /home/hipe-group/hipe/3rdParty/hipe_external
+
 RUN bash compile-ALL.sh
 
-WORKDIR /home/hipe-group/hipe/install/hipe-core/bin/Release
-#RUN bash startHipe.sh
-#CMD ./hipe_server.bin
+WORKDIR /home/hipe-group
+

@@ -24,15 +24,6 @@ xauth -f display/Xauthority add ${CONTAINER_HOSTNAME}/unix:${CONTAINER_DISPLAY} 
 #socat TCP4:localhost:60${DISPLAY_NUMBER} UNIX-LISTEN:display/socket/X${CONTAINER_DISPLAY} &
 bash X11-proxy.sh ${DISPLAY_NUMBER} ${CONTAINER_DISPLAY} &
 
-echo ""
-echo "#################################################################"
-echo ""
-echo "HELLO : To Start HIPE run this script : "
-echo "bash /home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh"
-echo ""
-echo "#################################################################"
-echo ""
-
 # Launch the container
 docker run -it --rm \
   -e DISPLAY=:${CONTAINER_DISPLAY} \
@@ -40,6 +31,7 @@ docker run -it --rm \
   -v ${PWD}/display/Xauthority:/home/hipe-group/.Xauthority \
   --hostname ${CONTAINER_HOSTNAME} \
   -p 9090:9090 -p 9999:9999/udp \
-  ${CONTAINER_NAME} /bin/bash
+  -p 3000:3000 \
+  ${CONTAINER_NAME} /bin/bash 
 
 kill -9 %1

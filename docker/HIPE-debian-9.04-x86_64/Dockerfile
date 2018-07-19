@@ -144,39 +144,8 @@ RUN apt-get install -y --no-install-recommends \
 	libicu57 \
 	libicu-dev
 
-
-
-
 RUN python2.7 -m pip install numpy
 RUN python3   -m pip install numpy
-
-
-# Install the build deps for the compilation targets.
-#RUN apt-get build-dep \
-#  opencv \
-#  ffmpeg \
-
-# Copy the local build scripts and source files. The source files are downloaded
-# before building the image to avoid redundant downloads when rebuilding the
-# image. The entire hipe directory is not copied here because any changes to
-# the source files in hipe/hipe-group would invalidate the cache and trigger a rerun
-# off all commands from this point. This must be avoided because the following
-# compilation steps take a long time to complete.
-#COPY hipe/build /home/hipe/build
-#COPY hipe/hipe_external /home/hipe/hipe_external
-#RUN mkdir -p /home/hipe/hipe_external/linux64/build
-
-# Download before building the image to avoid redownloading the files with
-# every build.
-# TODO: Maybe make this optional. Given that the Git repo currently prompts for
-#       a name and password, all downloads cannot yet be automated anyway.
-#WORKDIR /home/hipe/hipe_external/linux64/build
-#RUN python3 prepare_download.py boost opencv dlib
-#RUN bash download_sources.sh
-
-
-
-
 
 ###########
 #DDU
@@ -204,21 +173,20 @@ RUN bash ../downloads/cmake-3.11.4-Linux-x86_64.sh --skip-license
 ENV PATH="/home/hipe-group/utils:/home/hipe-group/utils/bin:${PATH}"
 
 WORKDIR /home/hipe-group
-RUN git clone https://github.com/aneoconsulting/HIPE.git hipe
 
-RUN mkdir -p /home/hipe-group/hipe/3rdParty/hipe_external/linux64/install
-RUN mkdir -p /home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads
-RUN mkdir -p /home/hipe-group/hipe/3rdParty/hipe_external/linux64/build
+RUN mkdir -p /home/hipe-group/hipe_external/linux64/install
+RUN mkdir -p /home/hipe-group/hipe_external/linux64/downloads
+RUN mkdir -p /home/hipe-group/hipe_external/linux64/build
 
-ENV HIPE_EXTERNAL /home/hipe-group/hipe/3rdParty/hipe_external
+ENV HIPE_EXTERNAL /home/hipe-group/hipe_external
 
 
 ######
 #Download all requierements
 ######
 
-RUN mkdir -p /home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads
-WORKDIR /home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads
+RUN mkdir -p /home/hipe-group/hipe_external/linux64/downloads
+WORKDIR /home/hipe-group/hipe_external/linux64/downloads
 
 
 # Intel_TBB: intel-tbb-2018_U2.tar.gz
@@ -237,22 +205,22 @@ RUN wget -c -O boost_1_62_0.tar.gz https://sourceforge.net/projects/boost/files/
 ######
 
 WORKDIR /home/hipe-group/utils
-RUN bash build.sh -a "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" \
-	-b "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/build" \
-	-i "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/install" \
-	-g "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" -d -c boost -n 8
+RUN bash build.sh -a "/home/hipe-group/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/hipe_external/linux64/build" \
+	-i "/home/hipe-group/hipe_external/linux64/install" \
+	-g "/home/hipe-group/hipe_external/linux64/downloads" -d -c boost -n 8
 
 
-RUN bash build.sh -a "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" \
-	-b "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/build" \
-	-i "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/install" \
-	-g "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" -d -c dlib -n 8
+RUN bash build.sh -a "/home/hipe-group/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/hipe_external/linux64/build" \
+	-i "/home/hipe-group/hipe_external/linux64/install" \
+	-g "/home/hipe-group/hipe_external/linux64/downloads" -d -c dlib -n 8
 
 
-RUN bash build.sh -a "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" \
-	-b "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/build" \
-	-i "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/install" \
-	-g "/home/hipe-group/hipe/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 8
+RUN bash build.sh -a "/home/hipe-group/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/hipe_external/linux64/build" \
+	-i "/home/hipe-group/hipe_external/linux64/install" \
+	-g "/home/hipe-group/hipe_external/linux64/downloads" -d -c opencv -n 8
 
 # Dependencies for building Boost
 RUN apt-get install -y --no-install-recommends \
@@ -267,15 +235,65 @@ RUN echo "hipe-group ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 WORKDIR /home/hipe-group
 RUN chown -hR hipe-group:hipe-group *
 
+RUN chown -hR hipe-group:hipe-group /home/hipe-group
+
+COPY mysql/install-webserver.sh  /home/hipe-group/install-webserver.sh
+COPY mysql/install_mysql.sh  /home/hipe-group/install_mysql.sh
+RUN mkdir /home/hipe-group/mysql_db
+COPY mysql/hipe.sql /home/hipe-group/mysql_db
+WORKDIR /home/hipe-group/
+RUN chmod +x /home/hipe-group/install_mysql.sh
+RUN bash /home/hipe-group/install_mysql.sh
+RUN chmod +x /home/hipe-group/install-webserver.sh
+RUN bash /home/hipe-group/install-webserver.sh
+RUN ln -s /usr/bin/nodejs /usr/local/bin/node
+RUN ln -s /usr/bin/npm /usr/local/bin/npm
+
 
 USER hipe-group
 
-	
+COPY mysql/webserver-hipe.tar.gz /home/hipe-group/webserver-hipe.tar.gz
+RUN tar xvzf webserver-hipe.tar.gz
+WORKDIR /home/hipe-group/webserver-hipe
+
+RUN npm install
+
+ENV PATH="/home/hipe-group/webserver-hipe/node_modules/.bin:${PATH}"
+RUN gulp js
+RUN gulp css
+RUN gulp sass
+RUN gulp fonts
+
+
+WORKDIR /home/hipe-group
+
+
+RUN git clone -v https://github.com/aneoconsulting/HIPE.git hipe
+
 # Build Hipe.
 WORKDIR /home/hipe-group/hipe
-ENV HIPE_EXTERNAL /home/hipe-group/hipe/3rdParty/hipe_external
+ENV HIPE_EXTERNAL /home/hipe-group/hipe_external
 RUN bash compile-ALL.sh
 
-WORKDIR /home/hipe-group/hipe/install/hipe-core/bin/Release
-#RUN bash startHipe.sh
-#CMD ./hipe_server.bin
+WORKDIR /home/hipe-group
+
+RUN echo "echo 'start database for webserver';" >> /home/hipe-group/.bashrc
+RUN echo "sudo mysqld --default-authentication-plugin=mysql_native_password --user=root &"  >> /home/hipe-group/.bashrc
+RUN echo "sleep 5; cd /home/hipe-group/webserver-hipe/; node app.js &" >> /home/hipe-group/.bashrc
+RUN echo "sleep 2; echo 'Webserver is started'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+RUN echo "echo 'HELLO : To Start HIPE run this script : '" >> /home/hipe-group/.bashrc
+RUN echo "echo 'bash /home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+
+EXPOSE 3306/tcp
+EXPOSE 9999/udp
+EXPOSE 9090/tcp
+EXPOSE 3000/tcp
+
+#RUN mkdir /home/hipe-group/hipe-store
+#VOLUME /home/hipe-group/hipe-store

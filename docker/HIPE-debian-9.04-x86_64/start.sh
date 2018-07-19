@@ -32,13 +32,22 @@ echo ""
 echo "#################################################################"
 echo ""
 
+if [ "$1" == "run" ]; then
+   arg="/home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh"
+else
+	arg=""
+fi
 # Launch the container
-docker run -it --rm \
-  -e DISPLAY=:${CONTAINER_DISPLAY} \
-  -v ${PWD}/display/socket:/tmp/.X11-unix \
-  -v ${PWD}/display/Xauthority:/home/hipe-group/.Xauthority \
-  --hostname ${CONTAINER_HOSTNAME} \
-  -p 9090:9090 -p 9999:9999/udp \
-  ${CONTAINER_NAME} /bin/bash
 
-kill -9 %1
+#--mount type=bind,source="$(pwd)"/hipe,target=/home/hipe-group/hipe \
+docker run -it --rm \
+	   -e DISPLAY=:${CONTAINER_DISPLAY} \
+	   -v ${PWD}/display/socket:/tmp/.X11-unix \
+	   -v ${PWD}/display/Xauthority:/home/hipe-group/.Xauthority \
+	   --hostname ${CONTAINER_HOSTNAME} \
+	   -p 9090:9090 -p 9999:9999/udp \
+	   -p 3000:3000 \
+	   ${CONTAINER_NAME} /bin/bash ${arg}
+
+
+#kill -9 %1
