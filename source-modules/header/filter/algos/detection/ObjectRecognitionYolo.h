@@ -52,6 +52,8 @@ namespace filter
 	{
 		class ObjectRecognitionYolo : public filter::IFilter
 		{
+			SET_NAMESPACE("vision/detection");
+
 			class Darknet
 			{
 			public:
@@ -79,6 +81,7 @@ namespace filter
 			bboxes_t saved_boxes;
 			boost::thread *thr_server;
 			std::atomic<bool> isStart;		//<! [TODO] Is the thread running?
+			std::atomic<bool> hasError;		//<! [TODO] Is the thread running?
 			core::queue::ConcurrentQueue<data::ImageData> imagesStack;	//<! [TODO] The queue containing the frames to process.
 			core::queue::ConcurrentQueue<data::ShapeData> shapes;			//<! [TODO] The shapes of the found faces.
 			data::ShapeData tosend;			//<! The image containing the drawn facial landmarks to output to the ConnexData port.
@@ -95,6 +98,9 @@ namespace filter
 				count_frame = 0;
 				confidenceThreshold = 0.8;
 				thr_server = nullptr;
+				wait_ms = 30;
+				isStart = false;
+				hasError = false;
 			}
 
 		REGISTER_P(std::string, names_filename);
@@ -102,6 +108,7 @@ namespace filter
 		REGISTER_P(std::string, weight_filename);
 		REGISTER_P(float, confidenceThreshold);
 		REGISTER_P(int, skip_frame);
+		REGISTER_P(int, wait_ms);
 
 #ifdef OLD_YOLO
 			HipeStatus process() override
@@ -174,6 +181,6 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(ObjectRecognitionYolo, names_filename, cfg_filename, weight_filename, confidenceThreshold, skip_frame) ;
+		ADD_CLASS(ObjectRecognitionYolo, names_filename, cfg_filename, weight_filename, confidenceThreshold, skip_frame, wait_ms) ;
 	}
 }

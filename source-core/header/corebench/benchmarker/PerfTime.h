@@ -28,28 +28,59 @@
  *  contact us (hipe@aneo.fr) for more information.
  */
 
-#include <algos/extraction/ExtractBackground.h>
-#include <opencv2/video/background_segm.hpp>
-#include <algos/extraction/ExctractSubImage.h>
+#pragma once
+#include <corefilter/Model.h>
+#include <corefilter/tools/RegisterClass.h>
+#include <corefilter/IFilter.h>
+
+#include <core/HipeStatus.h>
 
 
-HipeStatus filter::algos::ExtractBackground::process()
+
+#pragma warning(push, 0)
+
+#pragma warning(pop)
+
+namespace data {
+	class ImageData;
+}
+
+namespace corefilter
 {
-	data::ImageData data = _connexData.pop();
-
-	if (!background_subtractor_mog2)
+	namespace tools
 	{
-		background_subtractor_mog2 = cv::createBackgroundSubtractorMOG2(history_frames, varThreshold, false);
-		
+		class PerfTime : public filter::IFilter
+		{
+			SET_NAMESPACE("tools/benchmark")
+
+			CONNECTOR(data::Data, data::Data);
+
+			REGISTER(PerfTime, ()), _connexData(data::INDATA)
+			{
+				_debug = 0;
+				id = -1;
+				count = 0;
+			}
+
+			int id;
+			int count;
+
+			REGISTER_P(int, _debug);
+
+
+			HipeStatus process() override;
+
+
+			/**
+			* \brief Be sure to call the dispose method before to destroy the object PushGraphToNode
+			*/
+			virtual void dispose()
+			{
+			}
+		};
+
+		ADD_CLASS(PerfTime, _debug);
+
+
 	}
-	cv::Mat input;
-	cv::Mat result;
-	input = data.getMat();
-
-	background_subtractor_mog2->apply(input, result);
-	
-
-	PUSH_DATA(data::ImageData(result));
-
-	return OK;
 }

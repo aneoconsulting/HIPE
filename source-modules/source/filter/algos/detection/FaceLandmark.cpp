@@ -156,7 +156,7 @@ namespace filter
 
 			if (!isStart.exchange(true))
 			{
-				dlib::deserialize("shape_predictor_68_face_landmarks.dat") >> pose_model;
+				dlib::deserialize(file_predictor_dat) >> pose_model;
 				startDetectFace();
 			}
 

@@ -28,28 +28,63 @@
  *  contact us (hipe@aneo.fr) for more information.
  */
 
-#include <algos/extraction/ExtractBackground.h>
-#include <opencv2/video/background_segm.hpp>
-#include <algos/extraction/ExctractSubImage.h>
+#include <filter/datasource/StreamDataSource.h>
+#include <data/FileVideoInput.h>
+#include <data/ImageArrayData.h>
+#include <data/ImageData.h>
 
-
-HipeStatus filter::algos::ExtractBackground::process()
+std::string buildGstreamUri(int udp_port)
 {
-	data::ImageData data = _connexData.pop();
+	std::stringstream buildUri;
 
-	if (!background_subtractor_mog2)
+	//udpsrc port=8864 ! application/x-rtp,media=video,clock-rate=90000,encoding-name=H264,payload=96 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! timeoverlay shaded-background=true deltay=20 ! appsink sync=false
+	buildUri << "udpsrc port=" << udp_port << "  ! application/x-rtp,media=video,clock-rate=90000,encoding-name=H264,payload=96 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! timeoverlay shaded-background=true deltay=20 ! appsink sync=false";
+	return buildUri.str();
+}
+
+HipeStatus filter::datasource::StreamDataSource::process()
+{
+	if (!atomic_state.exchange(true))
 	{
-		background_subtractor_mog2 = cv::createBackgroundSubtractorMOG2(history_frames, varThreshold, false);
-		
+		if (!video)
+		{
+
+			video = std::make_shared<data::FileVideoInput>(buildGstreamUri(udp_port), false);
+
+		}
 	}
-	cv::Mat input;
-	cv::Mat result;
-	input = data.getMat();
+	data::Data new_frame = video->newFrame();
 
-	background_subtractor_mog2->apply(input, result);
-	
 
-	PUSH_DATA(data::ImageData(result));
+	if (!new_frame.empty())
+	{
+		PUSH_DATA(new_frame);
+
+		return OK;
+	}
+
+	video.reset();
+
+	return END_OF_STREAM;
+
+	PUSH_DATA(data::ImageData());
+	return END_OF_STREAM;
+}
+
+HipeStatus filter::datasource::StreamDataSource::intialize()
+{
+	if (!atomic_state.exchange(true))
+	{
+		if (!video)
+		{
+			video = std::make_shared<data::FileVideoInput>(buildGstreamUri(udp_port), false);
+		}
+	}
+	data::Data new_frame = video->newFrame();
+	video->closeFile();
 
 	return OK;
 }
+
+
+

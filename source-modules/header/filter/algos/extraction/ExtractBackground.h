@@ -40,7 +40,7 @@
 #pragma warning(push, 0)
 #include <opencv2/imgproc.hpp>
 #include <opencv2/photo.hpp>	
-#include <opencv2/video/background_segm.hpp>
+
 #include "ExctractSubImage.h"
 #pragma warning(pop)
 
@@ -60,18 +60,19 @@ namespace filter
 
 			REGISTER(ExtractBackground, ()), _connexData(data::INDATA)
 			{
-				unused = 1.0;
-
+				history_frames = 500;
+				varThreshold = 32;
 			}
-			cv::Ptr<cv::cuda::BackgroundSubtractorMOG> background_subtractor_mog2;
+			cv::Ptr<cv::BackgroundSubtractorMOG2> background_subtractor_mog2;
 
-			REGISTER_P(double, unused);
+			REGISTER_P(int, history_frames);
+			REGISTER_P(double, varThreshold);
 
 			HipeStatus process() override;
 
 		};
 
-		ADD_CLASS(ExtractBackground, unused);
+		ADD_CLASS(ExtractBackground, history_frames, varThreshold);
 
 
 	}

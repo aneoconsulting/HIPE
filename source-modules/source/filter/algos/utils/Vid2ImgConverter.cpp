@@ -28,28 +28,72 @@
  *  contact us (hipe@aneo.fr) for more information.
  */
 
-#include <algos/extraction/ExtractBackground.h>
-#include <opencv2/video/background_segm.hpp>
-#include <algos/extraction/ExctractSubImage.h>
+#include <algos/utils/Vid2ImgConverter.h>
+#include "data/FileVideoInput.h"
+#include <regex>
+
+int filter::algos::Vid2ImgConverter::getLastKnownIDFromDirectory()
+{
+	std::vector<cv::String> filenames;
+
+	cv::glob(dir_path, filenames);
+
+	std::stringstream file_pattern;
+	file_pattern << prefix_filename << "_([0-9]+)\\.JPEG";
+
+	std::regex base_regex(file_pattern.str());
+	std::smatch base_match;
+	int id = -1;
+	for (const auto &fname : filenames) {
+		std::string std_filename = extractFileName(fname) + ".JPEG";
+
+		if (std::regex_match(std_filename, base_match, base_regex)) {
+			// The first sub_match is the whole string; the next
+			// sub_match is the first parenthesized expression.
+			if (base_match.size() == 2) {
+				std::ssub_match base_sub_match = base_match[1];
+				std::string base = base_sub_match.str();
+				std::cout << fname << " has an id of " << base << '\n';
+				std::string::size_type sz;   // alias of size_t
+
+				int i_dec = std::stoi(base, &sz);
+
+				id = std::max(id, i_dec);
+			}
+		}
+	}
+	std::cout << " The best next ID is " << id + 1 << '\n';
+	return id + 1;
+}
+
+HipeStatus filter::algos::Vid2ImgConverter::savePaternPicture(const cv::Mat& picture)
+{
+	createDirectory(dir_path);
+	std::stringstream build_path;
+
+	if (id == -1)
+	{
+		id = getLastKnownIDFromDirectory();
+	}
+
+	build_path << dir_path << PathSeparator() << prefix_filename << "_" << id << ".JPEG";
+
+	cv::imwrite(build_path.str(), picture);
+	id++;
+	return OK;
+}
 
 
-HipeStatus filter::algos::ExtractBackground::process()
+
+HipeStatus filter::algos::Vid2ImgConverter::process()
 {
 	data::ImageData data = _connexData.pop();
 
-	if (!background_subtractor_mog2)
-	{
-		background_subtractor_mog2 = cv::createBackgroundSubtractorMOG2(history_frames, varThreshold, false);
-		
-	}
-	cv::Mat input;
-	cv::Mat result;
-	input = data.getMat();
 
-	background_subtractor_mog2->apply(input, result);
+	if (skip_frame <= 0 || count % skip_frame == 0)
+		savePaternPicture(data.getMat());
 	
 
-	PUSH_DATA(data::ImageData(result));
 
 	return OK;
 }

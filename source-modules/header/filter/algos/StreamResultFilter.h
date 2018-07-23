@@ -100,10 +100,10 @@ namespace filter
 
 			}
 
-
+			REGISTER_P(std::string, ip_dest);
 			REGISTER_P(int, port);
 
-			REGISTER_P(std::string, cmd);
+			//REGISTER_P(std::string, cmd);
 
 			~StreamResultFilter()
 			{
@@ -154,7 +154,7 @@ namespace filter
 			}
 		};
 
-		ADD_CLASS(StreamResultFilter, cmd, port);
+		ADD_CLASS(StreamResultFilter, ip_dest, port);
 
 	}
 }

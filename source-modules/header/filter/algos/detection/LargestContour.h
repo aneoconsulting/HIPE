@@ -27,29 +27,59 @@
  *  Licensing Office. Users and or developers interested in such a license should 
  *  contact us (hipe@aneo.fr) for more information.
  */
+#pragma once
+#include <corefilter/Model.h>
+#include <corefilter/tools/RegisterClass.h>
+#include <corefilter/IFilter.h>
 
-#include <algos/extraction/ExtractBackground.h>
-#include <opencv2/video/background_segm.hpp>
-#include <algos/extraction/ExctractSubImage.h>
+#include <core/HipeStatus.h>
 
+#include <data/ImageData.h>
 
-HipeStatus filter::algos::ExtractBackground::process()
+#pragma warning(push, 0)
+#include <opencv2/imgproc.hpp>
+#include <opencv2/photo.hpp>	
+
+#pragma warning(pop)
+
+namespace data {
+	class ImageData;
+}
+
+namespace filter
 {
-	data::ImageData data = _connexData.pop();
-
-	if (!background_subtractor_mog2)
+	namespace algos
 	{
-		background_subtractor_mog2 = cv::createBackgroundSubtractorMOG2(history_frames, varThreshold, false);
-		
+		class LargestContour : public filter::IFilter
+		{
+			std::vector<std::vector<cv::Point>> delta_contours;
+			int index;
+
+			SET_NAMESPACE("vision/detection")
+
+			CONNECTOR(data::ImageData, data::ImageData);
+
+			REGISTER(LargestContour, ()), _connexData(data::INDATA)
+			{
+				_debug = 0;
+				delta_contours = std::vector<std::vector<cv::Point> >(10);
+				index = 0;
+				delta_frames = 5;
+			}
+
+
+			REGISTER_P(int, _debug);
+
+			REGISTER_P(int, delta_frames);
+
+			HipeStatus process() override;
+
+			std::vector<cv::Point> convexHullDeltaTime(std::vector<cv::Point> contours);
+
+		};
+
+		ADD_CLASS(LargestContour, _debug, delta_frames);
+
+
 	}
-	cv::Mat input;
-	cv::Mat result;
-	input = data.getMat();
-
-	background_subtractor_mog2->apply(input, result);
-	
-
-	PUSH_DATA(data::ImageData(result));
-
-	return OK;
 }

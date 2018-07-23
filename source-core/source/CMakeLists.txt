@@ -24,6 +24,8 @@ add_subdirectory(coredata)
 
 add_subdirectory(corefilter)
 
+add_subdirectory(corebench)
+
 add_subdirectory(json)
 add_subdirectory(orchestrator)
 add_subdirectory(http)

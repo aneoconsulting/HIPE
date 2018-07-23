@@ -68,7 +68,7 @@
 	\
 	typedef ProxyFunctor<Constructor> _proxyFunctor; \
 	typedef Constructor mytype;\
-	Constructor(_protectPreInit unused) : IFilter(#Constructor)\
+	Constructor(filter::_protectPreInit unused) : IFilter(#Constructor)\
 	{}\
 	Constructor params : IFilter(#Constructor)
 
@@ -116,7 +116,7 @@
 
 #define ADD_CLASS(classname, ...)\
 	std::string CONCAT3(str_constructor_, classname , EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addClass(std::string(#classname), [](){ return static_cast<classname *>(new classname()); }); \
-	std::string CONCAT3(str_constructor_preload_, classname , EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addPreloadClass(std::string(#classname), [](){ return static_cast<classname *>(new classname(_protectPreInit())); }); \
+	std::string CONCAT3(str_constructor_preload_, classname , EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addPreloadClass(std::string(#classname), [](){ return static_cast<classname *>(new classname(filter::_protectPreInit())); }); \
 	BOOST_PP_SEQ_FOR_EACH(ADD_ARGS, classname, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__))
 
 #define __callfunc(instance, function, ...) 	RegisterTable::getInstance().invoke(instance, function, __VA_ARGS__)

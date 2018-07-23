@@ -83,10 +83,10 @@ namespace filter {
 		virtual void addDependenciesName(std::string filter);
 		virtual void addChildDependenciesName(std::string filter);
 
-		virtual std::map<std::string, Model *>  getParents() const
+		std::map<std::string, Model *>  & getParents() override
 		{ return _parentFilters; }
 
-		virtual std::map<std::string, Model *> getChildrens() const
+		std::map<std::string, Model *> & getChildrens() override
 		{ return _childFilters; }
 
 		

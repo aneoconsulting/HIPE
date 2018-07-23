@@ -105,10 +105,10 @@ namespace filter
 		virtual void addDependenciesName(std::string filter) = 0;
 		virtual void addChildDependenciesName(std::string filter) = 0;
 
-		virtual std::map<std::string, Model *>  getParents() const = 0;
+		virtual std::map<std::string, Model *>  & getParents()  = 0;
 
 
-		virtual std::map<std::string, Model *> getChildrens() const = 0;
+		virtual std::map<std::string, Model *> & getChildrens() = 0;
 
 		Model * getRootFilter()
 		{

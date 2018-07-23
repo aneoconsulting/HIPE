@@ -271,24 +271,25 @@ namespace orchestrator
 				//InitNewThreadState for python in c++ Thread pool
 				if (interpreterPython != nullptr)
 				{
-				for (int i = 0; i < boost::thread::hardware_concurrency(); ++i)
-				{
-					p_ininternal_task_t task = boost::make_shared<internal_task_t>(boost::bind(&InitNewPythonThread, interpreterPython));
-					boost::shared_future<result_t> fut(task->get_future());
-					pending_data.push_back(fut);
-					tasksPool.getIoService().post(boost::bind(&internal_task_t::operator(), task));
+					for (int i = 0; i < boost::thread::hardware_concurrency(); ++i)
+					{
+						p_ininternal_task_t task = boost::make_shared<internal_task_t>(boost::bind(&InitNewPythonThread, interpreterPython));
+						boost::shared_future<result_t> fut(task->get_future());
+						pending_data.push_back(fut);
+						tasksPool.getIoService().post(boost::bind(&internal_task_t::operator(), task));
+
+					}
+
+					boost::wait_for_all(pending_data.begin(), pending_data.end());
+
 					
-				}
 
-				boost::wait_for_all(pending_data.begin(), pending_data.end());
-				
-
-				//Get all threadStates coming from Thread itself
-				for(boost::shared_future<result_t> res : pending_data)
-				{
-					result_t pair = res.get();
-					threadStates[pair.first] = pair.second;
-				}
+					//Get all threadStates coming from Thread itself
+					for (boost::shared_future<result_t> res : pending_data)
+					{
+						result_t pair = res.get();
+						threadStates[pair.first] = pair.second;
+					}
 				}
 				return threadStates;
 			}
@@ -333,6 +334,16 @@ namespace orchestrator
 					disposeChild(cpyFilter, false);
 					//TO DO FORWARD EXCEPTION !!!!
 					
+					return -1;
+				}
+				catch (...)
+				{
+					std::cerr << "Unkown error during the " << cpyFilter->getName() <<
+						". Please contact us" << std::endl;
+
+					cleanDataChild(cpyFilter, false);
+					disposeChild(cpyFilter, false);
+					//TO DO FORWARD EXCEPTION !!!!
 					return -1;
 				}
 				//std::cout << "end pool"  <<std::endl;
@@ -502,6 +513,10 @@ namespace orchestrator
 					catch (std::exception &e)
 					{
 						throw HipeException(e.what());
+					}
+					catch (...)
+					{
+						throw HipeException("Unkown error in SchedulerSimonV2");
 					}
 					//std::cout << "end thread"<<std::endl;
 				});

@@ -36,6 +36,22 @@ namespace filter
 {
 	namespace algos
 	{
+		std::string buildGstreamUri(std::string ip_dest, int udp_port)
+		{
+			std::stringstream buildUri;
+
+			//appsrc ! videoconvert ! x264enc tune=zerolatency bitrate=500 speed-preset=superfast ! rtph264pay config-interval=10 pt=96 mtu=1400 ! udpsink host=192.168.1.19 port=8864 sync=false async=false
+			buildUri << "appsrc ! videoconvert ! x264enc tune=zerolatency bitrate=500 speed-preset=superfast ! rtph264pay config-interval=10 pt=96 mtu=1400";
+
+			buildUri << " ! udpsink host=";
+			buildUri << ip_dest;
+
+			buildUri << " port=";
+			buildUri << udp_port;
+
+			buildUri << " sync=false async=false";
+			return buildUri.str();
+		}
 
 		HipeStatus StreamResultFilter::computeFPS()
 		{
@@ -84,21 +100,23 @@ namespace filter
 			if (_connexData.empty()) return VECTOR_EMPTY;
 
 			//if (computeFPS() == WAIT_FPS)	return OK;
-			fps_avg = 12;
+			fps_avg = 25;
 			
 			data::ImageData image_data = _connexData.pop();
 			cv::Size size = image_data.getMat().size();
 			if (!writer.isOpened()) {
 				/*cv::Size size = getImageDimension();*/
-				if (cmd != "")
+				if (ip_dest != "")
 				{
 					uri.clear();
-					uri << cmd;
-					writer.open(cmd, 0, (double)fps_avg, size, true);
+
+					std::string cs = buildGstreamUri(ip_dest, port);
+					std::cout << "RTP connextion to " << std::endl << cs << std::endl;
+					writer.open(cs, 0, (double)fps_avg, size, true);
 				}
 				else {
 					uri << port;
-
+					std::cout << "RTP connextion to " << std::endl << uri.str() << std::endl;
 					writer.open(uri.str(), 0, (double)fps_avg, size, true);
 				}
 			}
@@ -109,16 +127,6 @@ namespace filter
 				//cv::cvtColor(image_data.getMat(), copy, CV_BGR2YUV_I420);
 				writer << copy;
 			}
-			//std::shared_ptr<TaskContainer> task_container = Streaming::getInstance()->getStreaming(port, size.height, size.width, fps_avg);
-
-			//data::IOData copy(_data, true);
-			//if (task_container->isActive()) // next iteration the streamer will be ready and active
-			//{
-			//	data::ImageData image_data = _connexData.pop();
-			//	task_container->onFrameMethod(image_data.getMat());
-			//	
-			//}
-			//
 
 			return OK;
 		}

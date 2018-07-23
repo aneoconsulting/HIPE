@@ -28,28 +28,80 @@
  *  contact us (hipe@aneo.fr) for more information.
  */
 
-#include <algos/extraction/ExtractBackground.h>
-#include <opencv2/video/background_segm.hpp>
-#include <algos/extraction/ExctractSubImage.h>
+#pragma once
+#include <corefilter/Model.h>
+#include <corefilter/tools/RegisterClass.h>
+#include <corefilter/IFilter.h>
 
+#include <core/HipeStatus.h>
 
-HipeStatus filter::algos::ExtractBackground::process()
+#include <data/ImageData.h>
+
+#pragma warning(push, 0)
+#include <opencv2/imgproc.hpp>
+#include <opencv2/photo.hpp>	
+#include "algos/show/WriteText.h"
+
+#pragma warning(pop)
+
+namespace data {
+	class ImageData;
+}
+
+namespace filter
 {
-	data::ImageData data = _connexData.pop();
-
-	if (!background_subtractor_mog2)
+	namespace algos
 	{
-		background_subtractor_mog2 = cv::createBackgroundSubtractorMOG2(history_frames, varThreshold, false);
-		
+		class WriteVideo : public filter::IFilter
+		{
+			SET_NAMESPACE("vision/utils")
+
+				CONNECTOR(data::ImageData, data::ImageData);
+
+			REGISTER(WriteVideo, ()), _connexData(data::INDATA)
+			{
+				_debug = 0;
+				skip_frame = 0;
+				id = -1;
+				count = 0;
+				dir_path = "videos";
+				fps_avg = 25;
+				url = "";
+			}
+
+			int id;
+			int count;
+			cv::VideoWriter writer;
+
+			REGISTER_P(int, _debug);
+
+			REGISTER_P(int, skip_frame);
+
+			REGISTER_P(int, fps_avg);
+
+			REGISTER_P(std::string, dir_path);
+
+			REGISTER_P(std::string, prefix_filename);
+			REGISTER_P(std::string, url);
+
+			
+
+			int getLastKnownIDFromDirectory();
+
+			HipeStatus process() override;
+
+
+			void dispose()
+			{
+				if (writer.isOpened())
+				{
+					writer.release();
+				}
+			}
+		};
+
+		ADD_CLASS(WriteVideo, _debug, skip_frame, fps_avg, dir_path, prefix_filename, url);
+
+
 	}
-	cv::Mat input;
-	cv::Mat result;
-	input = data.getMat();
-
-	background_subtractor_mog2->apply(input, result);
-	
-
-	PUSH_DATA(data::ImageData(result));
-
-	return OK;
 }

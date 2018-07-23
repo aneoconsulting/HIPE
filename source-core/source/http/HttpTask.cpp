@@ -354,6 +354,17 @@ void http::HttpTask::runTask() const
 			HttpTask::logger << "HttpTask response has been sent";
 			HttpTask::logger << dataResponse.str();
 		}
+		catch (HipeException& e) {
+			json::JsonTree treeResponse;
+			treeResponse.Add("Status", e.what());
+			std::stringstream dataResponse;
+			treeResponse.write_json(dataResponse);
+			*_response << "HTTP/1.1 200 OK\r\n"
+				<< "Access-Control-Allow-Origin: *\r\n"
+				<< "Content-Type: application/json\r\n"
+				<< "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
+				<< dataResponse.str();
+		}
 		catch (std::exception& e) {
 			json::JsonTree treeResponse;
 			treeResponse.Add("Status", e.what());
@@ -365,10 +376,10 @@ void http::HttpTask::runTask() const
 				<< "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"
 				<< dataResponse.str();
 		}
-
-		catch (HipeException& e) {
+		catch (...)
+		{
 			json::JsonTree treeResponse;
-			treeResponse.Add("Status", e.what());
+			treeResponse.Add("Status", "Uknown exception");
 			std::stringstream dataResponse;
 			treeResponse.write_json(dataResponse);
 			*_response << "HTTP/1.1 200 OK\r\n"
