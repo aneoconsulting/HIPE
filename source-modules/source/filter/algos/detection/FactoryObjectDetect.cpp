@@ -22,18 +22,26 @@ namespace filter
 				while (This->isStart)
 				{
 					data::ImageData image;
-					if (!This->imagesStack.trypop_until(image, 10))
+					if (!This->imagesStack.trypop_until(image, 1))
 						continue;
-					cv::Mat imgMat = image.getMat();
+
+					This->count_frame++;
+					if (This->skip_frame == 0 || (This->count_frame % This->skip_frame) == 0)
+					{
+						cv::Mat imgMat = image.getMat();
+						
+
+						data::ShapeData bx = This->detectBoxes(imgMat);
+
+						if (This->shapes.size() != 0)
+							This->shapes.clear();
+
+						This->shapes.push(bx);
+						This->count_frame = 0;
+						
+					}
 					This->imagesStack.clear();
-
-					data::ShapeData bx = This->detectBoxes(imgMat);
-
-					if (This->shapes.size() != 0)
-						This->shapes.clear();
-
-					This->shapes.push(bx);
-
+					
 				}
 			});
 		}
@@ -157,16 +165,15 @@ namespace filter
 				startRecognition();
 			}
 
-			data::ImageData data = _connexData.pop();
-			cv::Mat image = data.getMat();
 			bboxes_t boxes;
 
-			if (skip_frame == 0 || count_frame % skip_frame == 0)
+			while (!_connexData.empty())
 			{
+				data::ImageData data = _connexData.pop();
+				//cv::Mat image = data.getMat();
+
 				imagesStack.push(data);
-				count_frame = 0;
 			}
-			count_frame++;
 
 			data::ShapeData popShape;
 			if (shapes.trypop_until(popShape, wait_ms)) // wait 30ms no more
@@ -179,8 +186,18 @@ namespace filter
 				PUSH_DATA(data::ShapeData());
 			}
 			else {
-
-				PUSH_DATA(tosend);
+				count++;
+				if (skip_frame == 0 || count < skip_frame)
+				{
+					PUSH_DATA(tosend);
+				}
+				else
+				{
+					data::ShapeData shape_data = data::ShapeData();
+					tosend = shape_data;
+					count = 0;
+				}
+					
 			}
 
 			return OK;

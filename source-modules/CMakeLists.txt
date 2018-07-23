@@ -118,7 +118,7 @@ install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
 install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT sources)
 
 if (${INSTALL_SOURCE})
-	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./project"
+	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/project"
 			COMPONENT sources
 			PATTERN "cmake" 
 			PATTERN "source"
@@ -129,6 +129,7 @@ if (${INSTALL_SOURCE})
 			PATTERN "*.sh"
 			PATTERN "bin" EXCLUDE
 			PATTERN "build" EXCLUDE
+			PATTERN "install" EXCLUDE
 			)
 
 	install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake" COMPONENT sources)

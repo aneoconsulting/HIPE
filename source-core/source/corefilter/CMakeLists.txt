@@ -10,6 +10,7 @@ include_directories(corefilter ${OpenCV_INCLUDE_DIRS} )
 target_link_libraries(corefilter ${Boost_LIBRARIES})
 target_link_libraries(corefilter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(corefilter core)
+target_link_libraries(corefilter coredata)
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?

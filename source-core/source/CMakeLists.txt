@@ -14,7 +14,7 @@ if(UNIX)
     add_definitions(-DUSE_GPERFTOOLS)
     message(STATUS "Google perftools : ON")
   endif(USE_GPERFTOOLS)
-  add_compile_options("-Wunknown-pragmas")
+  add_compile_options("-Wno-unknown-pragmas")
 
 endif(UNIX)
 
@@ -23,6 +23,8 @@ add_subdirectory(core)
 add_subdirectory(coredata)
 
 add_subdirectory(corefilter)
+
+add_subdirectory(corebench)
 
 add_subdirectory(json)
 add_subdirectory(orchestrator)

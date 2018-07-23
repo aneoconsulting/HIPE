@@ -30,11 +30,16 @@ namespace filter
 			{
 				index = 0;
 				fontscale = 0.8;
+				height = 720;
+				width = 1024;
 			}
 
 
 
 			REGISTER_P(double, fontscale);
+			REGISTER_P(int, width);
+			REGISTER_P(int, height);
+			
 
 			std::deque<std::string> texts;
 			std::deque<size_t> text_height;
@@ -57,6 +62,6 @@ namespace filter
 			HipeStatus process();
 		};
 
-		ADD_CLASS(TextLoggerShow, fontscale);
+		ADD_CLASS(TextLoggerShow, fontscale, width, height);
 	}
 }

@@ -48,19 +48,21 @@ HipeStatus filter::algos::TextLoggerShow::process()
 		}
 	}
 
-	cv::Mat textToImage = cv::Mat::zeros(640, 480, CV_8UC3);
+	cv::Mat textToImage = cv::Mat::zeros(width, height, CV_8UC3);
 	
 	for (auto &shape : arrayShapeData)
 	{
 		for (std::string text : shape.IdsArray())
 		{
 			//Compute size if higher than 480 then pop before
-			size_t height = computeSizeOfAllText();
-			while (height >= 480)
+			size_t height_total = computeSizeOfAllText();
+			while (height_total >= height)
 			{
+				if (texts.empty()) break;
+
 				texts.pop_front();
 
-				height = computeSizeOfAllText();
+				height_total = computeSizeOfAllText();
 			}
 			texts.push_back(text);
 		}
@@ -79,7 +81,12 @@ HipeStatus filter::algos::TextLoggerShow::process()
 			cv::HersheyFonts::FONT_HERSHEY_PLAIN, fontscale, color, 2);
 	}
 
-	PUSH_DATA(data::ImageData(textToImage));
+	data::ImageData img = data::ImageData(textToImage);
+
+	img.setLabel(this->getName() + "__dataOut");
+	_connexData.push(img);
+
+	//PUSH_DATA(data::ImageData(textToImage));
 
 
 

@@ -54,7 +54,8 @@ HipeStatus filter::algos::OverlayFilter::process()
 		if (overlayDatum.getType() == data::SHAPE) drawShape(outputImage, static_cast<data::ShapeData &>(overlayDatum));
 	}
 
-	PUSH_DATA(data::ImageData(outputImage));
+	data::ImageData image_data = data::ImageData(outputImage);
+	PUSH_DATA(image_data);
 
 	return OK;
 }

@@ -301,10 +301,7 @@ void http::HttpTask::runTask() const
 				//Start processing Algorithm with data
 				data::Data outputData;
 
-				
 				orchestrator::OrchestratorFactory::getInstance()->process(json_filter_tree->getName(), data, outputData);
-				
-				
 
 				//after the process execution Data should be an OutputData type
 				if (outputData.getType() == data::IMGB64)

@@ -1,6 +1,3 @@
-#pragma once
-
-
 //@HIPE_LICENSE@
 #pragma once
 #include <corefilter/Model.h>

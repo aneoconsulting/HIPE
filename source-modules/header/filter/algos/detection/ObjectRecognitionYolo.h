@@ -52,6 +52,7 @@ namespace filter
 			bboxes_t saved_boxes;
 			boost::thread *thr_server;
 			std::atomic<bool> isStart;		//<! [TODO] Is the thread running?
+			std::atomic<bool> hasError;		//<! [TODO] Is the thread running?
 			core::queue::ConcurrentQueue<data::ImageData> imagesStack;	//<! [TODO] The queue containing the frames to process.
 			core::queue::ConcurrentQueue<data::ShapeData> shapes;			//<! [TODO] The shapes of the found faces.
 			data::ShapeData tosend;			//<! The image containing the drawn facial landmarks to output to the ConnexData port.
@@ -69,6 +70,8 @@ namespace filter
 				confidenceThreshold = 0.8;
 				thr_server = nullptr;
 				wait_ms = 30;
+				isStart = false;
+				hasError = false;
 			}
 
 		REGISTER_P(std::string, names_filename);

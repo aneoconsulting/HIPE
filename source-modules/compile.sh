@@ -11,10 +11,8 @@ cd -- "$DIR_SCRIPT"
 mkdir -p build
 cd build
 cmake \
-  -DCMAKE_BUILD_TYPE=Debug \
-  -DUSE_DLIB=ON \
-  -DUSE_GPERFTOOLS=OFF \
-  -DGPERFTOOLS_DIR=/mnt/ssd/gperftools/install/ \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-modules" \
   ..
 
 make VERBOSE=1 -j8

@@ -5,12 +5,12 @@ namespace filter
 {
 	namespace algos
 	{
-		static void showImage(const cv::Mat & image, std::string name, bool shouldDestroy, int waitTime)
+		static void showImage(const cv::Mat& image, std::string name, bool shouldDestroy, int waitTime)
 		{
 			cv::namedWindow(name);
 			cv::imshow(name, image);
-			if (waitTime >= 0)	cv::waitKey(waitTime);
-			if (shouldDestroy)	cv::destroyWindow(name);
+			if (waitTime >= 0) cv::waitKey(waitTime);
+			if (shouldDestroy) cv::destroyWindow(name);
 		}
 
 		void ObjectRecognitionYolo::startRecognition()
@@ -22,18 +22,31 @@ namespace filter
 				while (This->isStart)
 				{
 					data::ImageData image;
-					if (!This->imagesStack.trypop_until(image, 10))
-						continue;
-					cv::Mat imgMat = image.getMat();
-					This->imagesStack.clear();
+					try
+					{
+						if (!This->imagesStack.trypop_until(image, 2))
+							continue;
+						This->count_frame++;
+						if (This->skip_frame == 0 || (This->count_frame % This->skip_frame) == 0)
+						{
+							cv::Mat imgMat = image.getMat();
 
-					data::ShapeData bx = This->detectBoxes(imgMat);
 
-					if (This->shapes.size() != 0)
-						This->shapes.clear();
+							data::ShapeData bx = This->detectBoxes(imgMat);
 
-					This->shapes.push(bx);
+							if (This->shapes.size() != 0)
+								This->shapes.clear();
 
+							This->shapes.push(bx);
+							This->count_frame = 0;
+						}
+						This->imagesStack.clear();
+					}
+					catch (HipeException& e)
+					{
+						std::cerr << "ERROR : Fail to start recognition msg : " << e.what() << std::endl;
+						This->isStart = false;
+					}
 				}
 			});
 		}
@@ -64,7 +77,6 @@ namespace filter
 
 					result.rectangles.push_back(object);
 					result.names.push_back(label);
-
 				}
 			}
 			return result;
@@ -91,21 +103,46 @@ namespace filter
 		data::ShapeData ObjectRecognitionYolo::detectBoxes(cv::Mat image)
 		{
 			bboxes_t boxes;
+			if (hasError)
+			{
+				return data::ShapeData();
+			}
+
 			if (!detect)
 			{
 				using namespace boost::filesystem;
 
-				if (cfg_filename == "" || weight_filename == "")
+				try
 				{
-					throw HipeException("[Error] ObjectRecognitionYolo::process - No input data found.");
+					if (cfg_filename == "" || weight_filename == "")
+					{
+						throw HipeException("[Error] ObjectRecognitionYolo::process - No input data found.");
+					}
+					
+					if (!isFileExist(cfg_filename)) throw HipeException("Cannot find file " + cfg_filename);
+					if (!isFileExist(weight_filename)) throw HipeException("Cannot find file " + weight_filename);
+					
+					//FIXME
+					Darknet* d = new Darknet(cfg_filename, weight_filename);
+					detect.reset(d);
+					names = get_labels(names_filename);
+				}
+				catch (std::invalid_argument& e)
+				{
+					std::cerr << "ERROR : Fail to init recognition msg : " << e.what() << std::endl;
+					isStart = false;
+					hasError = true;
+					throw HipeException(e.what());
+				}
+				catch (HipeException& e)
+				{
+					std::cerr << "ERROR : Fail to init recognition msg : " << e.what() << std::endl;
+					isStart = false;
+					hasError = true;
+					throw e;
 				}
 
-				isFileExist(cfg_filename);
-				isFileExist(weight_filename);
-				//FIXME
-				Darknet* d = new Darknet(cfg_filename, weight_filename);
-				detect.reset(d);
-				names = get_labels(names_filename);
+				
 			}
 
 			//FIXME std::vector<bbox_t> boxes;
@@ -129,8 +166,6 @@ namespace filter
 					boxes = getBoxes(image, detectionMat);
 					saved_boxes = boxes;
 				}
-
-				
 
 			}
 			
@@ -160,13 +195,10 @@ namespace filter
 			data::ImageData data = _connexData.pop();
 			cv::Mat image = data.getMat();
 			bboxes_t boxes;
-			
-			if (skip_frame == 0 || count_frame % skip_frame == 0)
-			{
-				imagesStack.push(data);
-				count_frame = 0;
-			}
-			count_frame++;
+
+
+			imagesStack.push(data);
+
 
 			data::ShapeData popShape;
 			if (shapes.trypop_until(popShape, wait_ms)) // wait 30ms no more
@@ -178,8 +210,8 @@ namespace filter
 			{
 				PUSH_DATA(data::ShapeData());
 			}
-			else {
-
+			else
+			{
 				PUSH_DATA(tosend);
 			}
 
