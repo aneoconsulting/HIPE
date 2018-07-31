@@ -180,6 +180,8 @@ HipeStatus filter::algos::RotationTextReader::process()
 	
 	cv::Mat res = getDiscFromCirlce(image.getMat(), circle);
 	
+	data::ImageData result_debug(res);
+	PUSH_DATA(result_debug);
 
 	//Get B/W image to read text
 	res = transformInBlackAndWhite(res);

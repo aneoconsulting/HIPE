@@ -5,7 +5,7 @@
 #include <corefilter/IFilter.h>
 
 #include <core/HipeStatus.h>
-
+#include "core/HipeTimer.h"
 
 
 #pragma warning(push, 0)
@@ -31,12 +31,18 @@ namespace corefilter
 				_debug = 0;
 				id = -1;
 				count = 0;
+				interval_sampling_ms = -1.0;
+				avg_elapse = 0;
 			}
 
 			int id;
 			int count;
+			core::HipeTimer sampler;
+			double avg_elapse;
 
 			REGISTER_P(int, _debug);
+
+			REGISTER_P(double, interval_sampling_ms);
 
 
 			HipeStatus process() override;
@@ -50,7 +56,7 @@ namespace corefilter
 			}
 		};
 
-		ADD_CLASS(PerfTime, _debug);
+		ADD_CLASS(PerfTime, _debug, interval_sampling_ms);
 
 
 	}

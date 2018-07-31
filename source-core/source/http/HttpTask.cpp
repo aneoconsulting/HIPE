@@ -7,7 +7,7 @@
 #include <core/HipeException.h>
 #include <http/CommandManager.h>
 #include <core/version.h>
-#include <core/Localenv.h>
+#include <corefilter/tools/Localenv.h>
 
 #pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
@@ -260,7 +260,7 @@ void http::HttpTask::runTask() const
 
 
 			HttpTask::logger << "Check if algorithm need to be built";
-			HttpTask::logger << "Port To listen task was " << core::getLocalEnv().getValue("http_port");
+			HttpTask::logger << "Port To listen task was " << corefilter::getLocalEnv().getValue("http_port");
 
 			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);
 			const string name = json_filter_tree->getName();

@@ -18,6 +18,7 @@
 #pragma warning(push, 0)
 #include <boost/function_types/components.hpp>
 #include <boost/function_types/function_pointer.hpp>
+#include <corefilter/tools/Localenv.h>
 #pragma warning(pop)
 
 
@@ -154,6 +155,8 @@ namespace core
 			std::string dll_dir = extractDirectoryName(_filename);
 
 			addEnv(dll_dir);
+
+			corefilter::getLocalEnv().setValue("pydata_path", dll_dir);
 
 #ifdef WIN32
 

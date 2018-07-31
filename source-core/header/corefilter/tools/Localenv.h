@@ -3,13 +3,13 @@
 #include <map>
 #include <string>
 
-#include <core/core_export.h>
+#include <corefilter/filter_export.h>
 
-namespace core
+namespace corefilter
 {
 	
 
-	class CORE_EXPORT LocalEnv
+	class FILTER_EXPORT LocalEnv
 	{
 	private:
 		std::map<std::string, std::string> envValues;
@@ -31,5 +31,5 @@ namespace core
 		}
 	};
 
-	LocalEnv & getLocalEnv();
+	FILTER_EXPORT LocalEnv & getLocalEnv();
 }

@@ -67,11 +67,17 @@ namespace json
 
 			for (auto& parentName : filterNode.getDependenciesFilter())
 			{
-				/*if (parentName == "PerfTime")
+				if (parentName == "PerfTime")
 				{
-					
+					//Add node end timer to encasuplate the node to analyze
+					Model * endPerfTimer = static_cast<filter::Model *>(newFilter("PerfTime"));
+					_filterMap[name + "__end_timer___"] = endPerfTimer;
+					endPerfTimer->setName(name + "__end_timer___");
+					endPerfTimer->addDependenciesName(name);
+					filter->addDependenciesName(parentName);
+					//endPerfTimer->addDependenciesName(parentName);
 				}
-				else*/
+				else
 				{
 					filter->addDependenciesName(parentName);
 				}
@@ -80,36 +86,39 @@ namespace json
 
 		void plugPerfAnalysis(Model* nodeToAnalysis, Model* startPerfTime)
 		{
-			if (nodeToAnalysis->getParents().find(startPerfTime->getName()) != startPerfTime->getParents().end() &&
-				nodeToAnalysis->getParents()[startPerfTime->getName()] != nullptr)
+			std::map<std::string, Model *> newFilterMap;
+
+			std::map<std::string, Model*> & pairs = startPerfTime->getParents();
+
+			std::map<std::string, Model*> nodeToAnalysis_pairs = nodeToAnalysis->getParents();
+
+			if (nodeToAnalysis_pairs.find(startPerfTime->getName()) != nodeToAnalysis_pairs.end() &&
+				nodeToAnalysis_pairs[startPerfTime->getName()] != nullptr)
 			{
 				throw HipeException("Node PerfTime must be linked to one node only for analysis");
 			}
 
 			//remove all link to PerfTime object
-			startPerfTime->getParents().clear();
+			pairs.clear();
 			startPerfTime->getChildrens().clear();
 
-			std::map<std::string, Model*> & pairs = nodeToAnalysis->getParents();
+			
 
 			//Remove fake PerfTime parent to the node anlyszed 
-			pairs.erase(startPerfTime->getName());
+			nodeToAnalysis_pairs.erase(startPerfTime->getName());
 
 			//For the start timer
 			//Now get dependencies of node to analyze and push it to PerfTime
-			startPerfTime->getParents() = nodeToAnalysis->getParents();
-			for (auto &it : startPerfTime->getParents())
+			
+			for (auto &it : nodeToAnalysis_pairs)
 			{
 				Model* parent = it.second;
 				parent->getChildrens()[startPerfTime->getName()] = startPerfTime;
 			}
 
 			//For the end timer
-			//Create the EndTimer node
-			Model * endPerfTimer = static_cast<filter::Model *>(newFilter("PerfTime"));
-			endPerfTimer->setName(nodeToAnalysis->getName() +  "__end_timer___");
-			//_filterMap[endPerfTimer->getName()] = endPerfTimer;
 			
+			Model * endPerfTimer = _filterMap[nodeToAnalysis->getName() + "__end_timer___"];
 			endPerfTimer->getParents()[startPerfTime->getName()] = startPerfTime;
 			startPerfTime->getChildrens()[endPerfTimer->getName()] = endPerfTimer;
 
@@ -163,6 +172,7 @@ namespace json
 					filterNode->addDependencies(root);
 				}
 				
+				bool needKPI = false;
 
 				for (auto& parent : filterNode->getParents())
 				{
@@ -170,13 +180,27 @@ namespace json
 						throw HipeException("No node found with name " + parent.first);
 
 					//Ignore the perftime it has been inserted before
-					if (parent.first.find("PerfTime") != std::string::npos)
+					//And avoid to find the end timer that we have created before
+					if (parent.first.find("PerfTime") != std::string::npos && filterNode->getName().find("__end_timer___") == std::string::npos)
 					{
-						plugPerfAnalysis(filterNode, _filterMap[parent.first]);
+						//A perftime has been found, let link all others parents to the node before
+						needKPI = true;
 					}
 					else
 					{
 						filterNode->addDependencies(_filterMap[parent.first]);
+					}
+				}
+				
+				//If we found KPI PerfTime links have to updated and plugged around the node
+				if (needKPI)
+				{
+					for (auto& parent : filterNode->getParents())
+					{
+						if (parent.first.find("PerfTime") != std::string::npos && filterNode->getName().find("__end_timer___") == std::string::npos)
+						{
+							plugPerfAnalysis(filterNode, _filterMap[parent.first]);
+						}
 					}
 				}
 			}

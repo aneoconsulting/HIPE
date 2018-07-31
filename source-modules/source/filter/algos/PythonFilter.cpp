@@ -3,6 +3,7 @@
 #include <core/HipeStatus.h>
 #include <core/misc.h>
 #include <core/python/pyThreadSupport.h>
+#include <corefilter/tools/Localenv.h>
 
 
 extern "C"
@@ -63,10 +64,12 @@ namespace filter
 			{
 				std::ostringstream python_path;
 				std::ostringstream python2_path;
+				std::ostringstream pydata_path;
 				python_path << "sys.path.append(r'" << extractDirectoryName(script_path).c_str() << "')";
 				std::string workingDir = GetCurrentWorkingDir();
 				python2_path << "sys.path.append(r'" << workingDir << "')";
-
+				std::string datapython_path = corefilter::getLocalEnv().getValue("pydata_path");
+				pydata_path << "sys.path.append(r'" << datapython_path << "')";
 
 				
 
@@ -83,8 +86,11 @@ namespace filter
 					try
 					{
 						boost::python::exec("import sys", l_pythonContext.This().global, l_pythonContext.This().local);
+						boost::python::exec(pydata_path.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
+
 						boost::python::exec(python_path.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
 						boost::python::exec(python2_path.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
+						
 
 						l_pythonContext.This().script = boost::python::import(moduleName.c_str());
 						boost::python::import("__main__").attr("__dict__")[moduleName.c_str()] = l_pythonContext.This().script;

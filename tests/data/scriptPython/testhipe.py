@@ -28,7 +28,7 @@ def otherFunction(data):
 
 def process(data):
 	
-	print "Hello world : " + cwd
+	#print "Hello world : " + cwd
 	a = numpy.array([[1., 2., 3.]])
 	b = numpy.array([[1.], [2.], [3.]])
 	

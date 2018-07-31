@@ -65,6 +65,22 @@ void addEnv(std::string path)
 	std::string cs = new_path.str();
 	SetEnvironmentVariable("PATH", cs.c_str());
 
+	GetEnvironmentVariable("PATH", env_p, 163840);
+
+
+}
+
+void addVarEnv(std::string key, std::string value)
+{
+	char env_p[163840];
+	GetEnvironmentVariable(key.c_str(), env_p, 163840);
+	std::stringstream new_path;
+	new_path << value << ";" << env_p;
+	std::string cs = new_path.str();
+	SetEnvironmentVariable(key.c_str(), cs.c_str());
+
+	GetEnvironmentVariable(key.c_str(), env_p, 163840);
+
 
 }
 
@@ -91,6 +107,17 @@ void addEnv(std::string path)
 	std::string cs = new_path.str();
 	setenv("PATH", cs.c_str(), 1);
 	
+}
+
+void addVarEnv(std::string key, std::string value)
+{
+	char * env_p;
+	env_p = getenv(key.c_str());
+	std::stringstream new_path;
+	new_path << value << ";" << env_p;
+	std::string cs = new_path.str();
+	setenv(key.c_str(), cs.c_str(), 1);
+
 }
 
 #endif

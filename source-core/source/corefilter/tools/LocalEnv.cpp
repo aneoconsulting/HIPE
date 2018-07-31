@@ -1,10 +1,10 @@
 //@HIPE_LICENSE@
-#include <Localenv.h>
+#include <corefilter/tools/Localenv.h>
 
 
-namespace core
+namespace corefilter
 {
-	core::LocalEnv &getLocalEnv()
+	corefilter::LocalEnv &getLocalEnv()
 	{
 		static LocalEnv *local_env = new LocalEnv();
 		

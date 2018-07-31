@@ -35,3 +35,5 @@ Hipe/tests/data/scriptPython/testhipe.pyc
 install/**
 source-core/build/*
 source-modules/build/*
+source-modules/header/filter/References.h
+source-modules/header/filter/References.h.cmp

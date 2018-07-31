@@ -14,7 +14,7 @@
 #include <core/ModuleLoader.h>
 
 #include <hipe_server/Configuration.h>
-#include "core/Localenv.h"
+#include <corefilter/tools/Localenv.h>
 
 using namespace std;
 //Added for the json-example:
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 	std::stringstream buildstring;
 	buildstring << config.configuration.port;
 
-	core::getLocalEnv().setValue("http_port", buildstring.str());
+	corefilter::getLocalEnv().setValue("http_port", buildstring.str());
 	
 	http::HttpServer server(config.configuration.port, 1);
 
