@@ -88,26 +88,19 @@ WORKDIR /rpm
 RUN wget http://dl.fedoraproject.org/pub/epel/7/ppc64le/Packages/y/yasm-1.2.0-4.el7.ppc64le.rpm
 RUN rpm -i yasm-1.2.0-4.el7.ppc64le.rpm
 
-##Install Python 3.6
+#install gcc5 alternative
+# Install pacackages required by libraries in Hipe External
+
 RUN yum install -y gcc openssl-devel bzip2-devel
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
-RUN yum install -y python34 python34-devel python34-numpy python34-pip
 RUN yum -y groupinstall development
-RUN python3.4 -m pip install PyYAML
 
-
-#install gcc5 alternative
-RUN yum install -y git libtool scl-utils
-
-# Install pacackages required by libraries in Hipe External
-# TODO: Finish sorting these into separate commands per library to facilitate
 RUN yum install -y \
-  libX11-devel \
-  openssl-libs
-
-# #Gstreamer Dependencies for opencv
-RUN yum install -y \
+	python34 python34-devel python34-numpy python34-pip python2-pip \
+	git libtool scl-utils \
+  	libX11-devel \
+    openssl-libs \
 	gstreamer1-devel.ppc64le \
 	gstreamer1-plugins-bad-free.ppc64le \
 	gstreamer1-plugins-bad-free-devel.ppc64le \
@@ -121,17 +114,8 @@ RUN yum install -y \
 	gstreamer1-rtsp-server-devel.ppc64le \
 	gstreamer1-rtsp-server-devel-docs.noarch \
 	gstreamer1-vaapi.ppc64le \
-	gstreamer1-vaapi-devel.ppc64le
-
-# 	libges-1.0-0 \
-# 	gstreamer-tools \
-# 	libges-1.0-dev \
-# 	libavresample-dev \
-# 	v4l-utils \
-# 	libv4l-dev
-	
-# # Dependencies for building OpenCV
-RUN yum install -y \
+	gstreamer1-vaapi-devel.ppc64le \
+	python2-numpy \
 	glog-devel \
 	glog \
 	gflags-devel \
@@ -139,6 +123,7 @@ RUN yum install -y \
 	protobuf-compiler \
 	protobuf-devel \
 	tesseract \
+	tesseract-devel \
 	leptonica-devel \
 	leptonica \
 	eigen3-devel \
@@ -162,53 +147,13 @@ RUN yum install -y \
 	libicu \
 	libicu-devel
 
+#####
+# Install numpy and PyYAML
+####
+RUN python3.4 -m pip install PyYAML
+RUN python -m pip install numpy
+RUN python3.4 -m pip install numpy
 
- 
-# # Dependencies for building FFmpeg
-# RUN apt-get install -y --no-install-recommends \
-#   libfreetype6-dev \
-#   libtheora-dev \
-#   libvorbis-dev \
-#   libavutil-dev \
-#   libavcodec-dev \
-#   libswscale-dev \
-#   libavformat-dev \
-#   libavutil-dev
-
-#RUN python -m pip install numpy
-#RUN python3   -m pip install numpy
-
-
-# # Install the build deps for the compilation targets.
-# #RUN apt-get build-dep \
-# #  opencv \
-# #  ffmpeg \
-
-# # Copy the local build scripts and source files. The source files are downloaded
-# # before building the image to avoid redundant downloads when rebuilding the
-# # image. The entire hipe directory is not copied here because any changes to
-# # the source files in hipe/hipe-group would invalidate the cache and trigger a rerun
-# # off all commands from this point. This must be avoided because the following
-# # compilation steps take a long time to complete.
-# #COPY hipe/build /home/hipe/build
-# #COPY hipe/hipe_external /home/hipe/hipe_external
-# #RUN mkdir -p /home/hipe/hipe_external/linux64/build
-
-# # Download before building the image to avoid redownloading the files with
-# # every build.
-# # TODO: Maybe make this optional. Given that the Git repo currently prompts for
-# #       a name and password, all downloads cannot yet be automated anyway.
-# #WORKDIR /home/hipe/hipe_external/linux64/build
-# #RUN python3 prepare_download.py boost opencv dlib
-# #RUN bash download_sources.sh
-
-
-
-
-
-# ###########
-# #DDU
-# ##########
 
 #####
 # Create download area
@@ -241,9 +186,9 @@ RUN mkdir /home/hipe-group/sourceInstallations
 WORKDIR /home/hipe-group/sourceInstallations
 RUN mkdir /home/hipe-group/sourceInstallations/build
 RUN svn co svn://gcc.gnu.org/svn/gcc/tags/gcc_5_4_0_release/
-WORKDIR /home/hipe-group/sourceInstallationsgcc_5_4_0_release/
+WORKDIR /home/hipe-group/sourceInstallations/gcc_5_4_0_release/
 RUN bash ./contrib/download_prerequisites
-WORKDIR /home/hipe-group/sourceInstallationsbuild/
+WORKDIR /home/hipe-group/sourceInstallations/build/
 RUN ../gcc_5_4_0_release/configure && make -j16 && sudo make -j16 install && echo "success"
 RUN yum install -y which
 WORKDIR /usr/bin
@@ -335,21 +280,18 @@ RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads"
 	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
 	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c dlib -n 20
 
-RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
-	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
-	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
-	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 20
+#RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -b "/home/hipe-group/3rdParty/hipe_external/linux64/build" -i "/home/hipe-group/3rdParty/hipe_external/linux64/install" -g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 20
 
 
 ##Now everything is built then add user hipe-group and change all rights for him
-RUN useradd -d /home/hipe-group -ms /bin/bash -g root -G sudo -p hipe-group hipe-group
-RUN groupadd hipe-group
-RUN echo "hipe-group:hipe-group" | chpasswd && adduser hipe-group sudo
-RUN echo "hipe-group ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# RUN useradd -d /home/hipe-group -ms /bin/bash -g root -G sudo -p hipe-group hipe-group
+# RUN groupadd hipe-group
+# RUN echo "hipe-group:hipe-group" | chpasswd && adduser hipe-group sudo
+# RUN echo "hipe-group ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-WORKDIR /home/hipe-group
-RUN chown -hR hipe-group:hipe-group *
-RUN chown -hR hipe-group:hipe-group /home/hipe-group
+# WORKDIR /home/hipe-group
+# RUN chown -hR hipe-group:hipe-group *
+# RUN chown -hR hipe-group:hipe-group /home/hipe-group
 
 # COPY mysql/install-webserver.sh  /home/hipe-group/install-webserver.sh
 # RUN mkdir /home/hipe-group/mysql_db

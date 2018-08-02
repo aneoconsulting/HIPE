@@ -422,6 +422,8 @@ function build_ffmpeg()
       --enable-debug
 
     make -j "$N_THREADS" install
+	echo "$install_dir/lib" > /etc/ld.so.conf.d/ffmpeg_ld.conf
+	ldconfig
 #     hash -r
   popd
   maybe_remove_build_files "ffmpeg"
@@ -503,6 +505,7 @@ function build_opencv()
   local install_dir="$INSTALL_DIRECTORY/opencv"
 
   add_paths "$install_dir"
+  add_paths "$INSTALL_DIRECTORY/ffmpeg"
 
   # Required from sfm module in opencv contrib.
 #   header 'building ceres-solver'
