@@ -560,8 +560,13 @@ function build_opencv()
       -DBUILD_opencv_python2=ON \
       -DBUILD_opencv_python3=OFF \
       -DENABLE_PRECOMPILED_HEADERS=OFF \
+	  -DBUILD_PERF_TESTS=OFF \
+	  -DBUILD_EXAMPLES=OFF \
+	  -DBUILD_TESTS=OFF \
+	  -DBUILD_DOCS=OFF \
       ..
 #       -DBUILD_PROTOBUF=OFF \
+
     make -j "$N_THREADS" install
   popd
   maybe_remove_build_files "opencv-3.4.2"

@@ -280,18 +280,20 @@ RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads"
 	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
 	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c dlib -n 20
 
-#RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -b "/home/hipe-group/3rdParty/hipe_external/linux64/build" -i "/home/hipe-group/3rdParty/hipe_external/linux64/install" -g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 20
+RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -b "/home/hipe-group/3rdParty/hipe_external/linux64/build" -i "/home/hipe-group/3rdParty/hipe_external/linux64/install" -g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 20
 
 
-##Now everything is built then add user hipe-group and change all rights for him
-# RUN useradd -d /home/hipe-group -ms /bin/bash -g root -G sudo -p hipe-group hipe-group
-# RUN groupadd hipe-group
-# RUN echo "hipe-group:hipe-group" | chpasswd && adduser hipe-group sudo
-# RUN echo "hipe-group ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+#Now everything is built then add user hipe-group and change all rights for him
+RUN groupadd hipe-group
+RUN groupadd sudo
 
-# WORKDIR /home/hipe-group
-# RUN chown -hR hipe-group:hipe-group *
-# RUN chown -hR hipe-group:hipe-group /home/hipe-group
+RUN useradd -d /home/hipe-group -ms /bin/bash -g root -G sudo -p hipe-group hipe-group
+RUN echo "hipe-group:hipe-group" | chpasswd && adduser -g hipe-group sudo
+RUN echo "hipe-group ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+WORKDIR /home/hipe-group
+#RUN chown -hR hipe-group:hipe-group *
+RUN chown -hR hipe-group:hipe-group /home/hipe-group
 
 # COPY mysql/install-webserver.sh  /home/hipe-group/install-webserver.sh
 # RUN mkdir /home/hipe-group/mysql_db
@@ -300,12 +302,12 @@ RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads"
 
 # RUN chmod +x /home/hipe-group/install-webserver.sh
 # RUN bash /home/hipe-group/install-webserver.sh
-# RUN ln -s /usr/bin/nodejs /usr/local/bin/node
-# RUN ln -s /usr/bin/npm /usr/local/bin/npm
+
+
 
 # EXPOSE 3306/tcp
 
-# USER hipe-group
+USER hipe-group
 
 # COPY mysql/webserver-hipe.tar.gz /home/hipe-group/webserver-hipe.tar.gz
 # RUN tar xvzf webserver-hipe.tar.gz
@@ -324,21 +326,21 @@ RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads"
 # RUN echo "echo 'start database for webserver'; sudo sudo service mysql restart; sleep 2; cd /home/hipe-group/webserver-hipe/; node app.js &" >> /home/hipe-group/.bashrc
 # RUN echo "sleep 2; echo 'Webserver is started'" >> /home/hipe-group/.bashrc
 # RUN echo "echo ''" >> /home/hipe-group/.bashrc
-# RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
-# RUN echo "echo ''" >> /home/hipe-group/.bashrc
-# RUN echo "echo 'HELLO : To Start HIPE run this script : '" >> /home/hipe-group/.bashrc
-# RUN echo "echo 'bash /home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh'" >> /home/hipe-group/.bashrc
-# RUN echo "echo ''" >> /home/hipe-group/.bashrc
-# RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
-# RUN echo "echo ''" >> /home/hipe-group/.bashrc
+RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+RUN echo "echo 'HELLO : To Start HIPE run this script : '" >> /home/hipe-group/.bashrc
+RUN echo "echo 'bash /home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
+RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
+RUN echo "echo ''" >> /home/hipe-group/.bashrc
 
-# # Build Hipe.
-# WORKDIR /home/hipe-group
-# ENV HIPE_EXTERNAL /home/hipe-group/3rdParty/hipe_external
-# RUN git clone https://github.com/aneoconsulting/HIPE.git hipe
-# WORKDIR /home/hipe-group/hipe
+# Build Hipe.
+WORKDIR /home/hipe-group
+ENV HIPE_EXTERNAL /home/hipe-group/3rdParty/hipe_external
+RUN git clone https://github.com/aneoconsulting/HIPE.git hipe
+WORKDIR /home/hipe-group/hipe
 
-# RUN bash compile-ALL.sh
+#RUN bash compile-ALL.sh
 
-# WORKDIR /home/hipe-group
+WORKDIR /home/hipe-group
 
