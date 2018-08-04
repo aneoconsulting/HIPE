@@ -28,6 +28,7 @@
  *  contact us (hipe@aneo.fr) for more information.
  */
 
+#include <dlib/simd.h>
 #include <filter/algos/detection/HOGLiveTrainer.h>
 
 HipeStatus filter::algos::HOGLiveTrainer::process()

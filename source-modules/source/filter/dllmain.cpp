@@ -28,6 +28,7 @@
  *  contact us (hipe@aneo.fr) for more information.
  */
 
+#include <dlib/simd.h>
 #include <filter/References.h>
 #include <corefilter/tools/RegisterTable.h>
 #include <iostream>

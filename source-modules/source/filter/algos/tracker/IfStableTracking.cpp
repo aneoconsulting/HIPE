@@ -27,7 +27,7 @@
  *  Licensing Office. Users and or developers interested in such a license should 
  *  contact us (hipe@aneo.fr) for more information.
  */
-
+#include <dlib/simd.h>
 #include <filter/algos/tracker/IfStableTracking.h>
 #include <data/ImageData.h>
 #include <data/PatternData.h>
