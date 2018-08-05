@@ -258,6 +258,7 @@ run git clone -b n3.3.2 https://git.ffmpeg.org/ffmpeg.git /home/hipe-group/3rdPa
 RUN mkdir -p /home/hipe-group/deps/
 WORKDIR /home/hipe-group/deps
 COPY deps/*.sh /home/hipe-group/deps/
+COPY issue/patch_dlib_19.13.0.patch /home/hipe-group/deps/
 
 ######
 #Build dependencies
@@ -337,10 +338,11 @@ RUN echo "echo ''" >> /home/hipe-group/.bashrc
 # Build Hipe.
 WORKDIR /home/hipe-group
 ENV HIPE_EXTERNAL /home/hipe-group/3rdParty/hipe_external
+RUN echo "Get Hipe from GitHub"
 RUN git clone https://github.com/aneoconsulting/HIPE.git hipe
 WORKDIR /home/hipe-group/hipe
 
-#RUN bash compile-ALL.sh
+RUN bash compile-ALL.sh
 
 WORKDIR /home/hipe-group
 

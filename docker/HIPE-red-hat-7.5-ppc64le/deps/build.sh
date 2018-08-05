@@ -591,6 +591,8 @@ function build_dlib()
   add_paths "$install_dir"
 
   untar "$ARCHIVE_DIRECTORY/dlib-19.13.zip"
+  ##Fix correctif for Dlib to solve conflict with max() and min() method (Altivec versus std)
+  cat patch_dlib_19.13.0.patch | patch -p1 -d $BUILD_DIRECTORY/dlib-19.13
   mkdir -p -- "$BUILD_DIRECTORY/dlib-19.13/build"
   pushd "$BUILD_DIRECTORY/dlib-19.13/build"
   cmake \
@@ -606,7 +608,7 @@ function build_dlib()
 	  -DBUILD_SHARED_LIBS=ON \
     ..
   make -j "$N_THREADS" install
-#   make -j "$N_THREADS" DESTDIR="$install_dir" install
+  ln -s "$install_dir/lib64" "$install_dir/lib"
   popd
 
   maybe_remove_build_files "dlib"
@@ -666,6 +668,7 @@ function build_boost()
 
     #linkflags="${LDFLAGS:-}"
     ./b2 \
+		-j "$N_THREADS" \
       variant=release \
       debug-symbols=off \
       threading=multi \
