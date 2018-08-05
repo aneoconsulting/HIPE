@@ -27,8 +27,10 @@
  *  Licensing Office. Users and or developers interested in such a license should 
  *  contact us (hipe@aneo.fr) for more information.
  */
-
+#if defined(USE_DLIB) && defined(__ALTIVEC__)
 #include <dlib/simd.h>
+#endif
+
 #include <filter/References.h>
 #include <corefilter/tools/RegisterTable.h>
 #include <iostream>
