@@ -258,7 +258,7 @@ if(WIN32)
   target_compile_options(filter PRIVATE /bigobj)
 endif(WIN32)
 
-target_compile_definitions(filter PRIVATE "-DDLIB_HAVE_ALTIVEC -DUSE_BOOST_REGEX" "-DFILTER_BUILD" "-DOPENCV" ${USE_DLIB} 
+target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD" "-DOPENCV" ${USE_DLIB} 
 							${USE_GFLAGS} ${USE_GLOG} ${USE_CUDA} ${USE_CUBLAS} ${USE_LEVELDB} ${USE_LMDB} 
 							${USE_HDF5} ${USE_SNAPPY} ${USE_PROTOBUF} ${USE_CAFFE})
 
