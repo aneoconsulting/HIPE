@@ -27,7 +27,10 @@
  *  Licensing Office. Users and or developers interested in such a license should 
  *  contact us (hipe@aneo.fr) for more information.
  */
-#include <dlib/simd.h>
+#if defined(USE_DLIB) &&  defined(__ALTIVEC__)
+	//issue order of header for vector keyword call it before 
+	#include <dlib/simd.h>
+#endif
 #include <filter/algos/detection/HOGLiveDetector.h>
 
 HipeStatus filter::algos::HOGLiveDetector::process()

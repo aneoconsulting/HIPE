@@ -44,14 +44,14 @@
 #if defined(USE_DLIB)
 	//issue order of header for vector keyword call it before 
 	#if defined(__ALTIVEC__)
-#include <dlib/simd.h>
-#endif
-#include <dlib/image_processing/frontal_face_detector.h>
-#include <dlib/gui_widgets.h>
-#include <dlib/image_io.h>
-#include <dlib/opencv.h>
-#include <dlib/image_processing/render_face_detections.h>
-#include <dlib/image_processing.h>
+		#include <dlib/simd.h>
+	#endif
+	#include <dlib/image_processing/frontal_face_detector.h>
+	#include <dlib/gui_widgets.h>
+	#include <dlib/image_io.h>
+	#include <dlib/opencv.h>
+	#include <dlib/image_processing/render_face_detections.h>
+	#include <dlib/image_processing.h>
 #endif
 
 #pragma warning(pop)

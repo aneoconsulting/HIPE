@@ -35,8 +35,8 @@
 #if defined(USE_DLIB)
 	//issue order of header for vector keyword call it before 
 	#if defined(__ALTIVEC__)
-#include <dlib/simd.h>
-#endif
+		#include <dlib/simd.h>
+	#endif
 
 #include <dlib/image_transforms/fhog.h>
 #include <dlib/image_processing/correlation_tracker.h>

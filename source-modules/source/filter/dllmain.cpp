@@ -28,7 +28,7 @@
  *  contact us (hipe@aneo.fr) for more information.
  */
 #if defined(USE_DLIB) && defined(__ALTIVEC__)
-#include <dlib/simd.h>
+	#include <dlib/simd.h>
 #endif
 
 #include <filter/References.h>
