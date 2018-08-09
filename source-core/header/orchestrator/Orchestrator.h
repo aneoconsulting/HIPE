@@ -36,7 +36,7 @@
 #include <core/Singleton.h>
 #include <corefilter/Model.h>
 #include <core/HipeException.h>
-#include <json/JsonFilterNode/JsonFilterTree.h>
+#include <corefilter/tools/JsonFilterNode/JsonFilterTree.h>
 #include <coredata/Data.h>
 #include <orchestrator/orchestrator_export.h>
 

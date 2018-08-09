@@ -7,7 +7,7 @@ target_compile_definitions(json PRIVATE "-DUSE_BOOST_REGEX" "-DJSON_BUILD")
 
 target_link_libraries(json ${Boost_LIBRARIES})
 target_link_libraries(json ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(json core corefilter coredata)
+target_link_libraries(json core coredata)
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?

@@ -58,4 +58,6 @@ std::string PathSeparator();
 
 void addEnv(std::string path);
 
+void addVarEnv(std::string key, std::string value);
+
 std::string GetCurrentWorkingDir(void);

@@ -71,6 +71,7 @@ namespace data
 		MATCHER = 0x4d415443484552,
 		DLIBDTCT = 0x444c494244544354,	// dlib detectors data type (used to shared training data between filters)
 		PYCTX = 0x5059435458,
+		TIMER = 0x54494d4552,
 		NONE
 	};
 

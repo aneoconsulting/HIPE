@@ -11,6 +11,7 @@ target_link_libraries(corebench ${Boost_LIBRARIES})
 target_link_libraries(corebench ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(corebench core)
 target_link_libraries(corebench coredata)
+target_link_libraries(corebench corefilter)
 target_link_libraries(corebench json)
 
 

@@ -20,6 +20,7 @@ target_link_libraries(hipe_server http)
 target_link_libraries(hipe_server orchestrator)
 target_link_libraries(hipe_server json)
 target_link_libraries(hipe_server coredata)
+target_link_libraries(hipe_server corefilter)
 target_link_libraries(hipe_server corebench)
 
 target_link_libraries(hipe_server core)

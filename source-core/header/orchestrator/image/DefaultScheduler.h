@@ -113,17 +113,22 @@ namespace orchestrator
 				return 0;
 			}
 
-			static void cleanDataChild(filter::Model* filter)
+			static void popUnusedData(filter::Model* filter)
 			{
-				filter->cleanUp();
 				data::ConnexDataBase& outRes = filter->getConnector();
 				data::DataPort& data_port = static_cast<data::DataPort &>(outRes.getPort());
 
-				while (! data_port.empty())
+				while (!data_port.empty())
 				{
 					data_port.pop();
 				}
 
+			}
+
+			static void cleanDataChild(filter::Model* filter)
+			{
+				filter->cleanUp();
+				popUnusedData(filter);
 				for (auto& childFilter : filter->getChildrens())
 				{
 					childFilter.second->cleanUp();
@@ -232,13 +237,27 @@ namespace orchestrator
 				}
 			}
 
+			static void onStartCall(filter::Model* model, void* context)
+			{
+				if (! model->isPython()) // all other than pythonFilter
+				{
+					model->onStart(context);
+				}
+
+
+				for (auto& childFilter : model->getChildrens())
+				{
+					onStartCall(childFilter.second, context);
+				}
+			}
+
 			static void setPythonUserThreadState(filter::Model* model, PyExternalUser* py_external_user)
 			{
 				if (model->isPython())
 				{
 					model->onStart(py_external_user);
 				}
-
+				
 
 				for (auto& childFilter : model->getChildrens())
 				{
@@ -307,6 +326,9 @@ namespace orchestrator
 
 					setPythonUserThreadState(cpyFilterRoot, userThreadState);
 
+					//Call init method if need by each filter
+					onStartCall(cpyFilterRoot, nullptr);
+
 					while ((hipe_status != END_OF_STREAM) && *isActive)
 					{
 						for (unsigned int layer = 1; layer < matrixLayer.size() - 1; layer++)
@@ -317,7 +339,11 @@ namespace orchestrator
 								{
 									hipe_status = filter->process();
 									if (hipe_status == END_OF_STREAM)
+									{
+										(*isActive).exchange(false);
 										break;
+									}
+										
 								}
 								catch (HipeException& e)
 								{
@@ -359,7 +385,10 @@ namespace orchestrator
 								}
 							}
 							if (hipe_status == END_OF_STREAM)
+							{
+								(*isActive).exchange(false);
 								break;
+							}
 						}
 
 						//Special case for final result and other filter
@@ -378,10 +407,12 @@ namespace orchestrator
 								}
 								filter->process();
 							}
+							popUnusedData(filter);
 						}
 
 						if (data::DataTypeMapper::isImage(sourceType))
 							break;
+						
 					}
 					cleanDataChild(cpyFilterRoot);
 					disposeChild(cpyFilterRoot);
@@ -417,7 +448,21 @@ namespace orchestrator
 			{
 				if (!runningTasks.empty())
 				{
-					throw HipeException("Some previous task is stil running. Please kill it before run a new one.");
+					std::vector<TaskInfo> updateTasks;
+
+					for (auto & taskInfo : runningTasks)
+					{
+						if (*(taskInfo.isActive) && (taskInfo.task->joinable()))
+						{
+							updateTasks.push_back(taskInfo);
+						}
+					}
+					runningTasks.clear();
+					runningTasks = updateTasks;
+
+					if (!runningTasks.empty())
+						throw HipeException("Some previous task is stil running. Please kill it before run a new one.");
+					
 				}
 
 				if (data::DataTypeMapper::isNoneData(inputData.getType()))

@@ -21,6 +21,8 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
   target_link_libraries(binary ws2_32 wsock32)
 endif()
 
+install_header_to_target(http)
+
 install (TARGETS http CONFIGURATIONS Debug DESTINATION lib/Debug COMPONENT library)
 install (TARGETS http CONFIGURATIONS Release DESTINATION lib/Release COMPONENT library)
 install (TARGETS http CONFIGURATIONS RelWithDebInfo DESTINATION lib/Release COMPONENT library)

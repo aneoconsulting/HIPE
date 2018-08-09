@@ -62,16 +62,18 @@ namespace filter
 
 			SET_NAMESPACE("vision/preprocessing")
 
-			REGISTER(Resize, ()), _connexData(data::INOUT)
+			REGISTER(Resize, ()), _connexData(data::INDATA)
 			{
 				ratio = 1;
 				width = 0;
 				height = 0;
+				inoutData = true;
 			}
 
 			REGISTER_P(double, ratio);
 			REGISTER_P(int, width);
 			REGISTER_P(int, height);
+			REGISTER_P(bool, inoutData);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
@@ -80,6 +82,7 @@ namespace filter
 			{
 				while (!_connexData.empty()) // While i've parent data
 				{
+					data::ImageArrayData outImgArray;
 					auto images = _connexData.pop();
 					if (images.getType() == data::PATTERN)
 					{
@@ -87,29 +90,47 @@ namespace filter
 					}
 
 					//Resize all images coming from the same parent
-					for (auto &myImage : images.Array())
+					for (auto& myImage : images.Array())
 					{
 						if (myImage.empty())
 							continue;
+						cv::Mat & imgWork = myImage;
+						if (!inoutData)
+							imgWork = myImage.clone();
+
 						if (width == 0 || height == 0)
 						{
-							int l_iwidth = myImage.cols;
-							int l_iheight = myImage.rows;
+							int l_iwidth = imgWork.cols;
+							int l_iheight = imgWork.rows;
 							cv::Size size(l_iwidth / ratio, l_iheight / ratio);
 
-							cv::resize(myImage, myImage, size, 0.0, 0.0, cv::INTER_CUBIC);
+							cv::resize(imgWork, imgWork, size, 0.0, 0.0, cv::INTER_CUBIC);
 						}
 						else
 						{
 							cv::Size size(width, height);
-							cv::resize(myImage, myImage, size, 0.0, 0.0, cv::INTER_CUBIC);
+							cv::resize(imgWork, imgWork, size, 0.0, 0.0, cv::INTER_CUBIC);
 						}
+
+						if (!inoutData)
+						{
+							outImgArray.Array().push_back(imgWork);
+						}
+					}
+
+					if (!inoutData)
+					{
+						PUSH_DATA(outImgArray);
+					}
+					else
+					{
+						PUSH_DATA(images);
 					}
 				}
 				return OK;
 			}
 		};
 
-		ADD_CLASS(Resize, ratio, width, height);
+		ADD_CLASS(Resize, ratio, width, height, inoutData) ;
 	}
 }

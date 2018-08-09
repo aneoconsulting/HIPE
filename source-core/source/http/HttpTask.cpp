@@ -30,13 +30,13 @@
 
 #include <HttpTask.h>
 #include <HttpServer.h>
-#include <json/JsonBuilder.h>
+#include <corefilter/tools/JsonBuilder.h>
 #include <orchestrator/Orchestrator.h>
 #include <orchestrator/Composer.h>
 #include <core/HipeException.h>
 #include <http/CommandManager.h>
 #include <core/version.h>
-#include <core/Localenv.h>
+#include <corefilter/tools/Localenv.h>
 
 #pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
@@ -93,7 +93,7 @@ std::function<bool(std::string, json::JsonTree *)> get_filters() {
 				json::JsonTree info;
 				for (auto &varName : reg.getVarNames(name))
 				{
-					child.put(varName, "");
+					child.put(varName, std::string(""));
 				}
 				info.put("namespace", reg.getNamespace(name));
 				parameters.push_back("fields", child);
@@ -132,7 +132,7 @@ std::map < std::string, std::vector<json::JsonTree>>get_map_filters() {
 
 		for (auto &varName : reg.getVarNames(name))
 		{
-			filterNode.put(varName, "");
+			filterNode.put(varName, std::string(""));
 		}
 		json::JsonTree child;
 		child.push_back(name, filterNode);
@@ -289,7 +289,7 @@ void http::HttpTask::runTask() const
 
 
 			HttpTask::logger << "Check if algorithm need to be built";
-			HttpTask::logger << "Port To listen task was " << core::getLocalEnv().getValue("http_port");
+			HttpTask::logger << "Port To listen task was " << corefilter::getLocalEnv().getValue("http_port");
 
 			auto json_filter_tree = json::JsonBuilder::buildAlgorithm(dataResponse, treeRequest);
 			const string name = json_filter_tree->getName();

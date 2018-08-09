@@ -28,10 +28,7 @@
  *  contact us (hipe@aneo.fr) for more information.
  */
 
-#include <JsonBuilder.h>
-#include <JsonFilterNode/JsonFilterNode.h>
 
-#include <JsonFilterNode/JsonFilterTree.h>
 
 void json_start()
 {

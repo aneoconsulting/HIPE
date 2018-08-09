@@ -1,7 +1,0 @@
-- installer node.js sur https://nodejs.org/en/download/
-- récupérer le code sur https://gitlab.aneo.fr/tollivier/hipe
-- se placer dans le fichier hipe
-- effectuer un npm install
-- dans le ficher app.js, à la ligne 10, modifier l'accès à la BDD pour qu'elle soit adapté à ta base (mysql://root:@localhost/hipe) => Ici, root est le login, après les : c'est le mot de passe (dans mon cas, j'en ai pas), après le @ c'est le chemin jusqu'à la base
-- faire un gulp js, puis gulp css, puis gulp sass (s'il ne connait pas le command gulp, ouvrir un nouveau cmd, si ça ne marche toujours pas, c'est qu'il y a un problème sur le package)
-- faire un node app.js (le srv se met en route)
