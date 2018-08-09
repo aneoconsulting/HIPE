@@ -78,7 +78,7 @@ void filter::algos::PopGraphToNode::Connect()
 		std::unique_ptr<boost::asio::ip::tcp::resolver::query> query;
 		/*std::stringstream build_port;
 		build_port << port;*/
-		query = std::make_unique<boost::asio::ip::tcp::resolver::query>(address, std::to_string(port));
+		query = ::make_unique<boost::asio::ip::tcp::resolver::query>(address, std::to_string(port));
 
 
 		boost::asio::ip::tcp::resolver resolver(*service);
@@ -172,7 +172,7 @@ HipeStatus filter::algos::PopGraphToNode::process()
 	{
 		service = std::make_shared<boost::asio::io_service>();
 
-		thr_client = std::make_unique<boost::thread>([this]() { 
+		thr_client = ::make_unique<boost::thread>([this]() { 
 		Connect();
 
 		bool finish = true;

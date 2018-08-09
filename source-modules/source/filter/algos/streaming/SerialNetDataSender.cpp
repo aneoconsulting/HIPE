@@ -177,13 +177,13 @@ void SerialNetDataSender::startServer(int port)
 
 		if (!a_isActive.exchange(true))
 		{
-			thr_server = std::make_unique<boost::thread>([this, port, timer]()
+			thr_server = ::make_unique<boost::thread>([this, port, timer]()
 			{
 				if (ioservice->stopped())
 					ioservice->reset();
 
 				if (!acceptor)
-					acceptor = std::make_unique<boost::asio::ip::tcp::acceptor>(*ioservice);
+					acceptor = ::make_unique<boost::asio::ip::tcp::acceptor>(*ioservice);
 
 				boost::asio::ip::tcp::endpoint endpoint = boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port);
 				acceptor->open(endpoint.protocol());
