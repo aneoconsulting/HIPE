@@ -1,17 +1,25 @@
 //@HIPE_LICENSE@
 #pragma once
 #include <deque>
+#pragma warning(push, 0)
+#include <opencv2/core/mat.hpp>
+#if defined(USE_DLIB)
+	//issue order of header for vector keyword call it before 
+	#if defined(__ALTIVEC__)
+		#include <dlib/simd.h>
+	#endif
+
+#include <dlib/image_transforms/fhog.h>
+#include <dlib/image_processing/correlation_tracker.h>
+#endif
+#pragma warning(pop)
+
 #include <corefilter/tools/RegisterTools.hpp>
 #include <corefilter/tools/RegisterClass.h>
 #include <corefilter/IFilter.h>
 #include <corefilter/filter_export.h>
 #include <data/ShapeData.h>
 
-#pragma warning(push, 0)
-#include <opencv2/core/mat.hpp>
-#include <dlib/image_transforms/fhog.h>
-#include <dlib/image_processing/correlation_tracker.h>
-#pragma warning(pop)
 
 
 

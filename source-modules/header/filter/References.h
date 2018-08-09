@@ -40,6 +40,8 @@
 #include <filter/algos/IDPlate\IDPlateIdentifier.h>
 #include <filter/algos/IDPlate\IDPlateRectifier.h>
 #include <filter/algos/IDPlate\IDPlateTools.h>
+#include <filter/algos/IDPlate\LabelOCR.h>
+#include <filter/algos/IDPlate\RotationTextReader.h>
 #include <filter/algos/preprocessing\AverageColor.h>
 #include <filter/algos/preprocessing\BiggestBlob.h>
 #include <filter/algos/preprocessing\BilateralFilter.h>
@@ -69,6 +71,7 @@
 #include <filter/algos/preprocessing\Resize.h>
 #include <filter/algos/preprocessing\ResizePattern.h>
 #include <filter/algos/preprocessing\RotateImage.h>
+#include <filter/algos/preprocessing\SRcnnZoom.h>
 #include <filter/algos/show\ConcatToShow.h>
 #include <filter/algos/show\Cropper.h>
 #include <filter/algos/show\DrawCircles.h>
@@ -82,6 +85,8 @@
 #include <filter/algos/streaming\EncodeDataFilter.h>
 #include <filter/algos/streaming\PopGraphToNode.h>
 #include <filter/algos/streaming\PushGraphToNode.h>
+#include <filter/algos/streaming\SerialNetDataSender.h>
+#include <filter/algos/streaming\SerialNetSlaveSender.h>
 #include <filter/algos/streaming\WriteVideo.h>
 #include <filter/algos/tracker\IfStableTracking.h>
 #include <filter/algos/tracker\Tracker.h>
@@ -90,5 +95,6 @@
 #include <filter/datasource/DirectoryImgDataSource.h>
 #include <filter/datasource/DirPatternDataSource.h>
 #include <filter/datasource/ImageDataSource.h>
+#include <filter/datasource/SerialNetDataSource.h>
 #include <filter/datasource/StreamDataSource.h>
 #include <filter/datasource/VideoDataSource.h>

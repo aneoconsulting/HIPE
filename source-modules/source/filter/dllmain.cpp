@@ -1,4 +1,8 @@
 //@HIPE_LICENSE@
+#if defined(USE_DLIB) && defined(__ALTIVEC__)
+	#include <dlib/simd.h>
+#endif
+
 #include <filter/References.h>
 #include <corefilter/tools/RegisterTable.h>
 #include <iostream>

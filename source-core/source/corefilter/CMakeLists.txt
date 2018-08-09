@@ -11,6 +11,8 @@ target_link_libraries(corefilter ${Boost_LIBRARIES})
 target_link_libraries(corefilter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(corefilter core)
 target_link_libraries(corefilter coredata)
+target_link_libraries(corefilter json)
+
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?

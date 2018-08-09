@@ -14,8 +14,14 @@ if(UNIX)
     add_definitions(-DUSE_GPERFTOOLS)
     message(STATUS "Google perftools : ON")
   endif(USE_GPERFTOOLS)
+  
   add_compile_options("-Wno-unknown-pragmas")
 
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+	add_compile_options(-mabi=altivec -maltivec)
+  endif()
+
+  
 endif(UNIX)
 
 add_subdirectory(core)

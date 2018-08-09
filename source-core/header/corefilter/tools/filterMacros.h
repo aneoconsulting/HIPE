@@ -69,6 +69,10 @@
 				this-> params = __##params;\
 		}\
 		vartype__##params get_##params() { return this-> params; }\
+		void get_json_##params(::json::JsonTree & jsonClass)\
+		{\
+			jsonClass.put<typef>(std::string (#params), this->params);\
+		}\
 		void copy_##params(mytype * instance) \
 		{\
 				this-> params = instance->params;\
@@ -83,6 +87,8 @@
 	CONCAT4(std::string str_get_ , classname ## _ , elem, EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT2_STR(get_ , elem)), CONCAT4(invoke_get_ , classname, elem, EXPAND_VAR(FILE_BASENAME)));\
 	core::InvokerBase CONCAT4(invoke_copy_ , classname, elem, EXPAND_VAR(FILE_BASENAME))  = core::Invoker<void, classname *>::for_function<classname, & CONCAT2(classname::copy_, elem)>();\
 	CONCAT4(std::string str_copy_ , classname ## _ , elem, EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT2_STR(copy_ , elem)), CONCAT4(invoke_copy_ , classname, elem, EXPAND_VAR(FILE_BASENAME)));\
+	core::InvokerBase CONCAT4(invoke_get_json_ , classname, elem, EXPAND_VAR(FILE_BASENAME))  = core::Invoker<void, json::JsonTree &>::for_function<classname, & CONCAT2(classname::get_json_, elem)>();\
+	CONCAT4(std::string str_get_json_ , classname ## _ , elem, EXPAND_VAR(FILE_BASENAME)) = RegisterTable::getInstance().addSetter(std::string(TO_STR(classname)), std::string(CONCAT2_STR(get_json_ , elem)), CONCAT4(invoke_get_json_ , classname, elem, EXPAND_VAR(FILE_BASENAME)));\
 
 
 #define ADD_CLASS(classname, ...)\

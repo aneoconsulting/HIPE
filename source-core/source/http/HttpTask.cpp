@@ -1,7 +1,7 @@
 //@HIPE_LICENSE@
 #include <HttpTask.h>
 #include <HttpServer.h>
-#include <json/JsonBuilder.h>
+#include <corefilter/tools/JsonBuilder.h>
 #include <orchestrator/Orchestrator.h>
 #include <orchestrator/Composer.h>
 #include <core/HipeException.h>
@@ -64,7 +64,7 @@ std::function<bool(std::string, json::JsonTree *)> get_filters() {
 				json::JsonTree info;
 				for (auto &varName : reg.getVarNames(name))
 				{
-					child.put(varName, "");
+					child.put(varName, std::string(""));
 				}
 				info.put("namespace", reg.getNamespace(name));
 				parameters.push_back("fields", child);
@@ -103,7 +103,7 @@ std::map < std::string, std::vector<json::JsonTree>>get_map_filters() {
 
 		for (auto &varName : reg.getVarNames(name))
 		{
-			filterNode.put(varName, "");
+			filterNode.put(varName, std::string(""));
 		}
 		json::JsonTree child;
 		child.push_back(name, filterNode);

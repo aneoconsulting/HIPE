@@ -1,4 +1,8 @@
 //@HIPE_LICENSE@
+#if defined(USE_DLIB) &&  defined(__ALTIVEC__)
+	//issue order of header for vector keyword call it before 
+	#include <dlib/simd.h>
+#endif
 #include <filter/algos/tracker/IfStableTracking.h>
 #include <data/ImageData.h>
 #include <data/PatternData.h>

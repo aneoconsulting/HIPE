@@ -1,4 +1,5 @@
 //@HIPE_LICENSE@
+
 #include <json/JsonTree.h>
 
 #pragma warning(push, 0)
@@ -132,13 +133,6 @@ namespace json
 		return _jsonPtree->get<int>(path);
 	}
 
-
-	JsonTree& JsonTree::put(std::string key, std::string value)
-	{
-		auto p = _jsonPtree->put(key, value);
-		return *this;
-	}
-
 	//boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>>::iterator JsonTree::push_back(std::string p1, JsonTree &p2)
 	void JsonTree::push_back(std::string p1, JsonTree& p2)
 	{
@@ -232,5 +226,34 @@ namespace json
 		return getFloat(path);
 	}
 
+	template <>	void JsonTree::put<int>(std::string key, int value)
+	{
+		_jsonPtree->put(key, value);
 
+		
+	}
+	
+	template <>	void JsonTree::put<std::string>(std::string key, std::string value)
+	{
+		_jsonPtree->put(key, value);
+		
+	}
+
+	template <>	void JsonTree::put<bool>(std::string key, bool value)
+	{
+		_jsonPtree->put(key, value);
+		
+	}
+
+	template <>	void JsonTree::put<float>(std::string key, float value)
+	{
+		_jsonPtree->put(key, value);
+		
+	}
+
+	template <>	void JsonTree::put<double>(std::string key, double value)
+	{
+		_jsonPtree->put(key, value);
+		
+	}
 }

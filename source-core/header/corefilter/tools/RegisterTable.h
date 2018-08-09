@@ -15,6 +15,7 @@
 #include <coredata/IODataType.h>
 #include <corefilter/filter_export.h>
 #include <corefilter/Model.h>
+#include "json/JsonTree.h"
 
 class FILTER_EXPORT RegisterTable;
 
@@ -168,6 +169,19 @@ public:
 		return _namespace;
 	}
 
+
+	void getVariable(json::JsonTree & jsonNode, filter::Model *filter, std::string fieldName)
+	{
+		if (setterTable.find(filter->getConstructorName()) == setterTable.end())
+		{
+			throw HipeException("Cannot get Variable by instance with type " + filter->getConstructorName());
+		}
+		
+
+		invoke(filter, "get_json_" + fieldName, jsonNode);
+
+	}
+
 	template <typename...Args>
 	void invoke(filter::Model* instance, std::string functionName, Args ...args)
 	{
@@ -175,7 +189,7 @@ public:
 
 		std::transform(typeStr.begin(), typeStr.end(), typeStr.begin(), ::tolower);
 
-		if (typeStr.find("set") != std::string::npos || typeStr.find("copy") != std::string::npos)
+		if (typeStr.find("set") != std::string::npos || typeStr.find("copy") != std::string::npos || typeStr.find("get_json") != std::string::npos)
 		{
 			core::InvokerBase d = setterTable[reverse[instance]][functionName];
 			d.operator()<void, Args...>(instance, args...);

@@ -1,3 +1,4 @@
+//@HIPE_LICENSE@
 #include <algos/IDPlate/LabelOCR.h>
 
 filter::algos::LabelOCR2::LabelOCR2()

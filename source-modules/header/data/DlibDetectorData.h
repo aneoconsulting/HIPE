@@ -1,14 +1,23 @@
 //@HIPE_LICENSE@
 #pragma once
+#pragma warning(push, 0)   
+#include <boost/thread/shared_mutex.hpp>
+
+#if defined(USE_DLIB)
+	#if defined(__ALTIVEC__)
+	#include <dlib/simd.h>
+	#endif
+#include <dlib/image_processing.h>
+#endif
+
+#include <data/HogTrainer/HogTrainer.h>
+#pragma warning(pop)
+
+
 #include <coredata/IOData.h>
 #include <coredata/Data.h>
 #include <coredata/IODataType.h>
 
-#pragma warning(push, 0)   
-#include <boost/thread/shared_mutex.hpp>
-#include <dlib/image_processing.h>
-#include <data/HogTrainer/HogTrainer.h>
-#pragma warning(pop)
 
 namespace data
 {

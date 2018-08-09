@@ -283,8 +283,12 @@ namespace orchestrator
 				{
 					HipeStatus hipe_status = cpyFilter->process();
 					hipe_status = hipe_status;
-					if (hipe_status == END_OF_STREAM)
+					if (hipe_status == HipeStatus::END_OF_STREAM)
+					{
 						std::cout << "end of stream" << std::endl;
+						return HipeStatus::END_OF_STREAM;
+					}
+						
 				}
 				catch (HipeException& e)
 				{
@@ -293,7 +297,7 @@ namespace orchestrator
 					cleanDataChild(cpyFilter, false);
 					disposeChild(cpyFilter, false);
 					//TO DO FORWARD EXCEPTION !!!!
-					return -1;
+					return HipeStatus::UNKOWN_ERROR;
 				}
 
 				catch (std::exception& e)
@@ -305,7 +309,7 @@ namespace orchestrator
 					disposeChild(cpyFilter, false);
 					//TO DO FORWARD EXCEPTION !!!!
 					
-					return -1;
+					return HipeStatus::UNKOWN_ERROR;
 				}
 				catch (...)
 				{
@@ -315,10 +319,10 @@ namespace orchestrator
 					cleanDataChild(cpyFilter, false);
 					disposeChild(cpyFilter, false);
 					//TO DO FORWARD EXCEPTION !!!!
-					return -1;
+					return UNKOWN_ERROR;
 				}
 				//std::cout << "end pool"  <<std::endl;
-				return 0;
+				return HipeStatus::OK;
 			}
 
 			void processDataSource(filter::Model* root, data::Data& outputData, bool debug)
@@ -417,10 +421,23 @@ namespace orchestrator
 								}
 
 								boost::wait_for_all(pending_data.begin(), pending_data.end());
-
+								hipe_status = OK;
+								for (auto &data : pending_data) {
+									hipe_status = static_cast<HipeStatus>(data.get());
+									if (hipe_status == END_OF_STREAM)
+									{
+										(*isActive).exchange(false);
+										break;
+									}
+									if (hipe_status != OK)
+									{
+										
+									}
+									
+								}
 								if (hipe_status == END_OF_STREAM)
 								{
-									//std::cout << "end of stream" <<std::endl;
+									(*isActive).exchange(false);
 									break;
 								}
 							}
@@ -516,7 +533,21 @@ namespace orchestrator
 			{
 				if (!runningTasks.empty())
 				{
-					throw HipeException("Some previous task is stil running. Please kill it before run a new one.");
+					std::vector<TaskInfo> updateTasks;
+
+					for (auto & taskInfo : runningTasks)
+					{
+						if (*(taskInfo.isActive) && (taskInfo.task->joinable()))
+						{
+							updateTasks.push_back(taskInfo);
+						}
+					}
+					runningTasks.clear();
+					runningTasks = updateTasks;
+
+					if (!runningTasks.empty())
+						throw HipeException("Some previous task is stil running. Please kill it before run a new one.");
+
 				}
 
 				if (data::DataTypeMapper::isNoneData(inputData.getType()))

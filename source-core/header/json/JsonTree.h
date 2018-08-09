@@ -98,9 +98,12 @@ namespace json
 		
 		std::string get(std::string path) const;
 
-		
-		
-		JsonTree& put(std::string key, std::string value);
+		template <typename T>
+		void put(std::string key, T value)
+		{
+			/*return _jsonPtree->get<Type>(path);*/
+			throw HipeException("Type isn't ready to use in Hipe");
+		}
 
 		void push_back(std::string p1, JsonTree& p2);
 
@@ -127,6 +130,11 @@ namespace json
 	template <> float JsonTree::get<float>(std::string path) const;
 	template <> double JsonTree::get<double>(std::string path) const;
 
+	template <>	void JsonTree::put<int>(std::string key, int value);
+	template <>	void JsonTree::put<std::string>(std::string key, std::string value);
+	template <>	void JsonTree::put<bool>(std::string key, bool value);
+	template <>	void JsonTree::put<float>(std::string key, float value);
+	template <>	void JsonTree::put<double>(std::string key, double value);
 	
 	JSON_EXTERN template JSON_EXPORT int JsonTree::get_value<int>();
 	JSON_EXTERN template JSON_EXPORT std::string JsonTree::get_value<std::string>();
@@ -140,8 +148,10 @@ namespace json
 	JSON_EXTERN template JSON_EXPORT double JsonTree::get<double>(std::string path) const;
 	JSON_EXTERN template JSON_EXPORT float JsonTree::get<float>(std::string path) const;
 
-
-
-
+	JSON_EXTERN template JSON_EXPORT void JsonTree::put<int>(std::string key, int value);
+	JSON_EXTERN template JSON_EXPORT void JsonTree::put<std::string>(std::string key, std::string value);
+	JSON_EXTERN template JSON_EXPORT void JsonTree::put<bool>(std::string key, bool value);
+	JSON_EXTERN template JSON_EXPORT void JsonTree::put<float>(std::string key, float value);
+	JSON_EXTERN template JSON_EXPORT void JsonTree::put<double>(std::string key, double value);
 
 }

@@ -14,18 +14,18 @@ namespace filter
 {
 	namespace algos
 	{
-		/**
-		* \var Resize::ratio
-		* The factor by which the image must be rescaled.
-		*
-		* \var Resize::width
-		* If a width and height is provided the image will be rescaled to these values. The width to which the image must be rescaled.
-		*
-		* \var Resize::height
-		* If a width and height is provided the image will be rescaled to these values. The height to which the image must be rescaled.
-		*
-		* \brief The Resize filter will resize an image (downscale or upscale).
-		*/
+		 /**
+		 * \var Resize::ratio
+		 * The factor by which the image must be rescaled.
+		 *
+		 * \var Resize::width
+		 * If a width and height is provided the image will be rescaled to these values. The width to which the image must be rescaled.
+		 *
+		 * \var Resize::height
+		 * If a width and height is provided the image will be rescaled to these values. The height to which the image must be rescaled.
+		 *
+		 * \brief The Resize filter will resize an image (downscale or upscale).
+		 */
 		class Resize : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
@@ -65,11 +65,9 @@ namespace filter
 					{
 						if (myImage.empty())
 							continue;
-						cv::Mat imgWork;
+						cv::Mat & imgWork = myImage;
 						if (!inoutData)
 							imgWork = myImage.clone();
-						else
-							imgWork = myImage;
 
 						if (width == 0 || height == 0)
 						{
@@ -100,8 +98,6 @@ namespace filter
 						PUSH_DATA(images);
 					}
 				}
-
-
 				return OK;
 			}
 		};
