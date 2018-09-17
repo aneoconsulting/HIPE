@@ -9,16 +9,24 @@ if (MSVC)
 		if (NOT ${HIPE_EXTERNAL} STREQUAL "")
 			message(STATUS "Use prebuilt and HIPE_EXTERNAL EXIST")
 			if (NOT EXISTS "${HIPE_EXTERNAL}" OR ${FORCE_USE_PREBUILT_DEPENDENCIES})
-				message(STATUS "Download prebuilt HIPE EXTERNAL dependencies...")
+				message(STATUS "Check if prebuilt HIPE EXTERNAL dependencies exists")
 				file(MAKE_DIRECTORY "${HIPE_EXTERNAL}")
-				#file(MAKE_DIRECTORY "${HIPE_EXTERNAL}/win64")
-				#file(MAKE_DIRECTORY "${HIPE_EXTERNAL}/win64")
-				FILE(DOWNLOAD "ftp://dupihome.ddns.net/HipeExternal/${FILE_HIPE_EXTERNAL_DEPS}" "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
-				#FILE(DOWNLOAD "ftp://192.168.1.107/HipeExternal/${FILE_HIPE_EXTERNAL_DEPS}" "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
-				USERPWD "public:guest01"
-				EXPECTED_MD5 ${DEPENDENCIES_SHA}
-				SHOW_PROGRESS
-				LOG print_download)
+				
+				file(MAKE_DIRECTORY "${HIPE_EXTERNAL}/download")
+				SET(_file_download_md5 "0")
+				if (EXISTS "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}")
+					FILE(MD5 "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}" _file_download_md5)
+				endif()
+				if(NOT "${_file_download_md5}" STREQUAL "${DEPENDENCIES_SHA}")
+					message(STATUS "Need to download prebuilt HIPE EXTERNAL dependencies...")
+					FILE(DOWNLOAD "ftp://dupihome.ddns.net/HipeExternal/${FILE_HIPE_EXTERNAL_DEPS}" "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
+					#FILE(DOWNLOAD "ftp://192.168.1.107/HipeExternal/${FILE_HIPE_EXTERNAL_DEPS}" "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}"
+					USERPWD "public:guest01"
+					EXPECTED_MD5 ${DEPENDENCIES_SHA}
+					SHOW_PROGRESS
+					LOG print_download)
+				endif()
+				
 				FILE(MD5 "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}" _file_sha)
 				if(NOT "${_file_sha}" STREQUAL "${DEPENDENCIES_SHA}")
 					message(STATUS "LOG FAILURE ${print_download}")
