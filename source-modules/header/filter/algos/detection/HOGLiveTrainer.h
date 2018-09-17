@@ -40,8 +40,8 @@ namespace filter
 				viewport_offset_y = 175;
 				fhog_epsilon = 0.01;
 				training_threads = 2;
-
-				startFilterThread();
+				_isThreadRunning = false;
+				
 			}
 
 			REGISTER_P(int, skip_frames);

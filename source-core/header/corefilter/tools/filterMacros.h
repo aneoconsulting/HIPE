@@ -39,9 +39,9 @@
 	\
 	typedef ProxyFunctor<Constructor> _proxyFunctor; \
 	typedef Constructor mytype;\
-	Constructor(filter::_protectPreInit unused) : IFilter(#Constructor)\
+	Constructor(filter::_protectPreInit unused) : filter::IFilter(#Constructor)\
 	{}\
-	Constructor params : IFilter(#Constructor)
+	Constructor params : filter::IFilter(#Constructor)
 
 
 #define EXPAND_VAR(elem) elem

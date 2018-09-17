@@ -1,0 +1,62 @@
+{
+	"name": "DDU-AgeEstimation",
+	"filters": [
+		{
+			"Resize": {
+				"name": "Resize",
+				"height": "0",
+				"inoutData": "true",
+				"ratio": "1",
+				"width": "0",
+				"need": [
+					"WebRTCVideoDataSource"
+				]
+			}
+		},
+		{
+			"ObjectRecognitionYolo": {
+				"name": "ObjectRecognitionYolo",
+				"cfg_filename": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Yolo Detection\\yolo.cfg",
+				"confidenceThreshold": "0.5",
+				"names_filename": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Yolo Detection\\coco.names",
+				"skip_frame": "4",
+				"wait_ms": "30",
+				"weight_filename": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Yolo Detection\\yolo.weights",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter",
+				"asReference": "true",
+				"need": [
+					"Resize",
+					"ObjectRecognitionYolo"
+				]
+			}
+		},
+		{
+			"WebRTCSender": {
+				"name": "WebRTCSender",
+				"need": [
+					"OverlayFilter"
+				],
+				"port": "9002"
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"datasource": [
+			{
+				"WebRTCVideoDataSource": {
+					"loop": false,
+					"port": "9001",
+					"name": "WebRTCVideoDataSource"
+				}
+			}
+		]
+	}
+}

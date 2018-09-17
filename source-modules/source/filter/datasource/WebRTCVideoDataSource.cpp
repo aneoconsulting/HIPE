@@ -1,0 +1,119 @@
+//%HIPE_LICENSE%
+
+#ifdef USE_WEBRTC
+#include <datasource/WebRTCVideoDataSource.h>
+#include <WebRTCCapturer.h>
+#include <glog/logging.h>
+
+filter::datasource::WebRTCVideoDataSource::WebRTCVideoDataSource(const WebRTCVideoDataSource& left)
+{
+	this->a_isActive.exchange(left.a_isActive);
+	this->atomic_state.exchange(left.atomic_state);
+	this->port = left.port;
+	this->sourceType = left.sourceType;
+	this->loop = left.loop;
+	this->eSourceType = left.eSourceType;
+	this->video = nullptr;
+	this->task = nullptr;
+}
+
+void filter::datasource::WebRTCVideoDataSource::captureTasks()
+{
+	task = new std::thread([this]()
+	{
+		a_isActive.exchange(true);
+		while (this->a_isActive)
+		{
+			cv::Mat res;
+			int retry = 150;
+			while (res.empty()) // Timeout to capture image
+			{
+				res = video->Capture();
+				if (!this->a_isActive)
+				{
+					stack.clear();
+					stack.push(res);
+					break;
+				}
+
+				if (retry <= 0)
+				{
+					LOG(WARNING) << "Timeout to capture video from WebRTC SOURCE. Stop Capture task";
+					stack.clear();
+					stack.push(res);
+					break;
+				}
+				retry--;
+			}
+			if (res.channels() == 4)
+			{
+				cv::cvtColor(res, res, CV_BGRA2BGR);
+			}
+			stack.clear();
+			stack.push(res);
+		}
+		LOG(INFO) << "End of Capture task";
+	});
+}
+
+HipeStatus filter::datasource::WebRTCVideoDataSource::process()
+{
+	data::ImageData img;
+	cv::Mat res;
+
+	if (stack.trypop_until(res, 30000))
+	{
+		img.getMat() = res;
+	}
+	if (res.empty())
+		return END_OF_STREAM;
+
+	PUSH_DATA(img);
+
+	return OK;
+}
+
+void filter::datasource::WebRTCVideoDataSource::dispose()
+{
+	a_isActive = false;
+	if (task != nullptr && task->joinable())
+	{
+		task->join();
+		delete task;
+		task = nullptr;
+	}
+
+	if (video != nullptr)
+	{
+		video->stopWebRTCServer();
+		delete video;
+		video = nullptr;
+	}
+
+}
+
+HipeStatus filter::datasource::WebRTCVideoDataSource::intialize()
+{
+	return OK;
+}
+
+void filter::datasource::WebRTCVideoDataSource::onLoad(void* data)
+{
+	if (!a_isActive.exchange(true))
+	{
+		const char* workdir = "http-root/certificats";
+		std::stringstream path;
+
+		path << GetCurrentWorkingDir() << PathSeparator() << workdir;
+
+		if (!isDirExist(path.str()))
+		{
+			throw HipeException("Cannot find the working dir for webrtc");
+		}
+		const char* c_str = path.str().c_str();
+		video = new WebRTCCapturer(port, c_str);
+		video->startWebRTCServer();
+		captureTasks();
+	}
+}
+#endif // USE_WEBRTC

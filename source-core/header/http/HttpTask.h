@@ -6,17 +6,18 @@
 namespace http {
 	class HttpTask
 	{
-		std::shared_ptr<Response<http::HTTP>> & _response;
+		std::shared_ptr<RawResponse> & _response;
 
-		std::shared_ptr<Request<http::HTTP>> & _request;
+		std::shared_ptr<RawRequest> & _request;
 
 	public:
-		static core::Logger logger;
 
-		HttpTask(std::shared_ptr<Response<http::HTTP>> & response, std::shared_ptr<http::Request<http::HTTP>> & request) :
+		HttpTask(std::shared_ptr<RawResponse> & response, std::shared_ptr<http::RawRequest> & request) :
 			_response(response), _request(request)
 		{};
 
+		static void readFileContent(const std::string& local_path, std::stringstream& data_response);
+		void RenderHtml() const;
 		void runTask() const;
 
 	};

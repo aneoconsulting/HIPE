@@ -1,16 +1,10 @@
 
 #pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
-#include "algos/streaming/SerialNetDataSender.h"
 #include <boost/asio/ip/address.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <chrono>
 #include <boost/asio/connect.hpp>
-#include <boost/asio/high_resolution_timer.hpp>
-#include <boost/asio/write.hpp>
-#include <boost/asio/streambuf.hpp>
-#include <boost/asio/read.hpp>
 #pragma warning(pop)
 
 
@@ -18,6 +12,7 @@
 #include <algos/streaming/PushGraphToNode.h>
 #include <algos/streaming/PopGraphToNode.h>
 #include <data/FileVideoInput.h>
+#include <corefilter/tools/cloud/SerialNetDataServer.h>
 #include <http/HttpClient.h>
 #include <regex>
 #include <stack>
@@ -294,8 +289,9 @@ void filter::algos::PushGraphToNode::startSerialNetServer()
 			std::cout << "Local adress are :" << local_adress << std::endl;
 		}
 
-		sender = SerialNetDataSender(3100, 1); // Warning need to verify the port to use when multiple slave are requested
-		sender.startServer(3100);
+		sender = SerialNetDataServer(3100, 1); // Warning need to verify the port to use when multiple slave are requested
+		SerialNetDataServer::ptr_func func = &SerialNetDataServer::ImagesHandler;
+		sender.startServer(3100, std::bind(func, &sender));
 
 
 		//send graph to the node via UDP protocol to host_or_ip

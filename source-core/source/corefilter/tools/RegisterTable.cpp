@@ -19,6 +19,53 @@ extern "C"
 	}
 }
 
+const std::string RegisterTable::getDefaultValue(std::string className, std::string fieldName)
+{
+	filter::Model* ret = newObjectInstance(className);
+
+
+	json::JsonTree jsonNode;
+
+	getVariable(jsonNode, ret, fieldName);
+	std::string value = jsonNode.get<std::string>(fieldName);
+
+	reverse.erase(ret);
+	delete ret;
+
+	return value;
+}
+
+void RegisterTable::getVariable(json::JsonTree& jsonNode, filter::Model* filter, std::string fieldName)
+{
+	if (setterTable.find(filter->getConstructorName()) == setterTable.end())
+	{
+		throw HipeException("Cannot get Variable by instance with type " + filter->getConstructorName());
+	}
+
+
+	invoke(filter, "get_json_" + fieldName, jsonNode);
+}
+
+filter::Model* RegisterTable::newObjectInstance(std::string className, bool managed)
+{
+	std::function<filter::Model*()> function = functionTable[className];
+
+	if (!function)
+	{
+		std::stringstream build_string;
+		build_string << "the constructor of class " << className << " doesn't exist (" << TO_STR(FILE_BASENAME) << ":" << __LINE__ << ")";
+
+		throw HipeException(build_string.str());
+	}
+
+	filter::Model* ret = functionTable[className]();
+
+	//if (managed)
+	reverse[ret] = className;
+
+	return ret;
+}
+
 void* newFilter(std::string className)
 {
 	return RegisterTable::getInstance().newObjectInstance(className);

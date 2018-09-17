@@ -3,10 +3,11 @@
 
 
 #pragma once
-#include <corefilter/tools/RegisterTools.hpp>
 #include <corefilter/IFilter.h>
+#include <corefilter/tools/RegisterTools.hpp>
 #include <corefilter/tools/RegisterTable.h>
 #include <core/HipeException.h>
+#include <core/HipeStatus.h>
 #include <coredata/ConnexData.h>
 #include <coredata/NoneData.h>
 #include <corefilter/filter_export.h>
@@ -21,6 +22,8 @@ namespace filter {
 		{
 			//data::ConnexInput<data::Data> _connexData;
 			CONNECTOR_IN(data::NoneData);
+
+			SET_NAMESPACE("Example")
 
 			REGISTER(EntryPoint, ())
 			{
@@ -39,7 +42,7 @@ namespace filter {
 				//		_connexData.pop();
 				//	}
 				//}
-				return HipeStatus::OK;
+				return OK;
 			}
 
 			/**
@@ -65,7 +68,7 @@ namespace filter {
 			}
 		};
 
-		ADD_CLASS(RootFilter, unused);
+		ADD_CLASS(EntryPoint, unused);
 
 	}
 }

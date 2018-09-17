@@ -8,20 +8,20 @@ PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR_WIN@\bin\Deb
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommand>@Hipecore_DIR_WIN@\bin\Debug\hipe_server.exe</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments>-p 9090 -m "@CMAKE_BINARY_DIR_WIN@\target\Debug\filter.dll"</LocalDebuggerCommandArguments>
-    <LocalDebuggerWorkingDirectory>@Hipecore_DIR_WIN@\bin\Debug</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>@CMAKE_BINARY_DIR_WIN@\..\..\workingdir</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerCommand>@Hipecore_DIR_WIN@\bin\Release\hipe_server.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommandArguments>-p 9090 -m "@CMAKE_BINARY_DIR_WIN@\target\Release\filter.dll"</LocalDebuggerCommandArguments>
-    <LocalDebuggerWorkingDirectory>@Hipecore_DIR_WIN@\bin\Release</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>@CMAKE_BINARY_DIR_WIN@\..\..\workingdir</LocalDebuggerWorkingDirectory>
     <LocalDebuggerEnvironment>GST_PLUGIN_SYSTEM_PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64
 PYTHONPATH=@Hipecore_DIR_WIN@\bin\Release;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14\Lib\site-packages
 PATH=@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@Hipecore_DIR_WIN@\bin\Release;@CMAKE_INSTALL_PREFIX_WIN@\bin\Release;@HIPE_EXTERNAL_DIR_WIN@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR_WIN@\Python2.7.14;%PATH%</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <LocalDebuggerCommand>@Hipecore_DIR_WIN@\bin\Release\hipe_server.exe</LocalDebuggerCommand>
-    <LocalDebuggerWorkingDirectory>@Hipecore_DIR_WIN@\bin\Release</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>@CMAKE_BINARY_DIR_WIN@\..\..\workingdir</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommandArguments>-p 9090 -m "@CMAKE_BINARY_DIR_WIN@\target\RelWithDebInfo\filter.dll"</LocalDebuggerCommandArguments>
     <LocalDebuggerEnvironment>GST_DEBUG=*:2

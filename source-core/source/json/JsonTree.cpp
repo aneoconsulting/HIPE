@@ -195,6 +195,11 @@ namespace json
 	{
 		return _jsonPtree->get_value<double>();
 	}
+
+	template <> char JsonTree::get_value()
+	{
+		return _jsonPtree->get_value<char>();
+	}
 	
 	template <>
 	std::string JsonTree::get(std::string path) const
@@ -215,16 +220,23 @@ namespace json
 	}
 
 	template <>
+	float JsonTree::get<float>(std::string path) const
+	{
+		return getFloat(path);
+	}
+
+	template <>
 	double JsonTree::get<double>(std::string path) const
 	{
 		return getDouble(path);
 	}
 
 	template <>
-	float JsonTree::get<float>(std::string path) const
+	char JsonTree::get<char>(std::string path) const
 	{
-		return getFloat(path);
+		return _jsonPtree->get<char>(path);
 	}
+	
 
 	template <>	void JsonTree::put<int>(std::string key, int value)
 	{
@@ -255,5 +267,11 @@ namespace json
 	{
 		_jsonPtree->put(key, value);
 		
+	}
+
+	template <>	void JsonTree::put<char>(std::string key, char value)
+	{
+		_jsonPtree->put(key, value);
+
 	}
 }

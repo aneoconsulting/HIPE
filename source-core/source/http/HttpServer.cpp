@@ -4,8 +4,6 @@
 
 namespace http
 {
-	core::Logger HttpServer::logger = core::setClassNameAttribute("HttpServer");
-
 	void Server<HTTP>::accept() {
 		//Create new socket for this connection
 		//Shared_ptr is used to pass temporary objects to the asynchronous functions
@@ -31,8 +29,8 @@ namespace http
 	{
 		server.config.num_threads = 1;
 		server.config.port = port;
-		server.logger << "Waiting for Json request ...";
-		server.resource["^/json$"]["POST"] = [](std::shared_ptr<Response<http::HTTP>> response, std::shared_ptr<http::Request<http::HTTP>> request) {
+		LOG(INFO) << "Waiting for Json request ...";
+		server.resource["^/json$"]["POST"] = [](std::shared_ptr<RawResponse> response, std::shared_ptr<http::RawRequest> request) {
 			http::HttpTask task(response, request);
 			/*	thread work_thread([&response, &request] {
 
@@ -44,10 +42,32 @@ namespace http
 
 			task.runTask();
 		};
-		thread = server.run();
 
-		//server_thread.detach();
+		server.resource["^/$"]["GET"] = [](std::shared_ptr<RawResponse> response, std::shared_ptr<http::RawRequest> request) {
+			http::HttpTask task(response, request);
+			task.RenderHtml();
+		};
+		server.resource["^/[A-Za-z]*\.html$"]["GET"] = [](std::shared_ptr<RawResponse> response, std::shared_ptr<http::RawRequest> request) {
+			http::HttpTask task(response, request);
+			task.RenderHtml();
+		};
+		server.resource["^/css.*"]["GET"] = [](std::shared_ptr<RawResponse> response, std::shared_ptr<http::RawRequest> request) {
+			http::HttpTask task(response, request);
+			task.RenderHtml();
+		};
+		server.resource["^/js/.*\.js"]["GET"] = [](std::shared_ptr<RawResponse> response, std::shared_ptr<http::RawRequest> request) {
+			http::HttpTask task(response, request);
+			task.RenderHtml();
+		};
+		server.resource["^/images/.*"]["GET"] = [](std::shared_ptr<RawResponse> response, std::shared_ptr<http::RawRequest> request) {
+			http::HttpTask task(response, request);
+			task.RenderHtml();
+		};
+
+		thread = server.run();
 
 		return port;
 	}
+
+	
 }

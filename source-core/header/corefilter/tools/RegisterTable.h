@@ -169,18 +169,10 @@ public:
 		return _namespace;
 	}
 
+	const std::string getDefaultValue(std::string className, std::string fieldName);
 
-	void getVariable(json::JsonTree & jsonNode, filter::Model *filter, std::string fieldName)
-	{
-		if (setterTable.find(filter->getConstructorName()) == setterTable.end())
-		{
-			throw HipeException("Cannot get Variable by instance with type " + filter->getConstructorName());
-		}
-		
 
-		invoke(filter, "get_json_" + fieldName, jsonNode);
-
-	}
+	void getVariable(json::JsonTree& jsonNode, filter::Model* filter, std::string fieldName);
 
 	template <typename...Args>
 	void invoke(filter::Model* instance, std::string functionName, Args ...args)
@@ -198,26 +190,7 @@ public:
 			throw HipeException("TODO : Don't know how to manage getter method");
 	}
 
-	filter::Model* newObjectInstance(std::string className, bool managed = true)
-	{
-		std::function<filter::Model*()> function = functionTable[className];
-
-		if (!function)
-		{
-			std::stringstream build_string;
-			build_string << "the constructor of class " << className << " doesn't exist (" << TO_STR(FILE_BASENAME) << ":" << __LINE__ << ")";
-
-			throw HipeException(build_string.str());
-		}
-
-		filter::Model* ret = functionTable[className]();
-
-		//if (managed)
-		reverse[ret] = className;
-
-		return ret;
-	}
-
+	filter::Model* newObjectInstance(std::string className, bool managed = true);
 };
 
 
@@ -228,6 +201,8 @@ FILTER_EXPORT const std::vector<std::string> getTypes(std::string className);
 FILTER_EXPORT const std::vector<std::string> getParameterNames(std::string className);
 
 FILTER_EXPORT filter::Model* copyFilter(filter::Model* filter);
+
+
 
 FILTER_EXPORT filter::Model* copyAlgorithms(filter::Model* root);
 

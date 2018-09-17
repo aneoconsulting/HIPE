@@ -25,7 +25,7 @@ namespace filter
 
 				skip_frames = 4;
 
-				startFilterThread();
+				_isThreadRunning = false;
 			}
 
 			REGISTER_P(int, skip_frames);

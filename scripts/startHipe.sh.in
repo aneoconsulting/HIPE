@@ -3,13 +3,15 @@
 cd $(dirname $0)
 local_dir=$(pwd -P)
 
-#set GST_PLUGIN_PATH=@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\lib\gstreamer-1.0
 export LD_LIBRARY_PATH=${local_dir}/:${local_dir}/../../lib/@BUILD_CONFIG@:${LD_LIBRARY_PATH}
-#export LD_LIBRARY_PATH=@HIPE_EXTERNAL_DIR@/ffmpeg/bin:@HIPE_EXTERNAL_DIR@/boost_1_62_0/lib64-msvc-14.0:@HIPE_EXTERNAL_DIR@/opencv-3.4/lib:@HIPE_EXTERNAL_DIR@/gstreamer/1.0/x86_64/bin:@HIPE_EXTERNAL_DIR@/liblept/lib:${LD_LIBRARY_PATH}
-#export TESSDATA_PREFIX="~/Dropbox (ANEO)/HIPE_GROUP/Demos/ID Plates/data/Tesseract"
+
 
 
 export LD_LIBRARY_PATH=$(readlink -f -n ../../../hipe-modules/bin/@BUILD_CONFIG@/):$(readlink -f -n ../../../hipe-modules/lib/@BUILD_CONFIG@/):${LD_LIBRARY_PATH}
 echo "LD_SEARCH = $LD_LIBRARY_PATH"
-./hipe_server.bin -p 9090 -m "$(readlink -f -n ../../../hipe-modules/lib/@BUILD_CONFIG@)/libfilter.so"
+export PATH=${local_dir}:${PATH}
+export PATH=${local_dir}/../../../hipe-modules/lib/@BUILD_CONFIG@)/:${PATH}
+cd "${local_dir}/../../../workingdir"
+
+./hipe_server.bin -p 9090 -m "libfilter.so"
 

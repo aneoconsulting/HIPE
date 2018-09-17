@@ -10,7 +10,7 @@
 #include <data/FileVideoInput.h>
 
 #include <data/ImageData.h>
-#include "algos/streaming/SerialNetDataSender.h"
+#include <corefilter/tools/cloud/SerialNetDataServer.h>
 #include <boost/asio/connect.hpp>
 
 

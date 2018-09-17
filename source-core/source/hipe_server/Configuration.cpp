@@ -13,8 +13,6 @@ namespace bpo = boost::program_options;
 
 namespace hipe_server
 {
-	core::Logger Configuration::configLogger = core::setClassNameAttribute("Configuration");
-
 	ConfigurationParameters::ConfigurationParameters()
 	{
 		setDefaultValues();
@@ -99,14 +97,14 @@ namespace hipe_server
 		{
 			if (! isFileExist(this->configFilePath))
 			{
-				this->configLogger << "Couldn't find configuration file.";
+				LOG(INFO) << "Couldn't find configuration file.";
 				return 1;
 			}
 			boost::property_tree::read_json(this->configFilePath, configPtree);
 		}
 		catch (const std::exception& e)
 		{
-			this->configLogger << "Couldn't find configuration file.";
+			LOG(INFO) << "Couldn't find configuration file.";
 			return 1;
 		}
 
@@ -128,7 +126,7 @@ namespace hipe_server
 
 	void Configuration::displayConfig() const
 	{
-		configLogger << "port set to " + std::to_string(this->configuration.port);
+		LOG(INFO) << "port set to " + std::to_string(this->configuration.port);
 	}
 
 

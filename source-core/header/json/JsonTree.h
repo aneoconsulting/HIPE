@@ -123,35 +123,41 @@ namespace json
 	template <> bool JsonTree::get_value();
 	template <> float JsonTree::get_value();
 	template <> double JsonTree::get_value();
+	template <> char JsonTree::get_value();
 
 	template <> int JsonTree::get<int>(std::string path) const;
 	template <> std::string JsonTree::get<std::string>(std::string path) const;
 	template <> bool JsonTree::get<bool>(std::string path) const;
 	template <> float JsonTree::get<float>(std::string path) const;
 	template <> double JsonTree::get<double>(std::string path) const;
+	template <> char JsonTree::get<char>(std::string path) const;
 
 	template <>	void JsonTree::put<int>(std::string key, int value);
 	template <>	void JsonTree::put<std::string>(std::string key, std::string value);
 	template <>	void JsonTree::put<bool>(std::string key, bool value);
 	template <>	void JsonTree::put<float>(std::string key, float value);
 	template <>	void JsonTree::put<double>(std::string key, double value);
+	template <>	void JsonTree::put<char>(std::string key, char value);
 	
 	JSON_EXTERN template JSON_EXPORT int JsonTree::get_value<int>();
 	JSON_EXTERN template JSON_EXPORT std::string JsonTree::get_value<std::string>();
 	JSON_EXTERN template JSON_EXPORT bool JsonTree::get_value<bool>();
 	JSON_EXTERN template JSON_EXPORT double JsonTree::get_value<double>();
 	JSON_EXTERN template JSON_EXPORT float JsonTree::get_value<float>();
+	JSON_EXTERN template JSON_EXPORT char JsonTree::get_value<char>();
 	
 	JSON_EXTERN template JSON_EXPORT int JsonTree::get<int>(std::string path) const;
 	JSON_EXTERN template JSON_EXPORT std::string JsonTree::get<std::string>(std::string path) const;
 	JSON_EXTERN template JSON_EXPORT bool JsonTree::get<bool>(std::string path) const;
-	JSON_EXTERN template JSON_EXPORT double JsonTree::get<double>(std::string path) const;
 	JSON_EXTERN template JSON_EXPORT float JsonTree::get<float>(std::string path) const;
+	JSON_EXTERN template JSON_EXPORT double JsonTree::get<double>(std::string path) const;
+	JSON_EXTERN template JSON_EXPORT char JsonTree::get<char>(std::string path) const;
 
 	JSON_EXTERN template JSON_EXPORT void JsonTree::put<int>(std::string key, int value);
 	JSON_EXTERN template JSON_EXPORT void JsonTree::put<std::string>(std::string key, std::string value);
 	JSON_EXTERN template JSON_EXPORT void JsonTree::put<bool>(std::string key, bool value);
 	JSON_EXTERN template JSON_EXPORT void JsonTree::put<float>(std::string key, float value);
 	JSON_EXTERN template JSON_EXPORT void JsonTree::put<double>(std::string key, double value);
+	JSON_EXTERN template JSON_EXPORT void JsonTree::put<char>(std::string key, char value);
 
 }

@@ -5,15 +5,12 @@
 #include <corefilter/IFilter.h>
 
 #include <core/HipeStatus.h>
+#include <corefilter/tools/cloud/SerialNetDataServer.h>
 
 #include <data/ImageData.h>
 
 #pragma warning(push, 0)
 #include <opencv2/imgproc.hpp>
-#include <opencv2/photo.hpp>	
-#include "data/VideoData.h"
-#include "SerialNetDataSender.h"
-
 #pragma warning(pop)
 
 namespace data {
@@ -48,7 +45,7 @@ namespace filter
 			std::atomic<bool> atomic_state;
 
 			std::atomic<bool> a_isActive;
-			SerialNetDataSender sender;
+			SerialNetDataServer sender;
 
 			REGISTER_P(int, _debug);
 

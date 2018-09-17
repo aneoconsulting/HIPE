@@ -1,23 +1,14 @@
+//@HIPE_LICENSE@
+
+#include <regex>
 #include <algos/streaming/SerialNetSlaveSender.h>
 #include <data/FileVideoInput.h>
 #include <http/HttpClient.h>
-#include <regex>
-#include <stack>
-
+#include <corefilter/tools/cloud/SerialNetDataServer.h>
 #pragma warning(push, 0)
-#include <boost/property_tree/ptree.hpp>
-#include "algos/streaming/SerialNetDataSender.h"
-#include <boost/asio/ip/address.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/ip/tcp.hpp>
-#include <chrono>
-#include <boost/asio/connect.hpp>
-#include <boost/asio/high_resolution_timer.hpp>
-#include <boost/asio/write.hpp>
-#include <boost/asio/streambuf.hpp>
-#include <boost/asio/read.hpp>
-#pragma warning(pop)
 
+
+#pragma warning(pop)
 
 void filter::algos::SerialNetSlaveSender::startSerialNetServer()
 {
@@ -54,8 +45,10 @@ void filter::algos::SerialNetSlaveSender::startSerialNetServer()
 		}
 
 
-		sender = SerialNetDataSender(target_port, 1); // Warning need to verify the port to use when multiple slave are requested
-		sender.startServer(target_port);
+		sender = SerialNetDataServer(target_port, 1); // Warning need to verify the port to use when multiple slave are requested
+	
+		SerialNetDataServer::ptr_func func = &SerialNetDataServer::ImagesHandler;
+		sender.startServer(target_port, std::bind(func, &sender));
 
 
 
@@ -68,7 +61,8 @@ HipeStatus filter::algos::SerialNetSlaveSender::process()
 	{
 		data::ImageData value = _connexData.pop();
 		//Initialisation Create Json graph from here to the next PopGraph node
-	
+		if (value.This_const().getType() != data::IMGF)
+			continue;
 
 		if (sender.isActive())
 		//Serialize data and send it

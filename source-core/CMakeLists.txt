@@ -28,7 +28,6 @@ message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 option(INSTALL_SOURCE "Install source for future developpement" ON)
 message(STATUS "INSTALL_SOURCE: ${INSTALL_SOURCE}")
 
-
 # Configure common settings.
 include("${CMAKE_SOURCE_DIR}/cmake/common_config.cmake")
 
@@ -44,6 +43,8 @@ include(InstallRequiredSystemLibraries)
 
 endif(WIN32)
 
+set(WITH_GFLAGS ON CACHE BOOL "Use GFlags libraries." FORCE)
+set(WITH_GLOG ON CACHE BOOL "Use GLOG libraries." FORCE)
 
 #controls where to build the executables after "make"
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
@@ -91,6 +92,8 @@ if (${INSTALL_SOURCE})
 	install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake" COMPONENT sources)
 endif()
 
+##Install working directory
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/../workingdir" DESTINATION "./" COMPONENT userspace)
 
 set(CPACK_PACKAGE_NAME "Hipe-core-installer")
 set(CPACK_PACKAGE_VENDOR "Damien DUBUC (ANEO)")
@@ -106,7 +109,10 @@ set(CPACK_COMPONENTS_ALL applications library headers)
 
 if (${INSTALL_SOURCE})
 	set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} sources)
+	set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} sources)
 endif()
+
+set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} userspace)
 
 set(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
 set(CPACK_COMPONENT_APPLICATIONS_GROUP "")

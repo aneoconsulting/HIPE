@@ -7,6 +7,11 @@
 #include <corefilter/tools/RegisterTable.h>
 #include <iostream>
 #include <corefilter/filter_export.h>
+#include <core/Logger.h>
+
+#include <glog/stl_logging.h>
+
+#include <list>
 
 extern "C"
 {
@@ -20,12 +25,15 @@ extern "C"
 ENTRYPOINT void load()
 {
 	RegisterTable & reg = RegisterTable::getInstance();
-	std::cout << "list of types registered : " << std::endl;
 	
+	std::list<std::string> x;
+
 	for (auto &name : reg.getTypeNames())
 	{
-		std::cout << name << std::endl;
+		x.push_back(name);
+		/*std::cout << name << std::endl;*/
 	}
+	LOG(INFO) << "list of types registered : " << x;
 }
 
 #ifdef WIN32

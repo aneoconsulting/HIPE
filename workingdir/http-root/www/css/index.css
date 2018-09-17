@@ -1,0 +1,82 @@
+#selfView {
+  width: 320px;
+  height: 240px;
+}
+
+#remoteView {
+}
+.table {
+  display: table-cell;
+  border: solid;
+  border-width: 0;
+  padding: 10px;
+}
+
+.emoji {
+  font-family: "Segoe UI Emoji";
+  font-size: 1.5em;
+}
+
+.start + label:before {
+  background: #DEDEDE;
+  color: #000000;
+  content: "\25B6";
+  font-size: 2em;
+}
+.start + label:after {
+  background: #73CAFF;
+  color: #FFFFFF;
+  content: "\23F8";
+  font-size: 2em;
+}
+.isKaicho + label:before {
+  content: "no";
+}
+.isKaicho + label:after {
+  content: "yes";
+}
+.useEye + label:before {
+  content: "\1F441";
+}
+.useEye + label:after {
+  content: "\1F441";
+}
+.useMustache + label:before {
+  content: "\1F453";
+}
+.useMustache + label:after {
+  content: "\1F453";
+}
+
+.onoff {
+	display: none;
+}
+.onoff + label {
+}
+.onoff + label:before,
+.onoff + label:after {
+  display: inline-block;
+  padding: .2em .5em;
+  width: 2em;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+}
+.onoff + label:before {
+  display: inline;
+  background: #DEDEDE;
+  color: #000000;
+  border-top-left-radius: .3em;
+  border-bottom-left-radius: .3em;
+}
+.onoff + label:after {
+  display: none;
+}
+.onoff:checked + label:before {
+  display: none;
+}
+.onoff:checked + label:after {
+  display: inline;
+  background: #73CAFF;
+  color: #FFFFFF;
+}

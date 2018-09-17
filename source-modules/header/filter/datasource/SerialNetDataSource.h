@@ -1,5 +1,6 @@
 //@HIPE_LICENSE@
 #pragma once
+#include <mutex>
 #include <coredata/NoneData.h>
 #include <coredata/IODataType.h>
 
@@ -12,12 +13,13 @@
 #include <corefilter/IFilter.h>
 #include <corefilter/filter_export.h>
 
-#include <string>
-#include <data/FileImageData.h>
-#include <data/VideoData.h>
+
 #include <corefilter/datasource/DataSource.h>
-#include "algos/streaming/SerialNetDataSender.h"
-#include <mutex>
+#include <corefilter/tools/cloud/SerialNetDataServer.h>
+
+#include <corefilter/tools/cloud/SerialNetDataClient.h>
+
+#include <boost/asio/ip/tcp.hpp>
 
 
 struct ClientHipeService;
@@ -38,8 +40,6 @@ namespace filter
 			REGISTER(SerialNetDataSource, ()), _connexData(data::INDATA)
 			{
 				eSourceType = data::IODataType::VIDF;
-			
-				a_isActive = false;
 			}
 
 			REGISTER_P(int, port);
@@ -49,16 +49,13 @@ namespace filter
 
 			data::IODataType eSourceType;
 
-			std::shared_ptr<HipeConnection> connector;
-			std::shared_ptr<boost::asio::io_service> service;
-		public:
-			core::queue::ConcurrentQueue<data::ImageData> imagesStack;
-			std::mutex socket_mutex;
+			SerialNetDataClient serialNetDataClient;
 
+
+		public:
+			
 			SerialNetDataSource(const SerialNetDataSource &left)
 			{
-				this->a_isActive.exchange(left.a_isActive);
-				
 				this->port = left.port;
 				this->sourceType = left.sourceType;
 				this->eSourceType = left.eSourceType;
@@ -74,23 +71,6 @@ namespace filter
 				eSourceType = source_type;
 			}
 	
-			std::atomic<bool> a_isActive;
-
-			inline std::atomic<bool> & isActive()
-			{
-				return a_isActive;
-			}
-
-			void setactive()
-			{
-				a_isActive.exchange(true);
-			}
-
-			std::shared_ptr<boost::asio::deadline_timer> get_timeout_timer(int nb_seconds);
-
-
-			void Connect();
-			
 			HipeStatus process();
 
 			/**

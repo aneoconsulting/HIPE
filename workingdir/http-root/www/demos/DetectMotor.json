@@ -1,0 +1,102 @@
+{
+	"name": "Demo Motor Detection v3",
+	"filters": [
+		{
+			"Resize": {
+				"name": "Resize",
+				"height": "0",
+				"inoutData": "true",
+				"ratio": "1",
+				"width": "0",
+				"need": [
+					"VideoDataSource"
+				]
+			}
+		},
+		{
+			"FactoryObjectDetect": {
+				"name": "FactoryObjectDetect_140",
+				"cfg_filename": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Yolo Detection\\yolo-obj.cfg",
+				"confidenceThreshold": "0.6",
+				"names_filename": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Yolo Detection\\yolo-obj.names",
+				"skip_frame": "0",
+				"wait_ms": "300",
+				"weight_filename": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Yolo Detection\\yolo-obj_1100.weights",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"FactoryObjectDetect": {
+				"name": "FactoryObjectDetect2",
+				"cfg_filename": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Yolo Detection\\yolo-mg21.cfg",
+				"confidenceThreshold": "0.3",
+				"names_filename": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Yolo Detection\\yolo-mg21.names",
+				"skip_frame": "0",
+				"wait_ms": "300",
+				"weight_filename": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\Yolo Detection\\yolo-mg21_2100.weights",
+				"need": [
+					"Resize"
+				],
+				"time": "true"
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter_85",
+				"asReference": "true",
+				"need": [
+					"FactoryObjectDetect2",
+					"Resize",
+					"FactoryObjectDetect_140"
+				]
+			}
+		},
+		{
+			"TextLoggerShow": {
+				"name": "TextLoggerShow_141",
+				"fontscale": "1.8",
+				"height": "720",
+				"width": "1024",
+				"need": [
+					"FactoryObjectDetect2",
+					"FactoryObjectDetect_140"
+				]
+			}
+		},
+		{
+			"ConcatToShow": {
+				"name": "ConcatToShow",
+				"height": "1080",
+				"nb_img_by_row": "1",
+				"width": "1280",
+				"need": [
+					"OverlayFilter_85",
+					"TextLoggerShow_141"
+				]
+			}
+		},
+		{
+			"WebRTCSender": {
+				"name": "WebRTCSender",
+				"port": "9002",
+				"need": [
+					"ConcatToShow"
+				]
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"datasource": [
+			{
+				"VideoDataSource": {
+					"loop": true,
+					"url": "C:\\workspace\\ANEO\\Project\\Poclain\\Data\\video\\0507_mg21_vue3.avi",
+					"name": "VideoDataSource"
+				}
+			}
+		]
+	}
+}

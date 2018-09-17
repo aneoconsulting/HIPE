@@ -13,12 +13,9 @@
 
 namespace http
 {
-	template <class socket_type>
-	class Request
+	class RawRequest
 	{
-
 	public:
-		//Based on http://www.boost.org/doc/libs/1_60_0/doc/html/unordered/hash_equality.html
 		class iequal_to
 		{
 		public:
@@ -28,6 +25,8 @@ namespace http
 			}
 		};
 
+	public:
+		//Based on http://www.boost.org/doc/libs/1_60_0/doc/html/unordered/hash_equality.html
 		class ihash
 		{
 		public:
@@ -49,11 +48,24 @@ namespace http
 
 		REGEX_NM::smatch path_match;
 
+	
+		boost::asio::streambuf streambuf;
+
+		RawRequest() : content(streambuf)
+		{
+			
+		}
+
+	};
+
+	template <class socket_type>
+	class Request : public RawRequest
+	{
 		std::string remote_endpoint_address;
 		unsigned short remote_endpoint_port;
 
 	public:
-		Request(const socket_type& socket) : content(streambuf)
+		Request(const socket_type& socket) 
 		{
 			try
 			{
@@ -65,6 +77,6 @@ namespace http
 			}
 		}
 
-		boost::asio::streambuf streambuf;
+		
 	};
 }

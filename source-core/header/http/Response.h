@@ -9,24 +9,35 @@
 
 namespace http
 {
-	template <class socket_type>
-	class Response : public std::ostream
+	class RawResponse : public std::ostream
 	{
-		
 	public:
 		boost::asio::streambuf streambuf;
 
-		std::shared_ptr<socket_type> socket;
-
-		
-		Response(const std::shared_ptr<socket_type>& socket) : std::ostream(&streambuf), socket(socket)
+		RawResponse() : std::ostream(&streambuf)
 		{
+			
 		}
 
-	public:
-		size_t size()
+		size_t size() const
 		{
 			return streambuf.size();
 		}
+
 	};
+
+	template <class socket_type>
+	class Response : public RawResponse
+	{
+	public:
+		std::shared_ptr<socket_type> socket;
+
+	
+		Response(const std::shared_ptr<socket_type>& socket) : socket(socket)
+		{
+			
+		}
+	};
+
+
 }

@@ -34,8 +34,6 @@ namespace hipe_server
 
 	private:
 		std::string configFilePath;
-		static core::Logger configLogger;
-
 
 	public:
 		Configuration();

@@ -8,14 +8,6 @@
 #include "core/HipeTimer.h"
 
 
-#pragma warning(push, 0)
-
-#pragma warning(pop)
-
-namespace data {
-	class ImageData;
-}
-
 namespace corefilter
 {
 	namespace tools

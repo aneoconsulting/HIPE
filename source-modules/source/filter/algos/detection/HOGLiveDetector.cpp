@@ -7,6 +7,11 @@
 
 HipeStatus filter::algos::HOGLiveDetector::process()
 {
+	if (!_isThreadRunning.exchange(true))
+	{
+		startFilterThread();
+	}
+
 	{
 		// Assert input data count is correct
 		if (_connexData.size() != 2)

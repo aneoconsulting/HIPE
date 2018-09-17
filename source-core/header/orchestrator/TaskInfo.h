@@ -5,6 +5,8 @@
 #include <boost/thread.hpp>
 #pragma warning(pop)
 #include <atomic>
+#include <exception>
+#include <stdexcept>
 
 namespace orchestrator
 {
@@ -14,6 +16,12 @@ namespace orchestrator
 		std::shared_ptr<boost::thread> task;
 		std::shared_ptr<filter::Model> filter;
 		std::shared_ptr<std::atomic<bool> > isActive;
+		std::shared_ptr<std::exception_ptr> texptr;
+
+		TaskInfo()
+		{
+			
+		}
 
 	};
 }

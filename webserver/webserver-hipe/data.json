@@ -1,0 +1,12 @@
+{
+  "SIMG": "path",
+  "LISTIO": "array",
+  "IMGF": "path",
+  "IMGB64": "base64",
+  "SEQIMG": "path",
+  "SEQIMGD": "path",
+  "VIDF": "path",
+  "SQR_CROP": "obj{crop, IMGF}",
+  "PATTERN": "obj{(SQR_CROP)desc}",
+  "STRMVID": "ip"
+}

@@ -1,0 +1,90 @@
+{
+	"name": "PythonFilterTest",
+	"filters": [
+		{
+			"Resize": {
+				"name": "Resize",
+				"height": "0",
+				"inoutData": "true",
+				"ratio": "2",
+				"width": "0",
+				"need": [
+					"WebRTCVideoDataSource"
+				]
+			}
+		},
+		{
+			"PythonFilter": {
+				"name": "PythonFilter",
+				"function_name": "process",
+				"script_path": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\tests\\data\\scriptPython\\testhipe.py",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"PythonFilter": {
+				"name": "PythonFilter_4",
+				"function_name": "process",
+				"script_path": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\tests\\data\\scriptPython\\testhipe.py",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"PythonFilter": {
+				"name": "PythonFilter_6",
+				"script_path": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\tests\\data\\scriptPython\\testhipe.py",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"PythonFilter": {
+				"name": "PythonFilter_7",
+				"script_path": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\tests\\data\\scriptPython\\testhipe.py",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"ConcatToShow": {
+				"name": "ConcatToShow",
+				"need": [
+					"PythonFilter",
+					"PythonFilter_4",
+					"PythonFilter_6",
+					"PythonFilter_7"
+				],
+				"height": "480",
+				"nb_img_by_row": "1",
+				"width": "640"
+			}
+		},
+		{
+			"WebRTCSender": {
+				"name": "WebRTCSender",
+				"need": [
+					"ConcatToShow"
+				],
+				"port": "9002"
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"datasource": [
+			{
+				"WebRTCVideoDataSource": {
+					"loop": false,
+					"port": "9001",
+					"name": "WebRTCVideoDataSource"
+				}
+			}
+		]
+	}
+}

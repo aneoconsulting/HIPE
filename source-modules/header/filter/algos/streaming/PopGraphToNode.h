@@ -1,4 +1,5 @@
 //@HIPE_LICENSE@
+#include <mutex>
 
 #include <corefilter/Model.h>
 #include <corefilter/tools/RegisterClass.h>
@@ -7,8 +8,8 @@
 #include <core/HipeStatus.h>
 
 #include <data/ImageData.h>
-#include "SerialNetDataSender.h"
-#include <mutex>
+
+#include <corefilter/tools/cloud/SerialNetDataServer.h>
 
 namespace data {
 	class ImageData;

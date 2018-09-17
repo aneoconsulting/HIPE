@@ -13,6 +13,7 @@
 #include <dlib/gui_widgets.h>
 #include <dlib/image_io.h>
 #include <data/SquareCrop.h>
+#include <glog/logging.h>
 
 
 namespace filter
@@ -80,7 +81,15 @@ namespace filter
 			try
 			{
 				dlib::array2d<unsigned char> img;
-				dlib::cv_image<dlib::bgr_pixel> cimg(image.getMat());
+				cv::Mat res;
+				if (image.getMat().channels() == 4)
+				{
+					cv::cvtColor(image.getMat(), res, CV_BGRA2BGR);
+				}
+				else
+					res = image.getMat();
+
+				dlib::cv_image<dlib::bgr_pixel> cimg(res);
 				dlib::assign_image(img, cimg);
 
 				std::vector<dlib::full_object_detection> local_shapes;
@@ -109,7 +118,7 @@ namespace filter
 						(long)(dets[j].right() / 2),
 						(long)(dets[j].bottom() / 2)
 					);
-					dlib::cv_image<dlib::bgr_pixel> cimg2(image.getMat());
+					dlib::cv_image<dlib::bgr_pixel> cimg2(res);
 					dlib::full_object_detection shape = pose_model(cimg2, r);
 					local_shapes.push_back(shape);
 					render_face(faces, shape);
@@ -119,8 +128,11 @@ namespace filter
 			}
 			catch (exception& e)
 			{
-				cout << "\nexception thrown!" << endl;
-				cout << e.what() << endl;
+
+				std::stringstream build;
+				build << "Fail to process with Dlib : " << e.what();
+				LOG(ERROR) << build.str() << endl;
+				throw HipeException(build.str());
 			}
 
 			return data::ShapeData();

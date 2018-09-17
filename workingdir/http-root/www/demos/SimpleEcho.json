@@ -1,0 +1,38 @@
+{
+	"name": "DDU : Stream Local Camera",
+	"filters": [
+		{
+			"Resize": {
+				"name": "Resize",
+				"height": "0",
+				"inoutData": "true",
+				"ratio": "1",
+				"width": "0",
+				"need": [
+					"WebRTCVideoDataSource"
+				]
+			}
+		},
+		{
+			"WebRTCSender": {
+				"name": "WebRTCSender",
+				"port": "9002",
+				"need": [
+					"Resize"
+				]
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"datasource": [
+			{
+				"WebRTCVideoDataSource": {
+					"loop": false,
+					"port": "9001",
+					"name": "WebRTCVideoDataSource"
+				}
+			}
+		]
+	}
+}

@@ -59,6 +59,31 @@ namespace filter
 			PyThreadState* _state;
 		};
 
+		// decode a Python exception into a string
+		std::string handle_pyerror()
+		{
+			using namespace boost::python;
+			using namespace boost;
+
+			PyObject *exc, *val, *tb;
+			object formatted_list, formatted;
+			PyErr_Fetch(&exc, &val, &tb);
+			handle<> hexc(exc), hval(allow_null(val)), htb(allow_null(tb));
+			object traceback(import("traceback"));
+			if (!tb)
+			{
+				object format_exception_only(traceback.attr("format_exception_only"));
+				formatted_list = format_exception_only(hexc, hval);
+			}
+			else
+			{
+				object format_exception(traceback.attr("format_exception"));
+				formatted_list = format_exception(hexc, hval, htb);
+			}
+			formatted = str("\n").join(formatted_list);
+			return extract<std::string>(formatted);
+		}
+
 		void PythonFilter::init_python(const std::string& path)
 		{
 			{
@@ -71,7 +96,6 @@ namespace filter
 				std::string datapython_path = corefilter::getLocalEnv().getValue("pydata_path");
 				pydata_path << "sys.path.append(r'" << datapython_path << "')";
 
-				
 
 				if (l_pythonContext.This().main.is_none())
 				{
@@ -90,27 +114,30 @@ namespace filter
 
 						boost::python::exec(python_path.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
 						boost::python::exec(python2_path.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
-						
+
 
 						l_pythonContext.This().script = boost::python::import(moduleName.c_str());
 						boost::python::import("__main__").attr("__dict__")[moduleName.c_str()] = l_pythonContext.This().script;
 
-						
+
 						//Reload module when the python has already loaded the module
-						
+
 
 						std::stringstream reload_command;
-						reload_command  << "reload(" << moduleName.c_str() << ")\n";
-						
-						
+						reload_command << "reload(" << moduleName.c_str() << ")\n";
+
+
 						boost::python::exec(reload_command.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
-						
+
 						l_pythonContext.This().global = l_pythonContext.This().script.attr("__dict__");
 					}
 					catch (boost::python::error_already_set& e)
 					{
 						if (PyErr_Occurred())
-							PyErr_Print();
+						{
+							std::string msg = handle_pyerror();
+							throw HipeException("Python error : " + msg);
+						}
 					}
 				}
 			}
@@ -120,6 +147,8 @@ namespace filter
 		HipeStatus PythonFilter::process()
 		{
 			std::vector<data::Data> input;
+
+			if (_connexData.empty()) return OK;
 
 			while (_connexData.size() != 0)
 			{
@@ -154,9 +183,9 @@ namespace filter
 					//foo(boost::python::ptr(o.get()));
 
 					boost::python::object result;
-					
+
 					result = foo(boost::python::ptr(o.get()));
-					
+
 
 					pyImageData* py_image_data = o.get();
 					//std::cout << "Nb rows " << py_image_data->get().rows << " Nb Cols :" << py_image_data->get().cols << std::endl;
@@ -168,8 +197,11 @@ namespace filter
 			catch (boost::python::error_already_set& e)
 			{
 				if (PyErr_Occurred())
-					PyErr_Print();
-				return OK;
+				{
+					std::string msg = handle_pyerror();
+					throw HipeException("Python error : " + msg);
+				}
+				return END_OF_STREAM;
 			}
 			PUSH_DATA(l_pythonContext);
 
@@ -189,18 +221,14 @@ namespace filter
 			if (!mPyUser)
 			{
 				_m_interp = static_cast<PyInterpreterState*>(interp);
-				
 			}
 
 			init_python(extractDirectoryName(script_path));
-			
 		}
 
 		void PythonFilter::onStart(void* pyThreadState)
 		{
-			
 			mPyUser = static_cast<PyExternalUser*>(pyThreadState);
 		}
-
 	}
 }

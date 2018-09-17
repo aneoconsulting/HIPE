@@ -4,6 +4,7 @@
 
 #pragma warning(push, 0)
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 #pragma warning(pop)
 
 
@@ -52,7 +53,14 @@ namespace filter
 			try
 			{
 				dlib::array2d<unsigned char> img;
-				dlib::cv_image<dlib::bgr_pixel> cimg(image.getMat());
+				cv::Mat res;
+				if (image.getMat().channels() == 4)
+				{
+					cv::cvtColor(image.getMat(), res, CV_BGRA2BGR);
+				}
+				else
+					res = image.getMat();
+				dlib::cv_image<dlib::bgr_pixel> cimg(res);
 				dlib::assign_image(img, cimg);
 
 

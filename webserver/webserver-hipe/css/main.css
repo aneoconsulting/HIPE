@@ -1,0 +1,232 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins");
+html, body {
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  padding: 0;
+  margin: 0; 
+  /*background:url(../images/Plandetravail2.png)!important;*/
+  background-color: rgb(38, 92, 115)!important;
+  }
+
+section {
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 50px 0;
+  position: relative; }
+  section .github-badge {
+    position: absolute;
+    top: 0;
+    left: 0; }
+  section h1 {
+    text-align: center;
+    margin-bottom: 70px; }
+  section .hv-container {
+    flex-grow: 1;
+    overflow: auto;
+    justify-content: center; }
+
+.basic-style {
+	}
+  .basic-style > h1 {
+    color: #ac2222; }
+
+p.simple-card {
+  margin: 0;
+  background-color: #fff;
+  color: #DE5454;
+  padding: 20px;
+  border-radius: 7px;
+  min-width: 100px;
+  text-align: center;
+  box-shadow: 0 3px 6px rgba(204, 131, 103, 0.22); }
+
+.hv-item-parent p {
+  font-weight: bold;
+  color: #DE5454; }
+
+.management-hierarchy {
+  background-color: #303840; }
+  .management-hierarchy > h1 {
+    color: #FFF; }
+  .management-hierarchy .person {
+    text-align: center; }
+    .management-hierarchy .person > img {
+      height: 110px;
+      border: 5px solid #FFF;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #fff; }
+    .management-hierarchy .person > p.name {
+      background-color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: normal;
+      color: #3BAA9D;
+      margin: 0;
+      position: relative; }
+      .management-hierarchy .person > p.name b {
+        color: rgba(59, 170, 157, 0.5); }
+      .management-hierarchy .person > p.name:before {
+        content: '';
+        position: absolute;
+        width: 2px;
+        height: 8px;
+        background-color: #fff;
+        left: 50%;
+        top: 0;
+        transform: translateY(-100%); }
+
+.hv-item-component {
+	width:50px;
+	margin:10px;
+}
+
+.panel {
+	overflow:auto;
+    background-color: rgb(91, 121, 134)!important;
+}
+.panel-default {
+	overflow:auto;
+    background-color: rgb(245, 245, 245)!important;
+}
+
+.panel-body {
+    overflow:auto;
+    background-color: rgb(245, 245, 245)!important;
+}
+
+.list-group-item {
+	margin-top : 10px;
+	z-index:900;
+}
+
+#filtersType .list-group-item{
+  z-index:3;
+}
+
+#board {
+}
+
+.boardpanel {
+	background-color:  rgb(91, 121, 134)!important;
+}
+
+.span-simple-card {
+    background-color: #d0d0d0;
+    color: #FFF;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 50%;
+    top: -10px;
+    /* width: 22px; */
+    left: -6px;
+    position: absolute;
+}
+#img-responsive-logo {
+	height: 100px!important;
+	margin-left: auto;
+    margin-right: auto;
+}
+
+#svgContainer {
+	padding-top: 0px;
+}
+
+#btnContainer{
+  position: relative;
+  top: -80px;
+}
+
+#menuGraph{
+  background-color: #f5f5f5;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+#command{
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 2px 0px;
+  border: 1px solid black;
+}
+
+#sendToServerBtn:hover{
+  color: #fff;
+  background-color: #286090;
+  border-color: #204d74;
+}
+
+.loader {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.add-marge{
+  margin-top: 20px!important;
+}
+
+.removeBtn{
+  content: "\e014";
+  color: red;
+}
+
+.edgehandles-hover{
+  background-color: red;
+}
+
+.margin-line{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.btn-flex{
+  margin: auto!important;
+  margin-left: 10px!important;
+}
+
+.collapse-data{
+  border: 1px solid #cacaca;
+  border-top: none;
+  padding: 10px;
+}
+
+.button-collapse-data{
+  width: 100%;
+  text-align: left!important;
+}
+
+.removeData-container{
+  position: absolute;
+  float: right;
+  right: 38px;
+}
+
+.removeData{
+  text-align: right;
+  position: relative;
+  float: right;
+  top: -38px;
+}
+
+.cy-panzoom{
+  z-index: 5!important;
+}
+.always-follow{
+  position: fixed!important;
+  z-index: 6
+}

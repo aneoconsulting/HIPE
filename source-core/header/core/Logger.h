@@ -2,9 +2,8 @@
 #pragma once
 #include <string>
 #pragma warning(push, 0)
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/sources/severity_logger.hpp>
+#include <glog/logging.h>
+#include <iostream>
 #pragma warning(pop)
 
 #define LOG_CONCAT2(a, b) a b
@@ -19,49 +18,61 @@
 #define LOG_PATH_ROUND() LOG_CONCAT2(LOG_DIR, "Hipe_3%N.log")
 
 
+DECLARE_string(log_backtrace_at);  // logging.cc
+
+
+#define PRINTSTACK(severity) \
+{ \
+	char stack_print[100]; \
+	snprintf(stack_print, 100, "%s:%d", removeDirectoryName(__FILE__), __LINE__); \
+	FLAGS_log_backtrace_at = stack_print; \
+	LOG(severity) << "***** Stacktrace end ******"; \
+}\
 
 namespace core
 {
-
-
-	typedef boost::log::sources::severity_logger<boost::log::trivial::severity_level> BoostLogger;
-
+	class HipeGlogSink : public google::LogSink
+	{
+		void send(google::LogSeverity severity, const char* full_filename,
+			const char* base_filename, int line,
+			const struct ::tm* tm_time,
+			const char* message, size_t message_len)
+		{
+			std::cout << "Test TCP GLOG SYNC" << base_filename << ":" << line << " " << message;
+		}
+	};
 
 	class Logger
 	{
 	public:
-		typedef boost::log::trivial::severity_level Level;
 
-
-		BoostLogger boostLogger;
-		Level level;
-
-		Logger() : level(Level::info)
+		Logger() 
 		{
 			
 		}
 
-		Logger(BoostLogger logger) : boostLogger(logger), level(Level::info) {}
+		//Logger() {}
 		
 
 		template <typename T>
 		Logger& operator<<(const T& value)
 		{
-			BOOST_LOG_SEV(boostLogger, level) << value;
-			level = Level::info;
+			LOG(INFO) << value;
+			
 
 			return *this;
 		}
 
-		Logger& operator<<(Level iLevel)
+		Logger& operator<<(int iLevel)
 		{
-			level = iLevel;
 
 			return *this;
 		}
 
-		static void init();
+		static void init(const char *filename);
 		
 	};
-	Logger setClassNameAttribute(const std::string& classNameIn);
+	
+	
+
 }

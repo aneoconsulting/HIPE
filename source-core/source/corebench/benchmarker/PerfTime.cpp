@@ -3,7 +3,7 @@
 #include "coredata/PerfTimeData.h"
 #include <core/Logger.h>
 
-core::Logger perfTimeLogger = core::setClassNameAttribute("PerfTime");
+
 
 HipeStatus corefilter::tools::PerfTime::process()
 {
@@ -19,6 +19,10 @@ HipeStatus corefilter::tools::PerfTime::process()
 	{
 		data::PerfTimeData data_timer(ti);
 		bool found = false;
+		//Ignore performance when Data is empty because there is no processing
+		if (_connexData.empty())
+			return OK;
+
 		while (_connexData.size() != 0)
 		{
 			data::Data onePop = _connexData.pop();
@@ -31,7 +35,7 @@ HipeStatus corefilter::tools::PerfTime::process()
 				data_timer = onePop;
 			}
 		}
-		if (!found) throw HipeException("PerfTime EndTimer Object has no data in input. Can't stop the timer without a chrono");
+		if (!found) throw HipeException("PerfTime EndTimer Object has no PerfData in input. Can't stop the timer without a chrono");
 		ti = data_timer.getHipeTimer();
 		interval_sampling_ms = data_timer.getSampling();
 
@@ -65,7 +69,7 @@ HipeStatus corefilter::tools::PerfTime::process()
 			log << nodeToAnalysis << " average took : " << avg_elapse / (double)count << " ms";
 			count = 0;
 			avg_elapse = 0.0;
-			perfTimeLogger << log.str();
+			LOG(INFO) << log.str();
 
 
 		}
@@ -81,7 +85,7 @@ HipeStatus corefilter::tools::PerfTime::process()
 			nodeToAnalysis.resize(pos);
 			std::stringstream log;
 			log << nodeToAnalysis << " took : " << ti.getElapseTimeInMicro() << " us";
-			perfTimeLogger << log.str();
+			LOG(INFO) << log.str();
 		}
 		else
 		{
@@ -96,6 +100,10 @@ HipeStatus corefilter::tools::PerfTime::process()
 	}
 	else // This a start PerfTimer
 	{
+		//Ignore performance when Data is empty because there is no processing
+		if (_connexData.empty()) 
+			return OK; 
+
 		while (_connexData.size() != 0)
 			_connexData.pop();
 

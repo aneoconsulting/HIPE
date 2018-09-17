@@ -114,6 +114,7 @@ set(USE_PROTOBUF "")
 set(USE_CAFFE "")
 set(USE_CUDA "")
 set(USE_CUBLAS "")
+set(USE_WEBRTC "")
 
 if (WITH_OPENBLAS)
 	include("${CMAKE_SOURCE_DIR}/cmake/FindOpenblas.cmake")
@@ -241,8 +242,6 @@ if (WITH_CUBLAS)
 	message(STATUS "CUBLAS IS INCLUDED")
 endif()
 
-
-
 if(USE_DLIB)
   target_link_libraries(filter ${dlib_LIBRARIES})
   # TODO
@@ -253,6 +252,22 @@ if(USE_DLIB)
 	message(STATUS "DLIB IS INCLUDED")
 endif(USE_DLIB)
 
+if (WITH_WEBRTC AND WIN32)
+	set(USE_WEBRTC "-DUSE_WEBRTC")
+	set(WEBRTC_ROOT_DIR "${HIPE_EXTERNAL_DIR}/WebRTCServer" CACHE PATH "WEBRTC_ROOT_DIR" FORCE)
+	message(STATUS "Search WebRTCServer location ${WEBRTC_ROOT_DIR}/lib/cmake/WebRTCServer")
+	find_package(WebRTCServer 
+				REQUIRED
+				PATHS "${WEBRTC_ROOT_DIR}/lib/cmake"
+				NO_DEFAULT_PATH)
+				
+	set_target_properties(WebRTCServer PROPERTIES
+		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)	
+
+	target_link_libraries(filter WebRTCServer)
+endif()
+
 # Configure Visual Studio to handle more options.
 if(WIN32)
   target_compile_options(filter PRIVATE /bigobj)
@@ -260,7 +275,7 @@ endif(WIN32)
 
 target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD" "-DOPENCV" ${USE_DLIB} 
 							${USE_GFLAGS} ${USE_GLOG} ${USE_CUDA} ${USE_CUBLAS} ${USE_LEVELDB} ${USE_LMDB} 
-							${USE_HDF5} ${USE_SNAPPY} ${USE_PROTOBUF} ${USE_CAFFE})
+							${USE_HDF5} ${USE_SNAPPY} ${USE_PROTOBUF} ${USE_CAFFE} ${USE_WEBRTC})
 
 # Enable the addition of algorithms without forcing a rerun of CMake
 if(WIN32)

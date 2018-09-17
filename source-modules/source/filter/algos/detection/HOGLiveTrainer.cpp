@@ -7,6 +7,11 @@
 
 HipeStatus filter::algos::HOGLiveTrainer::process()
 {
+	if (!_isThreadRunning.exchange(true))
+	{
+		startFilterThread();
+	}
+
 	data::ImageData data = _connexData.pop();
 
 	skipFrames();

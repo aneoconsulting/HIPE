@@ -10,10 +10,47 @@ add_hipe_executable(hipe_server)
 target_compile_definitions(hipe_server PRIVATE "-DUSE_BOOST_REGEX")
 
 
+
+if (WITH_GFLAGS)
+	message(STATUS "Get Gflags from ${Caffe_DIR}/share/Caffe/")
+	find_package(Gflags 
+				REQUIRED
+				PATHS "${HIPE_EXTERNAL_DIR}/gflags/lib/cmake"
+				NO_DEFAULT_PATH)
+	message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
+	target_link_libraries(hipe_server ${GFLAGS_LIBRARIES})
+	target_include_directories(hipe_server PRIVATE ${GFLAGS_INCLUDE_DIRS})
+	set(USE_GFLAGS "-DUSE_GFLAGS")
+	message(STATUS "GFLAGS IS INCLUDED")
+endif()
+
+if (WITH_GLOG)
+	message(STATUS "Get Glog from ${GLOG_ROOT_DIR}")
+	list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+	find_package(Glog 
+				REQUIRED
+				PATHS "${GLOG_ROOT_DIR}/lib/cmake/glog"
+				NO_DEFAULT_PATH)
+	
+	message(STATUS "Gflags include dir : ${GLOG_LIBRARIES}")
+	message(STATUS "Gflags include dir : ${GLOG_LIBRARY}")
+
+	target_include_directories(hipe_server PRIVATE ${GLOG_INCLUDE_DIR})
+	target_link_libraries(hipe_server glog::glog)
+	set(USE_GLOG "-DUSE_GLOG")
+	message(STATUS "GLOG IS INCLUDED")
+
+endif()
+
 # TODO
 # Is this not already included in the output of CMake? Remove?
 display_pathlist("OpenCV_LIBS" "${OpenCV_LIBS}")
 display_pathlist("Boost_LIBRARIES" "${Boost_LIBRARIES}")
+message(STATUS "OpenSSL cmake dir ${OpenSSL_DIR}/lib/cmake")
+find_package(BoringSSL 
+				REQUIRED
+				PATHS "${BoringSSL_DIR}/lib/cmake"
+				NO_DEFAULT_PATH)
 
 
 target_link_libraries(hipe_server http)
@@ -27,6 +64,7 @@ target_link_libraries(hipe_server core)
 target_link_libraries(hipe_server ${OpenCV_LIBS})
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(hipe_server BoringSSL BoringCrypto)
 
 if (UNIX)
   target_link_libraries(hipe_server ${CMAKE_DL_LIBS})

@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 3.7.1)
 
 project (Hipe_module)
 
-option(INSTALL_SOURCE "Install source for future developpement" ON)
+option(INSTALL_SOURCE "Install source for future developpement" OFF)
 message(STATUS "INSTALL_SOURCE: ${INSTALL_SOURCE}")
 
 # Options
@@ -43,6 +43,8 @@ option(WITH_SNAPPY "Use SNAPPY libraries." OFF)
 
 option(WITH_PROTOBUF "Use PROTOBUF libraries." OFF)
 
+option(WITH_WEBRTC "Use WebRTC libraries." OFF)
+
 # option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
 # message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")
 
@@ -71,6 +73,8 @@ set(WITH_PROTOBUF ON CACHE BOOL "Use PROTOBUF libraries." FORCE)
 
 
 endif()
+
+
 
 message(STATUS "HIPE_EXTERNAL_PYTHON27: ${HIPE_EXTERNAL_PYTHON27}")
 message(STATUS "HIPE_EXTERNAL_BOOST: ${HIPE_EXTERNAL_BOOST}")
@@ -118,7 +122,7 @@ install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
 install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT sources)
 
 if (${INSTALL_SOURCE})
-	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/project"
+	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./project"
 			COMPONENT sources
 			PATTERN "cmake" 
 			PATTERN "source"

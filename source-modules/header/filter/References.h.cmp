@@ -85,8 +85,8 @@
 #include <filter/algos/streaming\EncodeDataFilter.h>
 #include <filter/algos/streaming\PopGraphToNode.h>
 #include <filter/algos/streaming\PushGraphToNode.h>
-#include <filter/algos/streaming\SerialNetDataSender.h>
 #include <filter/algos/streaming\SerialNetSlaveSender.h>
+#include <filter/algos/streaming\WebRTCSender.h>
 #include <filter/algos/streaming\WriteVideo.h>
 #include <filter/algos/tracker\IfStableTracking.h>
 #include <filter/algos/tracker\Tracker.h>
@@ -98,3 +98,4 @@
 #include <filter/datasource/SerialNetDataSource.h>
 #include <filter/datasource/StreamDataSource.h>
 #include <filter/datasource/VideoDataSource.h>
+#include <filter/datasource/WebRTCVideoDataSource.h>

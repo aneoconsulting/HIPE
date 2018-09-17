@@ -1,13 +1,13 @@
-set TESSDATA_PREFIX=%HOMEPATH%\Dropbox (ANEO)\HIPE_GROUP\Demos\ID Plates\data\Tesseract
+set TESSDATA_PREFIX=%HOMEPATH%\bla_blah
 set GST_PLUGIN_PATH=@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\lib\gstreamer-1.0
 
 pushd %~dp0
 set script_dir=%CD%
 popd
 set PYTHONPATH=%script_dir%\..\..\..\hipe-modules\bin\@BUILD_CONFIG@;@HIPE_EXTERNAL_DIR@\Python2.7.14\Lib;@HIPE_EXTERNAL_DIR@\Python2.7.14\Lib\site-packages
-PATH=@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR@\Python2.7.14;@HIPE_EXTERNAL_DIR@\Python2.7.14\Lib\site-packages;%PATH%
+PATH=%script_dir%;@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DIR@\Python2.7.14;@HIPE_EXTERNAL_DIR@\Python2.7.14\Lib\site-packages;%PATH%
 echo "Path to binary " %script_dir%
-cd %script_dir%
+cd "%script_dir%"
 
-hipe_server.exe -p 9090 -m "%cd%\..\..\..\hipe-modules\bin\@BUILD_CONFIG@\filter.dll"
+hipe_server.exe -p 9090 -m "%script_dir%\..\..\..\hipe-modules\bin\@BUILD_CONFIG@\filter.dll"
 
