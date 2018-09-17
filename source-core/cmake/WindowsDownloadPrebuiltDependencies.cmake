@@ -26,7 +26,7 @@ if (MSVC)
 					SHOW_PROGRESS
 					LOG print_download)
 				endif()
-				
+				message(STATUS "check MD5 for download package...")
 				FILE(MD5 "${HIPE_EXTERNAL}/download/${FILE_HIPE_EXTERNAL_DEPS}" _file_sha)
 				if(NOT "${_file_sha}" STREQUAL "${DEPENDENCIES_SHA}")
 					message(STATUS "LOG FAILURE ${print_download}")

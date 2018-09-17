@@ -1,6 +1,5 @@
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/livemedia_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/hipecore_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
@@ -96,7 +95,6 @@ target_include_directories(filter PUBLIC ${hipecore_INCLUDE_DIRS})
 target_link_libraries(filter ${OpenCV_LIBS} opencv_xfeatures2d)
 target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(filter ${Lives_LIBS})
 target_link_libraries(filter ${PYTHON27_LIBRARIES})
 
 

@@ -34,9 +34,9 @@ option(WITH_LMDB "Use LMDB libraries." OFF)
 
 option(WITH_HDF5 "Use HDF5 libraries." OFF)
 
-option(WITH_GFLAGS "Use GFlags libraries." OFF)
+option(WITH_GFLAGS "Use GFlags libraries." ON)
 
-option(WITH_GLOG "Use GLOG libraries." OFF)
+option(WITH_GLOG "Use GLOG libraries." ON)
 
 option(WITH_SNAPPY "Use SNAPPY libraries." OFF)
 
