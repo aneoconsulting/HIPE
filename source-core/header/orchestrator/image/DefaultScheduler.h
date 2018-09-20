@@ -1,5 +1,6 @@
 //@HIPE_LICENSE@
 #pragma once
+#include <thread>
 #include <core/python/pyThreadSupport.h>
 #include <coredata/OutputData.h>
 #include <orchestrator/TaskInfo.h>

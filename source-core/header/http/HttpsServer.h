@@ -1,7 +1,7 @@
 #ifndef SERVER_HTTPS_HPP
 #define	SERVER_HTTPS_HPP
 
-#include "httpServer.h"
+#include <http/HttpServer.h>
 #include <boost/asio/ssl.hpp>
 #include <openssl/ssl.h>
 #include <algorithm>

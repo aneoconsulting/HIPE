@@ -15,7 +15,11 @@ option(USE_DLIB "Enable dlib library." ON)
 # option(HIPE_STATIC_LIBS "Compile static libraries." ON)
 option(HIPE_STATIC_EXES "Compile static executables." OFF)
 
-option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." ON)
+if (WIN32)
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." ON)
+else()
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+endif()
 message(STATUS "HIPE_EXTERNAL_PYTHON27: ${HIPE_EXTERNAL_PYTHON27}")
 
 option(HIPE_EXTERNAL_BOOST "Use Boost libraries in Hipe External." ON)
@@ -24,6 +28,9 @@ message(STATUS "HIPE_EXTERNAL_BOOST: ${HIPE_EXTERNAL_BOOST}")
 option(HIPE_EXTERNAL_OPENCV "Use OpenCV libraries in Hipe External." ON)
 message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 
+
+option(HIPE_EXTERNAL_GLOG "Use GLOB libraries in Hipe External." ON)
+message(STATUS "HIPE_EXTERNAL_GLOG: ${HIPE_EXTERNAL_GLOG}")
 
 option(INSTALL_SOURCE "Install source for future developpement" ON)
 message(STATUS "INSTALL_SOURCE: ${INSTALL_SOURCE}")

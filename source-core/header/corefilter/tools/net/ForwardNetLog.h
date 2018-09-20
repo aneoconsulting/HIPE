@@ -8,7 +8,9 @@
 #include <thread>
 #include <tools/cloud/SerialNetDataClient.h>
 #include <core/Logger.h>
-
+#ifdef LINUX
+#include <sys/utsname.h>
+#endif
 namespace net
 {
 	namespace log
@@ -53,14 +55,13 @@ namespace net
 				const char* message, size_t message_len)
 			{
 				
-				static std::atomic<bool> recursive = false;
+				static std::atomic<bool> recursive(false);
 
 				if (!recursive.exchange(true))
 				{
 					std::stringstream build;
 					std::string hostname;
 					GetHostName(&hostname);
-					time_t timestamp;
 					
 					char code = 'I';
 

@@ -13,11 +13,17 @@ option(USE_DLIB "Enable dlib library." ON)
 # option(HIPE_STATIC_LIBS "Compile static libraries." ON)
 option(HIPE_STATIC_EXES "Compile static executables." OFF)
 
-option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." ON)
+if (WIN32)
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." ON)
+else()
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+ endif()
 
 option(HIPE_EXTERNAL_BOOST "Use Boost libraries in Hipe External." ON)
 
 option(HIPE_EXTERNAL_OPENCV "Use OpenCV libraries in Hipe External." ON)
+
+option(HIPE_EXTERNAL_GLOG "Use GLOB libraries in Hipe External." ON)
 
 option(WITH_CUDA "Use CUDA GPU." ON)
 
@@ -43,7 +49,9 @@ option(WITH_SNAPPY "Use SNAPPY libraries." OFF)
 
 option(WITH_PROTOBUF "Use PROTOBUF libraries." OFF)
 
-option(WITH_WEBRTC "Use WebRTC libraries." OFF)
+option(WITH_WEBRTC "Use WebRTC libraries." ON)
+
+set(WITH_WEBRTC ON CACHE BOOL "Use WebRTC libraries." FORCE)
 
 # option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
 # message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")

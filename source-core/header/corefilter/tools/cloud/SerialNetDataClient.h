@@ -50,7 +50,11 @@ public:
 	void TextHandler();
 	void TextSenderHandler();
 
+#ifdef WIN32
 	void StartOnceAndConnect(const std::string& address, int port, std::_Binder<std::_Unforced, void( SerialNetDataClient::*&)(), SerialNetDataClient*> binder);
+#else
+	void StartOnceAndConnect(const std::string& address, int port, std::function<void()> binder);
+#endif
 
 
 	SerialNetDataClient() : _bufferingSize(1)
@@ -77,7 +81,11 @@ public:
 		ioservice = right.ioservice;
 	}
 
+	#ifdef WIN32
 	void Connect(const std::string address, int port, std::_Binder<std::_Unforced, void(SerialNetDataClient::*&)(), SerialNetDataClient*> binder);
+	#else
+	void Connect(const std::string address, int port, std::function<void()> binder);
+	#endif
 	std::shared_ptr<boost::asio::deadline_timer> get_timeout_timer(int nb_seconds);
 
 	void send(const cv::Mat image) const;

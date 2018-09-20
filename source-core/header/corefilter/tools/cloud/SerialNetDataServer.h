@@ -455,9 +455,16 @@ public:
 	void TextHandler();
 	void TextReceiverHandler();
 
+	#ifdef WIN32
 	void accept(std::shared_ptr<boost::asio::ip::tcp::socket> socket, std::_Binder<std::_Unforced, void( SerialNetDataServer::*&)(), SerialNetDataServer*> binder);
+		void startServer(int port, std::_Binder<std::_Unforced, void( SerialNetDataServer::*&)(), SerialNetDataServer*> binder);
 
-	void startServer(int port, std::_Binder<std::_Unforced, void( SerialNetDataServer::*&)(), SerialNetDataServer*> binder);
+	#else
+		void accept(std::shared_ptr<boost::asio::ip::tcp::socket> socket, std::function<void()> binder);
+		void startServer(int port, std::function<void()> binder);
+			
+	#endif
+
 
 	void send(const cv::Mat image) const;
 	void send(const std::string& text) const;

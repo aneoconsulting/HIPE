@@ -113,14 +113,14 @@ else(WIN32)
   endif(HIPE_EXTERNAL_BOOST)
   
   if(HIPE_EXTERNAL_GLOG)
-	  set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/gflags/"  CACHE PATH "Folder contains Gflags" FORCE)
-	  set(GLOG_ROOT_DIR "${HIPE_EXTERNAL_DIR}/glog/" CACHE PATH "Folder contains Google glog" FORCE)
+	  set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/"  CACHE PATH "Folder contains Gflags" FORCE)
+	  set(GLOG_ROOT_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "Folder contains Google glog" FORCE)
   else()
 	  set(GFLAGS_ROOT_DIR "/usr/share/gflags/"  CACHE PATH "Folder contains Gflags" FORCE)
 	  set(GLOG_ROOT_DIR "/usr/share/glog/" CACHE PATH "Folder contains Google glog" FORCE)
   endif()
   
-  set(BoringSSL_DIR "${HIPE_EXTERNAL_DIR}/boringssl" CACHE PATH "BOringSSL Directory" FORCE)
+  set(BoringSSL_DIR "${HIPE_EXTERNAL_DIR}" CACHE PATH "BOringSSL Directory" FORCE)
   list(APPEND CMAKE_PREFIX_PATH "${BoringSSL_DIR}")
   
   message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")

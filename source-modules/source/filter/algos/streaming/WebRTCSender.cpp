@@ -51,7 +51,8 @@ void WebRTCSender::onLoad(void* data)
 		{
 			throw HipeException("Cannot find the working dir for webrtc");
 		}
-		const char* c_str = path.str().c_str();
+		std::string built_path = path.str();
+		const char* c_str = built_path.c_str();
 		streamer = newWebRTCStreamer(port, c_str);
 		startStreamerServer(streamer);
 	}

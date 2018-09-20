@@ -110,7 +110,9 @@ void filter::datasource::WebRTCVideoDataSource::onLoad(void* data)
 		{
 			throw HipeException("Cannot find the working dir for webrtc");
 		}
-		const char* c_str = path.str().c_str();
+		std::string built_path = path.str();
+		
+		const char* c_str = built_path.c_str();
 		video = new WebRTCCapturer(port, c_str);
 		video->startWebRTCServer();
 		captureTasks();

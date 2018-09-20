@@ -11,7 +11,7 @@ cd -- "$DIR_SCRIPT"
 mkdir -p build
 cd build
 cmake \
-  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_BUILD_TYPE=Debug \
   -DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-modules" \
   ..
 

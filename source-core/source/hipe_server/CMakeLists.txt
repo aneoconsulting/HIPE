@@ -11,19 +11,6 @@ target_compile_definitions(hipe_server PRIVATE "-DUSE_BOOST_REGEX")
 
 
 
-if (WITH_GFLAGS)
-	message(STATUS "Get Gflags from ${Caffe_DIR}/share/Caffe/")
-	find_package(Gflags 
-				REQUIRED
-				PATHS "${HIPE_EXTERNAL_DIR}/gflags/lib/cmake"
-				NO_DEFAULT_PATH)
-	message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
-	target_link_libraries(hipe_server ${GFLAGS_LIBRARIES})
-	target_include_directories(hipe_server PRIVATE ${GFLAGS_INCLUDE_DIRS})
-	set(USE_GFLAGS "-DUSE_GFLAGS")
-	message(STATUS "GFLAGS IS INCLUDED")
-endif()
-
 if (WITH_GLOG)
 	message(STATUS "Get Glog from ${GLOG_ROOT_DIR}")
 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -64,7 +51,12 @@ target_link_libraries(hipe_server core)
 target_link_libraries(hipe_server ${OpenCV_LIBS})
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(hipe_server BoringSSL BoringCrypto)
+
+if (WIN32)
+  target_link_libraries(hipe_server BoringSSL BoringCrypto)
+else()
+  target_link_libraries(hipe_server ssl crypto)
+endif()
 
 if (UNIX)
   target_link_libraries(hipe_server ${CMAKE_DL_LIBS})

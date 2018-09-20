@@ -45,7 +45,11 @@ void SerialNetDataClient::TextSenderHandler()
 
 typedef void(SerialNetDataClient::* ptr_func)();
 
+#ifdef WIN32
 void SerialNetDataClient::StartOnceAndConnect(const std::string& address, int port, std::_Binder<std::_Unforced, void(SerialNetDataClient::*&)(), SerialNetDataClient*> binder)
+#else
+	void SerialNetDataClient::StartOnceAndConnect(const std::string& address, int port, std::function<void()> binder)
+#endif
 {
 	if (!a_isActive.exchange(true))
 	{
@@ -75,8 +79,11 @@ std::shared_ptr<boost::asio::deadline_timer> SerialNetDataClient::get_timeout_ti
 	return timer;
 }
 
-
+#ifdef WIN32
 void SerialNetDataClient::Connect(const std::string address, int port, std::_Binder<std::_Unforced, void(SerialNetDataClient::*&)(), SerialNetDataClient*> binder)
+#else
+	void SerialNetDataClient::Connect(const std::string address, int port, std::function<void()> binder)
+#endif
 {
 	if (!ioservice) ioservice = std::make_shared<boost::asio::io_service>();
 

@@ -10,18 +10,23 @@ add_hipe_library(core STATIC)
 
 
 
-if (WITH_GFLAGS)
-	message(STATUS "Get Gflags from ${Caffe_DIR}/share/Caffe/")
-	find_package(Gflags 
-				REQUIRED
-				PATHS "${HIPE_EXTERNAL_DIR}/gflags/lib/cmake"
-				NO_DEFAULT_PATH)
-	message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
-	target_link_libraries(core ${GFLAGS_LIBRARIES})
-	target_include_directories(core PRIVATE ${GFLAGS_INCLUDE_DIRS})
-	set(USE_GFLAGS "-DUSE_GFLAGS")
-	message(STATUS "GFLAGS IS INCLUDED")
-endif()
+#if (WITH_GFLAGS)
+#  	message(STATUS "Get Gflags from ${GFLAGS_ROOT_DIR}")
+#	find_package(Gflags 
+#				REQUIRED
+#				PATHS "${GFLAGS_ROOT_DIR}/lib/cmake/gflags"
+#				NO_DEFAULT_PATH)
+#
+#			  message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
+#	if (WIN32)
+#	  target_link_libraries(core ${GFLAGS_LIBRARIES})
+#	else()
+#	  target_link_libraries(core gflags_shared)
+#	endif()
+#	target_include_directories(core PRIVATE ${GFLAGS_INCLUDE_DIRS})
+#	set(USE_GFLAGS "-DUSE_GFLAGS")
+#	message(STATUS "GFLAGS IS INCLUDED")
+#endif()
 
 if (WITH_GLOG)
 	message(STATUS "Get Glog from ${GLOG_ROOT_DIR}")
@@ -33,7 +38,6 @@ if (WITH_GLOG)
 	
 	message(STATUS "Gflags include dir : ${GLOG_LIBRARIES}")
 	message(STATUS "Gflags include dir : ${GLOG_LIBRARY}")
-
 	target_include_directories(core PRIVATE ${GLOG_INCLUDE_DIR})
 	target_link_libraries(core glog::glog)
 	set(USE_GLOG "-DUSE_GLOG")

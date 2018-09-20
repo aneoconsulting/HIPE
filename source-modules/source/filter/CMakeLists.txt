@@ -122,19 +122,6 @@ if (WITH_OPENBLAS)
 	message(STATUS "OPENBLAS IS INCLUDED")
 endif()
 
-if (WITH_GFLAGS)
-	message(STATUS "Get Gflags from ${Caffe_DIR}/share/Caffe/")
-	find_package(Gflags 
-				REQUIRED
-				PATHS "${HIPE_EXTERNAL_DIR}/gflags/lib/cmake"
-				NO_DEFAULT_PATH)
-	message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
-	target_link_libraries(filter ${GFLAGS_LIBRARIES})
-	target_include_directories(filter PRIVATE ${GFLAGS_INCLUDE_DIRS})
-	set(USE_GFLAGS "-DUSE_GFLAGS")
-	message(STATUS "GFLAGS IS INCLUDED")
-endif()
-
 if (WITH_GLOG)
 	message(STATUS "Get Glog from ${GLOG_ROOT_DIR}")
 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -250,15 +237,19 @@ if(USE_DLIB)
 	message(STATUS "DLIB IS INCLUDED")
 endif(USE_DLIB)
 
-if (WITH_WEBRTC AND WIN32)
-	set(USE_WEBRTC "-DUSE_WEBRTC")
+if (WITH_WEBRTC)
+  set(USE_WEBRTC "-DUSE_WEBRTC")
+  if (WIN32)
 	set(WEBRTC_ROOT_DIR "${HIPE_EXTERNAL_DIR}/WebRTCServer" CACHE PATH "WEBRTC_ROOT_DIR" FORCE)
+  else()
+	set(WEBRTC_ROOT_DIR "${HIPE_EXTERNAL_DIR}" CACHE PATH "WEBRTC_ROOT_DIR" FORCE)
+  endif()
 	message(STATUS "Search WebRTCServer location ${WEBRTC_ROOT_DIR}/lib/cmake/WebRTCServer")
 	find_package(WebRTCServer 
 				REQUIRED
 				PATHS "${WEBRTC_ROOT_DIR}/lib/cmake"
 				NO_DEFAULT_PATH)
-				
+
 	set_target_properties(WebRTCServer PROPERTIES
 		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
 		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)	

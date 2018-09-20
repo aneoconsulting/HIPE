@@ -160,8 +160,11 @@ void SerialNetDataServer::TextReceiverHandler()
 	this->stringStack.push(text);
 }
 
-
+#ifdef WIN32
 void SerialNetDataServer::accept(std::shared_ptr<boost::asio::ip::tcp::socket> socket, std::_Binder<std::_Unforced, void(SerialNetDataServer::*&)(), SerialNetDataServer*> binder)
+#else
+	void SerialNetDataServer::accept(std::shared_ptr<boost::asio::ip::tcp::socket> socket, std::function<void()> binder)
+#endif
 {
 	acceptor->async_accept(*socket, [this, socket, binder](const boost::system::error_code& ec)
                        {
@@ -207,7 +210,12 @@ void SerialNetDataServer::accept(std::shared_ptr<boost::asio::ip::tcp::socket> s
                        });
 }
 
+#ifdef WIN32
 void SerialNetDataServer::startServer(int port, std::_Binder<std::_Unforced, void(SerialNetDataServer::*&)(), SerialNetDataServer*> binder)
+#else
+	void SerialNetDataServer::startServer(int port, std::function<void()> binder)
+	 
+#endif
 {
 	try
 	{

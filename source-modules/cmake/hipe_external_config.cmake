@@ -103,6 +103,10 @@ else(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/boost")
   endif(HIPE_EXTERNAL_BOOST)
 
+  set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}"  CACHE PATH "Folder contains Gflags" FORCE)
+  
+  set(GLOG_ROOT_DIR "${HIPE_EXTERNAL_DIR}" CACHE PATH "Folder contains Google glog" FORCE)
+
 
   set(Dlib_DIR "${HIPE_EXTERNAL_DIR}/dlib" CACHE PATH "DLIB_LIBRARYDIR")
 

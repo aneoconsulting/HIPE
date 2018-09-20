@@ -15,7 +15,7 @@ cd build
 mkdir -p ../install
 
 cmake \
-	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_BUILD_TYPE=Debug \
 	-DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-core" \
 	..
 

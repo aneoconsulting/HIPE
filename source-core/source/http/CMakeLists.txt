@@ -22,7 +22,12 @@ target_link_libraries(http coredata)
 target_link_libraries(http corefilter)
 target_link_libraries(http json)
 target_link_libraries(http orchestrator)
-target_link_libraries(http BoringSSL BoringCrypto)
+if (WIN32)
+  target_link_libraries(http BoringSSL BoringCrypto)
+else()
+  target_link_libraries(http ssl crypto)
+endif()
+
 
 
 

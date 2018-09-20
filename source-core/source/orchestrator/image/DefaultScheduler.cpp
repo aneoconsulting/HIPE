@@ -1,7 +1,7 @@
 //@HIPE_LICENSE@
 
-#include <Orchestrator/image/DefaultScheduler.h>
-#include "core/FatalException.h"
+#include <orchestrator/image/DefaultScheduler.h>
+#include <core/FatalException.h>
 
 orchestrator::image::DefaultScheduler::DefaultScheduler()
 {

@@ -10,6 +10,7 @@ target_compile_definitions(pydata PRIVATE "-DCV_VERSION_EPOCH=3" "-DUSE_BOOST_RE
 
 target_link_libraries(pydata ${hipecore_LIBRARIES})
 target_include_directories(pydata PUBLIC ${hipecore_INCLUDE_DIRS})
+target_include_directories(pydata PRIVATE ${PYTHON27_INCLUDE_DIRS})
 
 target_link_libraries(pydata ${Boost_LIBRARIES})
 target_link_libraries(pydata ${CMAKE_THREAD_LIBS_INIT})
