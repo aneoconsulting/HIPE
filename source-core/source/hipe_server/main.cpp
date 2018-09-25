@@ -85,6 +85,7 @@ int main(int argc, char* argv[]) {
 				foundWorkingDir = false;
 				continue;
 			}
+			corefilter::getLocalEnv().setValue("workingdir", workingDir);
 
 			break;
 		}
@@ -103,6 +104,7 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
+	
 	config.displayConfig();
 
 	LOG(INFO) << "Hello Hipe";

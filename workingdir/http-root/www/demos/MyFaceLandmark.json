@@ -19,7 +19,7 @@
 				"need": [
 					"Resize"
 				],
-				"file_predictor_dat": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\install\\hipe-core\\bin\\Release\\shape_predictor_68_face_landmarks.dat",
+				"file_predictor_dat": "Data-light\\FaceDetection\\shape_predictor_68_face_landmarks.dat",
 				"skip_frame": "4"
 			}
 		},

@@ -1,0 +1,1 @@
+Here is the workspace when the Hipe Core is running

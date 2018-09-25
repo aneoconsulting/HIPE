@@ -49,9 +49,21 @@ option(WITH_SNAPPY "Use SNAPPY libraries." OFF)
 
 option(WITH_PROTOBUF "Use PROTOBUF libraries." OFF)
 
+
 option(WITH_WEBRTC "Use WebRTC libraries." ON)
 
-set(WITH_WEBRTC ON CACHE BOOL "Use WebRTC libraries." FORCE)
+if (UNIX)
+	#Working in progress Several unstable issue to deliver it now
+	set(WITH_WEBRTC OFF CACHE BOOL "Use WebRTC libraries." FORCE)
+endif(UNIX)
+
+option(BUILD_SAMPLE "Play with very light sample" ON)
+
+option(DOWNLOAD_SAMPLE "Force to download Demos package to test it" OFF)
+
+if (BUILD_SAMPLE)
+include ("${CMAKE_SOURCE_DIR}/cmake/DownloadSampleDependencies.cmake")
+endif()
 
 # option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
 # message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")

@@ -16,7 +16,7 @@
 		{
 			"FaceDetection": {
 				"name": "FaceDetection",
-				"file_predictor_dat": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\install\\hipe-core\\bin\\Release\\shape_predictor_68_face_landmarks.dat",
+				"file_predictor_dat": "Data-light\\FaceDetection\\shape_predictor_68_face_landmarks.dat",
 				"skip_frame": "2",
 				"need": [
 					"Resize"
@@ -37,14 +37,14 @@
 			"AgeGender": {
 				"name": "AgeGender",
 				"age_activation": "true",
-				"age_model_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\deploy_age2.prototxt",
-				"age_weight_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\age_net.caffemodel",
+				"age_model_file": "Data-light\\AgeGender\\model\\deploy_age2.prototxt",
+				"age_weight_file": "Data-light\\AgeGender\\model\\age_net.caffemodel",
 				"confidence_age": "0.6",
 				"confidence_gender": "0.6",
 				"gender_activation": "false",
-				"gender_model_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\deploy_gender2.prototxt",
-				"gender_weight_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\gender_net.caffemodel",
-				"mean_file": "C:\\Users\\ddubuc.ANEO\\Dropbox (ANEO)\\HIPE_GROUP\\Demos\\AgeGender\\model\\mean.binaryproto",
+				"gender_model_file": "Data-light\\AgeGender\\model\\deploy_gender2.prototxt",
+				"gender_weight_file": "Data-light\\AgeGender\\model\\gender_net.caffemodel",
+				"mean_file": "Data-light\\AgeGender\\model\\mean.binaryproto",
 				"need": [
 					"ExtractShape"
 				],

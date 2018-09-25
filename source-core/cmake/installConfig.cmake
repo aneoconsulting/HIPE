@@ -1,12 +1,13 @@
 include(GetPrerequisites)
 
-
-include("${PROJECT_SOURCE_DIR}/cmake/getDependencies.cmake")
 if("${CMAKE_INSTALL_CONFIG_NAME}" STREQUAL "Debug") 
 	set(BUILD_CONFIG "Debug")
 else()
 	set(BUILD_CONFIG "Release")
 endif()
+
+include("${PROJECT_SOURCE_DIR}/cmake/getDependencies.cmake")
+
 
 message(STATUS "Find shared library dependencies...")
 hipe_find_dependencies(list_deps ${target_name} ${BUILD_CONFIG})

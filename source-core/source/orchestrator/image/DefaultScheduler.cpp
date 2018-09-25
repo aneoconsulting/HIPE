@@ -2,6 +2,8 @@
 
 #include <orchestrator/image/DefaultScheduler.h>
 #include <core/FatalException.h>
+#include "corefilter/tools/Localenv.h"
+#include <glog/logging.h>
 
 orchestrator::image::DefaultScheduler::DefaultScheduler()
 {
@@ -248,6 +250,17 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 
 		SignalHandlerPointer previousHandler;
 		//previousHandler = signal(SIGSEGV, SignalHandler);
+		
+		//Change directory to the root data dire i.e workingdir/root
+		std::string rootDir = corefilter::getLocalEnv().getValue("workingdir") + + "/root";
+		if (isDirExist(rootDir))
+		{
+			if (!SetCurrentWorkingDir(rootDir))
+			{
+				LOG(WARNING) << "Found unvailable Dir : " << rootDir << " is unvailable. Try next..." << std::endl;
+				LOG(WARNING) << "Fail to set Working directory : " << rootDir << std::endl;
+			}
+		}
 
 		MatrixLayerNode matrixLayer(maxLevel + 1);
 
@@ -470,6 +483,8 @@ void orchestrator::image::DefaultScheduler::killall()
 
 	for (TaskInfo& taskInfo : runningTasks)
 	{
+		if (!taskInfo.isActive) continue;
+
 		std::atomic<bool>* isActive = taskInfo.isActive.get();
 		*(isActive) = false;
 		if (taskInfo.task->joinable())
