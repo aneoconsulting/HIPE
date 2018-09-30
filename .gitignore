@@ -37,3 +37,4 @@ source-core/build/*
 source-modules/build/*
 source-modules/header/filter/References.h
 source-modules/header/filter/References.h.cmp
+webserver/webserver-hipe/obj/*

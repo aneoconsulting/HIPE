@@ -237,16 +237,18 @@ void http::HttpTask::RenderHtml() const
 {
 	try
 	{
+		//Move current directory to root dir of WorkingDir
+		std::string workingRootDir = corefilter::getLocalEnv().getValue("workingdir")	;
 		stringstream dataResponse;
 		std::string extension = "html";
-		std::string currentDir = GetCurrentWorkingDir();
+		std::string currentDir;
 		std::string oldDir = GetCurrentWorkingDir();
-		std::string workingDir = currentDir + "/http-root/www";
-		if (isDirExist(workingDir))
+		std::string wwwDir = workingRootDir + "/http-root/www";
+		if (isDirExist(wwwDir))
 		{
-			if (!SetCurrentWorkingDir(workingDir))
+			if (!SetCurrentWorkingDir(wwwDir))
 			{
-				LOG(ERROR) << "Fail to set " << workingDir << " for HTML rendering" << std::endl;
+				LOG(ERROR) << "Fail to set " << wwwDir << " for HTML rendering" << std::endl;
 			}
 		}
 		currentDir = GetCurrentWorkingDir();

@@ -252,7 +252,7 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 		//previousHandler = signal(SIGSEGV, SignalHandler);
 		
 		//Change directory to the root data dire i.e workingdir/root
-		std::string rootDir = corefilter::getLocalEnv().getValue("workingdir") + + "/root";
+		std::string rootDir = corefilter::getLocalEnv().getValue("workingdir") + "/root";
 		if (isDirExist(rootDir))
 		{
 			if (!SetCurrentWorkingDir(rootDir))

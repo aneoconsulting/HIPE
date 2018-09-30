@@ -44,6 +44,8 @@ std::vector<std::string> defaultListWorkingDirectory()
 	{
 		relativePath.push_back(cs);
 	}
+	//If The binary was runned from workingDir
+	relativePath.push_back("../workingdir");
 
 	//If the binary was runned from core binary folder
 	relativePath.push_back("../../workingdir");
@@ -51,8 +53,7 @@ std::vector<std::string> defaultListWorkingDirectory()
 	//If The binary was runned from one of modules
 	relativePath.push_back("../../../workingdir");
 
-	//If The binary was runned from workingDir
-	relativePath.push_back("../workingdir");
+	
 
 
 
@@ -85,7 +86,8 @@ int main(int argc, char* argv[]) {
 				foundWorkingDir = false;
 				continue;
 			}
-			corefilter::getLocalEnv().setValue("workingdir", workingDir);
+			
+			corefilter::getLocalEnv().setValue("workingdir", GetCurrentWorkingDir());
 
 			break;
 		}

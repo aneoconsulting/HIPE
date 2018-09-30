@@ -4,6 +4,7 @@
 #include <datasource/WebRTCVideoDataSource.h>
 #include <WebRTCCapturer.h>
 #include <glog/logging.h>
+#include <corefilter/tools/Localenv.h>
 
 filter::datasource::WebRTCVideoDataSource::WebRTCVideoDataSource(const WebRTCVideoDataSource& left)
 {
@@ -101,10 +102,10 @@ void filter::datasource::WebRTCVideoDataSource::onLoad(void* data)
 {
 	if (!a_isActive.exchange(true))
 	{
-		const char* workdir = "http-root/certificats";
+		std::string workdir = corefilter::getLocalEnv().getValue("workingdir") + "/http-root/certificats";
 		std::stringstream path;
 
-		path << GetCurrentWorkingDir() << PathSeparator() << workdir;
+		path << workdir;
 
 		if (!isDirExist(path.str()))
 		{

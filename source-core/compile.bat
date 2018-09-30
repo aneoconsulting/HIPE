@@ -28,7 +28,7 @@ cmake.exe  --build build --target INSTALL --config RelWithDebInfo
 if NOT ["%errorlevel%"]==["0"] (
     pause
     exit /b %errorlevel%
+    
 )
 
 cd %dp0%
-pause
