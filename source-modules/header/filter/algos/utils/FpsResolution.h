@@ -6,30 +6,33 @@
 
 #include <core/HipeStatus.h>
 #include "core/HipeTimer.h"
+#include "data/ShapeData.h"
 
 
-namespace corefilter
+namespace algos
 {
 	namespace tools
 	{
-		class PerfTime : public filter::IFilter
+		class FPSResolution : public filter::IFilter
 		{
 			SET_NAMESPACE("tools/benchmark")
 
-			CONNECTOR(data::Data, data::Data);
+			CONNECTOR(data::Data, data::ShapeData);
 
-			REGISTER(PerfTime, ()), _connexData(data::INDATA)
+			REGISTER(FPSResolution, ()), _connexData(data::INDATA)
 			{
 				_debug = 0;
 				id = -1;
 				count = 0;
 				interval_sampling_ms = -1.0;
 				avg_elapse = 0;
+				isStart = false;
 			}
 
 			int id;
 			int count;
 			core::HipeTimer sampler;
+			bool isStart;
 			double avg_elapse;
 
 			REGISTER_P(int, _debug);
@@ -48,7 +51,7 @@ namespace corefilter
 			}
 		};
 
-		ADD_CLASS(PerfTime, _debug, interval_sampling_ms);
+		ADD_CLASS(FPSResolution, _debug, interval_sampling_ms);
 
 
 	}

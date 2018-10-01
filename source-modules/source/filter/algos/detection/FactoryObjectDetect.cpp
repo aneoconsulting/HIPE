@@ -49,6 +49,7 @@ namespace filter
 		FactoryObjectDetect::bboxes_t FactoryObjectDetect::getBoxes(cv::Mat frame, cv::Mat detectionMat)
 		{
 			bboxes_t result;
+			result.refFrame = frame;
 			for (int i = 0; i < detectionMat.rows; i++)
 			{
 				const int probability_index = 5;
@@ -72,6 +73,7 @@ namespace filter
 
 					result.rectangles.push_back(object);
 					result.names.push_back(label);
+				
 
 				}
 			}
@@ -147,7 +149,10 @@ namespace filter
 			{
 				cv::Scalar color(std::rand() % 255, std::rand() % 255, std::rand() % 255);
 				sd.add(boxes.rectangles[i], color, boxes.names[i]);
+				sd.add(image);
 			}
+			
+
 			return sd;
 		}
 

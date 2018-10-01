@@ -455,11 +455,17 @@ void http::HttpTask::runTask() const
 		}
 		catch (HipeException& e)
 		{
+			int errorCode = 400;
+			std::string errorMsg = std::string(e.what());
+
+			if (errorMsg.find("Old Exception was") != std::string::npos)
+				errorCode = 200;
+
 			json::JsonTree treeResponse;
 			treeResponse.Add("Status", e.what());
 			std::stringstream dataResponse;
 			treeResponse.write_json(dataResponse);
-			*_response << "HTTP/1.1 400 OK\r\n"
+			*_response << "HTTP/1.1 " << errorCode << " OK\r\n"
 				<< "Access-Control-Allow-Origin: *\r\n"
 				<< "Content-Type: application/json\r\n"
 				<< "Content-Length: " << dataResponse.str().length() << "\r\n\r\n"

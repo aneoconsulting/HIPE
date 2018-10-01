@@ -200,7 +200,6 @@ $(function () {
                 nodeTarget[0].style({ 'background-image':  'url(http://icons.iconarchive.com/icons/graphicloads/100-flat/256/home-icon.png)' });
             }
 
-            //if (isDataSource($(ui.draggable).attr('id'))) {
             var type = $(ui.draggable).attr('id');
 
             var split = element.split("_");
@@ -743,7 +742,6 @@ function displayOptions(selector) {
     var collection = cy.collection();
 
 
-    //if (!isDataSource(nodes[selector].data.filter)) {
         optBalise.append("<select id='parent' multiple class='form-control'></select>");
         Object.keys(nodes).forEach(function (el) {
             if (nodes[selector] != undefined && nodes[el] != undefined) {
@@ -1131,11 +1129,11 @@ function sendCommand(command) {
 
 function resendCommand() {
     var filterBodyRaw = {
-        "name": 'kill',
+        "name": 'Kill',
 
         "command":
             {
-                "type": 'kill'
+                "type": 'Kill'
             }
     };
 

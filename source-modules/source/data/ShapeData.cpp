@@ -260,5 +260,12 @@ namespace data
 		{
 			left.This()._ids.push_back(id);
 		}
+
+		left.This()._refFrame = getRefFrame();
+	}
+
+	cv::Mat ShapeData::RefFrame() const
+	{
+		return This_const()._refFrame;
 	}
 }

@@ -41,6 +41,7 @@ namespace filter
 			public:
 				std::vector<cv::Rect> rectangles;
 				std::vector<std::string> names;
+				cv::Mat refFrame;
 
 			};
 
