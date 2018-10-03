@@ -138,7 +138,7 @@ HipeStatus filter::algos::RotationTextReader::process()
 	// Assert data is present in connector
 	if (_connexData.empty())
 	{
-		throw HipeException("Error in OverlayFilter: No data in input.");
+		return OK;
 	}
 
 	// Separate shapes from source image
@@ -173,7 +173,7 @@ HipeStatus filter::algos::RotationTextReader::process()
 	}
 
 	if (image.empty() || !image.getMat().data)
-		throw HipeException("Error in OverlayFilter: No input image to draw on found.");
+		return OK;
 
 	//Ok let test work with only one circle
 	cv::Vec3f circle = shapeDataArray[0].CirclesArray()[0];

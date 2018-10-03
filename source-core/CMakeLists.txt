@@ -74,12 +74,12 @@ add_subdirectory(source)
 
 
 
-install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
-install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
+
 install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT sources)
 
 if (${INSTALL_SOURCE})
-
+	install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
+	install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
 	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./project"
 			COMPONENT sources
 			PATTERN "cmake"

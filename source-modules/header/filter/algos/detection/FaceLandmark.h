@@ -71,7 +71,7 @@ namespace filter
 				detector = dlib::get_frontal_face_detector();
 				isStart = false;
 				thr_server = nullptr;
-				file_predictor_dat = "shape_predictor_68_face_landmarks.dat";
+				file_predictor_dat = "Data-light/FaceDetection/shape_predictor_68_face_landmarks.dat";
 			}
 
 			REGISTER_P(int, skip_frame);

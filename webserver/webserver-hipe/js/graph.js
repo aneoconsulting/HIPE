@@ -4,6 +4,87 @@ var commands = [];
 var restriction = false;
 var oldNodes = [];
 
+
+function ApplyImageToNode(type, target) {
+    if (! isDataSource(type)) {
+        target[0].style({ 'shape': 'rectangle' });
+        //nodeTarget[0].style({ 'border-color': 'red' });
+
+        //nodeTarget[0].style({ 'background-image': 'url(/images/logo-hipe.png)' });
+
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+    else {
+        target[0].style({ 'shape': 'ellipse' });
+        target[0].style({ 'border-color': 'red' });
+        //nodeTarget[0].style({ 'background-image':  'url(http://icons.iconarchive.com/icons/graphicloads/100-flat/256/home-icon.png)' });
+    }
+
+    if (new RegExp('WebRTC.*DataSource', 'g').test(type)) {
+        target[0].style({ 'width': '60px' });
+        target[0].style({ 'height': '60px' });
+        target[0].style({ 'background-image': 'url(/images/webrtcDataSource.jpg)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+    else if (new RegExp('VideoDataSource', 'g').test(type)) {
+        target[0].style({ 'width': '60px' });
+        target[0].style({ 'height': '60px' });
+        target[0].style({ 'background-image': 'url(/images/VideoDataSource-2.png)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+    else if (new RegExp('Resize', 'g').test(type)) {
+        target[0].style({ 'width': '50px' });
+        target[0].style({ 'height': '50px' });
+        target[0].style({ 'background-image': 'url(/images/resize.png)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+    else if (new RegExp('Python.*', 'g').test(type)) {
+        target[0].style({ 'width': '50px' });
+        target[0].style({ 'height': '50px' });
+        target[0].style({ 'background-image': 'url(/images/python.png)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+    else if (new RegExp('Concat.*', 'g').test(type)) {
+        target[0].style({ 'width': '50px' });
+        target[0].style({ 'height': '50px' });
+        target[0].style({ 'background-image': 'url(/images/concat.png)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+    else if (new RegExp('.*Sender.*', 'g').test(type)) {
+        target[0].style({ 'width': '50px' });
+        target[0].style({ 'height': '50px' });
+        target[0].style({ 'background-image': 'url(/images/video-emit.png)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    } 
+    else if (new RegExp('.*Detect.*', 'g').test(type)) {
+        target[0].style({ 'shape': 'ellipse' });
+        target[0].style({ 'width': '50px' });
+        target[0].style({ 'height': '50px' });
+        target[0].style({ 'background-image': 'url(/images/objectdetection.png)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+    else if (new RegExp('Text.*', 'g').test(type)) {
+        target[0].style({ 'width': '50px' });
+        target[0].style({ 'height': '50px' });
+        target[0].style({ 'background-image': 'url(/images/textlog.png)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+    else if (new RegExp('Show.*', 'g').test(type)) {
+        target[0].style({ 'width': '50px' });
+        target[0].style({ 'height': '50px' });
+        target[0].style({ 'background-image': 'url(/images/showvideo.png)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+    else {
+        target[0].style({ 'shape': 'ellipse' });
+        target[0].style({ 'width': '60px' });
+        target[0].style({ 'height': '60px' });
+        target[0].style({ 'background-image': 'url(/images/cppcode2.png)' });
+        target[0].style({ 'background-fit': 'cover cover' });
+    }
+
+};
+
 $(function () {
 
     var cy = window.cy = cytoscape({
@@ -148,23 +229,24 @@ $(function () {
         var edgeTarget = evt.target;
         edgeTarget.addClass('edge-hover');
 
-        edgeTarget.on('click', function () {
-            edge.forEach(function (singleEdge, key) {
-                var idSource = edgeTarget[0].source().id();
-                var idTarget = edgeTarget[0].target().id();
+        edgeTarget.on('click',
+            function() {
+                edge.forEach(function(singleEdge, key) {
+                    var idSource = edgeTarget[0].source().id();
+                    var idTarget = edgeTarget[0].target().id();
 
-                if (singleEdge.data.source == idSource || singleEdge.data.target == idTarget) {
-                    edge.splice(key, 1);
-                    var nodeParentName = edgeTarget[0].source().data().name;
-                    edgeTarget[0].target().data().need.forEach(function (element, key) {
-                        if (element == nodeParentName) {
-                            edgeTarget[0].target().data().need.splice(key, 1);
-                        }
-                    })
-                }
+                    if (singleEdge.data.source == idSource || singleEdge.data.target == idTarget) {
+                        edge.splice(key, 1);
+                        var nodeParentName = edgeTarget[0].source().data().name;
+                        edgeTarget[0].target().data().need.forEach(function(element, key) {
+                            if (element == nodeParentName) {
+                                edgeTarget[0].target().data().need.splice(key, 1);
+                            }
+                        })
+                    }
+                });
+                cy.remove(edgeTarget);
             });
-            cy.remove(edgeTarget);
-        })
     });
 
     cy.on('mouseout', 'edge', function (evt) {
@@ -194,12 +276,9 @@ $(function () {
 
             var nodeTarget = cy.filter('node[id = "' + nodes[element].data.id + '"]');
 
-            if(isDataSource(nodes[element].data.filter)){
-                nodeTarget[0].style({'shape': 'ellipse'});
-                nodeTarget[0].style({'border-color': 'red'});
-                nodeTarget[0].style({ 'background-image':  'url(http://icons.iconarchive.com/icons/graphicloads/100-flat/256/home-icon.png)' });
-            }
+            ApplyImageToNode(nodes[element].data.filter, nodeTarget);
 
+         
             var type = $(ui.draggable).attr('id');
 
             var split = element.split("_");
@@ -583,7 +662,9 @@ $(function () {
 
 });
 
+
 function drawConnections(selector, isHtml, values) {
+    
     if (isHtml) {
         var values = $('#parent').val();
     }
@@ -615,13 +696,9 @@ function drawConnections(selector, isHtml, values) {
 
     http.send();
 
-    if(isDataSource(nodes[selector].data.filter)){
-        nodeTarget[0].style({ 'shape': 'rectangle' });
-        //nodeTarget[0].style({ 'border-color': 'red' });
-        nodeTarget[0].style({ 'background-image': 'url(/images/logo-hipe.png)' });
-        nodeTarget[0].style({ 'background-fit': 'cover cover' });
-    }
+    ApplyImageToNode(nodes[selector].data.filter, nodeTarget);
 
+    
     edge.forEach(function (singleEdge, key) {
         if (singleEdge.data.target == nodeTarget[0].id()) {
             edgeToDelete.push(key);
@@ -1023,11 +1100,11 @@ function resetGraph() {
 function getFilterByName(name) {
     var keyFound = null;
 
-    Object.keys(nodes).forEach(function (key) {
+    Object.keys(nodes).forEach(function(key) {
         if (nodes[key].data.name == name) {
             keyFound = key;
         }
-    })
+    });
 
     return keyFound;
 }

@@ -386,7 +386,7 @@ HipeStatus filter::algos::Tracker::process()
 {
 	if (_connexData.empty())
 	{
-		throw HipeException("Error in Tracker: No data in input.");
+		return OK;
 	}
 
 	// Separate shapes from source image
@@ -423,7 +423,7 @@ HipeStatus filter::algos::Tracker::process()
 	
 
 	if (!isSourceFound || image.empty() || !image.getMat().data)
-		throw HipeException("Error in Tracker: No input image to draw on found.");
+		return OK;
 
 	cv::Mat frame = image.getMat();
 	if (frame.channels() == 3)

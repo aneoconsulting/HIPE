@@ -50,11 +50,13 @@ namespace filter
 
 			REGISTER(AgeGender, ()), _connexData(data::INDATA)
 			{
-				age_model_file = "NO FILE SET";
-				gender_model_file = "NO FILE SET";
+				age_model_file = "Data-light/AgeGender/model/deploy_age2.prototxt";
+				gender_model_file = "Data-light/AgeGender/model/deploy_gender2.prototxt";
 
-				age_weight_file = "NO FILE SET";
-				gender_weight_file = "NO FILE SET";
+				age_weight_file = "Data-light/AgeGender/model/age_net.caffemodel";
+				gender_weight_file = "Data-light/AgeGender/model/gender_net.caffemodel";
+				mean_file = "Data-light/AgeGender/model/mean.binaryproto";
+
 
 				skip_frame = 4;
 				count_frame = 0;

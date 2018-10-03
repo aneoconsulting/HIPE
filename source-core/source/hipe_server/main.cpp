@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
 			}
 			
 			corefilter::getLocalEnv().setValue("workingdir", GetCurrentWorkingDir());
-
+			LOG(INFO) << "Change working directory to " << GetCurrentWorkingDir();
 			break;
 		}
 	}

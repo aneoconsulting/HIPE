@@ -9,5 +9,12 @@ PATH=%script_dir%;@HIPE_EXTERNAL_DIR@\gstreamer\1.0\x86_64\bin;@HIPE_EXTERNAL_DI
 echo "Path to binary " %script_dir%
 cd "%script_dir%"
 
-hipe_server.exe -p 9090 -m "%script_dir%\..\..\..\hipe-modules\bin\@BUILD_CONFIG@\filter.dll"
+:loop
+
+	echo "Start or restart Service Hipe"
+
+	hipe_server.exe -p 9090 -m "%script_dir%\..\..\..\hipe-modules\bin\@BUILD_CONFIG@\filter.dll"
+	timeout /t 1
+goto loop
+
 

@@ -2,7 +2,7 @@
 SET(SAMPLE_DIR ${CMAKE_INSTALL_PREFIX}/../hipe-core/workingdir/root/)
 
 SET(FILE_SAMPLE_DEPS "Data-light.zip")
-set(DEPENDENCIES_SHA "c4c8dd62cbb7ed6621d4b39315584cc8")
+set(DEPENDENCIES_SHA "afc81e570f43fa767444ffc7d683025d")
 if (${BUILD_SAMPLE})
 	message(STATUS "Download Sample dependencies...")
 	if (NOT EXISTS "${SAMPLE_DIR}/Data-light" OR ${DOWNLOAD_SAMPLE})

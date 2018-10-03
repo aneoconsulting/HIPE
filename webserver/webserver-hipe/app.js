@@ -83,6 +83,7 @@ app.put('/model/:id', function (req, res) {
         model.name = req.body['name'];
         model.json = req.body['json'];
         model.id_of_next_element = req.body['id_of_next_element'];
+        model.date_creation = new Date();
 
         var points = req.body['points'];
 

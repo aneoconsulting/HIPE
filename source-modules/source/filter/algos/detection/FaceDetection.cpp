@@ -100,6 +100,9 @@ namespace filter
 
 		HipeStatus FaceDetection::process()
 		{
+			if (_connexData.empty())
+				return OK;
+
 			cv::Mat im;
 			cv::Mat im_small, im_display;
 			std::vector<dlib::rectangle> faces;

@@ -208,6 +208,17 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 {
 	TaskInfo taskInfo;
 	runningTasks.push_back(taskInfo);
+	//Change directory to the root data dire i.e workingdir/root
+	std::string rootDir = corefilter::getLocalEnv().getValue("workingdir") + "/root";
+	if (isDirExist(rootDir))
+	{
+		if (!SetCurrentWorkingDir(rootDir))
+		{
+			LOG(WARNING) << "Found unvailable Dir : " << rootDir << " is unvailable. Try next..." << std::endl;
+			LOG(WARNING) << "Fail to set Working directory : " << rootDir << std::endl;
+		}
+	}
+
 	std::shared_ptr<std::exception_ptr> & texptr = runningTasks[0].texptr;
 
 	filter::Model* filterRoot = root->getRootFilter();
@@ -237,8 +248,21 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 
 	filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
 
-	CallFiltersOnload(cpyFilterRoot);
+	try {
+		CallFiltersOnload(cpyFilterRoot);
+	}
+	catch (HipeException & e)
+	{
+		cleanDataChild(cpyFilterRoot);
+		disposeChild(cpyFilterRoot);
+		if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+			throw HipeException("Cannot free properly Filter graph");
+		std::stringstream buildError;
+		buildError << "Fail to load Filter caling method CallFilterOnLoad Inner exception\n";
+		buildError << e.what();
 
+		throw HipeException(buildError.str());
+	}
 	std::atomic<bool>* isActive = new std::atomic<bool>(true);
 	PyInterpreterState* l_interp = interp[std::this_thread::get_id()];
 
@@ -251,17 +275,6 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 		SignalHandlerPointer previousHandler;
 		//previousHandler = signal(SIGSEGV, SignalHandler);
 		
-		//Change directory to the root data dire i.e workingdir/root
-		std::string rootDir = corefilter::getLocalEnv().getValue("workingdir") + "/root";
-		if (isDirExist(rootDir))
-		{
-			if (!SetCurrentWorkingDir(rootDir))
-			{
-				LOG(WARNING) << "Found unvailable Dir : " << rootDir << " is unvailable. Try next..." << std::endl;
-				LOG(WARNING) << "Fail to set Working directory : " << rootDir << std::endl;
-			}
-		}
-
 		MatrixLayerNode matrixLayer(maxLevel + 1);
 
 		//TODO insert debug layers into the matrix
