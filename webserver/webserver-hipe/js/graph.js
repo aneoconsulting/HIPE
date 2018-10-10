@@ -242,7 +242,7 @@ $(function () {
                             if (element == nodeParentName) {
                                 edgeTarget[0].target().data().need.splice(key, 1);
                             }
-                        })
+                        });
                     }
                 });
                 cy.remove(edgeTarget);
@@ -877,14 +877,17 @@ function displayOptions(selector) {
 
     optBalise.append("<a href='javascript:void(0)' class='btn btn-danger' id='delete_node' style='float: right;' class='" + selector + "'>Supprimer</a>");
 
-    $('#option_validation').on('click', function (ev) {
-        drawConnections(selector, true);
-        saveEdit(selector);
-    })
+    $('#option_validation').on('click',
+        function(ev) {
+            drawConnections(selector, true);
+            saveEdit(selector);
+            sendDataToServer();
+        });
 
-    $('#delete_node').on('click', function (ev) {
-        deleteModal('node', selector);
-    })
+    $('#delete_node').on('click',
+        function(ev) {
+            deleteModal('node', selector);
+        });
 }
 
 function saveEdit(selector) {

@@ -139,6 +139,110 @@ filter::Model* copyAlgorithms(filter::Model* root)
 	return newRoot;
 }
 
+
+
+void updateFilter(filter::Model* src, filter::Model* dest)
+{
+	if (src == nullptr) return;
+	filter::Model* nFilter = dest;
+	nFilter->setName(src->getName());
+	nFilter->setLevel(src->getLevel());
+
+	for (auto& field : getParameterNames(src->getConstructorName()))
+	{
+		std::string copyField(field);
+		{
+			__callfunc(nFilter, "copy_" + copyField, src);
+		}
+	}
+	return ;
+}
+
+void updateParameters(filter::Model* src, filter::Model* dest)
+{
+	if (src == nullptr) return ;
+	updateFilter(src, dest);
+
+	filter::Model* destParent = static_cast<filter::IFilter*>(dest);;
+	filter::Model* srcParent = static_cast<filter::IFilter*>(src);
+
+	std::stack<filter::Model*> heap;
+	std::stack<filter::Model*> destHeap;
+
+	heap.push(srcParent);
+	destHeap.push(destParent);
+	std::map<std::string, filter::Model *> destNodeCache; //To avoid multiple instance of same object with the same name;
+	std::map<std::string, filter::Model *> srcNodeCache; //To avoid multiple instance of same object with the same name;
+
+	//First step get all nodes from source 
+	while (!heap.empty())
+	{
+		srcParent = heap.top();
+		heap.pop();
+
+		for (auto srcNodeMap : srcParent->getChildrens())
+		{
+			if (srcNodeCache.find(srcNodeMap.second->getName()) == srcNodeCache.end())
+			{
+				srcNodeCache[srcNodeMap.second->getName()] = srcNodeMap.second;
+			}
+			//destChild->addDependencies(destParent);
+
+			if (!srcNodeMap.second->getChildrens().empty())
+			{
+				heap.push(static_cast<filter::IFilter*>(srcNodeMap.second));
+			}
+		}
+	}
+
+	//Second step get all nodes from destination 
+	while (!destHeap.empty())
+	{
+		destParent = destHeap.top();
+		destHeap.pop();
+		for (auto destNodedMap : destParent->getChildrens())
+		{
+			if (destNodeCache.find(destNodedMap.second->getName()) == destNodeCache.end())
+			{
+				destNodeCache[destNodedMap.second->getName()] = destNodedMap.second;
+			}
+			//destChild->addDependencies(destParent);
+			
+			if (!destNodedMap.second->getChildrens().empty())
+			{
+				destHeap.push(static_cast<filter::IFilter*>(destNodedMap.second));
+			}
+		}
+	}
+	std::map<std::string, filter::Model *> newDestNodeCache;
+
+	for (auto srcNodeMap : srcNodeCache)
+	{
+		//Easier step update parameter of node existing in src and dest
+		if (destNodeCache.find(srcNodeMap.second->getName()) != destNodeCache.end())
+		{
+			updateFilter(srcNodeMap.second, destNodeCache[srcNodeMap.second->getName()]);
+			destNodeCache.erase(srcNodeMap.second->getName());
+		}
+		// Node doesn't exist in dest then create new one by copy in dest and add dependencies
+		else 
+		{  //TODO: Instanciate when update will take into account the add/remove of node
+			newDestNodeCache[srcNodeMap.second->getName()] = static_cast<filter::Model*>(copyFilter(srcNodeMap.second));
+		}
+	}
+
+	//Third step remove all destNode that doesn't exist in srcNodeCache
+	if(!destNodeCache.empty() || ! newDestNodeCache.empty())
+	{
+		//TODO It's an hard stuff to do here. Need Signal Processing that the tree has changed.
+		//TOPO For now Resend is best solution
+		throw HipeException("The update contains remove and add filter. It's not yet implemented. Please Resend rather than update");
+	}
+	
+
+	return ;
+}
+
 HipeStatus freeAlgorithms(filter::Model* root)
 {
 	if (root == nullptr) return OK;

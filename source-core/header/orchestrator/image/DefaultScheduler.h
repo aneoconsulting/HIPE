@@ -73,6 +73,8 @@ namespace orchestrator
 
 			void processDataSource(filter::Model* root, data::Data& outputData, bool debug);
 
+			void updateFilterParameters(filter::Model* root, std::shared_ptr<filter::Model> model);
+
 			void process(filter::Model* root, data::Data& inputData, data::Data& outputData, bool debug = false);
 
 			virtual void killall();

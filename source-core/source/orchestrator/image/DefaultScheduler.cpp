@@ -11,8 +11,8 @@ orchestrator::image::DefaultScheduler::DefaultScheduler()
 	pyMainThreaState[root] = nullptr;
 	interp[root] = nullptr;
 	pyThreadState[root] = nullptr;
-	
-	
+
+
 	if (!Py_IsInitialized())
 	{
 		try
@@ -104,12 +104,11 @@ void orchestrator::image::DefaultScheduler::disposeChild(filter::Model* filter)
 
 void orchestrator::image::DefaultScheduler::CallFiltersOnload(filter::Model* filter, int level)
 {
-	
 	//// Get the default thread state  
 	std::thread::id root;
 
 	pyMainThreaState[root];
-	
+
 
 	if (level == 0 && pyThreadState[std::this_thread::get_id()] == nullptr)
 	{
@@ -219,7 +218,7 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 		}
 	}
 
-	std::shared_ptr<std::exception_ptr> & texptr = runningTasks[0].texptr;
+	std::shared_ptr<std::exception_ptr>& texptr = runningTasks[0].texptr;
 
 	filter::Model* filterRoot = root->getRootFilter();
 
@@ -248,10 +247,11 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 
 	filter::Model* cpyFilterRoot = copyAlgorithms(filterRoot);
 
-	try {
+	try
+	{
 		CallFiltersOnload(cpyFilterRoot);
 	}
-	catch (HipeException & e)
+	catch (HipeException& e)
 	{
 		cleanDataChild(cpyFilterRoot);
 		disposeChild(cpyFilterRoot);
@@ -266,15 +266,14 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 	std::atomic<bool>* isActive = new std::atomic<bool>(true);
 	PyInterpreterState* l_interp = interp[std::this_thread::get_id()];
 
-	
 
 	boost::thread* task = new boost::thread([cpyFilterRoot, maxLevel, &outputData, sourceType, isActive, l_interp, &texptr]()
 	{
-		typedef void(*SignalHandlerPointer)(int);
+		typedef void (*SignalHandlerPointer)(int);
 
 		SignalHandlerPointer previousHandler;
 		//previousHandler = signal(SIGSEGV, SignalHandler);
-		
+
 		MatrixLayerNode matrixLayer(maxLevel + 1);
 
 		//TODO insert debug layers into the matrix
@@ -308,11 +307,11 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 							break;
 						}
 					}
-					catch(FatalException & e)
+					catch (FatalException& e)
 					{
 						std::cerr << "FatalException during the " << filter->getName() << " execution. Msg : " << e.what() <<
 							". Please contact us" << std::endl;
-						
+
 						destroyPythonThread(userThreadState);
 						texptr = std::make_shared<std::exception_ptr>(std::current_exception());
 						exit(-1);
@@ -419,12 +418,11 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 	);
 	if (data::DataTypeMapper::isVideo(sourceType))
 	{
-		
 		runningTasks[0].task.reset(task);
 		runningTasks[0].isActive.reset(isActive);
 		runningTasks[0].filter.reset(cpyFilterRoot, [](filter::Model*)
-	                      {
-	                      });
+	                             {
+	                             });
 		//taskInfo.texptr = texptr;
 
 		/*runningTasks.push_back(taskInfo);*/
@@ -443,6 +441,11 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 	}
 }
 
+void orchestrator::image::DefaultScheduler::updateFilterParameters(filter::Model* root, std::shared_ptr<filter::Model> model)
+{
+	updateParameters(root, model.get());
+}
+
 void orchestrator::image::DefaultScheduler::process(filter::Model* root, data::Data& inputData, data::Data& outputData, bool debug)
 {
 	if (!runningTasks.empty())
@@ -453,6 +456,12 @@ void orchestrator::image::DefaultScheduler::process(filter::Model* root, data::D
 		{
 			if (*(taskInfo.isActive) && (taskInfo.task->joinable()))
 			{
+				//It's an update of actual execution 
+				if (taskInfo.filter->getName() == root->getName())
+				{
+					updateFilterParameters(root, taskInfo.filter);
+					return;
+				}
 				updateTasks.push_back(taskInfo);
 			}
 			if (taskInfo.texptr)
