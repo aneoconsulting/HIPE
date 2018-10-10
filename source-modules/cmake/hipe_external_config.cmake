@@ -46,6 +46,10 @@ else(WIN32)
 #   link_libraries("-L '${HIPE_EXTERNAL_DIR}/lib'")
 endif(WIN32)
 
+set(CUDA_MAJOR "8" CACHE STRING "CUDA MAJOR VERSION" FORCE)
+set(CUDA_MINOR "0" CACHE STRING "CUDA MINOR VERSION" FORCE)
+set(CUDA_VERSION "${CUDA_MAJOR}.${CUDA_MINOR}" CACHE PATH "CUDA_VERSION" FORCE)
+
 if(WIN32)
 
   set(Hipecore_DIR "${CMAKE_SOURCE_DIR}/../install/hipe-core" CACHE PATH "hipecore")
@@ -61,6 +65,8 @@ if(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "${Boost_DIR}")
   endif(HIPE_EXTERNAL_BOOST)
 
+ 
+  
   set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv-3.4" CACHE PATH "OpenCV Directory" FORCE)
   if(HIPE_EXTERNAL_OPENCV)
     list(APPEND CMAKE_PREFIX_PATH "${OpenCV_DIR}")

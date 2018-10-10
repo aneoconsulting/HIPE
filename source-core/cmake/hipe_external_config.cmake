@@ -58,6 +58,10 @@ else(WIN32)
 #   link_libraries("-L '${HIPE_EXTERNAL_DIR}/lib'")
 endif(WIN32)
 
+set(CUDA_MAJOR "8" CACHE STRING "CUDA MAJOR VERSION" FORCE)
+set(CUDA_MINOR "0" CACHE STRING "CUDA MINOR VERSION" FORCE)
+set(CUDA_VERSION "${CUDA_MAJOR}.${CUDA_MINOR}" CACHE PATH "CUDA_VERSION" FORCE)
+
 if(WIN32)
   # TODO
   # Update this section to enable optional use of installed system libraries.
@@ -100,6 +104,7 @@ else(WIN32)
 #   set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv/share/OpenCV" CACHE PATH "OpenCV")
 	if(HIPE_EXTERNAL_OPENCV)
 		list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/cuda8")
+		
 		set(ENV{PATH} "${HIPE_EXTERNAL_DIR}/cuda8/bin:$ENV{PATH}")
 		list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/opencv")
 	endif(HIPE_EXTERNAL_OPENCV)

@@ -2,7 +2,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/hipecore_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
+
 
 if(USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
@@ -45,9 +45,20 @@ endif()
 #   set(MYLIBS -Wl,--start-group core streaming data -Wl,--end-group)
 # endif()
 # target_link_libraries(filter -Wl,--start-group core streaming data -Wl,--end-group)
-
+file(TO_CMAKE_PATH "$ENV{CUDA_PATH_V${CUDA_MAJOR}_${CUDA_MINOR}}" CUDA_TOOLKIT_ROOT_DIR)
+message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
 
 target_link_libraries(filter data pydata)
+message(STATUS "Look for CUDA")
+if (WITH_CUBLAS OR WITH_CUDA)
+	find_package(CUDA "8.0" REQUIRED)
+	target_link_libraries(filter ${CUDA_LIBRARIES})
+	target_include_directories(filter PRIVATE ${CUDA_INCLUDE_DIRS})
+		
+	set(USE_CUDA "-DUSE_CUDA")
+	message(STATUS "CUBLAS IS INCLUDED ${CUDA_VERSION}")
+endif()
+include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 
 message(STATUS "List of libraries : ${hipecore_LIBRARIES}")
 
@@ -195,14 +206,7 @@ if (WITH_CAFFE)
 
 endif()
 
-if (WITH_CUBLAS OR WITH_CUDA)
-	find_package(CUDA)
-	target_link_libraries(filter ${CUDA_LIBRARIES})
-	target_include_directories(filter PRIVATE ${CUDA_INCLUDE_DIRS})
-		
-	set(USE_CUDA "-DUSE_CUDA")
-	message(STATUS "CUBLAS IS INCLUDED")
-endif()
+
 
 if (WITH_CUBLAS)
 	CUDA_ADD_CUBLAS_TO_TARGET(filter)
