@@ -1,7 +1,8 @@
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/python36_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 
-include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
+
 include("${CMAKE_SOURCE_DIR}/cmake/hipecore_config.cmake")
 
 add_hipe_library(pydata SHARED)
@@ -13,7 +14,7 @@ message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
 
 target_link_libraries(pydata ${hipecore_LIBRARIES})
 if (WITH_CUBLAS OR WITH_CUDA)
-	find_package(CUDA "8.0" EXACT REQUIRED)
+	find_package(CUDA "${CUDA_MAJOR}.${CUDA_MINOR}" EXACT REQUIRED)
 	target_link_libraries(pydata ${CUDA_LIBRARIES})
 	target_include_directories(pydata PRIVATE ${CUDA_INCLUDE_DIRS})
 		
@@ -22,13 +23,13 @@ if (WITH_CUBLAS OR WITH_CUDA)
 endif()
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 target_include_directories(pydata PUBLIC ${hipecore_INCLUDE_DIRS})
-target_include_directories(pydata PRIVATE ${PYTHON27_INCLUDE_DIRS})
+target_include_directories(pydata PRIVATE ${PYTHON36_INCLUDE_DIRS})
 
 
 target_link_libraries(pydata ${Boost_LIBRARIES})
 target_link_libraries(pydata ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(pydata ${OpenCV_LIBS})
-target_link_libraries(pydata ${PYTHON27_LIBRARIES})
+target_link_libraries(pydata ${PYTHON36_LIBRARIES})
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?

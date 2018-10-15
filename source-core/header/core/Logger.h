@@ -4,6 +4,8 @@
 #pragma warning(push, 0)
 #include <glog/logging.h>
 #include <iostream>
+#include <glog/logging.h>
+#include <gflags/gflags_declare.h>
 #pragma warning(pop)
 
 #define LOG_CONCAT2(a, b) a b

@@ -5,6 +5,7 @@
 
 #pragma warning(push, 0)
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/mat.hpp>
 #pragma warning(pop)
 
 namespace data

@@ -7,6 +7,7 @@
 #pragma warning(pop)
 
 #include <pydata/pyboostcvconverter.hpp>
+#include <iostream>
 
 
 namespace pbcvt {
@@ -129,32 +130,29 @@ namespace boost {
 		};
 	}
 }
+#ifdef BOOST_PYTHON_STATIC_LIB
+#undef BOOST_PYTHON_STATIC_LIB
+#endif
+	
+		BOOST_PYTHON_MODULE(pydata)
+		{
+			pbcvt::init_ar();
 
-BOOST_PYTHON_MODULE(hipetools)
-{
-  def("print_arity", boost::python::make_function (&print_arity, release_gil_policy()));
-}
+			//initialize converters
+			to_python_converter<cv::Mat,
+				pbcvt::matToNDArrayBoostConverter>();
+			pbcvt::matFromNDArrayBoostConverter();
 
-BOOST_PYTHON_MODULE(pydata)
-{
-	pbcvt::init_ar();
+			def("dot", pbcvt::dot);
+			def("dot2", pbcvt::dot2);
 
-	//initialize converters
-	to_python_converter<cv::Mat,
-		pbcvt::matToNDArrayBoostConverter>();
-	pbcvt::matFromNDArrayBoostConverter();
-
-	def("dot", pbcvt::dot);
-	def("dot2", pbcvt::dot2);
-
-	boost::python::class_<pyImageData>("imageData")
-		.def("assign", &pyImageData::assign)
-		.def("set", &pyImageData::set)
-		.def_readwrite("img", &pyImageData::get)
-		.def("get", &pyImageData::get);
-		
-}
-
+			boost::python::class_<pyImageData>("imageData")
+				.def("assign", &pyImageData::assign)
+				.def("set", &pyImageData::set)
+				.def_readwrite("img", &pyImageData::get)
+				.def("get", &pyImageData::get);
+				
+		}
 //BOOST_PYTHON_MODULE(pydata)
 //{
 //	pbcvt::init_ar();

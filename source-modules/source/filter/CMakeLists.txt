@@ -1,6 +1,6 @@
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/python36_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/hipecore_config.cmake")
 
 
@@ -71,7 +71,7 @@ target_include_directories(filter PUBLIC ${hipecore_INCLUDE_DIRS})
 target_link_libraries(filter ${OpenCV_LIBS} opencv_xfeatures2d)
 target_link_libraries(filter ${Boost_LIBRARIES})
 target_link_libraries(filter ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(filter ${PYTHON27_LIBRARIES})
+target_link_libraries(filter ${PYTHON36_LIBRARIES})
 
 
 
@@ -107,7 +107,7 @@ if (WITH_GFLAGS)
 
 				  message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
 		if (WIN32)
-		  target_link_libraries(filter ${GFLAGS_LIBRARIES})
+		  target_link_libraries(filter gflags_static)
 		else()
 		  target_link_libraries(filter gflags_shared)
 		endif()
@@ -126,7 +126,10 @@ if (WITH_GLOG)
 	
 	message(STATUS "Gflags include dir : ${GLOG_LIBRARIES}")
 	message(STATUS "Gflags include dir : ${GLOG_LIBRARY}")
-
+	set_target_properties(glog::glog PROPERTIES
+	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+	  )
 	target_include_directories(filter PRIVATE ${GLOG_INCLUDE_DIR})
 	target_link_libraries(filter glog::glog)
 	set(USE_GLOG "-DUSE_GLOG")
@@ -237,9 +240,9 @@ if (WITH_WEBRTC)
 				PATHS "${WEBRTC_ROOT_DIR}/lib/cmake"
 				NO_DEFAULT_PATH)
 
-	set_target_properties(WebRTCServer PROPERTIES
-		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
-		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)	
+	#set_target_properties(WebRTCServer PROPERTIES
+	#	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	#	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)	
 
 	target_link_libraries(filter WebRTCServer)
 endif()

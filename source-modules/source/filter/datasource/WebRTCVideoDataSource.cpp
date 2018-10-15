@@ -20,13 +20,21 @@ filter::datasource::WebRTCVideoDataSource::WebRTCVideoDataSource(const WebRTCVid
 
 void filter::datasource::WebRTCVideoDataSource::captureTasks()
 {
+	
 	task = new std::thread([this]()
 	{
+		bool firstInit = true;
 		a_isActive.exchange(true);
 		while (this->a_isActive)
 		{
 			cv::Mat res;
-			int retry = 150;
+			int retry = 5;
+			if (firstInit)
+			{
+				retry = 150;
+				firstInit = false;
+			}
+
 			while (res.empty()) // Timeout to capture image
 			{
 				res = video->Capture();

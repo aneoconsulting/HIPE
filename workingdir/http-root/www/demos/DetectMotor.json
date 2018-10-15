@@ -16,12 +16,12 @@
 		{
 			"FactoryObjectDetect": {
 				"name": "FactoryObjectDetect_140",
-				"cfg_filename": "Data-light\\Yolo Detection\\yolo-obj.cfg",
+				"cfg_filename": "Data-light\\QualityControl\\yolo-obj.cfg",
 				"confidenceThreshold": "0.6",
-				"names_filename": "Data-light\\Yolo Detection\\yolo-obj.names",
+				"names_filename": "Data-light\\QualityControl\\yolo-obj.names",
 				"skip_frame": "0",
 				"wait_ms": "300",
-				"weight_filename": "Data-light\\Yolo Detection\\yolo-obj_1100.weights",
+				"weight_filename": "Data-light\\QualityControl\\yolo-obj_1100.weights",
 				"need": [
 					"Resize"
 				]
@@ -30,12 +30,12 @@
 		{
 			"FactoryObjectDetect": {
 				"name": "FactoryObjectDetect2",
-				"cfg_filename": "Data-light\\Yolo Detection\\yolo-mg21.cfg",
+				"cfg_filename": "Data-light\\QualityControl\\yolo-mg21.cfg",
 				"confidenceThreshold": "0.3",
-				"names_filename": "Data-light\\Yolo Detection\\yolo-mg21.names",
+				"names_filename": "Data-light\\QualityControl\\yolo-mg21.names",
 				"skip_frame": "0",
 				"wait_ms": "300",
-				"weight_filename": "Data-light\\Yolo Detection\\yolo-mg21_2100.weights",
+				"weight_filename": "Data-light\\QualityControl\\yolo-mg21_2100.weights",
 				"need": [
 					"Resize"
 				],
@@ -93,7 +93,7 @@
 			{
 				"VideoDataSource": {
 					"loop": true,
-					"url": "C:\\Users\\ddubuc\\workspace\\hipe\\install\\hipe-core\\workingdir\\modules-datas\\demos\\Data-light\\Videos\\Demo_Composer.mp4",
+					"url": "Data-light\\Videos\\mg21.avi",
 					"name": "VideoDataSource"
 				}
 			}

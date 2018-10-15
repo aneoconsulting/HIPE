@@ -17,7 +17,7 @@ cd %script_dir%
 mkdir build
 cd build
 
-cmake.exe .. -G "Visual Studio 14 2015 Win64"
+cmake.exe .. -G "Visual Studio 15 2017 Win64"
 if NOT ["%errorlevel%"]==["0"] (
     pause
     exit /b %errorlevel%

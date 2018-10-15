@@ -16,9 +16,14 @@ if (WITH_GFLAGS)
 					PATHS "${GFLAGS_ROOT_DIR}/lib/cmake/gflags"
 					NO_DEFAULT_PATH)
 
+					set_target_properties(gflags_static PROPERTIES
+	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+	  )
 				  message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
 		if (WIN32)
-		  target_link_libraries(core ${GFLAGS_LIBRARIES})
+		  target_link_libraries(core gflags_static)
+		  #${GFLAGS_LIBRARIES}
 		else()
 		  target_link_libraries(core gflags_shared)
 		endif()
@@ -38,6 +43,10 @@ if (WITH_GLOG)
 	message(STATUS "Glog include dir : ${GLOG_LIBRARIES}")
 	message(STATUS "Glog include dir : ${GLOG_LIBRARY}")
 	target_include_directories(core PRIVATE ${GLOG_INCLUDE_DIR})
+	 set_target_properties(glog::glog PROPERTIES
+	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+	  )
 	target_link_libraries(core glog::glog)
 	set(USE_GLOG "-DUSE_GLOG")
 	message(STATUS "GLOG IS INCLUDED")
