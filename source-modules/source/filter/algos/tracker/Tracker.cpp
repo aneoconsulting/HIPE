@@ -3,7 +3,7 @@
 //issue order of header for vector keyword call it before 
 	#include <dlib/simd.h>
 #endif
-#include <filter/algos/tracker/tracker.h>
+#include <filter/algos/tracker/Tracker.h>
 #include <data/ImageData.h>
 #include <data/PatternData.h>
 #include <data/DirPatternData.h>

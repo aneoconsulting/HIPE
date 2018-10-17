@@ -31,7 +31,7 @@ option(WITH_CUDA "Use CUDA GPU." ON)
 
 option(WITH_CUBLAS "Use CUBLAS libraries." OFF)
 
-option(WITH_CAFFE "Use Caffe libraries." OFF)
+option(WITH_CAFFE "Use Caffe libraries." ON)
 
 option(WITH_OPENBLAS "Use OpenBLAS libraries." OFF)
 
@@ -75,9 +75,21 @@ option(CMAKE_USE_WIN32_THREADS_INIT "using WIN32 threads" ON)
 endif(WIN32)
 
 if (WITH_CAFFE AND UNIX)
-#Disable Caffe TODO ATM IT'S NOT IMPLEMENTED
-set(WITH_CAFFE OFF CACHE BOOL "Use Caffe libraries." FORCE)
-message(ERROR "Cannot yet activate the Caffe on Linux. Implementation soon")
+  #Disable Caffe TODO ATM IT'S NOT IMPLEMENTED
+  #set(WITH_LMDB OFF CACHE BOOL "Use Caffe libraries." FORCE)
+  #set(WITH_OPENBLAS OFF CACHE BOOL "Use OpenBLAS libraries." FORCE)
+  #set(WITH_LEVELDB OFF CACHE BOOL "Use Caffe libraries." FORCE)
+  #set(WITH_LMDB OFF CACHE BOOL "Use LMDB libraries." FORCE)
+  #set(WITH_HDF5 OFF CACHE BOOL "Use HDF5 libraries." FORCE)
+  set(WITH_GFLAGS ON CACHE BOOL "Use GFlags libraries." FORCE)
+  set(WITH_GLOG ON CACHE BOOL "Use GLOG libraries." FORCE)
+  #set(WITH_SNAPPY OFF CACHE BOOL "Use SNAPPY libraries." FORCE)
+  #set(WITH_CUDA OFF CACHE BOOL "Use CUDA GPU."  FORCE)
+  #set(WITH_CUBLAS OFF CACHE BOOL "Use CUBLAS libraries." FORCE)
+  #set(WITH_PROTOBUF OFF CACHE BOOL "Use PROTOBUF libraries." FORCE)
+
+#set(WITH_CAFFE OFF CACHE BOOL "Use Caffe libraries." FORCE)
+#message(ERROR "Cannot yet activate the Caffe on Linux. Implementation soon")
 
 elseif(WITH_CAFFE AND WIN32)
 

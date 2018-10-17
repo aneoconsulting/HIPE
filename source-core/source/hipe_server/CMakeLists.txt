@@ -1,3 +1,4 @@
+include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
@@ -15,14 +16,15 @@ if (WITH_GFLAGS)
 					REQUIRED
 					PATHS "${GFLAGS_ROOT_DIR}/lib/cmake/gflags"
 					NO_DEFAULT_PATH)
-set_target_properties(gflags_static PROPERTIES
-	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
-	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-	  )
-				  message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
-		if (WIN32)
-		  target_link_libraries(hipe_server gflags_static)
-		else()
+	  message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
+	  if (WIN32)
+		set_target_properties(gflags_static PROPERTIES
+		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+		  )
+		
+		target_link_libraries(hipe_server gflags_static)
+	  else()
 		  target_link_libraries(hipe_server gflags_shared)
 		endif()
 		target_include_directories(hipe_server PRIVATE ${GFLAGS_INCLUDE_DIRS})

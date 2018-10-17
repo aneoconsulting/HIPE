@@ -49,7 +49,7 @@ get_filename_component(HIPE_EXTERNAL "${HIPE_EXTERNAL}" ABSOLUTE)
 if(WIN32)
   set(HIPE_EXTERNAL_DIR "${HIPE_EXTERNAL}/win64")
 else(WIN32)
-  set(HIPE_EXTERNAL_DIR "${HIPE_EXTERNAL}/linux64/install")
+  set(HIPE_EXTERNAL_DIR "${HIPE_EXTERNAL}/linux64")
   # Without this, the linker fails to find e.g. libboost_wave when building
   # multiple libraries ("cannot find -lboost_wave"), despite correctly locating
   # the libraries in HIPE_EXTERNAL with the find_package command. For example,
@@ -61,6 +61,14 @@ endif(WIN32)
 set(CUDA_MAJOR "10" CACHE STRING "CUDA MAJOR VERSION" FORCE)
 set(CUDA_MINOR "0" CACHE STRING "CUDA MINOR VERSION" FORCE)
 set(CUDA_VERSION "${CUDA_MAJOR}.${CUDA_MINOR}" CACHE PATH "CUDA_VERSION" FORCE)
+if (WIN32)
+  file(TO_CMAKE_PATH "$ENV{CUDA_PATH_V${CUDA_MAJOR}_${CUDA_MINOR}}" _CUDA_TOOLKIT_ROOT_DIR)
+else()
+  file(TO_CMAKE_PATH "/usr/local/cuda-${CUDA_MAJOR}.${CUDA_MINOR}" _CUDA_TOOLKIT_ROOT_DIR)
+  
+endif(WIN32)
+SET(CUDA_TOOLKIT_ROOT_DIR ${_CUDA_TOOLKIT_ROOT_DIR} CACHE PATH "Cuda Tookit PATH" FORCE)
+message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
 
 if(WIN32)
   # TODO

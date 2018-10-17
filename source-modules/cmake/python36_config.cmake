@@ -4,7 +4,7 @@ if(UNIX)
 # message(STATUS "PYTHON_LIBRARY: ${PYTHON_LIBRARY}")
 # message(STATUS "PYTHON_INCLUDE_DIR: ${PYTHON_INCLUDE_DIR}")
 
-find_package(PythonLibs 3.6 REQUIRED)
+find_package(PythonLibs 3.5 REQUIRED)
 set(PYTHONLIBS_FOUND "${PYTHONLIBS_FOUND}")
 set(PYTHON36_INCLUDE_DIRS "${PYTHON_INCLUDE_DIRS}")
 set(PYTHON36LIBS_VERSION_STRING "${PYTHONLIBS_VERSION_STRING}")
@@ -12,27 +12,19 @@ set(PYTHON36_LIBRARIES "${PYTHON_LIBRARIES}")
 
 # set(Python_ADDITIONAL_VERSIONS 3.7)
 if(NOT HIPE_EXTERNAL_PYTHON36)
-  find_package(PythonInterp 3.6 REQUIRED)
+  find_package(PythonInterp 3.5 REQUIRED)
 else()
   set(PYTHON_EXECUTABLE "${HIPE_EXTERNAL_DIR}/python36/usr/bin/python36")
 endif()
 message(STATUS "PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE}")
 
 # Add site-packages to include directories to find Numpy headers.
-if (WIN32)
-execute_process(
-  COMMAND "${PYTHON_EXECUTABLE}" -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
-  OUTPUT_VARIABLE PYTHON36_SITE_PACKAGES_DIR
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-else()
 execute_process(
   COMMAND "${PYTHON_EXECUTABLE}" -c "import site; print(site.getsitepackages()[0])"
   OUTPUT_VARIABLE PYTHON36_SITE_PACKAGES_DIR
   OUTPUT_STRIP_TRAILING_WHITESPACE
   )
- 
-endif()
+
 # TODO
 # Maybe generalize this with file globbing or find_path. Determine how the
 # system normally find these files first and use that approach if possible.

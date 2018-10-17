@@ -1,3 +1,4 @@
+include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python36_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
@@ -8,9 +9,6 @@ include("${CMAKE_SOURCE_DIR}/cmake/hipecore_config.cmake")
 add_hipe_library(pydata SHARED)
 
 target_compile_definitions(pydata PRIVATE "-DCV_VERSION_EPOCH=3" "-DUSE_BOOST_REGEX" "-DPYDATA_BUILD")
-
-file(TO_CMAKE_PATH "$ENV{CUDA_PATH_V${CUDA_MAJOR}_${CUDA_MINOR}}" CUDA_TOOLKIT_ROOT_DIR)
-message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
 
 target_link_libraries(pydata ${hipecore_LIBRARIES})
 if (WITH_CUBLAS OR WITH_CUDA)

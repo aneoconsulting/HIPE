@@ -1,3 +1,4 @@
+include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python36_config.cmake")
@@ -45,13 +46,11 @@ endif()
 #   set(MYLIBS -Wl,--start-group core streaming data -Wl,--end-group)
 # endif()
 # target_link_libraries(filter -Wl,--start-group core streaming data -Wl,--end-group)
-file(TO_CMAKE_PATH "$ENV{CUDA_PATH_V${CUDA_MAJOR}_${CUDA_MINOR}}" CUDA_TOOLKIT_ROOT_DIR)
-message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
 
 target_link_libraries(filter data pydata)
 message(STATUS "Look for CUDA")
 if (WITH_CUBLAS OR WITH_CUDA)
-	find_package(CUDA "8.0" REQUIRED)
+	find_package(CUDA "${CUDA_MAJOR}.${CUDA_MINOR}" REQUIRED)
 	target_link_libraries(filter ${CUDA_LIBRARIES})
 	target_include_directories(filter PRIVATE ${CUDA_INCLUDE_DIRS})
 		
@@ -218,10 +217,10 @@ if (WITH_CAFFE)
 	set_target_properties(caffe PROPERTIES
 		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
 		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)	
-	#target_link_libraries(filter caffeproto)
-	
+	target_link_libraries(filter proto)
 	target_link_libraries(filter ${Caffe_LIBRARIES})
-	target_include_directories(filter PRIVATE ${caffe_INCLUDE_DIRS})
+	target_include_directories(filter PRIVATE ${Caffe_INCLUDE_DIRS})
+	target_include_directories(filter PRIVATE ${CUDA_TOOLKIT_ROOT_DIR}/include)
 	set(USE_CAFFE "-DUSE_CAFFE")
 	message(STATUS "CAFFE IS INCLUDED")
 

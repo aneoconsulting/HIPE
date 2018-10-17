@@ -1,14 +1,11 @@
-
+include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
-
-file(TO_CMAKE_PATH "$ENV{CUDA_PATH_V${CUDA_MAJOR}_${CUDA_MINOR}}" CUDA_TOOLKIT_ROOT_DIR)
-message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
-
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/python36_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/hipecore_config.cmake")
 
+message(STATUS "DLIB_DIR ${Dlib_DIR}")
 if(USE_DLIB)
   include("${CMAKE_SOURCE_DIR}/cmake/dlib_config.cmake")
 endif(USE_DLIB)
@@ -17,6 +14,8 @@ endif(USE_DLIB)
 add_hipe_library(data SHARED)
 
 if(USE_DLIB)
+  message(STATUS "USE_DLIB : INLCUDE DIR : ${dlib_INCLUDE_DIRS}")
+  target_include_directories(data PUBLIC ${dlib_INCLUDE_DIRS})
   target_link_libraries(data ${dlib_LIBRARIES})
   # TODO
   # Remove the previous line and use this without setting include_headers
