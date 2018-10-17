@@ -1,0 +1,6 @@
+{
+	"http" : {
+		"port" : "9090"
+	},
+	"base_cert" : "C:\\xampp\\cert\\https_aneo"
+}

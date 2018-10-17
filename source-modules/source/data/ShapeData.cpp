@@ -150,6 +150,9 @@ namespace data
 	ShapeData& ShapeData::operator<<(const std::vector<cv::Rect>& rects)
 	{
 		This()._rectsArray.insert(This()._rectsArray.end(), rects.begin(), rects.end());
+		for (size_t i = 0; i < rects.size(); i++)
+			This()._colors.emplace_back(cv::Scalar(255, 255, 255));
+
 		return *this;
 	}
 

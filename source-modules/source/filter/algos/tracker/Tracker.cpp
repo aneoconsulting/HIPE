@@ -137,7 +137,7 @@ cv::Rect filter::algos::SingleTracker::get_position()
 filter::algos::SingleTracker::SingleTracker(int id, cv::Mat& img, const cv::Rect rect, std::string & name) :
 	targetId(id), _rect(rect), _name(name)
 {
-	tracker = new dlib::correlation_tracker(3);
+	tracker = new dlib::correlation_tracker(6);
 
 	dlib::array2d<unsigned char> cvMatToArray2d = Util::cvtMatToArray2d(img);
 	tracker->start_track(cvMatToArray2d, Util::cvtRectToDrect(rect));
@@ -145,7 +145,7 @@ filter::algos::SingleTracker::SingleTracker(int id, cv::Mat& img, const cv::Rect
 
 filter::algos::SingleTracker::SingleTracker(const SingleTracker& left)
 {
-	tracker = new dlib::correlation_tracker(3);
+	tracker = new dlib::correlation_tracker(6);
 	targetId = left.targetId;
 	_rect = left._rect;
 	_name = left._name;
@@ -158,6 +158,21 @@ filter::algos::SingleTracker::~SingleTracker()
 		delete tracker;
 		tracker = nullptr;
 	}
+}
+
+
+double filter::algos::SingleTracker::update(const cv::Mat& mat) const
+{
+	dlib::array2d<unsigned char> cvMatToArray2d = Util::cvtMatToArray2d(mat);
+	return tracker->update(cvMatToArray2d);
+}
+
+double filter::algos::SingleTracker::update(const cv::Mat& mat, cv::Rect & rect)
+{
+	dlib::drectangle dRect = Util::cvtRectToDrect(rect);
+	_rect = rect;
+	dlib::array2d<unsigned char> cvMatToArray2d = Util::cvtMatToArray2d(mat);
+	return tracker->update(cvMatToArray2d, dRect);
 }
 
 double filter::algos::SingleTracker::update_noscale(const cv::Mat& mat)
@@ -360,7 +375,7 @@ void filter::algos::Tracker::clearTrackerOutsideFrame(const cv::Mat & frame)
 
 	for (SingleTracker * track : trackers)
 	{
-		double l_confidence = track->update_noscale(frame);
+		double l_confidence = track->update(frame);
 		dlib::drectangle drectangle = track->tracker->get_position();
 		auto corner = drectangle.tl_corner();
 		cv::Point center = cv::Point(corner.x() + (drectangle.width() / 2),
@@ -477,7 +492,7 @@ HipeStatus filter::algos::Tracker::process()
 						new_center.y < prevRect.y + 2 * prevRect.height)
 					{
 						isMatching = true;
-						track->update_noscale(new_rectImgs[idxRect], new_rect);
+						track->update(new_rectImgs[idxRect], new_rect);
 						
 						break;
 					}
@@ -499,7 +514,7 @@ HipeStatus filter::algos::Tracker::process()
 	for (SingleTracker * track : trackers)
 	{
 		auto& history_track = track->history_track;
-		double l_confidence = track->update_noscale(frame);
+		double l_confidence = track->update(frame);
 		cv::Rect new_pos = track->get_position();
 		
 		cv::Point center = cv::Point(new_pos.x + (new_pos.width / 2),

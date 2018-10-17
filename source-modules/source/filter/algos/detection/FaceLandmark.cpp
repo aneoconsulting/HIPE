@@ -88,8 +88,10 @@ namespace filter
 				}
 				else
 					res = image.getMat();
-
-				dlib::cv_image<dlib::bgr_pixel> cimg(res);
+				double ratio = 4.0;
+				cv::Mat small;
+				cv::resize(res, small, cv::Size(), 1.0/ratio, 1.0/ratio);
+				dlib::cv_image<dlib::bgr_pixel> cimg(small);
 				dlib::assign_image(img, cimg);
 
 				std::vector<dlib::full_object_detection> local_shapes;
@@ -113,10 +115,10 @@ namespace filter
 					// put them on the screen.
 					// Resize obtained rectangle for full resolution image. 
 					dlib::rectangle r(
-						(long)(dets[j].left() / 2),
-						(long)(dets[j].top() / 2),
-						(long)(dets[j].right() / 2),
-						(long)(dets[j].bottom() / 2)
+						(long)(dets[j].left() * ratio / 2),
+						(long)(dets[j].top() * ratio / 2),
+						(long)(dets[j].right() * ratio / 2),
+						(long)(dets[j].bottom() * ratio / 2)
 					);
 					dlib::cv_image<dlib::bgr_pixel> cimg2(res);
 					dlib::full_object_detection shape = pose_model(cimg2, r);

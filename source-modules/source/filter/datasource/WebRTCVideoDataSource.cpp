@@ -111,6 +111,7 @@ void filter::datasource::WebRTCVideoDataSource::onLoad(void* data)
 	if (!a_isActive.exchange(true))
 	{
 		std::string workdir = corefilter::getLocalEnv().getValue("workingdir") + "/http-root/certificats";
+		std::string base_cert = corefilter::getLocalEnv().getValue("base_cert");
 		std::stringstream path;
 
 		path << workdir;
@@ -122,7 +123,7 @@ void filter::datasource::WebRTCVideoDataSource::onLoad(void* data)
 		std::string built_path = path.str();
 		
 		const char* c_str = built_path.c_str();
-		video = new WebRTCCapturer(port, c_str);
+		video = new WebRTCCapturer(port, c_str, base_cert.c_str());
 		video->startWebRTCServer();
 		captureTasks();
 	}

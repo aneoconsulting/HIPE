@@ -54,7 +54,8 @@ void WebRTCSender::onLoad(void* data)
 		}
 		std::string built_path = path.str();
 		const char* c_str = built_path.c_str();
-		streamer = newWebRTCStreamer(port, c_str);
+		std::string base_cert = corefilter::getLocalEnv().getValue("base_cert");
+		streamer = newWebRTCStreamer(port, c_str, base_cert.c_str());
 		startStreamerServer(streamer);
 	}
 }

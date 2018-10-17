@@ -66,11 +66,7 @@ int main(int argc, char* argv[]) {
 	core::Logger::init(argv[0]);
 	
 
-	// Default values configuration file and command line configuration
-	hipe_server::Configuration config;
-	config.setConfigFromFile("./config.json");
-	if (config.setConfigFromCommandLine(argc, argv) == 1)
-		return 0;
+	
 
 	auto listPotentialWorkingDir = defaultListWorkingDirectory();
 	bool foundWorkingDir = false;
@@ -105,7 +101,11 @@ int main(int argc, char* argv[]) {
 		LOG(ERROR) << error_msg.str();
 		return -1;
 	}
-
+	// Default values configuration file and command line configuration
+	hipe_server::Configuration config;
+	config.setConfigFromFile("./config.json");
+	if (config.setConfigFromCommandLine(argc, argv) == 1)
+		return 0;
 	
 	config.displayConfig();
 
@@ -118,12 +118,14 @@ int main(int argc, char* argv[]) {
 	buildstring << config.configuration.port;
 
 	corefilter::getLocalEnv().setValue("http_port", buildstring.str());
+	corefilter::getLocalEnv().setValue("base_cert",  config.configuration.base_cert);
 	
 	http::HttpServer server(config.configuration.port, 1);
 
 	std::string currentDir = GetCurrentWorkingDir();
 	std::string certDir = currentDir + "/http-root/certificats";
-	http::HttpsServer server_https(config.configuration.port + 43, 1, certDir + "/mylaptop.crt", certDir + "/mylaptop.key");
+	std::string base_cert = corefilter::getLocalEnv().getValue("base_cert");
+	http::HttpsServer server_https(config.configuration.port + 43, 1, base_cert + ".crt", base_cert + ".key");
 
 	orchestrator::OrchestratorFactory::start_orchestrator();
 

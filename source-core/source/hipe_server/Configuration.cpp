@@ -22,6 +22,7 @@ namespace hipe_server
 	{
 		this->port = 8080;
 		this->modulePath = "";
+		this->base_cert = "NOT-DEFINED";
 	}
 
 	Configuration::Configuration()
@@ -48,6 +49,10 @@ namespace hipe_server
 		configCat.add_options()
 			("module,m", bpo::value<std::string>(&this->configuration.modulePath)->default_value(this->configuration.modulePath), "Sets the path to the module to get all filters implemented")
 			;
+		configCat.add_options()
+			("certificat_path, -c", bpo::value<std::string>(&this->configuration.base_cert)->default_value(this->configuration.base_cert), "Sets the path to the https certificats")
+			;
+
 
 
 		// Regroup all sub catagories
@@ -104,7 +109,8 @@ namespace hipe_server
 		}
 		catch (const std::exception& e)
 		{
-			LOG(INFO) << "Couldn't find configuration file.";
+			LOG(ERROR) << "Couldn't find a valid configuration file.";
+			LOG(ERROR) << e.what();
 			return 1;
 		}
 
@@ -113,6 +119,12 @@ namespace hipe_server
 		{
 			auto httpNode = configPtree.get_child("http");
 			configuration.port = getValue<unsigned short>(httpNode, "port");
+		}
+
+		if (configPtree.count("base_cert") != 0)
+		{
+			configuration.base_cert = configPtree.get<std::string>(std::string("base_cert"));
+			
 		}
 
 		return 0;

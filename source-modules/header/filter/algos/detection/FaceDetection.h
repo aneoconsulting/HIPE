@@ -98,7 +98,7 @@ namespace filter
 			 * \brief Find faces, if present, on an image.
 			 * \param image The image to process and on which we'll try to find faces.
 			 */
-			void detectFaces(const data::ImageData & image);
+			std::vector<cv::Rect> detectFaces(const data::ImageData& image);
 
 
 			HipeStatus process();
