@@ -2,7 +2,6 @@
 #if defined(USE_DLIB) && defined(__ALTIVEC__)
 	#include <dlib/simd.h>
 #endif
-
 typedef struct _GError GError;
 
 struct _GError
@@ -23,6 +22,7 @@ char *g_filename_to_uri   (const char *filename, const char *hostname, GError   
 	return strdup(filename);
 }
 #endif
+
 
 #include <filter/References.h>
 #include <corefilter/tools/RegisterTable.h>
@@ -58,35 +58,35 @@ ENTRYPOINT void load()
 }
 
 #ifdef WIN32
-#include <windows.h>
 
-BOOL WINAPI DllMain(
+
+int WINAPI DllMain(
     HINSTANCE hinstDLL,  // handle to DLL module
-    DWORD fdwReason,     // reason for calling function
-    LPVOID lpReserved )  // reserved
+    unsigned long fdwReason,     // reason for calling function
+    void* lpReserved )  // reserved
 {
     // Perform actions based on the reason for calling.
     switch( fdwReason ) 
     { 
-	case DLL_PROCESS_ATTACH:
+	case 1:
 		// Initialize once for each new process.
 		// Return FALSE to fail DLL load.
 		load();
 		break;
 
-	case DLL_THREAD_ATTACH:
+	case 2:
 		// Do thread-specific initialization.
 		break;
 
-	case DLL_THREAD_DETACH:
+	case 3:
 		// Do thread-specific cleanup.
 		break;
 
-	case DLL_PROCESS_DETACH:
+	case 0:
 		// Perform any necessary cleanup.
 		break;
     }
-    return TRUE;  // Successful DLL_PROCESS_ATTACH.
+    return 1;  // Successful DLL_PROCESS_ATTACH.
 }
 #endif
 

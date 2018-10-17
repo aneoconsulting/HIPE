@@ -140,10 +140,18 @@ endif()
 if (WITH_HDF5)
 	find_package(HDF5 
 				REQUIRED
-				PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake"
+				PATHS "${HIPE_EXTERNAL_DIR}/cmake"
 				NO_DEFAULT_PATH)
-	target_link_libraries(filter hdf5-shared)
-	target_link_libraries(filter hdf5_hl-shared)
+	set_target_properties(hdf5::hdf5-static PROPERTIES
+	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+	  )
+	set_target_properties(hdf5::hdf5_hl-static PROPERTIES
+	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+	  )
+	target_link_libraries(filter hdf5::hdf5-static)
+	target_link_libraries(filter hdf5::hdf5_hl-static)
 	set(USE_HDF5 "-DUSE_HDF5")
 	message(STATUS "HDF5 IS INCLUDED")
 endif()
@@ -151,29 +159,32 @@ endif()
 if (WITH_LMDB)		
 	find_package(LMDB 
 			REQUIRED
-			PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake")
+			PATHS "${HIPE_EXTERNAL_DIR}/lib/cmake")
 	set(USE_LMDB "-DUSE_LMDB")
+	set_target_properties(lmdb PROPERTIES
+		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
 	target_link_libraries(filter lmdb)
 	message(STATUS "LMDB IS INCLUDED")
 endif()
 
-if (WITH_LEVELDB)			
-	find_package(LevelDB 
-			REQUIRED
-			PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake"
-			)
-	target_link_libraries(filter leveldb)
-	set(USE_LEVELDB "-DUSE_LEVELDB")
-	message(STATUS "LEVELDB IS INCLUDED")
-endif()
+# if (WITH_LEVELDB)			
+	# find_package(LevelDB 
+			# REQUIRED
+			# PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake"
+			# )
+	# target_link_libraries(filter leveldb)
+	# set(USE_LEVELDB "-DUSE_LEVELDB")
+	# message(STATUS "LEVELDB IS INCLUDED")
+# endif()
 
-if (WITH_SNAPPY)
-	find_package(Snappy 
-				REQUIRED
-				PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake")
-    set(USE_SNAPPY "-DUSE_SNAPPY")
-	message(STATUS "SNAPPY IS INCLUDED")
-endif()			
+# if (WITH_SNAPPY)
+	# find_package(Snappy 
+				# REQUIRED
+				# PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake")
+    # set(USE_SNAPPY "-DUSE_SNAPPY")
+	# message(STATUS "SNAPPY IS INCLUDED")
+# endif()			
 			
 if (WITH_PROTOBUF)
 	message(STATUS "Get Protobuf from ${HIPE_EXTERNAL_DIR}/libraries/cmake")
@@ -182,10 +193,14 @@ if (WITH_PROTOBUF)
 	message(STATUS "Protobuf find_path : ${Protobuf_INCLUDE_DIR}")
 	find_package(Protobuf 
 				REQUIRED
-				PATHS "${HIPE_EXTERNAL_DIR}/libraries/cmake"
+				PATHS "${HIPE_EXTERNAL_DIR}/cmake"
 				NO_DEFAULT_PATH)
-
-				
+	set_target_properties(protobuf::libprotobuf-lite PROPERTIES
+		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
+	set_target_properties(protobuf::libprotoc PROPERTIES
+		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)			
 	target_link_libraries(filter protobuf::libprotobuf-lite protobuf::libprotoc)
 	target_include_directories(filter PRIVATE ${Protobuf_INCLUDE_DIRS})
 	set(USE_PROTOBUF "-DUSE_PROTOBUF")
@@ -193,16 +208,19 @@ if (WITH_PROTOBUF)
 endif()
 
 if (WITH_CAFFE)
-	set(ZLIB_LIBRARY_DEBUG "${HIPE_EXTERNAL_DIR}/libraries/lib/snappyd.lib" CACHE PATH "ZLIB_LIBRARY_DEBUG" FORCE)
-	set(ZLIB_LIBRARY_RELEASE "${HIPE_EXTERNAL_DIR}/libraries/lib/snappy.lib"  CACHE PATH "ZLIB_LIBRARY_RELEASE" FORCE)
-	set(ZLIB_INCLUDE_DIR "${HIPE_EXTERNAL_DIR}/libraries/include"  CACHE PATH "ZLIB_INCLUDE_DIR" FORCE)
+	# set(ZLIB_LIBRARY_DEBUG "${HIPE_EXTERNAL_DIR}/libraries/lib/snappyd.lib" CACHE PATH "ZLIB_LIBRARY_DEBUG" FORCE)
+	# set(ZLIB_LIBRARY_RELEASE "${HIPE_EXTERNAL_DIR}/libraries/lib/snappy.lib"  CACHE PATH "ZLIB_LIBRARY_RELEASE" FORCE)
+	# set(ZLIB_INCLUDE_DIR "${HIPE_EXTERNAL_DIR}/libraries/include"  CACHE PATH "ZLIB_INCLUDE_DIR" FORCE)
 	find_package(Caffe 
 			REQUIRED
 			PATHS "${Caffe_DIR}/share/Caffe"
 			NO_DEFAULT_PATH)
-			
-	target_link_libraries(filter caffeproto)
-	target_link_libraries(filter caffe)
+	set_target_properties(caffe PROPERTIES
+		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)	
+	#target_link_libraries(filter caffeproto)
+	
+	target_link_libraries(filter ${Caffe_LIBRARIES})
 	target_include_directories(filter PRIVATE ${caffe_INCLUDE_DIRS})
 	set(USE_CAFFE "-DUSE_CAFFE")
 	message(STATUS "CAFFE IS INCLUDED")

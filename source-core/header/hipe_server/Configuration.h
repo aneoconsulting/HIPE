@@ -17,6 +17,7 @@ namespace hipe_server
 	public:
 		unsigned short port;
 		std::string modulePath;
+		std::string base_cert;
 
 
 	public:

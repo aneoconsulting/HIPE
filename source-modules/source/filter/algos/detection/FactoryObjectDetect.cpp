@@ -1,5 +1,8 @@
 //@HIPE_LICENSE@
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
 #include <filter/algos/detection/FactoryObjectDetect.h>
+
 
 namespace filter
 {
@@ -147,7 +150,7 @@ namespace filter
 			data::ShapeData sd;
 			for (int i = 0; i < boxes.rectangles.size(); i++)
 			{
-				cv::Scalar color(std::rand() % 255, std::rand() % 255, std::rand() % 255);
+				cv::Scalar color(24, 101, 243);
 				sd.add(boxes.rectangles[i], color, boxes.names[i]);
 				sd.add(image);
 			}

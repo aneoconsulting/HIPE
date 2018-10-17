@@ -60,6 +60,8 @@ namespace filter
 			SingleTracker(const SingleTracker& left);
 
 			~SingleTracker();
+			double update(const cv::Mat& mat) const;
+			double update(const cv::Mat& mat, cv::Rect& rect);
 
 			double update_noscale(const cv::Mat& mat);
 			double update_noscale(const cv::Mat& mat, cv::Rect& rect);
@@ -95,6 +97,6 @@ namespace filter
 			HipeStatus process() override;
 		};
 
-		ADD_CLASS(Tracker, confidence, history_points) ;
+		ADD_CLASS(Tracker, confidence, history_points, trail) ;
 	}
 }

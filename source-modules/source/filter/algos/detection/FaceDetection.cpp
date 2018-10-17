@@ -28,30 +28,17 @@ namespace filter
 					This->detectFaces(image);
 					std::vector<cv::Rect> rects;
 
-					for (dlib::rectangle & rect : This->dets)
-					{
-						cv::Rect cvRect;
-						cvRect.x = std::max<int>(rect.left() / 2 - 20, 0);
-						cvRect.y = std::max<int>(rect.top() / 2 - 20, 0);
-						cvRect.height = std::min<int>((rect.bottom() - rect.top()) / 2 + 40, image.getMat().size().width);
-						cvRect.width = std::min<int>((rect.right() - rect.left()) / 2 + 40, image.getMat().size().width);
-						rects.push_back(cvRect);
-					}
-					data::ShapeData crop;
-					crop << rects;
-
-					if (This->crops.size() != 0)
-						This->crops.clear();
-
-					This->crops.push(crop);
+					
 				}
 			});
 		}
 
-		void FaceDetection::detectFaces(const data::ImageData & image)
+		std::vector<cv::Rect> FaceDetection::detectFaces(const data::ImageData& image)
 		{
+			std::vector<cv::Rect> rects;
 			try
 			{
+				
 				dlib::array2d<unsigned char> img;
 				cv::Mat res;
 				if (image.getMat().channels() == 4)
@@ -60,7 +47,11 @@ namespace filter
 				}
 				else
 					res = image.getMat();
-				dlib::cv_image<dlib::bgr_pixel> cimg(res);
+
+				double ratio = 2.0;
+				cv::Mat small;
+				cv::resize(res, small, cv::Size(), 1.0/ratio, 1.0/ratio);
+				dlib::cv_image<dlib::bgr_pixel> cimg(small);
 				dlib::assign_image(img, cimg);
 
 
@@ -80,22 +71,31 @@ namespace filter
 				// around all the faces it can find in the image.
 				dets = detector(img);
 
-				//std::cout << "Number of faces detected: " << dets.size() << std::endl;
-				//// Now we show the image on the screen and the face detections as
-				//// red overlay boxes.
-				//win.clear_overlay();
-				//win.set_image(img);
-				//win.add_overlay(dets, dlib::rgb_pixel(255,0,0));
+				for (dlib::rectangle& rect : dets)
+				{
+					cv::Rect cvRect;
+					cvRect.x = std::max<int>(rect.left() / 2 * ratio - 20, 0);
+					cvRect.y = std::max<int>(rect.top() / 2 * ratio - 20, 0);
+					cvRect.height = std::min<int>((rect.bottom() - rect.top()) / 2 * ratio + 40, image.getMat().size().width);
+					cvRect.width = std::min<int>((rect.right() - rect.left()) / 2 * ratio + 40, image.getMat().size().width);
+					rects.push_back(cvRect);
+				}
+				data::ShapeData crop;
+				crop << rects;
 
+				if (crops.size() != 0)
+					crops.clear();
 
-				//std::cout << "Hit enter to process the next image..." << std::endl;
-				//std::cin.get();
+				crops.push(crop);
+
 			}
 			catch (exception& e)
 			{
 				cout << "\nexception thrown!" << endl;
 				cout << e.what() << endl;
 			}
+
+			return rects;
 		}
 
 		HipeStatus FaceDetection::process()
