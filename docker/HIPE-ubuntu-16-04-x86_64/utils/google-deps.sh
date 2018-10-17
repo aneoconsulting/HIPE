@@ -238,17 +238,20 @@ function build_glog()
 	pushd "$BUILD_DIRECTORY/libyuv/build"
 		cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
 			  -DCMAKE_CXX_FLAGS='-std=gnu++0x -fno-rtti -D_GLIBCXX_USE_CXX11_ABI=0' \
-			  -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX="$INSTALL_DIRECTORY" ..
+			  -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+			  -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+			  -DCMAKE_INSTALL_PREFIX="$INSTALL_DIRECTORY" ..
 		make -j $N_THREADS install
 	popd #"$BUILD_DIRECTORY/libyuv/build"
 
     mkdir -p "$BUILD_DIRECTORY/jsoncpp/build"
 	pushd "$BUILD_DIRECTORY/jsoncpp/build"
+	# -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
 
 	#-DCMAKE_CXX_FLAGS='-std=gnu++0x -fno-rtti -D_GLIBCXX_USE_CXX11_ABI=0'
 	cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
 		  -DCMAKE_CXX_FLAGS='-std=gnu++0x -fno-rtti -D_GLIBCXX_USE_CXX11_ABI=0' \
-		  -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+		  -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
 		  -DCMAKE_INSTALL_PREFIX="$INSTALL_DIRECTORY" ..
 	VERBOSE=3 make -j $N_THREADS install
 	popd #"$BUILD_DIRECTORY/jsoncpp/build"
@@ -265,8 +268,17 @@ function build_glog()
 	
     mkdir -p "$BUILD_DIRECTORY/libwebrtc/build"
 	pushd "$BUILD_DIRECTORY/libwebrtc/build"
-		cmake -DCMAKE_BUILD_TYPE=Release -DWEBRTC_BRANCH_HEAD=refs/branch-heads/66 -DGN_EXTRA_ARGS="use_rtti=true" -DCMAKE_INSTALL_PREFIX="$INSTALL_DIRECTORY" ..
-		make -j $N_THREADS clean install
+		cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$INSTALL_DIRECTORY" ..
+		make -j $N_THREADS install
+		
+		#Copy boring to install folder
+#		cp -v ./webrtc/src/out/Release/obj/third_party/boringssl/libboringssl.a ${INSTALL_DIRECTORY}/lib/
+#		cp -v ./webrtc/src/build/linux/debian_jessie_amd64-sysroot/usr/lib/x86_64-linux-gnu/libcrypto.a ${INSTALL_DIRECTORY}/lib/
+#		cp -rv ./webrtc/src/third_party/boringssl/src/include/* ${INSTALL_DIRECTORY}/include/
+		
+		#cp -rv ./webrtc/src/third_party/libyuv/include/* ${INSTALL_DIRECTORY}/include/
+#		cp -v ./webrtc/src/build/linux/debian_jessie_amd64-sysroot/usr/lib/libjsoncpp.a ${INSTALL_DIRECTORY}/lib/
+#		cp -rv ./webrtc/src/build/linux/debian_jessie_amd64-sysroot/usr/include/jsoncpp/* ${INSTALL_DIRECTORY}/include/
 	popd #"$BUILD_DIRECTORY/libwebrtc/build"
 
 	
@@ -275,9 +287,9 @@ function build_glog()
 	#WebRTCServer
 	mkdir -p "$BUILD_DIRECTORY/WebRTCServer/build"
 	pushd "$BUILD_DIRECTORY/WebRTCServer/build"
-	cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+	cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ \
 	-DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX="$INSTALL_DIRECTORY" ..
-		VERBOSE=3 make -j $N_THREADS install
+		VERBOSE=3 make -j $N_THREADS clean install
 	popd #"$BUILD_DIRECTORY/WebRTCServer/build"
 
 	

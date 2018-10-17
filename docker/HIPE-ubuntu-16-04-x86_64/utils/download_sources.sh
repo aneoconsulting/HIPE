@@ -59,8 +59,8 @@ self_dir="${self_%/*}"
 gen_dir="${self_dir}/gen"
 
 metalink_path="${gen_dir}/archives.metalink"
-wget_cmds_path="${gen_dir}/archives.wget.sh"
-git_repos_list_path="${gen_dir}/git_repos.txt"
+wget_cmds_path="archives.wget.sh"
+git_repos_list_path="git_repos.txt"
 
 pids_=()
 download_dir="$(readlink -f "${1:-downloads}")"

@@ -14,14 +14,15 @@ echo  "\n--- Installing now... ---\n"
 
 echo  "\n>> Please enter a name for the database:\n"
 DBNAME=hipe
+DB_DIR=$1
 echo  "\n>> Please enter an username for accessing the database:\n"
 DBUSER=root
 echo  "\n>> Please enter a password for your database:\n"
 DBPASSWD="root"
 
 
-USERNAME=hipe-group
-PASSWORD="hipe-group"
+USERNAME=$2
+PASSWORD="$2"
 
 sudo useradd -m -g www-data $USERNAME -s /bin/bash
 #echo $USERNAME:$PASSWORD | chpasswd
@@ -79,7 +80,7 @@ sudo service apache2 restart 2>&1
 sudo service mysql restart 2>&1
 
 echo 'create database `hipe`' | mysql -uroot -proot
-mysql -uroot -proot -h localhost hipe < /home/hipe-group/mysql_db/hipe.sql
+mysql -uroot -proot -h localhost hipe < ${DB_DIR}/hipe.sql
 
 #echo  "\n--- Installing Composer ---\n"
 #curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
@@ -87,7 +88,7 @@ mysql -uroot -proot -h localhost hipe < /home/hipe-group/mysql_db/hipe.sql
 #curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
 
 echo  "\n--- Installing NodeJS and NPM ---\n"
-apt-get -y install nodejs rpm npm
+sudo apt-get -y install nodejs rpm npm
 
 
 echo  "\n--- Webserver Installation done ---\n"

@@ -81,7 +81,7 @@ TARGETS
 
     * ffmpeg
     * livemedia
-    * cuda8
+    * cuda10
     * opencv
     * dlib
     * boost
@@ -102,7 +102,7 @@ OPTIONS
     directory if it is present, otherwise it will try to find CUDA on the
     system. If neither are available, the build will fail.
 
-    This will also enable the cuda8 target when building "all".
+    This will also enable the cuda10 target when building "all".
 
   -d
     Clean up build files after each build. This can be used to free space when
@@ -267,7 +267,7 @@ function cmake_with_gcc_x()
       "$@"
 #       -DCUDA_NVCC_FLAGS='--expt-relaxed-constexpr' \
       # The gcc version is set in the nvcc script that wraps the nvcc binary in
-      # the CUDA 8 installation directory. Some CMake/Make files fail to pass
+      # the CUDA 10 installation directory. Some CMake/Make files fail to pass
       # the argument to all invocations of nvcc so a wrapper script was
       # necessary at the time of writing to ensure that the required version of
       # gcc is used.
@@ -453,12 +453,12 @@ function build_livemedia()
 }
 
 
-function build_cuda8()
+function build_cuda10()
 {
-  header 'building CUDA 8'
-  local install_dir="$INSTALL_DIRECTORY/cuda8"
+  header 'building CUDA 10'
+  local install_dir="/usr/local/cuda-10.0"
   add_paths "$install_dir"
-  "$script_dir"/install_cuda_8.sh "$install_dir"
+  "$script_dir"/install_cuda_10.sh "$install_dir"
 }
 
 
@@ -492,9 +492,9 @@ function build_opencv()
 #     add_paths "$boost_install_dir"
 #   fi
 
-  if [[ $OPENCV_CUDA == ON && -d $INSTALL_DIRECTORY/cuda8 ]]
+  if [[ $OPENCV_CUDA == ON && -d $INSTALL_DIRECTORY/cuda10 ]]
   then
-    local cuda_install_dir="$INSTALL_DIRECTORY/cuda8"
+    local cuda_install_dir="/usr/local/cuda-10.0"
     add_paths "$cuda_install_dir"
   fi
 
@@ -529,22 +529,22 @@ function build_opencv()
 
 
   header 'building opencv'
-  untar "$ARCHIVE_DIRECTORY/opencv_contrib-3.4.0.zip"
-  untar "$ARCHIVE_DIRECTORY/opencv-3.4.0.zip"
+  untar "$ARCHIVE_DIRECTORY/opencv_contrib-3.4.2.zip"
+  untar "$ARCHIVE_DIRECTORY/opencv-3.4.2.zip"
 
   # Disable detection of ceres-solver.
   sed -i 's/find_package(Ceres QUIET)/set(Ceres_FOUND FALSE)/' \
-    "$BUILD_DIRECTORY/opencv_contrib-3.4.0/modules/sfm/CMakeLists.txt"
+    "$BUILD_DIRECTORY/opencv_contrib-3.4.2/modules/sfm/CMakeLists.txt"
 
   # ensure clean build directory
-  local build_dir="$BUILD_DIRECTORY/opencv-3.4.0/build"
+  local build_dir="$BUILD_DIRECTORY/opencv-3.4.2/build"
 #   rm -rf -- "$build_dir"
   mkdir -p -- "$build_dir"
   pushd -- "$build_dir"
     cmake_with_gcc_x 5 \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX="$install_dir" \
-      -DOPENCV_EXTRA_MODULES_PATH="$BUILD_DIRECTORY/opencv_contrib-3.4.0/modules" \
+      -DOPENCV_EXTRA_MODULES_PATH="$BUILD_DIRECTORY/opencv_contrib-3.4.2/modules" \
       -DCMAKE_DISABLE_FIND_PACKAGE_Caffe=TRUE \
       -DWITH_CUDA="$OPENCV_CUDA" \
       -DWITH_GSTREAMER=ON \
@@ -553,14 +553,14 @@ function build_opencv()
       -DWITH_CUBLAS=ON \
       -DBUILD_opencv_python=ON \
       -DBUILD_opencv_python2=ON \
-      -DBUILD_opencv_python3=OFF \
+      -DBUILD_opencv_python3=ON \
       -DENABLE_PRECOMPILED_HEADERS=OFF \
       ..
 #       -DBUILD_PROTOBUF=OFF \
     make -j "$N_THREADS" install
   popd
-  maybe_remove_build_files "opencv-3.4.0"
-  maybe_remove_build_files "opencv_contrib-3.4.0"
+  maybe_remove_build_files "opencv-3.4.2"
+  maybe_remove_build_files "opencv_contrib-3.4.2"
 }
 
 
@@ -568,29 +568,29 @@ function build_opencv()
 
 function build_dlib()
 {
-  #dlib 19.13
+  #dlib 19.16
   header 'building dlib'
 
-#   if [[ $OPENCV_CUDA == ON && -d $INSTALL_DIRECTORY/cuda8 ]]
+#   if [[ $OPENCV_CUDA == ON && -d $INSTALL_DIRECTORY/cuda10 ]]
 #   then
-#     local cuda_install_dir="$INSTALL_DIRECTORY/cuda8"
+#     local cuda_install_dir="$INSTALL_DIRECTORY/cuda10"
 #     add_paths "$cuda_install_dir"
 #   fi
 
   local install_dir="$INSTALL_DIRECTORY/dlib"
   add_paths "$install_dir"
 
-  untar "$ARCHIVE_DIRECTORY/dlib-19.13.zip"
-  mkdir -p -- "$BUILD_DIRECTORY/dlib-19.13/build"
-  pushd "$BUILD_DIRECTORY/dlib-19.13/build"
+  untar "$ARCHIVE_DIRECTORY/dlib-19.16.zip"
+  mkdir -p -- "$BUILD_DIRECTORY/dlib-19.16/build"
+  pushd "$BUILD_DIRECTORY/dlib-19.16/build"
   cmake \
     -DCMAKE_INSTALL_PREFIX="$install_dir" \
     ..
   make -j "$N_THREADS" install
 #   make -j "$N_THREADS" DESTDIR="$install_dir" install
   popd
-  mkdir -p -- "$BUILD_DIRECTORY/dlib-19.13/build2"  
-  pushd "$BUILD_DIRECTORY/dlib-19.13/build2"
+  mkdir -p -- "$BUILD_DIRECTORY/dlib-19.16/build2"  
+  pushd "$BUILD_DIRECTORY/dlib-19.16/build2"
   cmake \
       -DCMAKE_INSTALL_PREFIX="$install_dir" \
 	  -DBUILD_SHARED_LIBS=ON \
@@ -615,41 +615,41 @@ function build_boost()
   # STDOUT while Python 2 writes to stderr.
   if command -v python
   then
-    pypath=$(command -v python)
+    pypath=$(command -v python3.5)
     pyver="$("$pypath" -V 2>&1 | sed 's@Python \([0-9]\+\.[0-9]\+\).*@\1@')"
     message  "Python path: $pypath\nPython version: $pyver"
   else
     pyver=''
     message 'No "python" executable found.'
   fi
-  if [[ ${pyver:0:1} != 2 ]]
+  if [[ ${pyver:0:1} != 3 ]]
   then
     message 'Searching for python2*.'
     local unchecked_path="$PATH"
-    while [[ ${pyver:0:1} != 2 && ! -z $unchecked_path ]]
+    while [[ ${pyver:0:1} != 3 && ! -z $unchecked_path ]]
     do
       local this_path="${unchecked_path%%:*}"
       local next_path_index=$((${#this_path} + 1))
       local unchecked_path="${unchecked_path:${next_path_index}}"
       local python2_candidate
-      for pypath in "$this_path/python2"*
+      for pypath in "$this_path/python3"*
       do
         pyver="$("$pypath" -V 2>&1 | sed 's@Python \([0-9]\+\.[0-9]\+\).*@\1@')"
-        [[ ${pyver:0:1} == 2 ]] && break
+        [[ ${pyver:0:1} == 3 ]] && break
       done
     done
   fi
 
-  if [[ ${pyver:0:1} != 2 ]]
+  if [[ ${pyver:0:1} != 3 ]]
   then
-    message "error: failed to find Python2 executable"
+    message "error: failed to find Python3 executable"
     exit 1
   else
-    message  "Python2 path: $pypath\nPython version: $pyver"
+    message  "Python3 path: $pypath\nPython version: $pyver"
   fi
 
-  untar "$ARCHIVE_DIRECTORY/boost_1_62_0.tar.gz"
-  pushd "$BUILD_DIRECTORY/boost_1_62_0"
+  untar "$ARCHIVE_DIRECTORY/boost_1_66_0.tar.gz"
+  pushd "$BUILD_DIRECTORY/boost_1_66_0"
   ./bootstrap.sh --prefix="$install_dir" --with-toolset=gcc --with-icu --with-python="$pypath"
     # Support for OpenMPI
     echo "using mpi ;" >> project-config.jam
@@ -668,7 +668,7 @@ function build_boost()
       --prefix="$install_dir" \
       install
   popd
-  maybe_remove_build_files "boost_1_62_0"
+  maybe_remove_build_files "boost_1_66_0"
 }
 
 
@@ -781,7 +781,7 @@ do
       build_livemedia
       build_boost
       build_dlib
-      [[ $OPENCV_CUDA == ON ]] && build_cuda8
+      [[ $OPENCV_CUDA == ON ]] && build_cuda10
       build_opencv
     ;;
 
@@ -798,8 +798,8 @@ do
       build_livemedia
     ;;
 
-    cuda8)
-      build_cuda8
+    cuda10)
+      build_cuda10
     ;;
 
     opencv)
