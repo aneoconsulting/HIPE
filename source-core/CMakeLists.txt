@@ -16,11 +16,13 @@ option(USE_DLIB "Enable dlib library." ON)
 option(HIPE_STATIC_EXES "Compile static executables." OFF)
 
 if (WIN32)
-  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." ON)
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+  option(HIPE_EXTERNAL_PYTHON36 "Use Python 3.6 libraries in Hipe External." ON)
 else()
   option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+  option(HIPE_EXTERNAL_PYTHON36 "Use Python 3.6 libraries in Hipe External." OFF)
 endif()
-message(STATUS "HIPE_EXTERNAL_PYTHON27: ${HIPE_EXTERNAL_PYTHON27}")
+message(STATUS "HIPE_EXTERNAL_PYTHON36: ${HIPE_EXTERNAL_PYTHON36}")
 
 option(HIPE_EXTERNAL_BOOST "Use Boost libraries in Hipe External." ON)
 message(STATUS "HIPE_EXTERNAL_BOOST: ${HIPE_EXTERNAL_BOOST}")
@@ -69,17 +71,20 @@ if(WIN32)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
+file(TO_CMAKE_PATH "$ENV{CUDA_PATH_V${CUDA_MAJOR}_${CUDA_MINOR}}" CUDA_TOOLKIT_ROOT_DIR)
+message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
+
 add_subdirectory(source)
 
 
 
 
-install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
-install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
+
 install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT sources)
 
 if (${INSTALL_SOURCE})
-
+	install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
+	install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
 	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./project"
 			COMPONENT sources
 			PATTERN "cmake"

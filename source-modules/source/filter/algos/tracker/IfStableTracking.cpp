@@ -99,8 +99,6 @@ HipeStatus filter::algos::IfStableTracking::process()
 		
 	}
 
-	//if (! isSourceFound || image.empty() || !image.getMat().data)
-	//	throw HipeException("Error in IfStableTracking: No input image to draw on found.");
 	std::vector<std::vector<cv::Point> > & vec_point = shapes[0].FreeshapeArray();
 	if (shapes[0].empty() || vec_point.size() == 0 || vec_point[0].size() < 10)
 	{

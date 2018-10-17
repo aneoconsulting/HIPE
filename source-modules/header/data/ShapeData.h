@@ -4,6 +4,7 @@
 #include <vector>
 #pragma warning(push, 0) 
 #include <opencv2/core/types.hpp>
+#include <opencv2/core/mat.hpp>
 #pragma warning(pop) 
 
 
@@ -23,6 +24,7 @@ namespace data
 
 		std::vector<std::string> _ids;				//<! container of indexed list of text for shape to dispose with it. 
 		std::vector<cv::Scalar> _colors;			//<! container of indexed list to _freeShape of color for shape to dispose. 
+		cv::Mat _refFrame;
 
 
 		ShapeData(IOData::_Protection priv) : IOData(SHAPE)
@@ -56,6 +58,7 @@ namespace data
 			registerInstance(right._This);
 			_type = right.This_const()._type;
 			_decorate = right._decorate;
+			_refFrame = right.This_const()._refFrame;
 		}
 
 		virtual ~ShapeData()
@@ -148,11 +151,24 @@ namespace data
 		*/
 		ShapeData& operator<<(const std::vector<four_points>& quads);
 
+
+		/**
+		 * \brief Add frame used to creadte all Shape in this dataShape
+		 * \param ref the Cv:Mat frame used to create shapes
+		 * \return Returns a reference to the ShapeData object
+		 */
+		ShapeData& add(cv::Mat &ref)
+		{
+			_refFrame = ref;
+			This()._refFrame = ref;
+
+			return *this;
+		}
 		/**
 		* \brief Add a free shape to a list of shapes.
 		* \param shapes The shape to add.
 		* \param color rectangle's color
-		* \param ids The id to the shape to add.
+		* \param id The id to the shape to add.
 		* \return Returns a reference to the ShapeData object
 		*/
 		ShapeData& add(const std::vector<cv::Point>& shapes, const cv::Scalar & color = cv::Scalar(255, 255, 255), const std::string & id = std::string());
@@ -185,5 +201,13 @@ namespace data
 		* \param left The other object where to copy the data to. Its current data will be overwritten
 		*/
 		void copyTo(ShapeData& left) const;
+
+		cv::Mat RefFrame() const;
+
+
+		cv::Mat getRefFrame() const
+		{
+			return This_const()._refFrame;
+		}
 	};
 }

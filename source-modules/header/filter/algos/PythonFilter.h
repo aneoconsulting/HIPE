@@ -26,6 +26,7 @@ namespace filter
 			{
 				_init = false;
 				mPyUser = nullptr;
+				script_path = "Data-light/Python-Sample/testhipe.py";
 			}
 			data::PyContextData l_pythonContext;
 

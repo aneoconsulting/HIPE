@@ -4,6 +4,7 @@
 
 #include <filter/algos/streaming/WebRTCSender.h>
 #include <opencv2/opencv.hpp>
+#include <corefilter/tools/Localenv.h>
 
 HipeStatus WebRTCSender::process()
 {
@@ -42,10 +43,10 @@ void WebRTCSender::onLoad(void* data)
 {
 	if (!isStart.exchange(true))
 	{
-		const char *workdir = "http-root/certificats";
+		std::string workdir = corefilter::getLocalEnv().getValue("workingdir") + "/http-root/certificats";
 		std::stringstream path;
 		
-		path << GetCurrentWorkingDir() << PathSeparator() << workdir;
+		path << workdir;
 
 		if (! isDirExist(path.str()))
 		{

@@ -122,6 +122,9 @@ bool filter::algos::ExtractShape::isOverlayData(const data::Data& data)
 
 HipeStatus filter::algos::ExtractShape::process()
 {
+	if (_connexData.empty())
+		return OK;
+
 	// Separate shapes from source image
 	std::vector<data::ShapeData> shapes;
 	data::ImageData image;
@@ -155,9 +158,7 @@ HipeStatus filter::algos::ExtractShape::process()
 
 	if (! isSourceFound)
 	{
-		throw HipeException(
-					"Error in OverlayFilter: Overlay filter cannot get source image to overlay the shape Data.");
-		return UNKOWN_ERROR;
+		return OK;
 	}
 
 	for (data::ShapeData shape : shapes)

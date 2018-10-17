@@ -3,6 +3,27 @@
 	#include <dlib/simd.h>
 #endif
 
+typedef struct _GError GError;
+
+struct _GError
+{
+  unsigned int       domain;
+  int         code;
+  char       *message;
+};
+
+#ifndef g_filename_to_uri
+#include <malloc.h>
+#include <string.h>
+//extern char *g_filename_to_uri_utf8   (const char *filename, const char *hostname, GError     **error) ;
+char *g_filename_to_uri   (const char *filename, const char *hostname, GError     **error)
+{
+	/*char *copy = (char *)(malloc(strlen(filename)));
+	strcpy(copy, filename);*/
+	return strdup(filename);
+}
+#endif
+
 #include <filter/References.h>
 #include <corefilter/tools/RegisterTable.h>
 #include <iostream>

@@ -6,7 +6,7 @@ HipeStatus filter::algos::OverlayFilter::process()
 	// Assert data is present in connector
 	if (_connexData.empty())
 	{
-		throw HipeException("Error in OverlayFilter: No data in input.");
+		return OK;
 	}
 
 	// Separate shapes from source image
@@ -41,7 +41,8 @@ HipeStatus filter::algos::OverlayFilter::process()
 	}
 
 	if (image.empty() || !image.getMat().data)
-		throw HipeException("Error in OverlayFilter: No input image to draw on found.");
+		return OK;
+
 	cv::Mat outputImage;
 
 	if (! asReference)

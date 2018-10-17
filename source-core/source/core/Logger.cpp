@@ -15,7 +15,7 @@ namespace core
 		//static HipeGlogSink *tcpSink = new HipeGlogSink();
 		FLAGS_alsologtostderr = true;
 		google::InitGoogleLogging(binary_name);
-		google::InstallFailureSignalHandler();
+		//google::InstallFailureSignalHandler();
 		//google::AddLogSink(tcpSink);
 		
 

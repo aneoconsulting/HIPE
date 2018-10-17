@@ -41,6 +41,7 @@ namespace filter
 			public:
 				std::vector<cv::Rect> rectangles;
 				std::vector<std::string> names;
+				cv::Mat refFrame;
 
 			};
 
@@ -63,13 +64,14 @@ namespace filter
 			CONNECTOR(data::ImageData, data::ShapeData);
 			REGISTER(FactoryObjectDetect, ()), _connexData(data::INDATA)
 			{
-				cfg_filename = "NO FILE SET";
-				weight_filename = "NO FILE SET";
+				cfg_filename = "Data-light/Yolo Detection/yolo-mg21.cfg";
+				weight_filename = "Data-light/Yolo Detection/yolo-mg21_1300.weights";
+				names_filename = "Data-light/Yolo Detection/yolo-mg21_2100.weights";
 				skip_frame = 4;
 				count_frame = 0;
 				confidenceThreshold = 0.8;
 				thr_server = nullptr;
-				wait_ms = 30;
+				wait_ms = 300;
 				count = 0;
 				isStart = false;
 			}

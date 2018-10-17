@@ -25,50 +25,63 @@
 <body>
 
 <div>
-    <img class="img-responsive" id="img-responsive-logo" src="images/Logo-HIPE.png" alt="">
+    
+    <ul><img class="img-responsive" id="img-responsive-logo" src="images/Logo-HIPE.png" alt="">
+    <h1 class="Model-title">Welcome to the HIPE model composer</h1>
+    
+    </ul>
+    
 </div>
 
 <div class="col-lg-12">
-    <div id="btnContainer">
-        <a href="/parameters" class="btn btn-default btn-lg" id="paramBtn">
-            <span class="glyphicon glyphicon-cog"></span>
-        </a>
-    </div>
+    
 
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="row" style="margin-bottom: 15px;">
+            <a href="/parameters" class="btn btn-default btn-lg" id="paramBtn" style="padding-top: 0px;  padding-bottom: 0px; padding-left: 0px; padding-right: 0px;">                    
+                <div id="addModalBtnDiv" style="margin-left: 15px;>
+                            
+                                <!--span class="glyphicon glyphicon-cog"></span-->
+                                <img src="../images/options.png" id="imgMenu" width="40px" height="40px"/>
+                            </a>
+                     </div>
                 <div class="col-lg-1 col-lg-offset-11">
-                    <a href="javascript:void(0)" id="addModalBtn" class="btn btn-success">
-                        Ajouter
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </a>
+                           <a href="javascript:void(0)" id="addModalBtn" class="btn btn-success">
+                                Ajouter
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </a>
+
+                    
                 </div>
             </div>
 
             <div class="row">
                 <% if (models.length > 0) { %>
                 <% models.forEach(function(model) { %>
-                <div class="col-xs-6 col-md-3" id="model_<%= model.id %>" style="margin: 5px 0;">
 
+                <div class="col-xs-6 col-md-12" id="model_<%= model.id %>" style="margin: 5px 0; width">
+                    
                     <article class="card animated fadeInLeft">
-                        <div class="card-block">
-                            <h2 class="card-title"><%= model.name %></h2>
-                            <span class="text-muted">Version testée: <%= model.version %></span>
-                            <span>
-                            <a href="/model/<%- model.id %>" class="btn btn-default"
-                               style="position: absolute;right: 35px;bottom: 20px;">
-                                <span class="glyphicon glyphicon-pencil"></span>
-                            </a>
-                            <a href="javascript:void(0)" class="btn btn-danger" id="deleteModels_<%= model.id %>"
-                               model-id="<%= model.id %>" style="position: absolute;top: 20px;right: 35px;">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </a>
-                        </span>
-                        </div>
+                        
+                            <div class="card-block">
+                                <a href="/model/<%- model.id %>" >
+                                <h2 class="card-title"><%= model.name %></h2>
+                                <span class="text-muted">Version testée: <%= model.version %></span>
+                                <span>
+                                    <!--a href="/model/<%- model.id %>" class="btn btn-default"
+                                       style="position: absolute;right: 35px;bottom: 20px;">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a-->
+                                    <a href="javascript:void(0)" class="btn btn-danger" id="deleteModels_<%= model.id %>"
+                                       model-id="<%= model.id %>" style="position: absolute;top: 20px;right: 35px;">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                </span>
+                                </a> 
+                            </div>
+                       
                     </article>
-
-
                 </div>
                 <% }) %>
                 <% } %>

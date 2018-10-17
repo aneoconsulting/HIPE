@@ -208,4 +208,6 @@ FILTER_EXPORT filter::Model* copyAlgorithms(filter::Model* root);
 
 FILTER_EXPORT HipeStatus freeAlgorithms(filter::Model* root);
 
+FILTER_EXPORT void updateParameters(filter::Model* src, filter::Model* dest);
+
 

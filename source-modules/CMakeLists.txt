@@ -14,9 +14,11 @@ option(USE_DLIB "Enable dlib library." ON)
 option(HIPE_STATIC_EXES "Compile static executables." OFF)
 
 if (WIN32)
-  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." ON)
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+  option(HIPE_EXTERNAL_PYTHON36 "Use Python 3.6 libraries in Hipe External." ON)
 else()
   option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+  option(HIPE_EXTERNAL_PYTHON36 "Use Python 2.7 libraries in Hipe External." OFF)
  endif()
 
 option(HIPE_EXTERNAL_BOOST "Use Boost libraries in Hipe External." ON)
@@ -49,9 +51,21 @@ option(WITH_SNAPPY "Use SNAPPY libraries." OFF)
 
 option(WITH_PROTOBUF "Use PROTOBUF libraries." OFF)
 
+
 option(WITH_WEBRTC "Use WebRTC libraries." ON)
 
-set(WITH_WEBRTC ON CACHE BOOL "Use WebRTC libraries." FORCE)
+if (UNIX)
+	#Working in progress Several unstable issue to deliver it now
+	set(WITH_WEBRTC OFF CACHE BOOL "Use WebRTC libraries." FORCE)
+endif(UNIX)
+
+option(BUILD_SAMPLE "Play with very light sample" ON)
+
+option(DOWNLOAD_SAMPLE "Force to download Demos package to test it" OFF)
+
+if (BUILD_SAMPLE)
+include ("${CMAKE_SOURCE_DIR}/cmake/DownloadSampleDependencies.cmake")
+endif()
 
 # option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
 # message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")
@@ -85,6 +99,7 @@ endif()
 
 
 message(STATUS "HIPE_EXTERNAL_PYTHON27: ${HIPE_EXTERNAL_PYTHON27}")
+message(STATUS "HIPE_EXTERNAL_PYTHON36: ${HIPE_EXTERNAL_PYTHON36}")
 message(STATUS "HIPE_EXTERNAL_BOOST: ${HIPE_EXTERNAL_BOOST}")
 message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 message(STATUS "WITH_CUDA: ${WITH_CUDA}")
@@ -125,11 +140,13 @@ set_property (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT 
 # add_subdirectory(tests)
 
 
-install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
-install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
+
 install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT sources)
 
 if (${INSTALL_SOURCE})
+	install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
+	install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
+	
 	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./project"
 			COMPONENT sources
 			PATTERN "cmake" 

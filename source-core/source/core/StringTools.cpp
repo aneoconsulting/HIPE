@@ -64,10 +64,10 @@ std::string removeDirectoryName(std::string pathname)
 #else
 	sep = "/";
 #endif
-	if (pathname.find(sep) == -1)
+	if (pathname.find("\\") == -1 && pathname.find("/") == -1)
 		return pathname;
 
-	return pathname.substr(pathname.find_last_of(sep) + 1, pathname.size());
+	return pathname.substr(pathname.find_last_of("/\\") + 1, pathname.size());
 
 }
 

@@ -1,6 +1,6 @@
 //@HIPE_LICENSE@
 #pragma once
-
+#include <cctype>
 #include <map>
 #include <iostream>
 #include <type_traits>
@@ -195,6 +195,12 @@ namespace orchestrator
 			if (treeFilter != nullptr)
 			{
 				root = treeFilter->getRootNode();
+				std::string keyname = model_name;
+				std::replace_if(keyname.begin(), keyname.end(),
+					std::not1(std::ptr_fun<int, int>(&std::isalnum)),
+					'_'
+				);
+				root->setName(keyname);
 
 			}
 			else

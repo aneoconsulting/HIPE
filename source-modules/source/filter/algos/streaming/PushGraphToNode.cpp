@@ -231,6 +231,10 @@ HipeStatus filter::algos::PushGraphToNode::sendGraphToService(const std::string&
 	build_adress << this->host_or_ip << ":" << this->target_port;
 
 	http::Client<http::HTTP> client(build_adress.str());
+	std::string killComand = "{\"name\": 'Kill',\"command\" :	{\"type\": 'Kill'} };";
+	auto r2 = client.request("POST", "/json", killComand);
+	std::cout << r2->content.rdbuf() << std::endl;
+	std::cout << "==== Kill previous task request ==== " << std::endl;
 
 	auto r3 = client.request("POST", "/json", json_string);
 	std::cout << r3->content.rdbuf() << std::endl;

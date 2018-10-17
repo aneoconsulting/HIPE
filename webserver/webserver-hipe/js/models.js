@@ -38,12 +38,13 @@ var addModelModal = function(){
 
     document.getElementById('importFile').addEventListener('change', onChange);
 
-    $('#confirmedAddBtn').on('click', function(ev){
-        if (ev.target.checkValidity()) {
-            ev.preventDefault();
-            saveModel()
-        }
-    })
+    $('#confirmedAddBtn').on('click',
+        function(ev) {
+            if (ev.target.checkValidity()) {
+                ev.preventDefault();
+                saveModel();
+            }
+        });
 }
 
 var cleanTableLine = function(selector){

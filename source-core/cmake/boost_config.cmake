@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.7.1)
 
 find_package(Threads REQUIRED)
 
-set(BOOST_COMPONENTS system thread filesystem date_time regex log program_options python iostreams serialization)
+set(BOOST_COMPONENTS system thread filesystem date_time regex log program_options python3 iostreams serialization)
 
 # Late 2017 TODO: remove the following checks and always use std::regex
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")

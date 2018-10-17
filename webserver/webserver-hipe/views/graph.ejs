@@ -43,30 +43,38 @@
         <ul id="menuGraph" class="nav nav-pills">
             <li class="presentation">
                 <a href="/models" id="backBtn">
-                    Précédent
+                    <img src="../images/home.png" id="imgMenu" width="60px" height="60px"/>
+                    HOME
                 </a>
             </li>
             <li class="active presentation">
-                <a href="#algo" data-toggle="tab">Algorithme</a>
+                <a href="#algo" id="backBtn" data-toggle="tab">
+                    <img id="imgMenu" src="../images/graph.png" width="60px" height="60px"/>
+                    COMPOSER
+                </a>
             </li>
             <li class="presentation">
-                <a href="#data" data-toggle="tab">Données</a>
+                <a href="#data" id="backBtn" data-toggle="tab">
+                    <img id="imgMenu" src="../images/data.png" width="60px" height="60px"/>
+                    INPUT
+                </a>
             </li>
             <li class="presentation">
-                <a href="/parameters" id="paramBtn">
-                    Configuration
+                <a href="/parameters" id="backBtn">
+                    <img src="../images/options.png" id="imgMenu" width="60px" height="60px"/>
+                    OPTIONS
                 </a>
             </li>
 
         </ul>
         <ul id="command" class="nav nav-pills" >
             <li role="presentation">
-                <li><a href="javascript:void(0)"  class="btn btn-primary" id="sendToServerBtn" onclick="sendDataToServer()">Send</a></li>
+                <li><a href="javascript:void(0)"  class="btn btn-primary" id="sendToServerBtn" onclick="sendDataToServer()">Execute</a></li>
             </li>
         </ul>
     </div>
     <div class="panel-body" style="display: none;"></div>
-    <div class="tab-content clearfix" style="padding-top: 150px;">
+    <div class="tab-content clearfix" style="padding-top: 130px;">
         <div class="tab-pane active" id="algo">
 
             <div class="col-lg-12">

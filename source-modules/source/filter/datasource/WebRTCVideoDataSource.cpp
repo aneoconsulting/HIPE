@@ -4,6 +4,7 @@
 #include <datasource/WebRTCVideoDataSource.h>
 #include <WebRTCCapturer.h>
 #include <glog/logging.h>
+#include <corefilter/tools/Localenv.h>
 
 filter::datasource::WebRTCVideoDataSource::WebRTCVideoDataSource(const WebRTCVideoDataSource& left)
 {
@@ -19,13 +20,21 @@ filter::datasource::WebRTCVideoDataSource::WebRTCVideoDataSource(const WebRTCVid
 
 void filter::datasource::WebRTCVideoDataSource::captureTasks()
 {
+	
 	task = new std::thread([this]()
 	{
+		bool firstInit = true;
 		a_isActive.exchange(true);
 		while (this->a_isActive)
 		{
 			cv::Mat res;
-			int retry = 150;
+			int retry = 5;
+			if (firstInit)
+			{
+				retry = 150;
+				firstInit = false;
+			}
+
 			while (res.empty()) // Timeout to capture image
 			{
 				res = video->Capture();
@@ -101,10 +110,10 @@ void filter::datasource::WebRTCVideoDataSource::onLoad(void* data)
 {
 	if (!a_isActive.exchange(true))
 	{
-		const char* workdir = "http-root/certificats";
+		std::string workdir = corefilter::getLocalEnv().getValue("workingdir") + "/http-root/certificats";
 		std::stringstream path;
 
-		path << GetCurrentWorkingDir() << PathSeparator() << workdir;
+		path << workdir;
 
 		if (!isDirExist(path.str()))
 		{

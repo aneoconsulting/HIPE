@@ -46,6 +46,10 @@ else(WIN32)
 #   link_libraries("-L '${HIPE_EXTERNAL_DIR}/lib'")
 endif(WIN32)
 
+set(CUDA_MAJOR "10" CACHE STRING "CUDA MAJOR VERSION" FORCE)
+set(CUDA_MINOR "0" CACHE STRING "CUDA MINOR VERSION" FORCE)
+set(CUDA_VERSION "${CUDA_MAJOR}.${CUDA_MINOR}" CACHE PATH "CUDA_VERSION" FORCE)
+
 if(WIN32)
 
   set(Hipecore_DIR "${CMAKE_SOURCE_DIR}/../install/hipe-core" CACHE PATH "hipecore")
@@ -53,26 +57,28 @@ if(WIN32)
     
   # TODO
   # Update this section to enable optional use of installed system libraries.
-  set(Boost_DIR "${HIPE_EXTERNAL_DIR}/boost_1_62_0/" CACHE PATH "Boost_DIR" FORCE)
+  set(Boost_DIR "${HIPE_EXTERNAL_DIR}/boost_1_66_0/" CACHE PATH "Boost_DIR" FORCE)
   set(Boost_INCLUDE_DIR "${Boost_DIR}" CACHE PATH "Boost_INCLUDE_DIR" FORCE)
-  set(BOOST_LIBRARYDIR "${Boost_DIR}/lib64-msvc-14.0" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
+  set(BOOST_LIBRARYDIR "${Boost_DIR}/lib" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
   set(BOOST_ROOT "${Boost_DIR}/"  CACHE PATH "BOOST_ROOT" FORCE)
   if(HIPE_EXTERNAL_BOOST)
     list(APPEND CMAKE_PREFIX_PATH "${Boost_DIR}")
   endif(HIPE_EXTERNAL_BOOST)
 
-  set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv-3.4" CACHE PATH "OpenCV Directory" FORCE)
+ 
+  
+  set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "OpenCV Directory" FORCE)
   if(HIPE_EXTERNAL_OPENCV)
     list(APPEND CMAKE_PREFIX_PATH "${OpenCV_DIR}")
   endif(HIPE_EXTERNAL_OPENCV)
 
-  set(Dlib_DIR "${HIPE_EXTERNAL_DIR}/dlib-19.8/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE)
+  set(Dlib_DIR "${HIPE_EXTERNAL_DIR}/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE)
   
   set(Caffe_DIR "${HIPE_EXTERNAL_DIR}/caffe/"  CACHE PATH "The directory containing a CMake configuration file for Caffe." FORCE)
    
-  set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/gflags/"  CACHE PATH "Folder contains Gflags" FORCE)
+  set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/"  CACHE PATH "Folder contains Gflags" FORCE)
   
-  set(GLOG_ROOT_DIR "${HIPE_EXTERNAL_DIR}/glog/" CACHE PATH "Folder contains Google glog" FORCE)
+  set(GLOG_ROOT_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "Folder contains Google glog" FORCE)
   
   set(OPENBLAS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/OpenBlas/" CACHE PATH "Folder contains openblas" FORCE)
 
@@ -80,7 +86,12 @@ if(WIN32)
   if(HIPE_EXTERNAL_PYTHON27)
     list(APPEND CMAKE_PREFIX_PATH "${Python27_DIR}")
   endif(HIPE_EXTERNAL_PYTHON27)
-
+  
+  set(Python36_DIR "${HIPE_EXTERNAL_DIR}/Python36"  CACHE PATH "PYTHON36_LIBRARYDIR" FORCE )
+  if(HIPE_EXTERNAL_PYTHON36)
+    list(APPEND CMAKE_PREFIX_PATH "${Python36_DIR}")
+  endif(HIPE_EXTERNAL_PYTHON36)
+  
   set(OpenBLAS_DIR "${HIPE_EXTERNAL_DIR}/OpenBLAS")
 
 else(WIN32)
@@ -89,9 +100,14 @@ else(WIN32)
   list(APPEND CMAKE_PREFIX_PATH "${Hipecore_DIR}")
 
   if(HIPE_EXTERNAL_PYTHON27)
-	  set(Python27_DIR "${HIPE_EXTERNAL_DIR}/python27/usr"  CACHE PATH "PYTHON_LIBRARYDIR")
+	  set(Python27_DIR "${HIPE_EXTERNAL_DIR}/python27/usr"  CACHE PATH "PYTHON27_LIBRARYDIR")
 	  list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/python27/usr")
   endif(HIPE_EXTERNAL_PYTHON27)
+  
+  if(HIPE_EXTERNAL_PYTHON36)
+	  set(Python36_DIR "${HIPE_EXTERNAL_DIR}/python36/usr"  CACHE PATH "PYTHON36_LIBRARYDIR")
+	  list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/python36/usr")
+  endif(HIPE_EXTERNAL_PYTHON36)
 
   if(HIPE_EXTERNAL_OPENCV)
     list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/cuda8")

@@ -17,7 +17,7 @@
 			"PythonFilter": {
 				"name": "PythonFilter",
 				"function_name": "process",
-				"script_path": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\tests\\data\\scriptPython\\testhipe.py",
+				"script_path": "Data-light\\Python-Sample\\testhipe.py",
 				"need": [
 					"Resize"
 				]
@@ -27,7 +27,7 @@
 			"PythonFilter": {
 				"name": "PythonFilter_4",
 				"function_name": "process",
-				"script_path": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\tests\\data\\scriptPython\\testhipe.py",
+				"script_path": "Data-light\\Python-Sample\\testhipe.py",
 				"need": [
 					"Resize"
 				]
@@ -36,7 +36,7 @@
 		{
 			"PythonFilter": {
 				"name": "PythonFilter_6",
-				"script_path": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\tests\\data\\scriptPython\\testhipe.py",
+				"script_path": "Data-light\\Python-Sample\\testhipe.py",
 				"need": [
 					"Resize"
 				]
@@ -45,7 +45,7 @@
 		{
 			"PythonFilter": {
 				"name": "PythonFilter_7",
-				"script_path": "C:\\workspace\\ANEO\\Project\\hipe-group\\hipe-master\\tests\\data\\scriptPython\\testhipe.py",
+				"script_path": "Data-light\\Python-Sample\\testhipe.py",
 				"need": [
 					"Resize"
 				]

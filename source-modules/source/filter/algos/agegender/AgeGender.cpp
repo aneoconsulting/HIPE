@@ -243,6 +243,9 @@ error_msg << "Cuda failure " << __FILE__ << ":" << __LINE__ << " msg: " << cudaG
 
 HipeStatus filter::algos::AgeGender::process()
 {
+	if (_connexData.empty())
+		return OK;
+
 	data::ImageData data = _connexData.pop();
 	cv::Mat image = data.getMat();
 	

@@ -372,10 +372,14 @@ function sortNodes() {
     return newNodesSorted;
 }
 
+function AssignBackGroundImage(name, target) {
+
+     
+};
 
 function addElementInGraph(name, helper, values, graphical) {
     var box = $(".boardpanel").offset();
-
+    
     if (helper != null) {
         var offset = helper.offset();
         var xPos = offset.left;
@@ -455,7 +459,8 @@ function addElementInGraph(name, helper, values, graphical) {
         nodeTarget[0].style({'border-color': 'red'});
 
         var split = name.split('DataSource');
-        nodeTarget[0].style({'content': split[0]});
+        nodeTarget[0].style({ 'content': split[0] });
+        AssignBackGroundImage(name, nodeTarget);
     }
 
     $('#itemDroped' + countItemDropped).css('top', '-' + $('#svgglobal').css('height'));

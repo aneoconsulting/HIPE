@@ -4,6 +4,8 @@
 #include <core/misc.h>
 #include <core/python/pyThreadSupport.h>
 #include <corefilter/tools/Localenv.h>
+#include "data/FileVideoInput.h"
+#include <coredata/Data.h>
 
 
 extern "C"
@@ -68,6 +70,7 @@ namespace filter
 			PyObject *exc, *val, *tb;
 			object formatted_list, formatted;
 			PyErr_Fetch(&exc, &val, &tb);
+			PyErr_NormalizeException(&exc, &val, &tb); 
 			handle<> hexc(exc), hval(allow_null(val)), htb(allow_null(tb));
 			object traceback(import("traceback"));
 			if (!tb)
@@ -110,11 +113,11 @@ namespace filter
 					try
 					{
 						boost::python::exec("import sys", l_pythonContext.This().global, l_pythonContext.This().local);
+						boost::python::exec("import imp", l_pythonContext.This().global, l_pythonContext.This().local);
 						boost::python::exec(pydata_path.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
 
 						boost::python::exec(python_path.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
 						boost::python::exec(python2_path.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
-
 
 						l_pythonContext.This().script = boost::python::import(moduleName.c_str());
 						boost::python::import("__main__").attr("__dict__")[moduleName.c_str()] = l_pythonContext.This().script;
@@ -124,10 +127,12 @@ namespace filter
 
 
 						std::stringstream reload_command;
-						reload_command << "reload(" << moduleName.c_str() << ")\n";
+						reload_command << "imp.reload(" << moduleName.c_str() << ");\n";
 
 
 						boost::python::exec(reload_command.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
+
+						
 
 						l_pythonContext.This().global = l_pythonContext.This().script.attr("__dict__");
 					}

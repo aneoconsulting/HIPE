@@ -9,6 +9,26 @@ add_hipe_executable(hipe_server)
 
 target_compile_definitions(hipe_server PRIVATE "-DUSE_BOOST_REGEX")
 
+if (WITH_GFLAGS)
+		message(STATUS "Get Gflags from ${GFLAGS_ROOT_DIR}")
+		find_package(Gflags 
+					REQUIRED
+					PATHS "${GFLAGS_ROOT_DIR}/lib/cmake/gflags"
+					NO_DEFAULT_PATH)
+set_target_properties(gflags_static PROPERTIES
+	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+	  )
+				  message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
+		if (WIN32)
+		  target_link_libraries(hipe_server gflags_static)
+		else()
+		  target_link_libraries(hipe_server gflags_shared)
+		endif()
+		target_include_directories(hipe_server PRIVATE ${GFLAGS_INCLUDE_DIRS})
+		set(USE_GFLAGS "-DUSE_GFLAGS")
+		message(STATUS "GFLAGS IS INCLUDED")
+endif()
 
 
 if (WITH_GLOG)
@@ -18,7 +38,10 @@ if (WITH_GLOG)
 				REQUIRED
 				PATHS "${GLOG_ROOT_DIR}/lib/cmake/glog"
 				NO_DEFAULT_PATH)
-	
+	set_target_properties(glog::glog PROPERTIES
+	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+	  )
 	message(STATUS "Gflags include dir : ${GLOG_LIBRARIES}")
 	message(STATUS "Gflags include dir : ${GLOG_LIBRARY}")
 
