@@ -197,6 +197,9 @@ if (WITH_PROTOBUF)
 	set_target_properties(protobuf::libprotobuf-lite PROPERTIES
 		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
 		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
+    set_target_properties(protobuf::libprotobuf PROPERTIES
+		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
 	set_target_properties(protobuf::libprotoc PROPERTIES
 		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
 		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)			
@@ -325,8 +328,8 @@ endif()
 target_compile_definitions(filter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
 #target_link_libraries(filter ${yolov2_LIBRARIES} )
 if(WIN32) #TODO: Is MSYS true when MSVC is true?
-  message(STATUS "Test if it works with windows")
   target_link_libraries(filter ws2_32 wsock32)
+  target_link_libraries(filter "-FORCE:MULTIPLE") # Hugly : do that because conflict with different boost call !!!!
 endif(WIN32)
 
 display_target_properties(filter)

@@ -81,7 +81,7 @@ if(WIN32)
 
   set(Dlib_DIR "${HIPE_EXTERNAL_DIR}/"  CACHE PATH "DLIB_LIBRARYDIR" FORCE)
   
-  set(Caffe_DIR "${HIPE_EXTERNAL_DIR}/caffe/"  CACHE PATH "The directory containing a CMake configuration file for Caffe." FORCE)
+  set(Caffe_DIR "${HIPE_EXTERNAL_DIR}/"  CACHE PATH "The directory containing a CMake configuration file for Caffe." FORCE)
    
   set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/"  CACHE PATH "Folder contains Gflags" FORCE)
   

@@ -111,3 +111,28 @@ ul.sdt_menu li div.sdt_box a:first-child{
 ul.sdt_menu li div.sdt_box a:hover{
 	color:#fff;
 }
+
+ #menu-button, #menu-sidebar,
+    .menu-activated #menu-overlay {
+        display: none;
+    }
+
+@media screen and (max-width: 1024px) {
+    h1 {
+        font-size: 42px;
+        line-height: 56px;
+    }
+
+    #menu-content {
+        display: none;
+    }
+
+    #menu-button, #menu-sidebar,
+    .menu-activated #menu-overlay {
+        display: block;
+    }
+
+    .menu-activated #menu-sidebar {
+        transform: translateX(0);
+    }
+}

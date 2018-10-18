@@ -14,8 +14,8 @@
 			}
 		},
 		{
-			"ObjectRecognitionYolo": {
-				"name": "ObjectRecognitionYolo",
+			"FactoryObjectDetect": {
+				"name": "FactoryObjectDetect",
 				"cfg_filename": "Data-light\\Yolo Detection\\yolo.cfg",
 				"confidenceThreshold": "0.5",
 				"names_filename": "Data-light\\Yolo Detection\\coco.names",
@@ -33,7 +33,7 @@
 				"asReference": "true",
 				"need": [
 					"Resize",
-					"ObjectRecognitionYolo"
+					"FactoryObjectDetect"
 				]
 			}
 		},
