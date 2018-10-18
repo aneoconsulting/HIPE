@@ -6,11 +6,15 @@
        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
        <meta name="description" content="HIPE ANEO Live Hiearchic Images processing in real time. WebStite to test Computer vision and AI for industry" />
             <meta name="keywords" content="HIPE iearchic Images processing engine HYPE CV Computer vision SaaS Images processing ML DL"/>
-     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen"/>
+     
     <link rel="icon" href="favicon.ico" />
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/sonic.js"></script>
-    <script src="/js/JsonRead.js"></script>
+    <script src="js/jquery.min.js"></script>
+    
+    <script src="js/sonic.js"></script>
+
+    <script src="js/common_socket.js"></script>
+	<script src="js/JsonRead.js"></script>
+	<script src="js/monitor.js"></script>
     <style>
                 body{
                     
@@ -45,13 +49,14 @@
                     text-align: center;
                 }
             </style>
+			<link rel="stylesheet" href="css/style.css" type="text/css" media="screen"/>
     </head>
     <body>
     
       
     <div id="large-header" class="large-header">
     
-    <div class="content">
+    <div id="menu-content" class="content">
 			<h1 class="title">HIPE Online Demos</h1>
 			<ul id="sdt_menu" class="sdt_menu">
 				<li>
@@ -59,7 +64,7 @@
 						<img src="images/1.jpg" alt=""/>
 						<span class="sdt_active"></span>
 						<span class="sdt_wrap">
-							<span class="sdt_link">Face</span>
+							<span class="sdt_link">Body</span>
                                 <span class="sdt_descr">Live</span>
 						</span>
 					</a>
@@ -67,7 +72,9 @@
                             <span></span>
 							 <a href="javascript:void(0)" onClick="sendJsonRequest('/demos/SimpleEcho.json')">Simple WebRTC Echo</a>
                              
-                             <a href="javascript:void(0)" onClick="sendJsonRequest('/demos/MyFaceLandmark.json')">Face LandMark</a>
+                             <a href="javascript:void(0)" onClick="sendJsonRequest('/demos/MyFaceBoxing.json')">Faces in Box</a>
+							 
+                             <a href="javascript:void(0)" onClick="sendJsonRequest('/demos/MyFaceLandmark.json')">Faces LandMarks</a>
                              
                              <a href="javascript:void(0)" onClick="sendJsonRequest('/demos/AgeGender.json')">Age Estimation</a>
                              <a href="#">Emotion Estimation (soon...)</a>
@@ -111,6 +118,16 @@
 					</a>
 				</li>
 				<li>
+					<a href="javascript:void(0)" onClick="startMonitoring()">
+						<img src="images/monitor.png" alt=""/>
+						<span class="sdt_active"></span>
+						<span class="sdt_wrap">
+						 <span class="sdt_link">Montinor<br/>HIPE</span>
+                         <!-- <span class="sdt_descr"></span> -->
+						</span>
+					</a>
+				</li>
+				<li>
 					<a href="#">
 						<img src="images/5.jpg" alt=""/>
 						<span class="sdt_active"></span>
@@ -138,9 +155,16 @@
 			</ul>
 		</div>
     
+	<button id="menu-button">&#9776;</button>
+				<div id="menu-sidebar">
+					<div id="menu-sidebar-header"></div>
+					<div id="menu-sidebar-body"></div>
+				</div>
+	<div id="menu-overlay"></div>
+				
     <div class="main-table" id='videoStream'>
-         <video id='remoteView' autoplay></video>
-         <video id='selfView' autoplay></video>
+         <video id='remoteView' autoplay controls></video>
+         <video id='selfView' autoplay ></video>
       </div>
         
       <div>
@@ -151,7 +175,7 @@
      </div>
     </div>
     
-
+	<script src="js/menu.js"></script>
      <script type="text/javascript" src="js/background.js"></script>
      <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
             <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
