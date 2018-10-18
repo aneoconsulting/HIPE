@@ -103,7 +103,24 @@ int main(int argc, char* argv[]) {
 	}
 	// Default values configuration file and command line configuration
 	hipe_server::Configuration config;
-	config.setConfigFromFile("./config.json");
+	std::string home_path = getEnv("HOME");
+	std::string config_path = home_path + "/config.json";
+	
+	try
+	{
+		LOG(INFO) << "Check if home config file exist : " << config_path;
+		isFileExist(config_path);
+
+		LOG(INFO) << "Using Home config file at " << config_path;
+
+		config.setConfigFromFile(config_path);
+	}
+	catch (std::invalid_argument &e)
+	{
+		LOG(INFO) << "Using config file at " << corefilter::getLocalEnv().getValue("workingdir") << "/" << config_path;
+		config.setConfigFromFile("./config.json");
+	}
+
 	if (config.setConfigFromCommandLine(argc, argv) == 1)
 		return 0;
 	

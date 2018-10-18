@@ -36,12 +36,19 @@ if(MSYS) #TODO: Is MSYS true when MSVC is true?
   target_link_libraries(pydata ws2_32 wsock32)
 endif(MSYS)
 
-
-add_custom_command(
-  TARGET pydata
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pydata> $<TARGET_FILE_DIR:pydata>/pydata.pyd
-)
+if (WIN32)
+  add_custom_command(
+	TARGET pydata
+	POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pydata> $<TARGET_FILE_DIR:pydata>/pydata.pyd
+	)
+else()
+  add_custom_command(
+	TARGET pydata
+	POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pydata> $<TARGET_FILE_DIR:pydata>/pydata.so
+	)
+endif()
 
 display_target_properties(pydata)
 
@@ -71,8 +78,22 @@ install (TARGETS pydata
 		COMPONENT library
 		ARCHIVE DESTINATION lib/Release
 		COMPONENT library)		
-		
-install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS Release DESTINATION bin/Release COMPONENT library)
-install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS RelWithDebInfo DESTINATION bin/Release COMPONENT library)
 
-install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS Debug DESTINATION bin/Debug COMPONENT library)
+if (WIN32)
+  SET(LIB_DIR "bin")
+else()
+  SET(LIB_DIR "lib")
+endif()
+
+if (WIN32)
+install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS Release DESTINATION ${LIB_DIR}/Release COMPONENT library)
+install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS RelWithDebInfo DESTINATION ${LIB_DIR}/Release COMPONENT library)
+
+install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS Debug DESTINATION ${LIB_DIR}/Debug COMPONENT library)
+else()
+install (FILES $<TARGET_FILE_DIR:pydata>/pydata.so CONFIGURATIONS Release DESTINATION ${LIB_DIR}/Release COMPONENT library)
+install (FILES $<TARGET_FILE_DIR:pydata>/pydata.so CONFIGURATIONS RelWithDebInfo DESTINATION ${LIB_DIR}/Release COMPONENT library)
+
+install (FILES $<TARGET_FILE_DIR:pydata>/pydata.so CONFIGURATIONS Debug DESTINATION ${LIB_DIR}/Debug COMPONENT library)
+  
+endif()

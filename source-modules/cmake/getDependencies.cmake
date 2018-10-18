@@ -1,6 +1,6 @@
 include(GetPrerequisites)
 include("${PROJECT_SOURCE_DIR}/cmake/list_dependencies.cmake")
-
+#getDependencies
 macro(hipe_find_dependencies list_deps target_name BUILD_CONFIG)
   if (WIN32)
 	file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/${BUILD_CONFIG}/${target_name}${EXT_BIN}" cm_path)

@@ -113,7 +113,7 @@ void hipe_usleep(long long usec)
 std::string getEnv(std::string path)
 {
 	char * env_p;
-	env_p = getenv("PATH");
+	env_p = getenv(path.c_str());
 	if (env_p == nullptr)
 		return std::string("");
 

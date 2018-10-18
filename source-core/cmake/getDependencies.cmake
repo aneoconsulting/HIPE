@@ -6,7 +6,7 @@ macro(hipe_find_dependencies list_deps target_name BUILD_CONFIG)
 	file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/${BUILD_CONFIG}/${target_name}${EXT_BIN}" cm_path)
 	file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/${BUILD_CONFIG}" cm_dir)
   else()
-	file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/${BUILD_CONFIG}/lib${target_name}${EXT_BIN}" cm_path)
+	file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/bin/${BUILD_CONFIG}/${target_name}${EXT_BIN}" cm_path)
 	file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/lib/${BUILD_CONFIG}" cm_dir)
   endif()
 

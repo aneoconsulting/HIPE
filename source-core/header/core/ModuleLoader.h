@@ -12,6 +12,7 @@
 #include <windows.h>
 #include "ImageHlp.h"
 #else
+#include <link.h>
 #include <dlfcn.h>
 #endif
 
@@ -189,6 +190,14 @@ namespace core
 #endif
 				throw HipeException(msg.str());
 			}
+#ifdef WIN32
+			
+#else // LINUX
+			char path_to_module[4096];
+			dlinfo(dllHandle, RTLD_DI_ORIGIN, (void *)path_to_module);
+			std::cout << "Module is located : " << path_to_module << std::endl;
+			corefilter::getLocalEnv().setValue("pydata_path", std::string(path_to_module));
+#endif
 			
 		}
 

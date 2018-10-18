@@ -7,7 +7,7 @@ export LD_LIBRARY_PATH=${local_dir}/:${local_dir}/../../lib/@BUILD_CONFIG@:${LD_
 
 
 
-export LD_LIBRARY_PATH=$(readlink -f -n ../../../hipe-modules/bin/@BUILD_CONFIG@/):$(readlink -f -n ../../../hipe-modules/lib/@BUILD_CONFIG@/):${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=$(readlink -f -n ../../../hipe-modules/lib/@BUILD_CONFIG@/):$(readlink -f -n ../../../hipe-modules/lib/@BUILD_CONFIG@/):${LD_LIBRARY_PATH}
 echo "LD_SEARCH = $LD_LIBRARY_PATH"
 export PATH=${local_dir}:${PATH}
 export PATH=${local_dir}/../../../hipe-modules/lib/@BUILD_CONFIG@/:${PATH}

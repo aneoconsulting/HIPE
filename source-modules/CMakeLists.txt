@@ -56,7 +56,7 @@ option(WITH_WEBRTC "Use WebRTC libraries." ON)
 
 if (UNIX)
 	#Working in progress Several unstable issue to deliver it now
-	set(WITH_WEBRTC OFF CACHE BOOL "Use WebRTC libraries." FORCE)
+	set(WITH_WEBRTC ON CACHE BOOL "Use WebRTC libraries." FORCE)
 endif(UNIX)
 
 option(BUILD_SAMPLE "Play with very light sample" ON)

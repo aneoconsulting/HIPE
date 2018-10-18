@@ -13,7 +13,7 @@ cd build
 cmake \
 	-DCMAKE_BUILD_TYPE=Debug \
 	-DWITH_CAFFE=ON \
-  -DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-modules" \
+	-DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-modules" \
   ..
 
 make VERBOSE=1 -j8
