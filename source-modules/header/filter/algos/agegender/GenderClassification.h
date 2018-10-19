@@ -1,6 +1,7 @@
 //@HIPE_LICENSE@
 #pragma once
 
+
 #ifdef USE_CAFFE
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #define NOMINMAX
@@ -16,8 +17,7 @@
 
 #include <string>
 #include <vector>
-
-
+#include <algos/agegender/Caffe_os_deps.h>
 
 using namespace std;
 using namespace caffe;
@@ -38,7 +38,7 @@ private:
 	string	weight_file;			// weight file path (gender_net.caffemodel)
 	string	mean_file;			// mean file path (mean.binaryproto)
 
-	std::shared_ptr<Net> gender_net;		// Deep Convolution Network
+	std::shared_ptr<Hipe_net> gender_net;		// Deep Convolution Network
 
 public:
 
@@ -57,7 +57,7 @@ public:
 	void getMeanImgFromMeanFile(Mat& _mean_img);
 
 	// Get blob vector which contains 5 input blobs (Details in implementation)
-	void makeBlobVecWithCroppedImg(Mat _img, vector<TBlob<Dtype> *>& _blob_vec);
+	void makeBlobVecWithCroppedImg(Mat _img, vector<Hipe_blob *>& _blob_vec);
 
 	// Classify gender and get probability
 	int classify(Mat _img, vector<Dtype>& _prob_vec);

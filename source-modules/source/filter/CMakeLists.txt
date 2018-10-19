@@ -106,6 +106,10 @@ if (WITH_GFLAGS)
 
 				  message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
 		if (WIN32)
+		set_target_properties(gflags_static PROPERTIES
+			MAP_IMPORTED_CONFIG_MINSIZEREL Release
+			MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+			)
 		  target_link_libraries(filter gflags_static)
 		else()
 		  target_link_libraries(filter gflags_shared)
@@ -220,7 +224,7 @@ if (WITH_CAFFE)
 	set_target_properties(caffe PROPERTIES
 		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
 		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)	
-	target_link_libraries(filter proto)
+	target_link_libraries(filter caffeproto)
 	target_link_libraries(filter ${Caffe_LIBRARIES})
 	target_include_directories(filter PRIVATE ${Caffe_INCLUDE_DIRS})
 	target_include_directories(filter PRIVATE ${CUDA_TOOLKIT_ROOT_DIR}/include)

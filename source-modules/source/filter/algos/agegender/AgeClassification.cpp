@@ -17,7 +17,7 @@ void AgeNet::initNetwork()
 	NetParameter net_param;
 	ReadNetParamsFromTextFileOrDie(this->model_file, &net_param);
 	
-	this->age_net = std::make_shared<Net>(net_param);
+	this->age_net = std::make_shared<Hipe_net>(net_param);
 	age_net->CopyTrainedLayersFrom(this->weight_file);
 }
 
@@ -42,7 +42,7 @@ void AgeNet::getMeanImgFromMeanFile(Mat& _mean_img)
 	BlobProto blob_proto;
 	ReadProtoFromBinaryFile(this->mean_file.c_str(), &blob_proto);
 
-	TBlob<Dtype> mean_blob;
+	Hipe_blob mean_blob;
 	mean_blob.FromProto(blob_proto);
 
 	vector<Mat> channels;
@@ -78,7 +78,7 @@ Param :
 1. _img : [in] input i
 2. _blob_vec : [out] output blob vector made by five cropped image of _img.
 */
-void AgeNet::makeBlobVecWithCroppedImg(Mat _img, vector<TBlob<Dtype> *>& _blob_vec)
+void AgeNet::makeBlobVecWithCroppedImg(Mat _img, vector<Hipe_blob *>& _blob_vec)
 {
 	Mat resized_img;
 	Mat mean_img;
@@ -95,11 +95,11 @@ void AgeNet::makeBlobVecWithCroppedImg(Mat _img, vector<TBlob<Dtype> *>& _blob_v
 	Mat rb_img = normalized_img(cv::Rect(29, 29, 227, 227));
 	Mat ctr_img = normalized_img(cv::Rect(14, 14, 227, 227));
 
-	TBlob<Dtype> * lt_blob = new TBlob<Dtype>(1, 3, 227, 227);
-	TBlob<Dtype> * rt_blob = new TBlob<Dtype>(1, 3, 227, 227);
-	TBlob<Dtype> * lb_blob = new TBlob<Dtype>(1, 3, 227, 227);
-	TBlob<Dtype> * rb_blob = new TBlob<Dtype>(1, 3, 227, 227);
-	TBlob<Dtype> * ctr_blob= new TBlob<Dtype>(1, 3, 227, 227);
+	Hipe_blob * lt_blob = new Hipe_blob(1, 3, 227, 227);
+	Hipe_blob * rt_blob = new Hipe_blob(1, 3, 227, 227);
+	Hipe_blob * lb_blob = new Hipe_blob(1, 3, 227, 227);
+	Hipe_blob * rb_blob = new Hipe_blob(1, 3, 227, 227);
+	Hipe_blob * ctr_blob= new Hipe_blob(1, 3, 227, 227);
 
 	TransformationParameter trans_param;
 	trans_param.mean_file();
@@ -135,9 +135,16 @@ Param :
 1. _img : [in] input image
 2. _prob_vec : [out] probabilities of each age
 */
+
+#ifndef WIN32
+#define TPL_DTYPE <Dtype>
+#else
+#define TPL_DTYPE
+#endif
+
 int AgeNet::classify(Mat _img, vector<Dtype>& prob_vec)
 {
-	vector<TBlob<Dtype> *> input_blob_vec;
+	vector<Hipe_blob *> input_blob_vec;
 
 	for (int i = 0; i < AGE_GROUP_NUM; i++)
 		prob_vec.push_back(0);
@@ -148,7 +155,7 @@ int AgeNet::classify(Mat _img, vector<Dtype>& prob_vec)
 	{
 		this->age_net->input_blobs()[0]->CopyFrom(*(cropped_blob));
 		this->age_net->Forward();
-		Dtype * result = this->age_net->output_blobs()[0]->mutable_cpu_data<Dtype>();
+		Dtype * result = this->age_net->output_blobs()[0]->mutable_cpu_data TPL_DTYPE();
 
 		for (int i = 0; i < AGE_GROUP_NUM; i++)
 		{

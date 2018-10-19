@@ -1,5 +1,6 @@
 //@HIPE_LICENSE@
 #pragma once
+#include "Caffe_os_deps.h"
 
 #ifdef USE_CAFFE
 #define GLOG_NO_ABBREVIATED_SEVERITIES
@@ -38,7 +39,7 @@ private:
 	string	weight_file;			// weight file path (age_net.caffemodel)
 	string	mean_file;			// mean file path (mean.binaryproto)
 
-	std::shared_ptr<Net> age_net;		// Deep Convolution Network
+	std::shared_ptr<Hipe_net> age_net;		// Deep Convolution Network
 
 public:
 
@@ -57,7 +58,7 @@ public:
 	void getMeanImgFromMeanFile(Mat& _mean_img);
 
 	// Get blob vector which contains 5 input blobs (Details in implementation)
-	void makeBlobVecWithCroppedImg(Mat _img, vector<TBlob<Dtype> *>& _blob_vec);
+	void makeBlobVecWithCroppedImg(Mat _img, vector<Hipe_blob *>& _blob_vec);
 
 	// Classify age and get probability
 	int classify(Mat _img, vector<Dtype>& prob_vec);
