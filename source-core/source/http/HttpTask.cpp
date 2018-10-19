@@ -277,7 +277,8 @@ void http::HttpTask::RenderHtml() const
 			else if (_request->path.find("/images/") == 0)
 			{
 				readFileContent(local_path, dataResponse);
-				const unsigned char* data = (const unsigned char *)(dataResponse.str().c_str());
+				std::string data_image = dataResponse.str();
+				const unsigned char* data = (const unsigned char *)(data_image.c_str());
 				extension = std::string("image/") + getExtensionFromImageData(data, dataResponse.str().size());
 			}
 			else if (_request->path == "/index.html")
