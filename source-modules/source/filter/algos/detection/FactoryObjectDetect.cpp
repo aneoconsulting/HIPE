@@ -188,6 +188,7 @@ namespace filter
 			{
 				PUSH_DATA(popShape);
 				tosend = popShape;
+				count = 0;
 			}
 			else if (tosend.empty())
 			{
@@ -195,7 +196,7 @@ namespace filter
 			}
 			else {
 				count++;
-				if (skip_frame == 0 || count < skip_frame)
+				if (skip_frame == 0 || count < 4 * skip_frame)
 				{
 					PUSH_DATA(tosend);
 				}

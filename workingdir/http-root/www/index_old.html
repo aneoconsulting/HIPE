@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>WebDemos Hipe</title>
+  <script type="text/javascript" src="js/signaling.js"></script>
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+  <div>
+  </div>
+  <div>
+    <div class="table">
+      <p>
+        my camera status = <span id="status" class="emoji">Connecting...</span>
+      </p>
+      <div class="table">
+        <div class="table">
+          <input type="checkbox" value="1" id="start" class="onoff start emoji" />
+          <label for="start" onclick="switchStart();switchMode('onAir')"></label>
+        </div>
+      </div>
+      <div>
+        <video id="selfView" autoplay></video>
+      </div>
+    </div>
+    <div class="table">
+      <p>you</p>
+      <video id="remoteView"  autoplay></video>
+    </div>
+  </div>
+  <span id="status"></span>
+</body>
+</html>

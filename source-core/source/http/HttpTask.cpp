@@ -257,7 +257,7 @@ void http::HttpTask::RenderHtml() const
 		if (_request->path == "/demos.html" || _request->path == "/")
 		{
 			extension = "text/html";
-			string local_path = currentDir + "/home.html";
+			string local_path = currentDir + "/index.html";
 			readFileContent(local_path, dataResponse);
 		}
 		else

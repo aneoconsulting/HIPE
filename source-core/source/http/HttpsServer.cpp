@@ -19,15 +19,15 @@ namespace http
 			http::HttpTask task(response, request);
 			task.RenderHtml();
 		};
-		server.resource["^/[A-Za-z]*\.html$"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {
+		server.resource["^/[A-Za-z]*.html$"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {
 			http::HttpTask task(response, request);
 			task.RenderHtml();
 		};
-		server.resource["^/[A-Za-z]*\.ico$"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {
+		server.resource["^/[A-Za-z]*.ico$"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {
 			http::HttpTask task(response, request);
 			task.RenderHtml();
 		};
-		server.resource["^/demos/[A-Za-z]*\.json$"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {
+		server.resource["^/demos/[A-Za-z]*.json$"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {
 			http::HttpTask task(response, request);
 			task.RenderHtml();
 		};
@@ -35,7 +35,7 @@ namespace http
 			http::HttpTask task(response, request);
 			task.RenderHtml();
 		};
-		server.resource["^/js/.*\.js"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {
+		server.resource["^/js/.*.js"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {
 			http::HttpTask task(response, request);
 			task.RenderHtml();
 		};

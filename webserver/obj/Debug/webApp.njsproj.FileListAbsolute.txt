@@ -1,0 +1,3 @@
+D:\workspace\hipe-vc2017\webserver\obj\Debug\webApp.njsprojAssemblyReference.cache
+D:\workspace\hipe-vc2017\webserver\obj\Debug\webApp.njsproj.CoreCompileInputs.cache
+D:\workspace\hipe-vc2017\webserver\bin\Microsoft.NodejsTools.WebRole.dll

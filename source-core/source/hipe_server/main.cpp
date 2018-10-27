@@ -164,6 +164,10 @@ int main(int argc, char* argv[]) {
 			std::cerr << "FAIL TO LOAD MODULE AT START TIME. Continue with no preloaded module" << std::endl;
 		}
 	}
+	else
+	{
+		LOG(INFO) << "No option to preload module library" << std::endl;
+	}
 	google::FlushLogFiles(google::GLOG_INFO);
 	thread.join();
 

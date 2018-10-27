@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<title>Perspective Page View Navigation</title>
+		<meta name="description" content="Perspective Page View Navigation: Transforms the page in 3D to reveal a menu" />
+		<meta name="keywords" content="3d page, menu, navigation, mobile, perspective, css transform, web development, web design" />
+		<meta name="author" content="Codrops" />
+		<link rel="shortcut icon" href="../favicon.ico">
+		<link rel="stylesheet" type="text/css" href="css/player.css" />
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<link rel="stylesheet" type="text/css" href="css/carrousel.css" />
+		
+		<!-- csstransforms3d-shiv-cssclasses-prefixed-teststyles-testprop-testallprops-prefixes-domprefixes-load --> 
+		<script src="js/modernizr.custom.25376.js"></script>
+	</head>
+	<body>
+		<div id="perspective" class="perspective effect-rotateleft">
+			<div class="container">
+				<div class="wrapper"><!-- wrapper needed for scroll -->
+					<!-- Top Navigation -->
+					<!-- <div class="codrops-top clearfix"> -->
+						<!-- <a class="codrops-icon codrops-icon-prev" href="http://tympanus.net/Development/ProgressButtonStyles/"><span>Previous Demo</span></a> -->
+						<!-- <span class="right"><a class="codrops-icon codrops-icon-drop" href="http://tympanus.net/codrops/?p=17915"><span>Back to the Codrops Article</span></a></span> -->
+					<!-- </div> -->
+					<header class="codrops-header">
+						<div class='div-header'>
+							<h1>Web HIPE Demos <span>Computer vision : Think faster build easier</span></h1>	
+						</div>
+					</header>
+					<!-- Trigger/Open The Modal -->
+					
+					<div id="myplayer" class="modal-layer">
+					<!-- <button id="myBtn">Open test Modal</button> -->
+					  <!-- Modal content -->
+					  <div class="player-content">
+						<div id="nav-arrows" class="nav-arrows">
+							<a class="menu_a" href="#">&#8801;</a>
+							<a class="prev_a" href="#">Previous</a>
+							<a class="next_a" href="#">Next< </a>
+
+						</div>
+						<span class="close" onclick="closeModal('myplayer')">&times;</span>
+						
+						<div id="facebody" class="carousel" data-bfc>
+							
+							<figure id="facebody_fig">
+
+								<div id="facebody1" class="player">
+									<div class="hipe-description">
+
+										<h3>Creative Lifesaver 1</h3>
+										<p>blka sdfomij dqsfq sdqfsd pàierml  sqfrdgsfg 
+										blka sdfomij dqsfq sdqfsd pàierml  sqfrdgsfg </p>
+										<p>blka sdfomij dqsfq sdqfsd pàierml  sqfrdgsfg 
+										blka sdfomij dqsfq sdqfsd pàierml  sqfrdgsfg 
+										blka sdfomij dqsfq sdqfsd pàierml  sqfrdgsfg 
+										blka sdfomij dqsfq sdqfsd pàierml  sqfrdgsfg 
+										</p>
+										
+									</div>
+									<div class="video-container">
+										<video id="rfacebody1" onClick="sendJsonRequest('demos/yolo.json', 'facebody1')" class="remoteView" autoplay="" controls=""></video>
+										<video id="sfacebody1" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+								<div id="facebody2" class="player">
+									<div class="hipe-description">
+										<h3>Creative Lifesaver 2</h3>
+									</div>
+									<div class="video-container">
+										<video id="rfacebody2" class="remoteView" autoplay="" controls=""></video>
+										<video id="sfacebody2" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+								<div id="facebody3" class="player">
+									<div class="hipe-description">
+									
+										<h3>Creative Lifesaver 3</h3>
+										
+									
+							
+									</div>
+									<div class="video-container">
+										<video id="rfacebody3" class="remoteView" autoplay="" controls=""></video>
+										<video id="sfacebody3" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+								<div id="facebody4" class="player">
+									<div class="hipe-description">
+											
+										<h3>Creative Lifesaver 4</h3>
+								
+									</div>
+									<div class="video-container">
+										<video id="rfacebody4" class="remoteView" autoplay="" controls=""></video>
+										<video id="sfacebody4" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+								<!-- <div id="facebody5" class="player"> -->
+									<!-- <div class="hipe-description"> -->
+										<!-- <h3>Creative Lifesaver 5</h3> -->
+									<!-- </div> -->
+									<!-- <div class="video-container"> -->
+										<!-- <video id="remoteView" autoplay="" controls=""></video> -->
+										<!-- <video id="selfView" autoplay="" controls></video> -->
+									<!-- </div> -->
+								<!-- </div> -->
+								<!-- <div id="facebody6" class="player"> -->
+									<!-- <div class="hipe-description"> -->
+										<!-- <h3>Creative Lifesaver 6</h3> -->
+									<!-- </div> -->
+									<!-- <div class="video-container"> -->
+										<!-- <video id="remoteView" autoplay="" controls=""></video> -->
+										<!-- <video id="selfView" autoplay="" controls></video> -->
+									<!-- </div> -->
+								<!-- </div> -->
+								<!-- <div id="facebody7" class="player"> -->
+									<!-- <div class="hipe-description"> -->
+										<!-- <h3>Creative Lifesaver 7</h3> -->
+									<!-- </div> -->
+									<!-- <div class="video-container"> -->
+										<!-- <video id="remoteView" autoplay="" controls=""></video> -->
+										<!-- <video id="selfView" autoplay="" controls></video> -->
+									<!-- </div> -->
+								<!-- </div> -->
+								<!-- <div id="facebody8" class="player"> -->
+									<!-- <div class="hipe-description"> -->
+										<!-- <h3>Creative Lifesaver 8</h3> -->
+									<!-- </div> -->
+									<!-- <div class="video-container"> -->
+										<!-- <video id="remoteView" autoplay="" controls=""></video> -->
+										<!-- <video id="selfView" autoplay="" controls></video> -->
+									<!-- </div> -->
+								<!-- </div> -->
+							</figure>	
+							
+						</div>
+						
+					  </div>
+
+					</div>
+					<div class="main clearfix">
+						<div class="row">
+							<div class="column">
+								<p>Cliquer sur le menu et découvrez nos algorithmes pré-conçus pour essayer HIPE. </p>
+								<p><button id="showMenu">Menu</button></p>
+								
+							</div>
+							<div class="column">
+							<!--nav class="codrops-demos">
+								<a href="index.html">Airbnb Effect</a>
+								<a href="index2.html">Move Left</a>
+								<a href="index3.html" class="current-demo">Rotate Left</a>
+								<a href="index4.html">Move Down</a>
+								<a href="index5.html">Rotate Top</a>
+								<a href="index6.html">Lay Down</a>
+							</nav-->
+							</div>
+						</div>
+						<div class="related">
+							<p>Cette page web est connecté à un service à distance HIPE. Ce que vous verrez est réalisé en temps-réel.</p>
+						</div>
+					</div><!-- /main -->
+				</div><!-- wrapper -->
+			</div><!-- /container -->
+		
+			<nav class="outer-nav right vertical">
+				<a href="#" class="icon-home" onclick="closeAllModal();">Home</a>
+				<a href="#" onclick="openModal('myplayer');" class="icon-news">Face and Body</a>
+				<a href="Survey.html" class="icon-image">Survey and detect</a>
+				<a href="text.html" class="icon-upload">Text recognition</a>
+				<a href="develop.html" class="icon-star">C++, Python, <br>Mathlab modules</a>
+				<a href="https://www.aneo.eu/hipe" class="icon-lock">project</a>
+			</nav>
+		</div><!-- /perspective -->
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+		<script src="js/classie.js"></script>
+		<script src="js/menu.js"></script>
+		<script src="js/jsonRead.js"></script>
+		<script src="js/player.js"></script>
+		<script src="js/carrousel.js"></script>
+	</body>
+</html>

@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0a7b88e4-a57a-442b-8562-2071024b5dd5}</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <ProjectView>ShowAllFiles</ProjectView>
+    <StartupFile>webserver-hipe\app.js</StartupFile>
+    <WorkingDirectory>D:\workspace\hipe-vc2017\webserver\webserver-hipe</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Content Include="package.json" />
+    <Content Include="webserver-hipe\INSTALL.txt" />
+    <Content Include="webserver-hipe\UpgradeLog.htm" />
+    <Content Include="webserver-hipe\data.json" />
+    <Content Include="webserver-hipe\filters.json" />
+    <Content Include="webserver-hipe\package.json" />
+    <Content Include="webserver-hipe\app.js" />
+    <Content Include="webserver-hipe\gulpfile.js" />
+    <Content Include="webserver-hipe\css\main.css" />
+    <Content Include="webserver-hipe\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="webserver-hipe\images\algos.png" />
+    <Content Include="webserver-hipe\images\Big-Data-icon.png" />
+    <Content Include="webserver-hipe\images\button.png" />
+    <Content Include="webserver-hipe\images\concat.png" />
+    <Content Include="webserver-hipe\images\cppCode.png" />
+    <Content Include="webserver-hipe\images\cppcode2.png" />
+    <Content Include="webserver-hipe\images\data.png" />
+    <Content Include="webserver-hipe\images\graph.png" />
+    <Content Include="webserver-hipe\images\home.png" />
+    <Content Include="webserver-hipe\images\home2.png" />
+    <Content Include="webserver-hipe\images\ImageDataSource-2.png" />
+    <Content Include="webserver-hipe\images\Logo-HIPE.png" />
+    <Content Include="webserver-hipe\images\logo_satelite.png" />
+    <Content Include="webserver-hipe\images\objectdetection.png" />
+    <Content Include="webserver-hipe\images\options.png" />
+    <Content Include="webserver-hipe\images\Plandetravail2.png" />
+    <Content Include="webserver-hipe\images\python.png" />
+    <Content Include="webserver-hipe\images\resize.png" />
+    <Content Include="webserver-hipe\images\send.png" />
+    <Content Include="webserver-hipe\images\showvideo.png" />
+    <Content Include="webserver-hipe\images\textlog.png" />
+    <Content Include="webserver-hipe\images\video-emit.png" />
+    <Content Include="webserver-hipe\images\VideoDataSource-2.png" />
+    <Content Include="webserver-hipe\images\VideoDataSource.png" />
+    <Content Include="webserver-hipe\images\wheel.png" />
+    <Content Include="webserver-hipe\images\algos.jpg" />
+    <Content Include="webserver-hipe\images\button - Copie.jpg" />
+    <Content Include="webserver-hipe\images\button.jpg" />
+    <Content Include="webserver-hipe\images\joel-filipe-187166.jpg" />
+    <Content Include="webserver-hipe\images\Send.jpg" />
+    <Content Include="webserver-hipe\images\ShowVideo.jpg" />
+    <Content Include="webserver-hipe\images\video-emit.jpg" />
+    <Content Include="webserver-hipe\images\web-internet-blue-vector-button-icon-set-design-50889300.jpg" />
+    <Content Include="webserver-hipe\images\webrtcDataSource.jpg" />
+    <Content Include="webserver-hipe\images\wheel.jpg" />
+    <Content Include="webserver-hipe\images\github-blue.svg" />
+    <Content Include="webserver-hipe\images\github-red.svg" />
+    <Content Include="webserver-hipe\js\bootstrap.js" />
+    <Content Include="webserver-hipe\js\bootstrap.min.js" />
+    <Content Include="webserver-hipe\js\datasSystem.js" />
+    <Content Include="webserver-hipe\js\graph.js" />
+    <Content Include="webserver-hipe\js\importSystem.js" />
+    <Content Include="webserver-hipe\js\main.js" />
+    <Content Include="webserver-hipe\js\models.js" />
+    <Content Include="webserver-hipe\js\npm.js" />
+    <Content Include="webserver-hipe\js\param.js" />
+    <Content Include="webserver-hipe\views\graph.ejs" />
+    <Content Include="webserver-hipe\views\index.ejs" />
+    <Content Include="webserver-hipe\views\models.ejs" />
+    <Content Include="webserver-hipe\views\parameters.ejs" />
+    <Content Include="webserver-hipe\dist\css\bootstrap.min.css" />
+    <Content Include="webserver-hipe\dist\css\cytoscape.js-panzoom.css" />
+    <Content Include="webserver-hipe\dist\css\main.css" />
+    <Content Include="webserver-hipe\dist\js\bootstrap-notify.js" />
+    <Content Include="webserver-hipe\dist\js\bootstrap.js" />
+    <Content Include="webserver-hipe\dist\js\bootstrap.min.js" />
+    <Content Include="webserver-hipe\dist\js\cytoscape-dagre.js" />
+    <Content Include="webserver-hipe\dist\js\cytoscape-edgehandles.js" />
+    <Content Include="webserver-hipe\dist\js\cytoscape-klay.js" />
+    <Content Include="webserver-hipe\dist\js\cytoscape-panzoom.js" />
+    <Content Include="webserver-hipe\dist\js\cytoscape.js" />
+    <Content Include="webserver-hipe\dist\js\dagre.js" />
+    <Content Include="webserver-hipe\dist\js\datasSystem.js" />
+    <Content Include="webserver-hipe\dist\js\graph.js" />
+    <Content Include="webserver-hipe\dist\js\importSystem.js" />
+    <Content Include="webserver-hipe\dist\js\jquery.js" />
+    <Content Include="webserver-hipe\dist\js\klay.js" />
+    <Content Include="webserver-hipe\dist\js\lodash.js" />
+    <Content Include="webserver-hipe\dist\js\main.js" />
+    <Content Include="webserver-hipe\dist\js\mermaid.js" />
+    <Content Include="webserver-hipe\dist\js\models.js" />
+    <Content Include="webserver-hipe\dist\js\npm.js" />
+    <Content Include="webserver-hipe\dist\js\param.js" />
+    <Content Include="webserver-hipe\dist\views\graph.ejs" />
+    <Content Include="webserver-hipe\dist\views\index.ejs" />
+    <Content Include="webserver-hipe\dist\views\models.ejs" />
+    <Content Include="webserver-hipe\dist\views\parameters.ejs" />
+    <Content Include="webserver-hipe\typings\globals\bootstrap\typings.json" />
+    <Content Include="webserver-hipe\typings\globals\bootstrap-notify\typings.json" />
+    <Content Include="webserver-hipe\typings\globals\jquery\typings.json" />
+    <Content Include="webserver-hipe\typings\globals\node\typings.json" />
+    <Content Include="webserver-hipe\typings\globals\webcola\typings.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="webApp" />
+    <Folder Include="webserver-hipe" />
+    <Folder Include="webserver-hipe\css" />
+    <Folder Include="webserver-hipe\dist" />
+    <Folder Include="webserver-hipe\dist\css" />
+    <Folder Include="webserver-hipe\dist\js" />
+    <Folder Include="webserver-hipe\dist\views" />
+    <Folder Include="webserver-hipe\fonts" />
+    <Folder Include="webserver-hipe\images" />
+    <Folder Include="webserver-hipe\js" />
+    <Folder Include="webserver-hipe\typings" />
+    <Folder Include="webserver-hipe\typings\globals" />
+    <Folder Include="webserver-hipe\typings\globals\bootstrap" />
+    <Folder Include="webserver-hipe\typings\globals\bootstrap-notify" />
+    <Folder Include="webserver-hipe\typings\globals\jquery" />
+    <Folder Include="webserver-hipe\typings\globals\node" />
+    <Folder Include="webserver-hipe\typings\globals\webcola" />
+    <Folder Include="webserver-hipe\views" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -3,13 +3,10 @@
 
 #include <string>
 #include <iostream>
-#include <fstream>
-#include <sstream>
+
 #include <stdexcept>
 #include "opencv2/core.hpp"
 #include <opencv2/core/utility.hpp>
-#include "opencv2/video.hpp"
-#include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/videostab.hpp"
@@ -370,6 +367,7 @@ int process(int argc, const char **argv)
         // get source video parameters
 
         Ptr<VideoFileSource> source = makePtr<VideoFileSource>(inputPath);
+		
         cout << "frame count (rough): " << source->count() << endl;
         if (arg("fps") == "auto")
             outputFps = source->fps();
@@ -566,4 +564,14 @@ MotionModel motionModel(const string &str)
     if (str == "homography")
         return MM_HOMOGRAPHY;
     throw runtime_error("unknown motion model: " + str);
+}
+
+HipeStatus filter::algos::StabilizeVideo::process()
+{
+
+	return OK;
+}
+
+void filter::algos::StabilizeVideo::onLoad(void* data)
+{
 }

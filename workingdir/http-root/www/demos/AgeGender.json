@@ -26,7 +26,7 @@
 		{
 			"ExtractShape": {
 				"name": "ExtractShape",
-				"unused": "/u0000",
+				"unused": "\u0000",
 				"need": [
 					"Resize",
 					"FaceDetection"

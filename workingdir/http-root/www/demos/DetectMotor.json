@@ -20,7 +20,7 @@
 				"confidenceThreshold": "0.6",
 				"names_filename": "Data-light/QualityControl/yolo-obj.names",
 				"skip_frame": "0",
-				"wait_ms": "300",
+				"wait_ms": "150",
 				"weight_filename": "Data-light/QualityControl/yolo-obj_1100.weights",
 				"need": [
 					"Resize"
@@ -34,7 +34,7 @@
 				"confidenceThreshold": "0.3",
 				"names_filename": "Data-light/QualityControl/yolo-mg21.names",
 				"skip_frame": "0",
-				"wait_ms": "300",
+				"wait_ms": "150",
 				"weight_filename": "Data-light/QualityControl/yolo-mg21_2100.weights",
 				"need": [
 					"Resize"
@@ -56,7 +56,7 @@
 		{
 			"TextLoggerShow": {
 				"name": "TextLoggerShow_141",
-				"fontscale": "1.8",
+				"fontscale": "2.6",
 				"height": "720",
 				"width": "1024",
 				"need": [

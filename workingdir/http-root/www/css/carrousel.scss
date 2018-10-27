@@ -1,0 +1,74 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1.5em;
+}
+
+h2 {
+    text-align: center;
+    color: #555;
+  margin-bottom: 0;
+}
+
+// Carousel configuration parameters
+
+500px: 500px;
+
+.carousel {
+    padding: 20px;
+
+    perspective: 500px;
+    overflow: hidden;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > * {
+        flex: 0 0 auto;
+    }
+    
+    figure {
+        margin: 0;
+        
+        width: 40%;
+        transform-style: preserve-3d;
+        transition: transform 0.5s;
+        
+        img {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0 0px / 2;
+            
+            &:not(:first-of-type) {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+    }
+    
+    nav {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0 0;
+        
+        button {
+            flex: 0 0 auto;
+            margin: 0 5px;
+            
+            cursor: pointer;
+            
+            color: #333;
+            background: none;
+            border: 1px solid;
+            letter-spacing: 1px;
+            padding: 5px 10px;
+        }
+    }
+    
+}

@@ -7,7 +7,7 @@ var datas = require('./data.json');
 var orm = require("orm");
 var $ = require('jquery');
 
-app.use(orm.express("mysql://root:@localhost:3306/hipe", {
+app.use(orm.express("mysql://root:@localhost:4406/hipe", {
     define: function (db, models, next) {
         models.models = db.define("models", {
             version: String,

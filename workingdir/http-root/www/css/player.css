@@ -1,0 +1,97 @@
+
+/* The player (background) */
+.player {
+	z-index: 1; /* Sit on top */
+    padding-top: 0px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    overflow: none; /* Enable scroll if needed */
+    display: flex;
+    background-color: rgba(167,184,195, 0.9);
+    border-radius: 10px;
+}
+
+.modal-layer {
+   display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* player Content */
+.player-content {
+	position: relative;
+    /* background-color: #fefefe; */
+    margin: auto;
+    padding: 10px;
+    /* border: 1px solid #888; */
+    /* border: 1px solid #888; */
+    width: 80%;
+    height: 100%;
+	overflow:auto;
+}
+
+/* The Close Button */
+.close {
+	position: absolute;
+    color: #ed8151;
+    float: right;
+    font-size: 36px;
+    font-weight: bold;
+	top : 0px;
+	z-index: 5;
+	display: block;
+	right:5%;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+ .selfView, .remoteView {
+
+	background-position: left;
+	/* position: absolute; */
+	margin-top: 10px;
+	/* -moz-border-radius:10px; */
+	/* -webkit-border-radius:10px; */
+	/* border:10px solid #ccc; */
+	/* line-height:18px; */
+	margin:0;
+	width: 100%;
+	/* height: 75%; */
+	z-index: 3;
+	top: 0%;
+	display: block;
+	
+}
+
+.selfView
+{
+	position: absolute;
+	
+	left: auto;
+	right: 0px;
+	top: 0px;
+	width: 20%;
+	
+	z-index: 4;
+	display: block;
+}
+/* .video-container { */
+	/* position: aboslute; */
+	/* width: 100%; */
+	/* padding-bottom: 75%; */
+/* } */
+

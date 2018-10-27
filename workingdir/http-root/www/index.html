@@ -1,34 +1,332 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>WebDemos Hipe</title>
-  <script type="text/javascript" src="js/signaling.js"></script>
-  <link rel="stylesheet" href="css/index.css" />
-</head>
-<body>
-  <div>
-  </div>
-  <div>
-    <div class="table">
-      <p>
-        my camera status = <span id="status" class="emoji">Connecting...</span>
-      </p>
-      <div class="table">
-        <div class="table">
-          <input type="checkbox" value="1" id="start" class="onoff start emoji" />
-          <label for="start" onclick="switchStart();switchMode('onAir')"></label>
-        </div>
-      </div>
-      <div>
-        <video id="selfView" autoplay></video>
-      </div>
-    </div>
-    <div class="table">
-      <p>you</p>
-      <video id="remoteView"  autoplay></video>
-    </div>
-  </div>
-  <span id="status"></span>
-</body>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<title>Perspective Page View Navigation</title>
+		<meta name="description" content="Perspective Page View Navigation: Transforms the page in 3D to reveal a menu" />
+		<meta name="keywords" content="3d page, menu, navigation, mobile, perspective, css transform, web development, web design" />
+		<meta name="author" content="Codrops" />
+		<link rel="shortcut icon" href="../favicon.ico">
+		<link rel="stylesheet" type="text/css" href="css/player.css" />
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<link rel="stylesheet" type="text/css" href="css/carrousel.css" />
+		
+		<!-- csstransforms3d-shiv-cssclasses-prefixed-teststyles-testprop-testallprops-prefixes-domprefixes-load --> 
+		<script src="js/modernizr.custom.25376.js"></script>
+	</head>
+	<body>
+		<div id="perspective" class="perspective effect-rotateleft">
+			<div class="container">
+				<div class="wrapper"><!-- wrapper needed for scroll -->
+					<!-- Top Navigation -->
+					<!-- <div class="codrops-top clearfix"> -->
+						<!-- <a class="codrops-icon codrops-icon-prev" href="http://tympanus.net/Development/ProgressButtonStyles/"><span>Previous Demo</span></a> -->
+						<!-- <span class="right"><a class="codrops-icon codrops-icon-drop" href="http://tympanus.net/codrops/?p=17915"><span>Back to the Codrops Article</span></a></span> -->
+					<!-- </div> -->
+					<header class="codrops-header">
+						<div class='div-header'>
+							<h1>Web HIPE Demos <span>Computer vision : Think faster build easier</span></h1>	
+						</div>
+					</header>
+					<!-- Trigger/Open The Modal -->
+					
+					<div id="myplayer" class="modal-layer">
+					<!-- <button id="myBtn">Open test Modal</button> -->
+					  <!-- Modal content -->
+					  <div class="player-content">
+						<div id="nav-arrows" class="nav-arrows">
+							<a class="menu_a" href="#">&#8801;</a>
+							<a class="prev_a" href="#">Previous</a>
+							<a class="next_a" href="#">Next< </a>
+
+						</div>
+						<span class="close" onclick="closeModal('myplayer')">&times;</span>
+						
+						<div id="facebody" class="carousel" data-bfc>
+							
+							<figure id="facebody_fig">
+
+								<div id="facebody1" class="player">
+									<div class="hipe-description">
+
+										<h3>Webcam Face detection (LIVE)</h3>
+										<p>
+											Test the remote service HIPE with your Camera and let the service running at ANEO or in the Cloud does the face detection.
+										</p>
+										<p>	The result will be your Video + plus all face boxing.
+										</p>
+										<p>	HIPE with module :
+										</p>
+										<p>	+ WebRTC to display on the web page
+										</p>
+										<p>	+ OpenCV and ANEO optimization
+										</p>
+										<p>	+ Dlib 19.16 with its fast face detection
+										</p>
+										<a class="start_a" href="#" onClick="switchButton('/demos/MyFaceBoxing.json', 'facebody1')">Start</a>
+										<a class="flip_a" href="#" onClick="flipCamera('/demos/MyFaceBoxing.json', 'facebody1')">Rear</a>
+									</div>
+									<div class="video-container">
+										<video id="rfacebody1"  class="remoteView" autoplay="" controls=""></video>
+										<video id="sfacebody1" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+								<div id="facebody2" class="player">
+									<div class="hipe-description">
+										<h3>Webcam Face landmarks detection (LIVE)</h3>
+										<p>
+											Test the remote service HIPE with your Camera and let the service running at ANEO or in the Cloud does the face detection.
+										</p>
+										<p>	The result will be your Video + plus all face boxing.
+										</p>
+										<p>	HIPE with module :
+										</p>
+										<p>	+ WebRTC to display on the web page
+										</p>
+										<p>	+ OpenCV and ANEO optimization
+										</p>
+										<p>	+ Dlib 19.16 with its fast face detection
+										</p>
+										<a class="start_a" href="#" onClick="switchButton('/demos/MyFaceLandmark.json', 'facebody2')">Start</a>
+										<a class="flip_a" href="#" onClick="flipCamera('/demos/MyFaceLandmark.json', 'facebody2')">Rear</a>
+									</div>
+									<div class="video-container">
+										<video id="rfacebody2"  class="remoteView" autoplay="" controls=""></video>
+										<video id="sfacebody2" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+								<div id="facebody4" class="player">
+									<div class="hipe-description">
+											
+										<h3>Webcam Age and Gender estimation (LIVE)</h3>
+										<p>
+											Test the remote service HIPE with your Camera and let the service running at ANEO or in the Cloud does the Age estimation.
+										</p>
+										<p>	The result will be your Video + a boxe with your estimated age.
+										</p>
+										<p>	HIPE with module :
+										</p>
+										<p>	+ WebRTC to display on the web page
+										</p>
+										<p>	+ OpenCV and ANEO optimization
+										</p>
+										<p>	+ Caffe to load an age gender model
+										</p>
+										<a class="start_a" href="#" onClick="switchButton('/demos/AgeGender.json', 'facebody4')">Start</a>
+										<a class="flip_a" href="#" onClick="flipCamera('/demos/AgeGender.json', 'facebody4')">Rear</a>
+									</div>
+									<div class="video-container">
+										<video id="rfacebody4" class="remoteView" autoplay="" controls=""></video>
+										<video id="sfacebody4" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+								
+								<!-- <div id="facebody8" class="player"> -->
+									<!-- <div class="hipe-description"> -->
+										<!-- <h3>Creative Lifesaver 8</h3> -->
+									<!-- </div> -->
+									<!-- <div class="video-container"> -->
+										<!-- <video id="rfacebody8" class="remoteView" autoplay="" controls=""></video> -->
+										<!-- <video id="sfacebody8" class="selfView" autoplay="" controls></video> -->
+									<!-- </div> -->
+								<!-- </div> -->
+							</figure>	
+							
+						</div>
+						
+					  </div> <!-- player-content -->
+
+					</div> <!-- myplayer -->
+					
+					<div id="detectModal" class="modal-layer">
+					  <!-- Modal content -->
+					  <div class="player-content">
+						<div id="nav-arrows" class="nav-arrows">
+							<a class="menu_a" href="#">&#8801;</a>
+							<a class="prev_a" href="#">Previous</a>
+							<a class="next_a" href="#">Next< </a>
+
+						</div>
+						<span class="close" onclick="closeModal('detectModal')">&times;</span>
+						
+						<div id="detect" class="carousel" data-bfc>
+							
+							<figure id="detect_fig">
+								<div id="detect5" class="player">
+									<div class="hipe-description">
+										<h3>Webcam Object detection v2 (LIVE)</h3>
+										<p>
+											Test the remote service HIPE with your Camera and let the service running at ANEO or in the Cloud does the detection.
+										</p>
+										<p>	The result will be your Video + object boxing.
+										</p>
+										<a class="start_a" href="#" onClick="switchButton('/demos/yolo.json', 'detect5')">Start</a>
+										<a class="flip_a" href="#" onClick="flipCamera('/demos/yolo.json', 'detect5')">Rear</a>
+									</div>
+									<div class="video-container">
+										<video id="rdetect5" class="remoteView" autoplay="" controls=""></video>
+										<video id="sdetect5" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+								<div id="detect6" class="player">
+									<div class="hipe-description">
+										<h3>Quality control for Engine</h3>
+										<p>This is a real time detection of inner and outter components detection.</p>
+										<p>Use case to a simple video where the detection is running in live now</p>
+										<a class="start_a" href="#" onClick="switchButton('/demos/DetectMotor.json', 'detect6')">Start</a>
+									</div>
+									<div class="video-container">
+										<video id="rdetect6" class="remoteView" autoplay="" controls=""></video>
+										<video id="sdetect6" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+								
+							</figure>	
+							
+						</div>
+						
+					
+						
+					  </div> <!-- player-content -->
+
+					</div> <!-- detectModal -->
+					
+					<div id="textRecognitionModal" class="modal-layer">
+					  <!-- Modal content -->
+					  <div class="player-content">
+						<div id="nav-arrows" class="nav-arrows">
+							<a class="menu_a" href="#">&#8801;</a>
+							<a class="prev_a" href="#">Previous</a>
+							<a class="next_a" href="#">Next< </a>
+
+						</div>
+						<span class="close" onclick="closeModal('textRecognitionModal')">&times;</span>
+						
+						<div id="textReco" class="carousel" data-bfc>
+							<figure id="textReco_fig">
+								<div id="textReco7" class="player">
+									<div class="hipe-description">
+										<h3>A real-time text recognition...(Soon)</h3>
+										<a class="start_a" href="#" onClick="switchButton('/demos/SimplePython.json', 'textReco7')">Start</a>
+										<a class="flip_a" href="#" onClick="flipCamera('/demos/SimplePython.json', 'textReco7')">Rear</a>
+									</div>
+									<div class="video-container">
+										<video id="rtextReco7" class="remoteView" autoplay="" controls=""></video>
+										<video id="stextReco7" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+							</figure>	
+						</div>
+					  </div> <!-- player-content -->
+					</div> <!-- textRecognitionModal -->
+					
+					<div id="pythonModal" class="modal-layer">
+					  <!-- Modal content -->
+					  <div class="player-content">
+						<div id="nav-arrows" class="nav-arrows">
+							<a class="menu_a" href="#">&#8801;</a>
+							<a class="prev_a" href="#">Previous</a>
+							<a class="next_a" href="#">Next< </a>
+
+						</div>
+						<span class="close" onclick="closeModal('pythonModal')">&times;</span>
+						
+						<div id="python" class="carousel" data-bfc>
+							<figure id="python_fig">
+								<div id="python7" class="player">
+									<div class="hipe-description">
+											<h3>Running python 3.6 script </h3>
+									<p>HIPE allows to run Python script in parallel graph node</p>
+									<p>This is a simple example running python 3.6 script. is embedded</p>
+									<a class="start_a" href="#" onClick="switchButton('/demos/SimplePython.json', 'python7')">Start</a>
+									<a class="flip_a" href="#" onClick="flipCamera('/demos/SimplePython.json', 'python7')">Rear</a>
+									</div>
+									<div class="video-container">
+										<video id="rpython7" class="remoteView" autoplay="" controls=""></video>
+										<video id="spython7" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+							</figure>	
+						</div>
+					  </div> <!-- player-content -->
+					</div> <!-- pythonModal -->
+					
+					
+					<div id="monitoringModal" class="modal-layer">
+					  <!-- Modal content -->
+					  <div class="player-content">
+						<div id="nav-arrows" class="nav-arrows">
+							<a class="menu_a" href="#">&#8801;</a>
+							<a class="prev_a" href="#">Previous</a>
+							<a class="next_a" href="#">Next< </a>
+
+						</div>
+						<span class="close" onclick="closeModal('monitoringModal')">&times;</span>
+						
+						<div id="monitoring" class="carousel" data-bfc>
+							<figure id="monitoring_fig">
+								<div id="monitoring7" class="player">
+									<div class="hipe-description">
+										<h3>Monitoring a model running HIPE service</h3>
+									<p>Monitoring the HIPE service and checking the model execution in live.</p>
+									<p> (Admin only) </p>
+									<a class="start_a" href="#" onClick="startMonitoring('monitoring7')">Start</a>
+									</div>
+									<div class="video-container">
+										<video id="rmonitoring7" class="remoteView" autoplay="" controls=""></video>
+										<video id="smonitoring7" class="selfView" autoplay="" controls></video>
+									</div>
+								</div>
+							</figure>	
+						</div>
+					  </div> <!-- player-content -->
+					</div> <!-- monitoringModal -->
+					
+					
+					<div class="main clearfix">
+						<div class="row">
+							<div class="column">
+								<p>Cliquer sur le menu et découvrez nos algorithmes pré-conçus pour essayer HIPE. </p>
+								<p><button id="showMenu">Menu</button></p>
+								
+							</div>
+							<div class="column">
+							<!--nav class="codrops-demos">
+								<a href="index.html">Airbnb Effect</a>
+								<a href="index2.html">Move Left</a>
+								<a href="index3.html" class="current-demo">Rotate Left</a>
+								<a href="index4.html">Move Down</a>
+								<a href="index5.html">Rotate Top</a>
+								<a href="index6.html">Lay Down</a>
+							</nav-->
+							</div>
+						</div>
+						<div class="related">
+							<p>Cette page web est connecté à un service à distance HIPE. Ce que vous verrez est réalisé en temps-réel.</p>
+						</div>
+					</div><!-- /main -->
+				</div><!-- wrapper -->
+			</div><!-- /container -->
+		
+			<nav class="outer-nav right vertical">
+				<a href="#" class="icon-home" onclick="closeAllModal();">Home</a>
+				<a href="#" onclick="openModal('myplayer');" class="icon-news">Face and Body</a>
+				<a href="#" onclick="openModal('detectModal');" class="icon-image">Survey and detect</a>
+				<a href="#" onclick="openModal('textRecognitionModal');" class="icon-upload">Text recognition</a>
+				<a href="#" onclick="openModal('pythonModal');" class="icon-star">C++, Python, <br>Mathlab modules</a>
+				<a href="#" onclick="openModal('monitoringModal');" class="icon-star">Monitoring</a>
+				<a href="https://www.aneo.eu/hipe" class="icon-lock">project</a>
+			</nav>
+		</div><!-- /perspective -->
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="js/classie.js"></script>
+		<script src="js/menu.js"></script>
+		<script src="js/jsonRead.js"></script>
+		<script src="js/player.js"></script>
+		<script src="js/carrousel.js"></script>
+	</body>
 </html>
