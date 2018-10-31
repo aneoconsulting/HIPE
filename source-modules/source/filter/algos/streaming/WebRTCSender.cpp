@@ -12,6 +12,9 @@ HipeStatus WebRTCSender::process()
 	{
 		data::ImageData img;
 		img = _connexData.pop();
+		
+		if (img.This_const().getType() != data::IMGF) continue;
+
 		if (streamer != nullptr)
 		{
 			cv::Mat res;
@@ -52,10 +55,9 @@ void WebRTCSender::onLoad(void* data)
 		{
 			throw HipeException("Cannot find the working dir for webrtc");
 		}
-		std::string built_path = path.str();
-		const char* c_str = built_path.c_str();
+
 		std::string base_cert = corefilter::getLocalEnv().getValue("base_cert");
-		streamer = newWebRTCStreamer(port, c_str, base_cert.c_str());
+		streamer = newWebRTCStreamer(port, base_cert.c_str());
 		startStreamerServer(streamer);
 	}
 }

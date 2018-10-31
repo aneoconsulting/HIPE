@@ -1,13 +1,18 @@
 //@HIPE_LICENSE@
+//#define NO_IMPORT_ARRAY
 #define PY_ARRAY_UNIQUE_SYMBOL pbcvt_ARRAY_API
 #include <pydata/pyImageData.h>
 
 #pragma warning(push, 0)
 #include <boost/python.hpp>
+#include <boost/python/numpy.hpp>
 #pragma warning(pop)
 
 #include <pydata/pyboostcvconverter.hpp>
 #include <iostream>
+#include "TupleConverter.h"
+#include "pyShapeData.h"
+
 
 
 namespace pbcvt {
@@ -56,6 +61,11 @@ namespace pbcvt {
         return result;
     }
 
+	//This function will force windows compiler to link with boost numpy
+	static void force_numpy_kink()
+	{
+		   boost::python::numpy::initialize();
+	}
 
 #if (PY_VERSION_HEX >= 0x03000000)
 
@@ -64,9 +74,11 @@ namespace pbcvt {
         static void init_ar(){
 #endif
         Py_Initialize();
-
-        	import_array();
-        return NUMPY_IMPORT_ARRAY_RETVAL;
+		
+        import_array();
+#if (PY_VERSION_HEX >= 0x03000000)
+        return NULL;
+#endif
     }
 
     //BOOST_PYTHON_MODULE (pbcvt) {
@@ -130,18 +142,38 @@ namespace boost {
 		};
 	}
 }
+
 #ifdef BOOST_PYTHON_STATIC_LIB
 #undef BOOST_PYTHON_STATIC_LIB
 #endif
-	
+
+
+void export_cpptuple_conv() {
+    create_tuple_converter<float, float>();
+    create_tuple_converter<int, int>();
+    create_tuple_converter<int, int, int, int>();
+    create_tuple_converter<int, int, int, int, int, int, int, int>();
+}
+
+std::tuple<float, float> tupPoint2f(std::tuple<float, float> t){return t;}
+std::tuple<int, int> tupPoint(std::tuple<float, float> t){return t;}
+std::tuple<int, int, int, int> tupRect(std::tuple<int, int, int, int> t){return t;}
+std::tuple<int, int, int, int, int, int, int, int>	tupQuad(std::tuple<int, int, int, int, int, int, int, int> t){return t;}
+
+
 	BOOST_PYTHON_MODULE(pydata)
 	{
 		pbcvt::init_ar();
+		export_cpptuple_conv();
 
 		//initialize converters
 		to_python_converter<cv::Mat,
 			pbcvt::matToNDArrayBoostConverter>();
 		pbcvt::matFromNDArrayBoostConverter();
+
+		py::def("tupPoint2f", tupPoint2f);
+		py::def("tupPoint", tupPoint);
+		py::def("tupPoint", tupRect);
 
 		def("dot", pbcvt::dot);
 		def("dot2", pbcvt::dot2);
@@ -151,24 +183,8 @@ namespace boost {
 			.def("set", &pyImageData::set)
 			.def_readwrite("img", &pyImageData::get)
 			.def("get", &pyImageData::get);
-				
+
+		boost::python::class_<pyShapeData>("shapeData")
+    		.def("addRect", &pyShapeData::addRect)
+    		.def("addQuad", &pyShapeData::addQuad);
 	}
-//BOOST_PYTHON_MODULE(pydata)
-//{
-//	pbcvt::init_ar();
-//
-//	//initialize converters
-//	to_python_converter<cv::Mat,
-//		pbcvt::matToNDArrayBoostConverter>();
-//	pbcvt::matFromNDArrayBoostConverter();
-//
-//	def("dot", make_function(pbcvt::dot, release_gil_policy()));
-//	def("dot2", make_function(pbcvt::dot2, release_gil_policy()));
-//
-//	boost::python::class_<pyImageData>("imageData")
-//		.def("assign", make_function(&pyImageData::assign, release_gil_policy()))
-//		.def("set", make_function(&pyImageData::set, release_gil_policy()))
-//		.def_readwrite("img", &pyImageData::get)
-//		.def("get", make_function(&pyImageData::get, release_gil_policy()));
-//
-//}

@@ -31,7 +31,7 @@ void filter::datasource::WebRTCVideoDataSource::captureTasks()
 			int retry = 5;
 			if (firstInit)
 			{
-				retry = 150;
+				retry = 70;
 				firstInit = false;
 			}
 
@@ -122,8 +122,8 @@ void filter::datasource::WebRTCVideoDataSource::onLoad(void* data)
 		}
 		std::string built_path = path.str();
 		
-		const char* c_str = built_path.c_str();
-		video = new WebRTCCapturer(port, c_str, base_cert.c_str());
+		
+		video = new WebRTCCapturer(port, base_cert.c_str());
 		video->startWebRTCServer();
 		captureTasks();
 	}

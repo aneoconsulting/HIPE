@@ -127,6 +127,44 @@ namespace hipe_server
 			
 		}
 
+		//Set localenv from config here
+		if (configPtree.count("config_path"))
+		{
+			auto pathsNode = configPtree.get_child("config_path");
+			for (auto data = pathsNode.begin(); data != pathsNode.end(); ++data)
+			{
+				
+				if(data->second.empty() && !data->second.data().empty()) {
+					corefilter::getLocalEnv().setValue(data->first, getValue<std::string>(pathsNode, data->first));
+					LOG(INFO) <<  "Set Path Variable environement : [ " << data->first << "] --> [ "
+						<< corefilter::getLocalEnv().getValue(data->first)
+						<< " ]" << std::endl;
+				}
+				else if(!data->second.empty() && data->second.data().empty())
+				{
+					std::stringstream array_path;
+					int first = 0;
+					for (auto fields = data->second.begin(); fields != data->second.end(); ++fields)
+					{
+						if (first == 0)
+							array_path << fields->second.data(); //getValue<std::string>(pathsNode, data->first);
+						else
+							array_path << ";" << fields->second.data(); //getValue<std::string>(pathsNode, data->first);
+						first++;
+					}
+					corefilter::getLocalEnv().setValue(data->first, array_path.str());
+					LOG(INFO) <<  "Set Path Variable environement : [ " << data->first << "] --> [ "
+						<< corefilter::getLocalEnv().getValue(data->first)
+						<< " ]" << std::endl;
+				}
+				    
+				
+				
+			}
+		}
+
+		
+
 		return 0;
 	}
 

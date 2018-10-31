@@ -2,6 +2,8 @@
 //Added for the json-example
 #define BOOST_SPIRIT_THREADSAFE
 //Added for the default_resource example
+#include <boost/algorithm/string.hpp>
+
 #include <fstream>
 #include <vector>
 #include <algorithm>
@@ -61,6 +63,26 @@ std::vector<std::string> defaultListWorkingDirectory()
 	return relativePath;
 }
 
+void add_python_path(const std::string& python_path)
+		{
+			std::vector<std::string> results;
+
+			boost::split(results, python_path, [](char c) { return c == ';'; });
+			
+
+			for (auto p : results)
+			{
+
+				addEnv(p);
+				addVarEnv("PYTHONPATH", p);
+				LOG(INFO) << "Add Python path : " << p.c_str() << std::endl;
+			}
+		}
+
+void setPythonPath()
+{
+	add_python_path(corefilter::getLocalEnv().getValue("python_dll_path"));
+}
 
 int main(int argc, char* argv[]) {
 	core::Logger::init(argv[0]);
@@ -125,6 +147,8 @@ int main(int argc, char* argv[]) {
 		return 0;
 	
 	config.displayConfig();
+
+	setPythonPath();
 
 	LOG(INFO) << "Hello Hipe";
 	LOG(INFO) << "Version : " << getVersion();

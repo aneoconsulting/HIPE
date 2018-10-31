@@ -27,6 +27,7 @@ namespace filter
 				_init = false;
 				mPyUser = nullptr;
 				script_path = "Data-light/Python-Sample/testhipe.py";
+				function_name = "process";
 			}
 			data::PyContextData l_pythonContext;
 
@@ -42,8 +43,14 @@ namespace filter
 			PyThreadState* pyThreadState;
 			PyExternalUser* mPyUser;
 
+			void add_python_path(const std::string& python_path);
+
+			void initialize_python_paths();
+
 			//Called from parent thread
 			void init_python(const std::string& path);
+
+			void push_result(const boost::python::object& object);
 
 			HipeStatus process() override;	
 

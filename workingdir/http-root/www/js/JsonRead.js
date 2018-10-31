@@ -24,6 +24,7 @@ let mode = {
 
 let cameras = [];
 let front = 0;
+var mediaStream = null;
 
 var notifySuccess = function (msg) {
     console.log(msg)
@@ -202,7 +203,21 @@ function GetConnectWebRTCServer(port, videoId)
 					  }; 
  
     // get a local stream, show it in a self-view and add it to be sent
-    navigator.mediaDevices.getUserMedia(constraints, 
+    navigator.mediaDevices.getUserMedia(constraints,
+        function (stream) {
+            mediaStream = stream;
+            mediaStream.stop = function () {
+                this.getAudioTracks().forEach(function (track) {
+                    track.stop();
+                });
+                this.getVideoTracks().forEach(function (track) { //in case... :)
+                    track.stop();
+                });
+            };
+            /*
+             * Rest of your code.....
+             * */
+        },	
 		// errorCallback
 	   function(err) {
 		if(err === PERMISSION_DENIED) {
@@ -564,8 +579,24 @@ function sendJsonRequest(jsonFilename, videoId)
 
 function startMonitoring(videoId)
 {
-	GetConnectWebRTCServer(target_port, videoId);
-	GetConnectWebRTCSender(source_port, videoId);
+	var videoObj = document.getElementById('s'+ videoId),
+	 player = videoObj.parentNode.parentNode,
+	 buttonStart = player.querySelector(".hipe-description .start_a")
+	 
+	if (buttonStart.textContent == "Start")
+	 {
+		 if (mediaStream) mediaStream.stop();
+		 front = cameras[0];
+		 GetConnectWebRTCServer(target_port, videoId);
+		 GetConnectWebRTCSender(source_port, videoId);
+	
+		 buttonStart.textContent = "Stop";
+	 }
+	 else{
+		 if (mediaStream) mediaStream.stop();
+		 killTask(videoId);
+		 buttonStart.textContent = "Start";
+	 }
 }
 
 
@@ -577,7 +608,9 @@ function switchButton(jsonFilename, videoId)
 	 buttonStart = player.querySelector(".hipe-description .start_a")
 	 if (buttonStart.textContent == "Start")
 	 {
+		 if (mediaStream) mediaStream.stop();
 		 if (front == 0) {
+			
 			front = cameras[0];
 			buttonFlip.textContent = "Rear";
 		 }
@@ -585,6 +618,7 @@ function switchButton(jsonFilename, videoId)
 		 buttonStart.textContent = "Stop";
 	 }
 	 else{
+		 if (mediaStream) mediaStream.stop();
 		 killTask(videoId);
 		 buttonStart.textContent = "Start";
 	 }
@@ -599,12 +633,14 @@ function flipCamera(jsonFilename, videoId)
 	 
 	 if (buttonFlip.textContent == "Rear")
 	 {
+		 if (mediaStream) mediaStream.stop();
 		 front = cameras[1];
 		 sendJsonRequest(jsonFilename, videoId);
 		 buttonFlip.textContent = "Front";
 		 buttonStart.textContent = "Stop";
 	 }
 	 else{
+		 if (mediaStream) mediaStream.stop();
 		 front = cameras[0];
 		 sendJsonRequest(jsonFilename, videoId);
 		 buttonFlip.textContent = "Rear";

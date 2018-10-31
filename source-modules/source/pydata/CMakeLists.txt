@@ -85,6 +85,8 @@ else()
   SET(LIB_DIR "lib")
 endif()
 
+install_dependencies(pydata)
+
 if (WIN32)
 install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS Release DESTINATION ${LIB_DIR}/Release COMPONENT library)
 install (FILES $<TARGET_FILE_DIR:pydata>/pydata.pyd CONFIGURATIONS RelWithDebInfo DESTINATION ${LIB_DIR}/Release COMPONENT library)

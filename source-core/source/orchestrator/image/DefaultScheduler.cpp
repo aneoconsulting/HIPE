@@ -66,6 +66,8 @@ int orchestrator::image::DefaultScheduler::setMatrixLayer(filter::Model* filter,
 
 void orchestrator::image::DefaultScheduler::popUnusedData(filter::Model* filter)
 {
+	if (filter == nullptr) return ;
+
 	data::ConnexDataBase& outRes = filter->getConnector();
 	data::DataPort& data_port = static_cast<data::DataPort &>(outRes.getPort());
 
@@ -124,7 +126,25 @@ void orchestrator::image::DefaultScheduler::CallFiltersOnload(filter::Model* fil
 	{
 		PyEval_AcquireThread(pyMainThreaState[root]);
 		interp[std::this_thread::get_id()] = pyThreadState[std::this_thread::get_id()]->interp;
-		filter->onLoad(interp[std::this_thread::get_id()]);
+		try {
+			filter->onLoad(interp[std::this_thread::get_id()]);
+		}
+		catch (HipeException &e)
+		{
+			PyEval_ReleaseThread(pyMainThreaState[root]);
+			throw e;
+		}
+		catch (std::exception &e)
+		{
+			PyEval_ReleaseThread(pyMainThreaState[root]);
+			throw e;
+		}
+		catch (...)
+		{
+			PyEval_ReleaseThread(pyMainThreaState[root]);
+			throw HipeException("Uncatched exception in python loading. Please contact us");
+		}
+
 		PyEval_ReleaseThread(pyMainThreaState[root]);
 	}
 	else
@@ -309,17 +329,18 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 					}
 					catch (FatalException& e)
 					{
-						std::cerr << "FatalException during the " << filter->getName() << " execution. Msg : " << e.what() <<
+						LOG(ERROR) << "FatalException during the " << filter->getName() << " execution. Msg : " << e.what() <<
 							". Please contact us" << std::endl;
-
+						LOG(ERROR) << "Error : from working directory [ " << GetCurrentWorkingDir() << " ]" << std::endl;; 
 						destroyPythonThread(userThreadState);
 						texptr = std::make_shared<std::exception_ptr>(std::current_exception());
 						exit(-1);
 					}
 					catch (HipeException& e)
 					{
-						std::cerr << "HipeException during the " << filter->getName() << " execution. Msg : " << e.what() <<
+						LOG(ERROR) << "HipeException during the " << filter->getName() << " execution. Msg : " << e.what() <<
 							". Please contact us" << std::endl;
+						LOG(ERROR) << "Error : from working directory [ " << GetCurrentWorkingDir() << " ]" << std::endl;; 
 						cleanDataChild(cpyFilterRoot);
 						disposeChild(cpyFilterRoot);
 						if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
@@ -333,8 +354,9 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 
 					catch (std::exception& e)
 					{
-						std::cerr << "Unkown error during the " << filter->getName() << " execution. Msg : " << e.what() <<
+						LOG(ERROR) << "Unkown error during the " << filter->getName() << " execution. Msg : " << e.what() <<
 							". Please contact us" << std::endl;
+						LOG(ERROR) << "Error : from working directory [ " << GetCurrentWorkingDir() << " ]" << std::endl;; 
 						cleanDataChild(cpyFilterRoot);
 						disposeChild(cpyFilterRoot);
 
@@ -347,8 +369,9 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 					}
 					catch (...)
 					{
-						std::cerr << "Unkown error during the " << filter->getName() <<
+						LOG(ERROR) << "Unkown error during the " << filter->getName() <<
 							". Please contact us" << std::endl;
+						LOG(ERROR) << "Error : from working directory [ " << GetCurrentWorkingDir() << " ]" << std::endl;; 
 						cleanDataChild(cpyFilterRoot);
 						disposeChild(cpyFilterRoot);
 
@@ -454,6 +477,8 @@ void orchestrator::image::DefaultScheduler::process(filter::Model* root, data::D
 		std::stringstream build;
 		for (auto& taskInfo : runningTasks)
 		{
+			if (! taskInfo.isActive) continue; // the task exist but it failed before taskInfo creation
+
 			if (*(taskInfo.isActive) && (taskInfo.task->joinable()))
 			{
 				//It's an update of actual execution 

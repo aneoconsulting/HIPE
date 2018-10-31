@@ -59,9 +59,10 @@ int hipe_gettimeofday(hipetimeval* p, void* tz)
 std::string getEnv(std::string path)
 {
 	char env_p[163840];
-	GetEnvironmentVariable(path.c_str(), env_p, 163840);
+	size_t nbchar = GetEnvironmentVariable(path.c_str(), env_p, 163840);
 	std::stringstream new_path;
-	new_path << env_p;
+	if (nbchar > 0)
+		new_path << env_p;
 	if (new_path.str().empty())
 		return std::string("");
 
@@ -70,28 +71,33 @@ std::string getEnv(std::string path)
 
 void addEnv(std::string path)
 {
-	char env_p[163840];
-	GetEnvironmentVariable("PATH", env_p, 163840);
+	std::string env_p;
+	env_p = getEnv("PATH");
 	std::stringstream new_path;
 	new_path << path << ";" << env_p;
 	std::string cs = new_path.str();
 	SetEnvironmentVariable("PATH", cs.c_str());
 
-	GetEnvironmentVariable("PATH", env_p, 163840);
+	/*GetEnvironmentVariable("PATH", env_p, 163840);*/
 
 
 }
 
 void addVarEnv(std::string key, std::string value)
 {
-	char env_p[163840];
-	GetEnvironmentVariable(key.c_str(), env_p, 163840);
+	std::string env_p;
+	env_p = getEnv(key);
 	std::stringstream new_path;
-	new_path << value << ";" << env_p;
+	if (env_p.empty())
+		new_path << value;
+	else
+	{
+		new_path << value << ";" << env_p;
+	}
+
 	std::string cs = new_path.str();
 	SetEnvironmentVariable(key.c_str(), cs.c_str());
 
-	GetEnvironmentVariable(key.c_str(), env_p, 163840);
 
 
 }
@@ -139,7 +145,14 @@ void addVarEnv(std::string key, std::string value)
 	char * env_p;
 	env_p = getenv(key.c_str());
 	std::stringstream new_path;
-	new_path << value << ";" << env_p;
+	if (env_p == nullptr)
+	{
+		new_path << value;
+	}
+	else
+	{
+		new_path << value << ":" << env_p;
+	}
 	std::string cs = new_path.str();
 	setenv(key.c_str(), cs.c_str(), 1);
 
