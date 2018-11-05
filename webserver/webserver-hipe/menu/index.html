@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+	<title>Main Menu Example</title>
+
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="js/jquery.menu.js"></script>
+    <link href="css/menu.css" rel="stylesheet" type="text/css" />
+
+	<style type="text/css">
+		body
+		{
+		    padding:10px; 
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+			font-size: 13px;
+			font-weight: normal; 
+		}
+	</style>
+</head>
+
+<body>
+<div id="menu-bar">
+            <ul class="main-menu">
+                <li>
+                    File
+                    <ul>
+                        <li>
+                            New
+                            <ul>
+                                <li><a href="http://www.google.com/" target="_blank">Google search (opens in new tab)</a></li>
+                                <li class="separator"></li>
+                                <li><a href="/#!/new-document">Product</a></li>
+                                <li><a href="/#!/new-document">Document</a></li>
+                                <li><a href="/#!/new-client">Client</a></li>
+                            </ul>
+                        </li>
+                        <li class="separator"></li>
+                        <li class="icon save"><a href="javascript:void(0)">Save<span>Ctrl+S</span></a></li>
+                        <li class="separator"></li>
+                        <li class="disabled"><a href="/#!/import">Import</a></li>
+                        <li>Export</li>
+                        <li class="separator"></li>
+                        <li class="icon print"><a href="javascript:void(0)">Print<span>Ctrl+P</span></a></li>
+                        <li class="separator"></li>
+                        <li>Logout</li>
+                    </ul>
+                </li>
+                <li>
+                    View
+                    <ul>
+                        <li>Documents
+                            <ul>
+                                <li>All</li>
+                                <li class="separator"></li>
+                                <li>Unfinished</li>
+                                <li>Closed</li>
+                            </ul>
+                        </li>
+                        <li><a href="/#!/products">Products</a></li>
+                        <li class="separator"></li>
+						<li>
+							First level
+							<ul>
+								<li>
+									Second level
+									<ul>
+										<li>
+											Third level menu item
+										</li>
+										<li>
+										Third level
+										<ul>
+												<li>
+													Forth level menu item 1
+												</li>
+												<li>
+													Forth level menu item 2
+												</li>
+											</ul>
+										</li>
+										<li class="separator"></li>
+										<li>Another third level menu item</li>
+									</ul>
+								</li>
+								<li>
+									Items will make menus stretch as needed
+								</li>
+								<li class="separator"></li>
+								<li>
+									 Another menu item
+								</li>
+							</ul>
+						</li>
+						<li class="separator"></li>
+                        <li>Reports
+                            <ul>
+                                <li>Sell history</li>
+                                <li>Clients history</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    Settings
+                    <ul>
+						<li>
+							Style configurator
+						</li>
+                        <li class="separator"></li>
+                        <li>
+                            Account
+                            <ul>
+                                <li>Company data</li>
+                                <li>Personal data</li>                            
+                            </ul>
+                        </li>
+                        <li class="separator"></li>
+                        <li>
+                            Options
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    Help
+                    <ul>
+                        <li>Index</li>
+                        <li class="separator"></li>
+                        <li>Upgrade account</li>
+                        <li>Registration</li>
+                        <li class="separator"></li>
+                        <li>Contact us</li>
+                    </ul>
+                </li>
+            </ul><!-- end mainmenu -->        
+        </div>
+</body>
+
+</html>

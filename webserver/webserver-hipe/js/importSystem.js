@@ -67,7 +67,7 @@ function setShema(json, graphical) {
                         }
 
                         var selector = addElementInGraph(type, null, json[key]['datasource'][keyData][type], graphical);
-                        drawConnections(selector, false, []);
+                        drawConnections(selector, false, true, []);
 
                         $('#attr_' + (idNode)).val(type);
 
@@ -122,7 +122,7 @@ function setShema(json, graphical) {
 
                             });
                         }
-                        drawConnections(selector, false, formattedParent)
+                        drawConnections(selector, false, true, formattedParent);
                     }
                 });
             }
@@ -163,7 +163,7 @@ function setShema(json, graphical) {
 
                     });
                 }
-                drawConnections(keyNode, false, formattedParent)
+                drawConnections(keyNode, false, true, formattedParent);
             }
         });
 

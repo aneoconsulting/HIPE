@@ -2,7 +2,8 @@
 #include "core/HipeTimer.h"
 #include "coredata/PerfTimeData.h"
 #include <core/Logger.h>
-
+#include "core/HipeStatus.h"
+#include "corefilter/tools/filterMacros.h"
 
 
 HipeStatus corefilter::tools::PerfTime::process()

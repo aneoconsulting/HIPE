@@ -204,20 +204,6 @@ function GetConnectWebRTCServer(port, videoId)
  
     // get a local stream, show it in a self-view and add it to be sent
     navigator.mediaDevices.getUserMedia(constraints,
-        function (stream) {
-            mediaStream = stream;
-            mediaStream.stop = function () {
-                this.getAudioTracks().forEach(function (track) {
-                    track.stop();
-                });
-                this.getVideoTracks().forEach(function (track) { //in case... :)
-                    track.stop();
-                });
-            };
-            /*
-             * Rest of your code.....
-             * */
-        },	
 		// errorCallback
 	   function(err) {
 		if(err === PERMISSION_DENIED) {
@@ -226,6 +212,15 @@ function GetConnectWebRTCServer(port, videoId)
 	   }
 	)
     .then(function (stream) {
+		 mediaStream = stream;
+            mediaStream.stop = function () {
+                this.getAudioTracks().forEach(function (track) {
+                    track.stop();
+                });
+                this.getVideoTracks().forEach(function (track) { //in case... :)
+                    track.stop();
+                });
+            };
       selfView.srcObject = stream;
         // document.getElementById('LoadingCanvasSrc').style.visibility = 'hidden';
 	  selfView.style.visibility = "visible";

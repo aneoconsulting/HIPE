@@ -4,6 +4,45 @@ var commands = [];
 var restriction = false;
 var oldNodes = [];
 
+var WindowsSize=function() {
+    var h = $(window).height();
+    var menubarHeight = $('#menu-header').outerHeight();
+    var toolbarHeight = $('#menu-toolbar').outerHeight();
+    var panelHeadingHeight = $('.panel-heading').outerHeight();
+    var monitorHeaderHeight = $('#Monitor-header').outerHeight();
+    var monitorHeaderHeight = $('#Json-header').outerHeight();
+    var searchFilterHeight = $('#searchFilter').outerHeight();
+
+    var boardHeight = h - menubarHeight - toolbarHeight - 5;
+    $('.boardpanel').height(boardHeight);
+    $('#panelFilter').height(boardHeight);
+    $('#panelBodyFilter').height(boardHeight - panelHeadingHeight - searchFilterHeight - 5);
+    $('#board').height(boardHeight - panelHeadingHeight);
+    $('#Editor').height(boardHeight - panelHeadingHeight - 35);
+    $('#Editor-area').height(boardHeight - panelHeadingHeight - 35);
+    $('.EditorPanel').height(boardHeight - panelHeadingHeight);
+    $('.CodeMirror').height(boardHeight - panelHeadingHeight);
+    $('.optionspanel').css('max-height', boardHeight - panelHeadingHeight - searchFilterHeight + 'px');
+
+    $('.monitorpanel').height($('#Monitor').height() + "px");
+    $('#Monitor-area').height($('#Monitor').height() - monitorHeaderHeight - 12 + "px");
+
+    $('.Logpanel').height($('#Log').height() + "px");
+    $('#Log-area').height($('#Log').height() - monitorHeaderHeight  - 43 + "px");
+    $('.Jsonpanel').height($('#Json').height() + "px");
+    $('#Json-area').height($('#Json').height() - monitorHeaderHeight  - 43 + "px");
+
+};
+//var initSize=function() {
+//    $('#Monitor').height("480px");
+//    ('#Monitor-area').height("480px");
+//    WindowsSize();
+//}
+
+
+$(document).ready(WindowsSize); 
+$(window).resize(WindowsSize); 
+
 
 function ApplyImageToNode(type, target) {
     if (! isDataSource(type)) {
@@ -87,11 +126,14 @@ function ApplyImageToNode(type, target) {
 
 $(function () {
 
+    document.getElementById("linkDemo").href = sessionStorage.getItem('srvUrl');
+
     var cy = window.cy = cytoscape({
         container: document.getElementById('board'),
 
-        boxSelectionEnabled: false,
-        autounselectify: true,
+        boxSelectionEnabled: true,
+        selectionType: 'additive',
+        autounselectify: false,
         userZoomingEnabled: false,
         ready: function () {
         },
@@ -117,6 +159,14 @@ $(function () {
                     'border-width': '1px',
                     'border-color': 'black',
                     'text-margin-x': '5px'
+                }
+            },
+            {
+                selector: '.node-selected',
+                css: {
+                    'border-width': '2px',
+                    'border-color': 'red'
+                  
                 }
             },
             {
@@ -153,6 +203,38 @@ $(function () {
 
 
     });
+
+    var board = document.getElementById('board');
+    var keyCtrlDown = false;
+
+    $(document).keydown(function(event) {
+       
+        if (event.ctrlKey) {
+            event.preventDefault();
+            keyCtrlDown = true;
+            $( '.nodeToolbar' ).css( "visibility", "visible" );
+        }
+    });
+
+    $(document).keyup(function(){
+       
+        if (!event.ctrlKey && keyCtrlDown) {
+            event.preventDefault();
+            keyCtrlDown = false;
+         
+            $( '.nodeToolbar' ).css( "visibility", "hidden" );
+        }
+    });
+
+    $('#trashBtn').on('click',
+        function(event) {
+            console.log("Deleting node " + cy.$('node:selected'));
+            var nodes = cy.$('node:selected');
+            for(var activeNodeId = 0; activeNodeId < nodes.length; activeNodeId++) {
+                deleteNode(nodes[activeNodeId].data().name + "_" + nodes[activeNodeId].data().id);
+            }
+            cleanOptionBoard();
+        });
 
     cy.edgehandles({
         toggleOffOnLeave: true,
@@ -203,10 +285,10 @@ $(function () {
                         }
                     });
 
-                    drawConnections(selector, false, nodes);
+                    drawConnections(selector, false, false, nodes);
                 }
             }
-        },
+        }
     });
 
     cy.panzoom({
@@ -254,12 +336,91 @@ $(function () {
         edge.removeClass('edge-hover');
     });
 
+    var doubleClickDelayMs = 350;
+    var previousTapStamp = 0;
+
+
+    cy.on('doubleTap',
+        'node',
+        function(event, originalTapEvent) {
+            if ($('#Editor').css("visibility") === "visible") {
+                $('#Editor').css("visibility", "hidden");
+            } else {
+                if (event.target.data().filter === "PythonCode") {
+                    $('#Editor').css("visibility", "visible");
+                    var myTextarea = document.getElementById("codeArea");
+                    if (myTextarea.parentNode.childElementCount <= 2) {
+                        var editor = CodeMirror.fromTextArea(myTextarea,
+                            {
+                                lineNumbers: true,
+                                matchBrackets: true,
+                                styleActiveLine: true,
+                                mode: "python",
+                                theme: "solarized dark"
+                            });
+                        editor.setOption("mode", "python");
+                    }
+                    $('#Editor').data("target", event.target.data());
+                    var editor = $('#codeArea').parent().find('.CodeMirror')[0].CodeMirror;
+                    editor.clearHistory();
+                    editor.setValue(event.target.data().code_impl);
+
+                }
+
+            }
+        });
+
     cy.on('tap', 'node', function (evt) {
-        var node = this;
-        displayOptions(this.data().filter + '_' + this.data().id);
+        if (!keyCtrlDown) {
+            cy.$('node:selected').unselect();
+            var currentTapStamp = evt.timeStamp;
+            var msFromLastTap = currentTapStamp - previousTapStamp;
+
+            if (msFromLastTap < doubleClickDelayMs) {
+                evt.target.trigger('doubleTap', 'node', evt);
+            } else {
+                var node = this;
+                displayOptions(this.data().filter + '_' + this.data().id);
+            }
+            previousTapStamp = currentTapStamp;
+        }
 
 
     });
+
+    cy.on('select',
+        'node',
+        function(event) {
+            // cyTarget holds a reference to the originator
+            // of the event (core or element)
+            if (keyCtrlDown) {
+                event.target.addClass('node-selected');
+               
+                
+            } else {
+                event.target.unselect();
+            }
+            
+        });
+
+    cy.on('unselect',
+        'node',
+        function(event) {
+            // cyTarget holds a reference to the originator
+            // of the event (core or element)
+            event.target.removeClass('node-selected');
+            
+
+        });
+    cy.on('tap',
+        function(event) {
+            // cyTarget holds a reference to the originator
+            // of the event (core or element)
+            if (event.target === cy && (!keyCtrlDown))
+                cy.$('node:selected').unselect();
+        });
+
+
 
 
     $("#board").droppable({
@@ -337,7 +498,8 @@ $(function () {
             }
         });
     };
-
+    
+   
     $.ajax({
         data: JSON.stringify(groupsFilterBodyRaw),
         url: sessionStorage.getItem('srvUrl') + '/json',
@@ -498,12 +660,17 @@ $(function () {
                     countElement = model.json.filters.length;
                 }
 
-                $('#graphicName').val(model.name)
+                $('#graphicName').val(model.name);
 
             }
-
-            $('#panelFilter').height($('.boardpanel').height());
-            $('#panelBodyFilter').height($('.boardpanel').outerHeight() - $('#panelHeadingFilter').outerHeight() - $('#panelSearchFilter').outerHeight() - 20);
+            window.draggableAndresizable("#Monitor");
+            window.draggable(".nodeToolBar");
+            window.draggableAndresizable(".videoBox");
+            
+            window.draggableAndresizable("#optionspanel");
+            window.draggableAndresizable("#Log");
+            window.draggableAndresizable("#Editor"); 
+            window.draggableAndresizable("#Json");
         }
 
     });
@@ -557,7 +724,7 @@ $(function () {
                 if (el != "Version" && el != "Hash" && el != "Filters" && el != "GroupFilters") {
                     commands.push(el);
 
-                    $('#command').append('<li><a href="javascript:void(0)" onclick="sendCommand(\'' +
+                    $('#SaSCommand').append('<li><a href="javascript:void(0)" onclick="sendCommand(\'' +
                         el +
                         '\')">' +
                         el +
@@ -566,7 +733,7 @@ $(function () {
             });
 
             commands.push("Resend");
-            $('#command').append('<li><a href="javascript:void(0)" onclick="resendCommand()">Resend</a></li>');
+            $('#SaSCommand').append('<li><a href="javascript:void(0)" onclick="resendCommand()">Resend</a></li>');
         }
 
     });
@@ -588,58 +755,62 @@ $(function () {
     });
 
     var isSaved = false;
-    $('#paramBtn').on('click', function (event) {
-        var currentNodes = Object.assign({}, nodes);
+    $('#paramBtn').on('click',
+        function(event) {
+            var currentNodes = Object.assign({}, nodes);
 
-        if (!isSaved && oldNodes != JSON.stringify(currentNodes)) {
-            var href = $(this).attr('href');
-            event.preventDefault();
+            if (!isSaved && oldNodes != JSON.stringify(currentNodes)) {
+                var href = $(this).attr('href');
+                event.preventDefault();
 
-            $('#confirmQuit').modal('show');
+                $('#confirmQuit').modal('show');
 
-            $('#addConfirmedSave').on('click', function () {
-                isSaved = true;
-                $('#confirmQuit').modal('hide');
-                saveModel();
-                $('#paramBtn')[0].click();
-            })
+                $('#addConfirmedSave').on('click',
+                    function() {
+                        isSaved = true;
+                        $('#confirmQuit').modal('hide');
+                        saveModel();
+                        $('#paramBtn')[0].click();
+                    })
 
-            $('#addNonConfirmedSave').on('click', function () {
-                $('#confirmQuit').modal('hide');
-                isSaved = true;
-                $('#paramBtn')[0].click();
-            })
-        }
-        else {
-            return true;
-        }
-    })
-    $('#backBtn').on('click', function (event) {
-        var currentNodes = Object.assign({}, nodes);
+                $('#addNonConfirmedSave').on('click',
+                    function() {
+                        $('#confirmQuit').modal('hide');
+                        isSaved = true;
+                        $('#paramBtn')[0].click();
+                    })
+            } else {
+                return true;
+            }
+        });
+    $('#backBtn').on('click',
+        function(event) {
+            var currentNodes = Object.assign({}, nodes);
 
-        if (!isSaved && oldNodes != JSON.stringify(currentNodes)) {
-            var href = $(this).attr('href');
-            event.preventDefault();
+            if (!isSaved && oldNodes != JSON.stringify(currentNodes)) {
+                var href = $(this).attr('href');
+                event.preventDefault();
 
-            $('#confirmQuit').modal('show');
+                $('#confirmQuit').modal('show');
 
-            $('#addConfirmedSave').on('click', function () {
-                isSaved = true;
-                $('#confirmQuit').modal('hide');
-                saveModel();
-                $('#backBtn')[0].click();
-            })
+                $('#addConfirmedSave').on('click',
+                    function() {
+                        isSaved = true;
+                        $('#confirmQuit').modal('hide');
+                        saveModel();
+                        $('#backBtn')[0].click();
+                    })
 
-            $('#addNonConfirmedSave').on('click', function () {
-                $('#confirmQuit').modal('hide');
-                isSaved = true;
-                $('#backBtn')[0].click();
-            })
-        }
-        else {
-            return true;
-        }
-    })
+                $('#addNonConfirmedSave').on('click',
+                    function() {
+                        $('#confirmQuit').modal('hide');
+                        isSaved = true;
+                        $('#backBtn')[0].click();
+                    })
+            } else {
+                return true;
+            }
+        });
 
     document.addEventListener('keydown', function(e){
         if (e.ctrlKey && e.keyCode == 83) {
@@ -663,39 +834,41 @@ $(function () {
 });
 
 
-function drawConnections(selector, isHtml, values) {
+function drawConnections(selector, isHtml, isInit, values) {
     
     if (isHtml) {
-        var values = $('#parent').val();
+        values = $('#parent').val();
     }
+  
 
     var nodeTarget = cy.filter('node[id = "' + nodes[selector].data.id + '"]');
     var existedEdges = cy.edges("[target='" + nodeTarget[0].id() + "']");
     var edgeToDelete = [];
 
-    var http = new XMLHttpRequest();
-    var url = "/point/" + model.id + "/" + nodes[selector].data.name;
-    http.open("GET", url, true);
+    if (isInit != undefined && isInit === true) {
+        var http = new XMLHttpRequest();
+        var url = "/point/" + model.id + "/" + nodes[selector].data.name;
+        http.open("GET", url, true);
 
-    http.setRequestHeader("Content-type", "application/json");
+        http.setRequestHeader("Content-type", "application/json");
 
-    http.onload = function () {
-        var point = JSON.parse(this.response);
+        http.onload = function() {
+            var point = JSON.parse(this.response);
 
-        if(point.length > 0) {
-            point = point[0];
+            if (point.length > 0) {
+                point = point[0];
 
-            position_x = point.position_x;
-            position_y = point.position_y;
+                position_x = point.position_x;
+                position_y = point.position_y;
 
-            nodeTarget.renderedPosition( "x", position_x);
-            nodeTarget.renderedPosition( "y", position_y);
-            //var node = cy.filter('node[id = "' + nodes[selector].data.id + '"]');
-        }
-    };
+                nodeTarget.renderedPosition("x", position_x);
+                nodeTarget.renderedPosition("y", position_y);
+                //var node = cy.filter('node[id = "' + nodes[selector].data.id + '"]');
+            }
+        };
 
-    http.send();
-
+        http.send();
+    }
     ApplyImageToNode(nodes[selector].data.filter, nodeTarget);
 
     
@@ -758,6 +931,9 @@ function sendDataToServer() {
                 $('#success_server').parent().parent().css('display', 'block');
                 $('#success_server').val(JSON.stringify(data.Status));
                 notifySuccess('Le serveur a effectué le processus : ' + JSON.stringify(data.Status));
+                window.initLogService();
+                window.initMonitor();
+               
                 if (data.dataResponse) {
                     if (data.dataResponse.DataResult.type_0 == "IMGB64") {
 
@@ -791,11 +967,12 @@ function sendDataToServer() {
             else {
                 $('#error_server').parent().parent().css('display', 'block');
                 $('#error_server').val(data.Status);
-                notifyError('Le serveur n\'as pas effectué le processus. Message d\'erreur : ' + data.Status)
+                notifyError('Le serveur n\'as pas effectué le processus. Message d\'erreur : ' + data.Status);
             }
         }
 
     });
+   
 }
 
 function showDetail() {
@@ -879,9 +1056,8 @@ function displayOptions(selector) {
 
     $('#option_validation').on('click',
         function(ev) {
-            drawConnections(selector, true);
+            drawConnections(selector, true, false);
             saveEdit(selector);
-            sendDataToServer();
         });
 
     $('#delete_node').on('click',
@@ -1231,4 +1407,74 @@ function resendCommand() {
         }
 
     });
+}
+
+
+//function onChange(event) {
+//    var reader = new FileReader();
+//    reader.onload = onReaderLoad;
+//    reader.readAsText(event.target.files[0]);
+//}
+
+//function onReaderLoad(event){
+//    var obj = JSON.parse(event.target.result);
+//    setShema(obj, false);
+//}
+
+
+function saveNewModel() {
+    var json = {
+        "name": $('#newGraphicName').val(),
+
+        'filters': [],
+        'orchestrator': 'DefaultScheduler'
+    };
+
+    json = JSON.stringify(json, null, "\t");
+    //generateJson(false);}
+
+    var data = {};
+    data['version'] = sessionStorage.getItem('version');
+    data['name'] = $('#newGraphicName').val();
+    data['json'] = json;
+
+    var http = new XMLHttpRequest();
+
+    var url = "/model";
+    http.open("POST", url, true);
+
+    http.setRequestHeader("Content-type", "application/json");
+
+    http.onload = function () {
+        notifySuccess('L\'élément a bien été enregistré');
+
+        var id = JSON.parse(this.response);
+        window.location.pathname = '/model/' + id['id'];
+    };
+
+    http.send(JSON.stringify(data));
+}
+
+var addModelModal = function(){
+    $('#addModelModal').modal('toggle');
+
+    //document.getElementById('importFile').addEventListener('change', onChange);
+
+    $('#confirmedAddBtn').on('click',
+        function(ev) {
+            if (ev.target.checkValidity()) {
+                ev.preventDefault();
+                saveNewModel();
+            }
+        });
+}
+
+function saveCode() {
+    var target = $('#Editor').data("target");
+    var cm = $('#codeArea').parent().find('.CodeMirror')[0].CodeMirror;
+
+
+    target.code_impl = cm.getValue();
+    displayOptions(target.filter + '_' + target.id);
+    //saveEdit(target.filter + '_' + target.id);
 }

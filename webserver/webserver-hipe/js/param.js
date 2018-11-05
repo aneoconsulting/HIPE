@@ -20,7 +20,7 @@ $(function () {
         window.location.pathname = '/models';
     });
 
-    $('#attr_server_url').on('click keyup input paste', function () {
+    $('#attr_server_url').on('focusout', function () {
         clearTimeout(wto);
         wto = setTimeout(function () {
             var width = $('.panel').width();
@@ -79,11 +79,11 @@ $(function () {
     }
 
     if ($('#attr_version').val() == "") {
-        $('#validatedParam').attr('disabled', 'disabled')
+        $('#validatedParam').attr('disabled', 'disabled');
     }
 
     if ($('#attr_server_url').val() == "") {
-        $('#attr_server_url').val('http://localhost:9090');
-        $('#attr_server_url').click();
+        $('#attr_server_url').val('https://localhost:9133');
+        //$('#attr_server_url').click();
     }
 });

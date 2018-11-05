@@ -34,8 +34,10 @@
     "node-sass": "^4.9.3",
     "orm": "^4.0.0",
     "path": "^0.12.7",
-    "webcola": "^3.3.8"
-  },
+    "webcola": "^3.3.8",
+    "codemirror": "^5.41.0",
+    "fs":  "0.0.1-security" 
+   },
   "devDependencies": {
     "gulp": "^3.9.1"
   }

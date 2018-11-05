@@ -411,13 +411,13 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 					{
 						std::cerr << "Unkown error during the " << filter->getName() <<
 							". Please contact us" << std::endl;
+						popUnusedData(filter);
 						cleanDataChild(cpyFilterRoot);
 						disposeChild(cpyFilterRoot);
 
 						if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
 							throw HipeException("Cannot free properly the Streaming videocapture");
 						destroyPythonThread(userThreadState);
-						popUnusedData(filter);
 						texptr = std::make_shared<std::exception_ptr>(std::current_exception());
 						return;
 					}

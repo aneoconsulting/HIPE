@@ -1,11 +1,22 @@
 var express = require('express');
 var app = express();
+var fs = require('fs');
 var path = require("path");
 var bodyParser = require('body-parser');
 var filtersType = require('./filters.json');
 var datas = require('./data.json');
 var orm = require("orm");
 var $ = require('jquery');
+
+var key = fs.readFileSync('C:/xampp/cert/https_aneo.key');
+var cert = fs.readFileSync( 'C:/xampp/cert/https_aneo.crt' );
+//var ca = fs.readFileSync( 'encryption/intermediate.crt' );
+var https = require('https');
+
+var options = {
+    key: key,
+    cert: cert
+};
 
 app.use(orm.express("mysql://root:@localhost:4406/hipe", {
     define: function (db, models, next) {
@@ -50,11 +61,13 @@ app.get('/model', function (req, res) {
     res.render('graph.ejs');
 });
 
+
 app.get('/model/:id', function (req, res) {
     req.models.models.find({id: req.params.id}, function (err, model) {
         res.render('graph.ejs', {model: model});
     });
 });
+
 
 app.get('/point/:id/:selector', function (req, res) {
     req.models.points.find({model_id: req.params.id, selector: req.params.selector}, function (err, model) {
@@ -154,7 +167,11 @@ app.post('/filters', function (req, res) {
     res.send();
 });
 
-app.listen(3000, function () {
+https.createServer(options, app).listen(3000, function() {
     console.log('Example app listening on port 3000!');
 });
+
+//app.listen(3000, function () {
+//    console.log('Example app listening on port 3000!');
+//});
 

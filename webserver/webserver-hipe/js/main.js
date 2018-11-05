@@ -83,9 +83,8 @@ var notifyError = function (msg) {
     });
 };
 
-function generateJson(needRoot, actionData) {
-
-    var filters = [];
+function cytoscape2json(needRoot, actionData) {
+     var filters = [];
     document.title = 'Hipe | ' + $('#graphicName').val();
 
     var graph = {
@@ -95,9 +94,9 @@ function generateJson(needRoot, actionData) {
 
     var newNodesSorted = sortNodes();
 
-    newNodesSorted.forEach(function (nodesSorted, index) {
+    newNodesSorted.forEach(function(nodesSorted, index) {
 
-        Object.keys(nodesSorted).forEach(function (keyInSorted) {
+        Object.keys(nodesSorted).forEach(function(keyInSorted) {
 
             var key = nodesSorted[keyInSorted]['key'];
 
@@ -112,8 +111,8 @@ function generateJson(needRoot, actionData) {
                 var isRootExist = false;
                 var listOfNeed = [];
 
-                nodesSorted[keyInSorted]['parents'].forEach(function (parentsEl) {
-                    Object.keys(nodesSorted).forEach(function (node) {
+                nodesSorted[keyInSorted]['parents'].forEach(function(parentsEl) {
+                    Object.keys(nodesSorted).forEach(function(node) {
                         if (nodesSorted[node].data.name == parentsEl) {
                             if (nodesSorted[node].data.filter == "RootFilter") {
                                 isRootExist = true;
@@ -143,7 +142,7 @@ function generateJson(needRoot, actionData) {
             }
 
         });
-    })
+    });
 
 
     graph.filters = filters;
@@ -267,8 +266,14 @@ function generateJson(needRoot, actionData) {
         });
 
     }
+    return graph;
+}
 
-    return JSON.stringify(graph, null, "\t");
+function generateJson(needRoot, actionData) {
+
+    var graph = cytoscape2json(needRoot, actionData);
+
+       return JSON.stringify(graph, null, "\t");
 }
 
 
@@ -467,3 +472,169 @@ function addElementInGraph(name, helper, values, graphical) {
 
     return name + '_' + (countElement - 1);
 }
+
+var videoMap = new Map();
+var remoteLog = null;
+
+function insertText(cm, data) {
+   
+    //var cm = $(".CodeMirror")[0].CodeMirror;
+    var doc = cm.getDoc();
+    var cursor = doc.getCursor(); // gets the line number in the cursor position
+    var line = doc.getLine(cursor.line); // get the line contents
+    var pos = {
+        line: cursor.line
+    };
+    if (line.length === 0) {
+        // check if the line is empty
+        // add the data
+        doc.replaceRange(data, pos);
+    } else {
+        // add a new line and the data
+        doc.replaceRange("\n" + data, pos);
+    }
+}
+
+function initLogService() {
+    var myTextarea = document.getElementById("logArea");
+    myTextarea.value = "";
+    if (myTextarea.parentNode.childElementCount <= 1) {
+        var editor = CodeMirror.fromTextArea(myTextarea,
+            {
+                lineNumbers: true,
+                matchBrackets: true,
+                styleActiveLine: true,
+                //mode: "python",
+                //theme: "solarized dark"
+            });
+        //editor.setOption("mode", "python");
+    }
+    var cm = $('#logArea').parent().find('.CodeMirror')[0].CodeMirror;
+    cm.setValue("");
+    cm.clearHistory();
+    var graph = cytoscape2json(true, true);
+    var filters = graph['filters'];
+    var logArea = $('#logArea');
+    var textBuffer = [];
+
+    for (var i = 0; i < filters.length; i++)
+    {
+        if (filters[i].ForwardLogToWeb != null) {
+            remoteLog = {
+                port : filters[i]['ForwardLogToWeb'].port,
+                logAreaId: "logArea",
+                socketToReceive: null,
+            }
+            remoteLog.socketToReceive = new WebSocket('wss://' + window.location.hostname + ":" + remoteLog.port);
+            remoteLog.socketToReceive.onopen = function() {
+                console.log('remoteLog open');
+                
+            }
+            remoteLog.socketToReceive.onmessage = function(event) {
+                //console.log('remoteLog message : ' + event.data);
+                textBuffer.push(event.data);
+                
+            }
+            break;
+        }
+    }
+    var intervalID = setInterval(function() {
+        if (textBuffer.length > 0) {
+            insertText(cm, textBuffer.join('\n'));
+        }
+
+        textBuffer = [];
+    }, 5000);
+}
+
+function initMonitor() {
+    videoMap["sources"] = [];
+    videoMap["remotes"] = [];
+    var graph = cytoscape2json(true, true);
+    var dataSource = graph['data']['datasource'];
+    for (var i = 0; i < dataSource.length; i++)
+    {
+        if (dataSource[i].WebRTCVideoDataSource != null) {
+            var source = {
+                port: dataSource[i]['WebRTCVideoDataSource'].port,
+                videoId: "sView_" + i,
+                socketToSend: null,
+                pcToSend: null
+            };
+            videoMap["sources"].push(source);
+                
+        }
+    }
+    var filters = graph['filters'];
+    for (var i = 0; i < filters.length; i++)
+    {
+        if (filters[i].WebRTCSender != null) {
+            var remote = {
+                port : filters[i]['WebRTCSender'].port,
+                videoId: "rView_" + i,
+                socketToReceive: null,
+                pcToReceive: null
+            }
+
+            videoMap["remotes"].push(remote);
+        }
+    }
+
+    //Create Video tag in html
+    var sourceVideos = $('#sourceVideos');
+    var remoteVideos = $('#remoteVideos');
+    var k = 0;
+    var videoObject = null;
+    sourceVideos.html('');
+    var htmlCode = "";
+    for (k = 0; k < videoMap["sources"].length; k++) {
+        videoObject = videoMap["sources"][k];
+        htmlCode += "<video id='" + videoObject.videoId + "' class='videoBox' autoplay controls></video>";
+    }
+    sourceVideos.html(htmlCode);
+    remoteVideos.html('');
+    htmlCode = "";
+    for (k = 0; k < videoMap["remotes"].length; k++) {
+        videoObject = videoMap["remotes"][k];
+        htmlCode += "<video id='" + videoObject.videoId + "' class='videoBox' autoplay controls></video>";
+    }
+    remoteVideos.html(htmlCode);
+
+    window.startMonitoring(videoMap);
+}
+
+function showMonitor() {
+    if ($('#Monitor').css("display") !== "none") {
+        $('#Monitor').css("display", "none");
+    } else {
+     
+        $('#Monitor').css("display", "block");
+       
+
+        //<video id="rView" class="videoBox" controls></video>
+
+        
+    }
+
+}
+
+function showLog() {
+    if ($('#Log').css("visibility") === "visible") {
+        $('#Log').css("visibility", "hidden");
+    } else {
+        $('#Log').css("visibility", "visible");
+        
+    }
+
+
+}
+
+function showJson() {
+    if ($('#Json').css("visibility") === "visible") {
+        $('#Json').css("visibility", "hidden");
+    } else {
+        $('#Json').css("visibility", "visible");
+    }
+
+}
+

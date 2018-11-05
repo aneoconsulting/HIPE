@@ -9,7 +9,11 @@ gulp.task("css", function() {
         "./css/*.css",
         "./node_modules/fastselect/dist/fastselect.css",
         "./node_modules/cytoscape-panzoom/cytoscape.js-panzoom.css",
-        "./node_modules/bootstrap/dist/css/bootstrap.min.css"
+        "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+        "./node_modules/codemirror/lib/codemirror.css",
+        "./node_modules/codemirror/theme/solarized.css",
+        "./node_modules/jquery-ui/themes/base/resizable.css",
+        "./node_modules/jquery-ui/themes/base/draggable.css"
     ])
     .pipe(gulp.dest("./dist/css/"));
 
@@ -25,7 +29,6 @@ gulp.task("js", function() {
     gulp.src([
         "./js/*.js",
         "./node_modules/jquery/dist/jquery.js",
-        //"./node_modules/jquery-ui/lodash.js",
         "./node_modules/mermaid/dist/mermaid.js",
         "./node_modules/cytoscape/dist/cytoscape.js",
         "./node_modules/dagre/dist/dagre.js",
@@ -36,7 +39,9 @@ gulp.task("js", function() {
         "./node_modules/bootstrap-notify/bootstrap-notify.js",
         "./node_modules/cytoscape-edgehandles/cytoscape-edgehandles.js",
         "./node_modules/cytoscape-panzoom/cytoscape-panzoom.js",
-        "./node_modules/lodash/lodash.js"
+        "./node_modules/lodash/lodash.js",
+        "./node_modules/codemirror/lib/codemirror.js",
+        "./node_modules/codemirror/mode/python/python.js"
     ])
         .pipe(gulp.dest("./dist/js/"));
 });

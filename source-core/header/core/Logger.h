@@ -20,14 +20,13 @@
 #define LOG_PATH_ROUND() LOG_CONCAT2(LOG_DIR, "Hipe_3%N.log")
 
 
-DECLARE_string(log_backtrace_at);  // logging.cc
-
+//DECLARE_string(log_backtrace_at);  // logging.cc
+//FLAGS_log_backtrace_at = stack_print; 
 
 #define PRINTSTACK(severity) \
 { \
 	char stack_print[100]; \
 	snprintf(stack_print, 100, "%s:%d", removeDirectoryName(__FILE__).c_str(), __LINE__); \
-	FLAGS_log_backtrace_at = stack_print; \
 	LOG(severity) << "***** Stacktrace end ******"; \
 }\
 

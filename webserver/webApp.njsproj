@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0a7b88e4-a57a-442b-8562-2071024b5dd5}</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
     <StartupFile>webserver-hipe\app.js</StartupFile>
     <WorkingDirectory>D:\workspace\hipe-vc2017\webserver\webserver-hipe</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -129,6 +129,12 @@
     <Folder Include="webserver-hipe\typings\globals\node" />
     <Folder Include="webserver-hipe\typings\globals\webcola" />
     <Folder Include="webserver-hipe\views" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="webserver-hipe\js\draggable.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="webserver-hipe\js\webrtc-mon.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->

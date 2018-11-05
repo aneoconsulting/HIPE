@@ -97,13 +97,10 @@ namespace filter
 
 			boost::split(results, python_path, [](char c) { return c == ';'; });
 			
-		/*os.environ['PATH'] = 'my-app-dir' + os.pathsep + os.environ['PATH']*/
-
 			for (auto p : results)
 			{
 				std::ostringstream python_path_builder;
 				python_path_builder << "sys.path.insert(0, r'" << p << "'); os.environ['PYTHONPATH'] = r'" << p <<"' + os.pathsep + os.environ['PATH']";
-				//python_path_builder << "sys.path.append(r'" << p << "'); os.environ['PYTHONPATH'] = r'" << p <<"' + os.pathsep + os.environ['PATH']";
 
 				boost::python::exec(python_path_builder.str().c_str(), l_pythonContext.This().global,
 				                    l_pythonContext.This().local);
@@ -127,10 +124,6 @@ namespace filter
 			std::stringstream new_workingDir_command;
 			std::string new_workingDir = extractDirectoryName(script_path);
 			add_python_path(new_workingDir);
-			//new_workingDir_command << "os.chdir(r'" << new_workingDir << "')";
-			//
-			//boost::python::exec(new_workingDir_command.str().c_str(), l_pythonContext.This().global, l_pythonContext.This().local);
-			
 
 			add_python_path(corefilter::getLocalEnv().getValue("pydata_path"));
 

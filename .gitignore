@@ -39,3 +39,5 @@ source-modules/header/filter/References.h
 source-modules/header/filter/References.h.cmp
 webserver/webserver-hipe/obj/*
 workingdir/root/Data-light/*
+/webserver/node_modules/*
+/webserver/obj/*
