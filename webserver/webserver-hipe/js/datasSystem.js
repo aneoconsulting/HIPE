@@ -41,7 +41,7 @@ var generateDom = function () {
 
             $('#secondColumn_' + countConfiguration + ' .deleteZone').append('<a href="javascript:void(0)" class="btn btn-danger btn-xs btn-flex"' +
                 ' onclick="removeLine(' + countConfiguration + ')">' +
-                '<span class="glyphicon glyphicon-remove"></span>' +
+                '<span class="fa fa-remove"></span>' +
                 '</a>');
             eventListenerChange('#typeData_' + countConfiguration);
 
@@ -271,7 +271,7 @@ var addCropLine = function (selectedLine) {
     var selector = '#full_crop_line_' + selectedLine + '_' + cropLine;
     $(selector + ' .deleteZone').append('<a href="javascript:void(0)" class="btn btn-danger btn-xs btn-flex"' +
         ' onclick="removeCropLine(\'' + selector + '\')">' +
-        '<span class="glyphicon glyphicon-remove"></span>' +
+        '<span class="fa fa-remove"></span>' +
         '</a>');
 
     cropLine++;

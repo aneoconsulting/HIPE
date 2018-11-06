@@ -494,6 +494,68 @@ function insertText(cm, data) {
         doc.replaceRange("\n" + data, pos);
     }
 }
+var remoteLog = {
+    port : 9134,
+    logAreaId: "logArea",
+    socketToReceive: null
+}
+
+function initBaseLogService() {
+    var myTextarea = document.getElementById("logArea");
+    myTextarea.value = "";
+    if (myTextarea.parentNode.childElementCount <= 1) {
+        var editor = CodeMirror.fromTextArea(myTextarea,
+            {
+                lineNumbers: true,
+                matchBrackets: true,
+                styleActiveLine: true,
+                //mode: "python",
+                //theme: "solarized dark"
+            });
+        //editor.setOption("mode", "python");
+    }
+
+    if (remoteLog.socketToReceive != null) {
+        return;
+    }
+
+    var cm = $('#logArea').parent().find('.CodeMirror')[0].CodeMirror;
+    cm.setValue("");
+    cm.clearHistory();
+    var graph = cytoscape2json(true, true);
+    var filters = graph['filters'];
+    var logArea = $('#logArea');
+    var textBuffer = [];
+
+   
+    remoteLog.socketToReceive = new WebSocket('wss://' + window.location.hostname + ":" + remoteLog.port);
+    remoteLog.socketToReceive.onopen = function() {
+        console.log('remoteLog open');
+                
+    }
+    remoteLog.socketToReceive.onmessage = function(event) {
+        //console.log('remoteLog message : ' + event.data);
+        textBuffer.push(event.data);
+                
+    }
+
+    remoteLog.socketToReceive.onclose = function(event) {
+        //console.log('remoteLog message : ' + event.data);
+        remoteLog.socketToReceive = null;
+
+    }
+    remoteLog.socketToReceive.onerror = function(event) {
+        console.log('remoteLog error during connexion : ');
+        remoteLog.socketToReceive = null;
+    }
+    var intervalBaseID = setInterval(function() {
+        if (textBuffer.length > 0) {
+            insertText(cm, textBuffer.join('\n'));
+        }
+
+        textBuffer = [];
+    }, 5000);
+}
 
 function initLogService() {
     var myTextarea = document.getElementById("logArea");
