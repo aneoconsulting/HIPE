@@ -64,6 +64,8 @@ find_package(BoringSSL
 				PATHS "${BoringSSL_DIR}/lib/cmake"
 				NO_DEFAULT_PATH)
 
+target_include_directories(hipe_server PRIVATE ${HIPE_EXTERNAL_DIR})
+target_include_directories(hipe_server PRIVATE ${HIPE_EXTERNAL_DIR}/include)
 
 target_link_libraries(hipe_server http)
 target_link_libraries(hipe_server orchestrator)

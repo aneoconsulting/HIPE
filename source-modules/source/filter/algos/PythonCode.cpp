@@ -12,6 +12,8 @@
 #include "data/ShapeData.h"
 #include <glog/logging.h>
 
+#include <boost/circular_buffer.hpp>
+
 
 extern "C" {
 #include <Python.h>
@@ -56,6 +58,40 @@ namespace filter
 			formatted = str("\n").join(formatted_list);
 			return extract<std::string>(formatted);
 		}
+
+		class PythonStdIoRedirect
+		{
+		public:
+			typedef boost::circular_buffer<std::string> ContainerType;
+
+			void Write(std::string const& str)
+			{
+				if (m_outputs.capacity() < 100)
+					m_outputs.resize(100);
+				m_outputs.push_back(str);
+			}
+
+			static std::string GetOutput()
+			{
+				std::string ret;
+				std::stringstream ss;
+				for (boost::circular_buffer<std::string>::const_iterator it = m_outputs.begin();
+				     it != m_outputs.end();
+				     it++)
+				{
+					ss << *it;
+				}
+				m_outputs.clear();
+				ret = ss.str();
+				return ret;
+			}
+
+		private:
+			static ContainerType m_outputs; // must be static, otherwise output is missing
+		};
+
+		PythonStdIoRedirect::ContainerType PythonStdIoRedirect::m_outputs;
+
 
 		void PythonCode::add_python_path(const std::string& python_path)
 		{
@@ -121,7 +157,14 @@ namespace filter
 					l_pythonContext.This().script = boost::python::import(moduleName.c_str());
 					l_pythonContext.This().main.attr("__dict__")[moduleName.c_str()] = l_pythonContext
 					                                                                         .This().script;
-
+					//Redirect Stdio from pyhton
+					l_pythonContext.This().main.attr("__dict__")["PythonStdIoRedirect"] = class_<PythonStdIoRedirect>("PythonStdIoRedirect", init<>())
+					.def("write", &PythonStdIoRedirect::Write);
+					
+					PythonStdIoRedirect python_stdio_redirector;
+					object kwds_proxy = boost::python::import("sys");
+					//kwds_proxy.attr("stderr") = python_stdio_redirector;
+					kwds_proxy.attr("stdout") = python_stdio_redirector;
 
 					//Reload module when the python has already loaded the module
 
@@ -310,13 +353,26 @@ namespace filter
 
 					{
 						boost::python::object result;
+						PythonStdIoRedirect python_stdio_redirector;
 
 						result = pythonFunctionCall(boost::python::ptr(o.get()));
-
+						std::string captured_python_output = python_stdio_redirector.GetOutput();
+						LOG(INFO) << "Python call : [" << captured_python_output << "]" << std::endl;
 
 						push_result(result);
 					}
 				}
+
+			//Transfer python context to PythonFilter group
+			for (auto& pairs : this->getChildrens())
+			{
+				if (pairs.second->isPython())
+				{
+					data::DataPort& data_port = static_cast<data::DataPort &>(pairs.second->getConnector().getPort());
+					data_port.push(l_pythonContext);
+				}
+			}
+
 			}
 			catch (boost::python::error_already_set& e)
 			{

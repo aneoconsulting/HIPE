@@ -20,6 +20,7 @@
 #include <corefilter/tools/Localenv.h>
 #include "http/HttpTask.h"
 #include "http/HttpsServer.h"
+#include "corefilter/tools/net/ForwardLogToWeb.h"
 
 using namespace std;
 //Added for the json-example:
@@ -82,6 +83,20 @@ void add_python_path(const std::string& python_path)
 void setPythonPath()
 {
 	add_python_path(corefilter::getLocalEnv().getValue("python_dll_path"));
+}
+
+net::log::ForwardLogToWeb * startLogService()
+{
+	net::log::ForwardLogToWeb *logForward = new net::log::ForwardLogToWeb();
+	logForward->setName(std::string("Base_log_forward"));
+	logForward->setLevel(0);
+	int port = 9134;
+	logForward->set_port(port);
+	logForward->onLoad(nullptr);
+	
+	
+
+	return logForward;
 }
 
 int main(int argc, char* argv[]) {
@@ -168,6 +183,10 @@ int main(int argc, char* argv[]) {
 	std::string base_cert = corefilter::getLocalEnv().getValue("base_cert");
 	http::HttpsServer server_https(config.configuration.port + 43, 1, base_cert + ".crt", base_cert + ".key");
 
+	net::log::ForwardLogToWeb* log_service = startLogService();
+	LOG(INFO) << "Start Web Log Service on port " << log_service->get_port() << std::endl;
+	LOG(INFO) << "Start Https service on port " << config.configuration.port + 43 << std::endl;
+	LOG(INFO) << "Start Orchestrator " << std::endl;
 	orchestrator::OrchestratorFactory::start_orchestrator();
 
 	std::thread thread;

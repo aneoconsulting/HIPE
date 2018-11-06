@@ -1,5 +1,8 @@
 #include <corefilter/tools/net/ForwardLogToWeb.h>
 #include "tools/Localenv.h"
+#include <mutex>
+#include <websocketpp/common/connection_hdl.hpp>
+#include <websocketpp/logger/levels.hpp>
 
 
 void net::log::ForwardLogToWeb::detach_logger()
@@ -36,7 +39,7 @@ websocket = ServerInit(
 },
 	[&](WebsocketServer* socket, websocketpp::connection_hdl hdl) { // onOpen
 		this->registerClient(hdl.lock());
-		
+		this->attach_logger();
 },
 	[&](WebsocketServer* s, websocketpp::connection_hdl hdl) { // onClose
 		
@@ -57,7 +60,7 @@ HipeStatus net::log::ForwardLogToWeb::process()
 	{
 		_connexData.pop();
 	}
-	if (!tcpSink && clientConnector) this->attach_logger();
+	
 	
 
 	return OK;
