@@ -5,10 +5,10 @@ include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
 include(GetPrerequisites)
 
 
-#hipe_server LIBRARY
-add_hipe_executable(hipe_server)
+#hipe_engine LIBRARY
+add_hipe_executable(hipe_engine)
 
-target_compile_definitions(hipe_server PRIVATE "-DUSE_BOOST_REGEX")
+target_compile_definitions(hipe_engine PRIVATE "-DUSE_BOOST_REGEX")
 
 if (WITH_GFLAGS)
 		message(STATUS "Get Gflags from ${GFLAGS_ROOT_DIR}")
@@ -23,11 +23,11 @@ if (WITH_GFLAGS)
 		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
 		  )
 		
-		target_link_libraries(hipe_server gflags_static)
+		target_link_libraries(hipe_engine gflags_static)
 	  else()
-		  target_link_libraries(hipe_server gflags_shared)
+		  target_link_libraries(hipe_engine gflags_shared)
 		endif()
-		target_include_directories(hipe_server PRIVATE ${GFLAGS_INCLUDE_DIRS})
+		target_include_directories(hipe_engine PRIVATE ${GFLAGS_INCLUDE_DIRS})
 		set(USE_GFLAGS "-DUSE_GFLAGS")
 		message(STATUS "GFLAGS IS INCLUDED")
 endif()
@@ -47,8 +47,8 @@ if (WITH_GLOG)
 	message(STATUS "Gflags include dir : ${GLOG_LIBRARIES}")
 	message(STATUS "Gflags include dir : ${GLOG_LIBRARY}")
 
-	target_include_directories(hipe_server PRIVATE ${GLOG_INCLUDE_DIR})
-	target_link_libraries(hipe_server glog::glog)
+	target_include_directories(hipe_engine PRIVATE ${GLOG_INCLUDE_DIR})
+	target_link_libraries(hipe_engine glog::glog)
 	set(USE_GLOG "-DUSE_GLOG")
 	message(STATUS "GLOG IS INCLUDED")
 
@@ -64,45 +64,45 @@ find_package(BoringSSL
 				PATHS "${BoringSSL_DIR}/lib/cmake"
 				NO_DEFAULT_PATH)
 
-target_include_directories(hipe_server PRIVATE ${HIPE_EXTERNAL_DIR})
-target_include_directories(hipe_server PRIVATE ${HIPE_EXTERNAL_DIR}/include)
+target_include_directories(hipe_engine PRIVATE ${HIPE_EXTERNAL_DIR})
+target_include_directories(hipe_engine PRIVATE ${HIPE_EXTERNAL_DIR}/include)
 
-target_link_libraries(hipe_server http)
-target_link_libraries(hipe_server orchestrator)
-target_link_libraries(hipe_server json)
-target_link_libraries(hipe_server coredata)
-target_link_libraries(hipe_server corefilter)
-target_link_libraries(hipe_server corebench)
+#target_link_libraries(hipe_engine http)
+target_link_libraries(hipe_engine orchestrator)
+target_link_libraries(hipe_engine json)
+target_link_libraries(hipe_engine coredata)
+target_link_libraries(hipe_engine corefilter)
+target_link_libraries(hipe_engine corebench)
 
-target_link_libraries(hipe_server core)
-target_link_libraries(hipe_server ${OpenCV_LIBS})
-target_link_libraries(hipe_server ${Boost_LIBRARIES})
-target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(hipe_engine core)
+target_link_libraries(hipe_engine ${OpenCV_LIBS})
+target_link_libraries(hipe_engine ${Boost_LIBRARIES})
+target_link_libraries(hipe_engine ${CMAKE_THREAD_LIBS_INIT})
 
 if (WIN32)
-  target_link_libraries(hipe_server BoringSSL BoringCrypto)
+  target_link_libraries(hipe_engine BoringSSL BoringCrypto)
 else()
-  target_link_libraries(hipe_server ssl crypto)
+  target_link_libraries(hipe_engine ssl crypto)
 endif()
 
 if (UNIX)
-  target_link_libraries(hipe_server ${CMAKE_DL_LIBS})
+  target_link_libraries(hipe_engine ${CMAKE_DL_LIBS})
 endif()
 
 
 if (MSVC)
-target_link_libraries(hipe_server Imagehlp)
+target_link_libraries(hipe_engine Imagehlp)
 endif()
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
   message(STATUS "Test if it works with windows")
-  target_link_libraries(hipe_server ws2_32 wsock32)
-  target_link_libraries(hipe_server ws2_32 wsock32)
+  target_link_libraries(hipe_engine ws2_32 wsock32)
+  target_link_libraries(hipe_engine ws2_32 wsock32)
   
 endif(MSYS)
 
 if(USE_GPERFTOOLS)
-  target_link_libraries(hipe_server ${GPERFTOOLS_DIR}/lib/libtcmalloc.a /usr/lib/aarch64-linux-gnu/libunwind.a /usr/lib/aarch64-linux-gnu/liblzma.a)
+  target_link_libraries(hipe_engine ${GPERFTOOLS_DIR}/lib/libtcmalloc.a /usr/lib/aarch64-linux-gnu/libunwind.a /usr/lib/aarch64-linux-gnu/liblzma.a)
 endif(USE_GPERFTOOLS)
 
 
@@ -110,11 +110,11 @@ endif(USE_GPERFTOOLS)
 enable_testing()
 #add_subdirectory(tests)
 
-display_target_properties(hipe_server)
+display_target_properties(hipe_engine)
 
-install (TARGETS hipe_server CONFIGURATIONS Debug DESTINATION bin/Debug COMPONENT applications)
-install (TARGETS hipe_server CONFIGURATIONS Release DESTINATION bin/Release COMPONENT applications)
-install (TARGETS hipe_server CONFIGURATIONS RelWithDebInfo DESTINATION bin/Release COMPONENT applications)
+install (TARGETS hipe_engine CONFIGURATIONS Debug DESTINATION bin/Debug COMPONENT applications)
+install (TARGETS hipe_engine CONFIGURATIONS Release DESTINATION bin/Release COMPONENT applications)
+install (TARGETS hipe_engine CONFIGURATIONS RelWithDebInfo DESTINATION bin/Release COMPONENT applications)
 
 #
 #Copy in install folder all dependencies for hipe_core
@@ -127,7 +127,7 @@ set(EXT_BIN .exe)
 endif() 
 
 message(STATUS "Install dependencies exe")
-install_dependencies_exe("hipe_server")
+install_dependencies_exe("hipe_engine")
 
 install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}\")" COMPONENT applications)
 install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT applications)

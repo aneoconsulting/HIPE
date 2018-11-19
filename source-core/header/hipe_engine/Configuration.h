@@ -10,36 +10,37 @@
 #include <boost/property_tree/ptree_fwd.hpp>
 #pragma warning(pop)
 
-namespace hipe_server
+namespace hipe_engine
 {
-	class ConfigurationParameters
+	class ConfigurationParametersChild
 	{
 	public:
-		unsigned short port;
+		std::string aschildproc; //Shared Memory name here
+		std::string json_request_file; //Shared Memory name here
 		std::string modulePath;
 		std::string base_cert;
 		bool debugMode;
 
 
 	public:
-		ConfigurationParameters();
+		ConfigurationParametersChild();
 
 	private:
 		void setDefaultValues();
 	};
 
-	class Configuration
+	class ConfigurationChild
 	{
 	public:
-		ConfigurationParameters configuration;
+		ConfigurationParametersChild configuration;
 
 
 	private:
 		std::string configFilePath;
 
 	public:
-		Configuration();
-		Configuration(const std::string& configFilePath);
+		ConfigurationChild();
+		ConfigurationChild(const std::string& configFilePath);
 
 		int setConfigFromCommandLine(int argc, char* argv[]);
 

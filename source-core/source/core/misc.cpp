@@ -160,7 +160,7 @@ void addVarEnv(std::string key, std::string value)
 
 #endif
 
-bool isFileExist(std::string filename)
+bool isFileExist(std::string filename, bool needThrow)
 {
 	if (!(boost::filesystem::exists(boost::filesystem::path(filename)) && boost::filesystem::is_regular_file(boost::filesystem::path(filename))))
 	{
@@ -168,7 +168,10 @@ bool isFileExist(std::string filename)
 		buildMsg << "file [";
 		buildMsg << filename;
 		buildMsg << "] not found";
-		throw std::invalid_argument(buildMsg.str());
+		if (needThrow)
+			throw std::invalid_argument(buildMsg.str());
+
+		return false;
 	}
 	return true;
 }

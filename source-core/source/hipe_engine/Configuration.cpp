@@ -1,5 +1,5 @@
 //@HIPE_LICENSE@
-#include <hipe_server/Configuration.h>
+#include <hipe_engine/Configuration.h>
 
 #pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
@@ -11,30 +11,29 @@
 
 namespace bpo = boost::program_options;
 
-namespace hipe_server
+namespace hipe_engine
 {
-	ConfigurationParameters::ConfigurationParameters()
+	ConfigurationParametersChild::ConfigurationParametersChild()
 	{
 		setDefaultValues();
 	}
 
-	void ConfigurationParameters::setDefaultValues()
+	void ConfigurationParametersChild::setDefaultValues()
 	{
-		this->port = 8080;
 		this->modulePath = "";
 		this->base_cert = "NOT-DEFINED";
 		this->debugMode = false;
 	}
 
-	Configuration::Configuration()
+	ConfigurationChild::ConfigurationChild()
 	{
 	}
 
-	Configuration::Configuration(const std::string& configFilePath) : configFilePath(configFilePath)
+	ConfigurationChild::ConfigurationChild(const std::string& i_configFilePath) : configFilePath(i_configFilePath)
 	{
 	}
 
-	int Configuration::setConfigFromCommandLine(int argc, char* argv[])
+	int ConfigurationChild::setConfigFromCommandLine(int argc, char* argv[])
 	{
 		// General options
 		bpo::options_description generalCat("General");
@@ -45,17 +44,22 @@ namespace hipe_server
 		// Configuration
 		bpo::options_description configCat("Configuration");
 		configCat.add_options()
-			("port,p", bpo::value<unsigned short>(&this->configuration.port)->default_value(this->configuration.port), "Sets the port the server should be listening on")
+			("shared,s", bpo::value<std::string>(&this->configuration.aschildproc)->default_value(""), "Sets the engine has child of one server. Name of shared memory")
 			;
+		configCat.add_options()
+			("json_file,f", bpo::value<std::string>(&this->configuration.json_request_file)->default_value(""), "Set a json request if the process is standalone")
+			;
+	
 		configCat.add_options()
 			("module,m", bpo::value<std::string>(&this->configuration.modulePath)->default_value(this->configuration.modulePath), "Sets the path to the module to get all filters implemented")
 			;
 		configCat.add_options()
-			("certificat_path, -c", bpo::value<std::string>(&this->configuration.base_cert)->default_value(this->configuration.base_cert), "Sets the path to the https certificats")
+			("certificat_path,c", bpo::value<std::string>(&this->configuration.base_cert)->default_value(this->configuration.base_cert), "Sets the path to the https certificats")
 			;
 		configCat.add_options()
-			("debug,d", bpo::value<bool>()->implicit_value(true), "Let user attached it's own hipe_engine binary")
+			("debug,d", bpo::value<bool>()->implicit_value(true), "Sets the engine in debug mode")
 			;
+
 
 
 		// Regroup all sub catagories
@@ -96,18 +100,22 @@ namespace hipe_server
 			return 1;
 		}
 
-		if (vm.count("module") != 0)
+		if (vm.count("module"))
 		{
 			corefilter::getLocalEnv().setValue("modulePath", configuration.modulePath);
 		}
-		if (vm.count("debug") != 0)
+
+		if (vm.count("debug"))
 		{
+			this->configuration.debugMode = true;
 			corefilter::getLocalEnv().setValue("debugMode", "true");
+			
 		}
+
 		return 0;
 	}
 
-	int Configuration::setConfigFromFile()
+	int ConfigurationChild::setConfigFromFile()
 	{
 		boost::property_tree::ptree configPtree;
 		try
@@ -126,21 +134,16 @@ namespace hipe_server
 			return 1;
 		}
 
-
-		if (configPtree.count("http") != 0)
-		{
-			auto httpNode = configPtree.get_child("http");
-			configuration.port = getValue<unsigned short>(httpNode, "port");
-		}
-
 		if (configPtree.count("base_cert") != 0)
 		{
 			configuration.base_cert = configPtree.get<std::string>(std::string("base_cert"));
 			
 		}
+
 		if (configPtree.count("module") != 0)
 		{
-			corefilter::getLocalEnv().setValue("modulePath", configPtree.get<std::string>(std::string("module")));
+			std::string module_path = configPtree.get<std::string>(std::string("module"));
+			corefilter::getLocalEnv().setValue("modulePath", module_path);
 		}
 
 		//Set localenv from config here
@@ -173,9 +176,6 @@ namespace hipe_server
 						<< corefilter::getLocalEnv().getValue(data->first)
 						<< " ]" << std::endl;
 				}
-				    
-				
-				
 			}
 		}
 
@@ -184,37 +184,37 @@ namespace hipe_server
 		return 0;
 	}
 
-	int Configuration::setConfigFromFile(const std::string& filePath)
+	int ConfigurationChild::setConfigFromFile(const std::string& filePath)
 	{
 		this->configFilePath = filePath;
 		return setConfigFromFile();
 	}
 
-	void Configuration::displayConfig() const
+	void ConfigurationChild::displayConfig() const
 	{
-		LOG(INFO) << "port set to " + std::to_string(this->configuration.port);
+		//LOG(INFO) << "port set to " + std::to_string(this->configuration.port);
 	}
 
 
-	std::string Configuration::getConfigFilePath() const
+	std::string ConfigurationChild::getConfigFilePath() const
 	{
 		return this->configFilePath;
 	}
 
-	std::string Configuration::getConfigFileName() const
+	std::string ConfigurationChild::getConfigFileName() const
 	{
 		std::size_t pos = this->configFilePath.find_last_of("/\\");
 		return configFilePath.substr(pos + 1);
 	}
 
-	std::string Configuration::getConfigFileDir() const
+	std::string ConfigurationChild::getConfigFileDir() const
 	{
 		std::size_t pos = this->configFilePath.find_last_of("/\\");
 		return configFilePath.substr(0, pos);
 	}
 
 	template <class T>
-	T Configuration::getValue(boost::property_tree::ptree node, std::string elem) const
+	T ConfigurationChild::getValue(boost::property_tree::ptree node, std::string elem) const
 	{
 		if (node.count(elem) != 0) return node.get<T>(elem);
 		return T();

@@ -25,19 +25,17 @@ namespace filter
 			{
 
 			}
-			REGISTER_P(char, unused);
+			REGISTER_P(int, unused);
 
 			HipeStatus process() override
 			{
 				data::ImageData data = _connexData.pop();
 				for (auto& d : data.Array())
 				{
+					if (d.empty()) continue;
+
 					if (d.channels() == 3 || d.channels() == 4)
 						cv::cvtColor(d, d, CV_BGR2GRAY);
-					else
-					{
-						std::cout << "[LOG] Grayscale::process - Image with " << d.channels() << " channels found. Can't convert to grayscale." << std::endl;
-					}
 				}
 				return OK;
 			}

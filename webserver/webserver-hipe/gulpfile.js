@@ -10,6 +10,7 @@ gulp.task("css", function() {
         "./node_modules/fastselect/dist/fastselect.css",
         "./node_modules/cytoscape-panzoom/cytoscape.js-panzoom.css",
         "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+        "./node_modules/bootstrap/dist/css/bootstrap.min.css.map",
         "./node_modules/codemirror/lib/codemirror.css",
         "./node_modules/codemirror/theme/solarized.css",
         "./node_modules/jquery-ui/themes/base/resizable.css",

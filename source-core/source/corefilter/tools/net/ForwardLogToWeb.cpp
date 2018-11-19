@@ -5,29 +5,34 @@
 #include <websocketpp/logger/levels.hpp>
 
 
-void net::log::ForwardLogToWeb::detach_logger()
+void net::log::ForwardLogToWeb::registerClient(std::shared_ptr<void> i_clientConnector)
 {
 	std::lock_guard<std::mutex> lock(guard);
 
-	if (tcpSink)
+	if (tcpSink.find(i_clientConnector) == tcpSink.end())
 	{
-		google::RemoveLogSink(tcpSink.get());
-
-		tcpSink.reset(nullptr);
-		LOG(INFO) << "Disconnect log forward from web client" << std::endl;
+		HipeGlogWebSink* sink = new HipeGlogWebSink(websocket, i_clientConnector);
+		sink->regiterSink();
+		tcpSink[i_clientConnector] = sink;
 	}
-	LOG(INFO) << "Disconnect log forward finished" << std::endl;
 }
 
-void net::log::ForwardLogToWeb::attach_logger()
+void net::log::ForwardLogToWeb::unRegisterClient(std::shared_ptr<void> i_clientConnector)
 {
 	std::lock_guard<std::mutex> lock(guard);
-	if (!tcpSink) {
-			 
-			tcpSink.reset(new HipeGlogWebSink(websocket, this->registeredClient()));
+
+	if (tcpSink.find(i_clientConnector) != tcpSink.end())
+	{
+		HipeGlogWebSink* sink = tcpSink[i_clientConnector];
+		if (sink == nullptr)
+		{
+			tcpSink.erase(i_clientConnector);
+			return;
 		}
-		google::AddLogSink(tcpSink.get());
-		LOG(INFO) << "Start to forward log to client" << std::endl;
+
+		sink->unregiterSink();
+		tcpSink.erase(i_clientConnector);
+	}
 }
 
 void net::log::ForwardLogToWeb::initServerConnection()
@@ -39,11 +44,11 @@ websocket = ServerInit(
 },
 	[&](WebsocketServer* socket, websocketpp::connection_hdl hdl) { // onOpen
 		this->registerClient(hdl.lock());
-		this->attach_logger();
+		
 },
 	[&](WebsocketServer* s, websocketpp::connection_hdl hdl) { // onClose
 		
-		this->detach_logger();
+	this->unRegisterClient(hdl.lock());
 
 },
 	[&](WebsocketServer*, websocketpp::connection_hdl, message_ptr) { // onClose
@@ -60,20 +65,23 @@ HipeStatus net::log::ForwardLogToWeb::process()
 	{
 		_connexData.pop();
 	}
-	
-	
 
 	return OK;
 }
 
+void net::log::ForwardLogToWeb::unRegisterAllClient()
+{
+	std::lock_guard<std::mutex> lock(guard);
+	tcpSink.clear();
+}
+
 void net::log::ForwardLogToWeb::dispose()
 {
-	detach_logger();
+	unRegisterAllClient();
 
 	if (websocket != nullptr && !websocket->stopped()) {
 			
 			websocket->stop();
-			clientConnector.reset();
 	}
 
 	if (server && server->joinable()) {
@@ -95,7 +103,7 @@ void net::log::ForwardLogToWeb::onLoad(void* data)
 		// Start the server accept loop
 		websocket->start_accept();
 		websocket->run();
-		this->detach_logger();
+		unRegisterAllClient();
 		std::error_code er;
 		websocket->stop_listening(er);
 		

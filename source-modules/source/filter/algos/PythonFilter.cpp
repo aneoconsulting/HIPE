@@ -168,16 +168,14 @@ namespace filter
 					//Is there any function name init_process ??
 					std::stringstream init_func_name;
 					init_func_name << "init_" << function_name;
-					boost::python::object pythonInitCall;
-
-					try {
+					
+					if (static_cast<boost::python::dict&>(l_pythonContext.This().global).has_key(init_func_name.str()))
+					{
+						boost::python::object pythonInitCall;
 						pythonInitCall = l_pythonContext.This().global[init_func_name.str()];
 						boost::python::object result;
 
 						result = pythonInitCall();
-					}
-					catch (boost::python::error_already_set& e)
-					{
 					}
 					
 				}
@@ -388,12 +386,15 @@ namespace filter
 				_m_interp = static_cast<PyInterpreterState*>(interp);
 			}
 
-			init_python(extractDirectoryName(script_path));
+		
 		}
 
 		void PythonFilter::onStart(void* pyThreadState)
 		{
 			mPyUser = static_cast<PyExternalUser*>(pyThreadState);
+			PyExternalUser::Use use(*mPyUser);
+			init_python(extractDirectoryName(script_path));
+			
 		}
 	}
 }

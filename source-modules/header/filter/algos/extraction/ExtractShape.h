@@ -15,13 +15,15 @@ namespace filter
 	{
 		class ExtractShape : public IFilter
 		{
+			SET_NAMESPACE("vision/extraction")
+
 			CONNECTOR(data::PatternData, data::ImageData);
 
 			REGISTER(ExtractShape, ()), _connexData(data::INDATA)
 			{
 			}
 
-			REGISTER_P(char, unused);
+			REGISTER_P(int, unused);
 
 			cv::Mat saved;
 

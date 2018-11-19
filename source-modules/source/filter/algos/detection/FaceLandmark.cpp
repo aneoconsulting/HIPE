@@ -163,7 +163,7 @@ namespace filter
 				//FaceLandmark all images coming from the same parent
 				for (auto &myImage : images.Array())
 				{
-					if (count_frame % skip_frame == 0)
+					if (skip_frame == 0 || count_frame % skip_frame == 0)
 					{
 						if (imagesStack.size() != 0)
 							imagesStack.clear();

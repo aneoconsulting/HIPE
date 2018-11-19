@@ -31,10 +31,12 @@ namespace json
 		for (auto& field : getParameterNames(_filter->getConstructorName()))
 		{
 			std::string copyField(field);
-			
-			if (_params.count(field) != 0)
+			if (copyField != "unused")
 			{
-				__callfunc(_filter, "set_" + copyField + "_from_json", _params);
+				if (_params.count(field) != 0)
+				{
+					__callfunc(_filter, "set_" + copyField + "_from_json", _params);
+				}
 			}
 		}
 

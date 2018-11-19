@@ -76,7 +76,7 @@ function setShema(json, graphical) {
 
                         addConfiguration(idNode);
                         $("#delete_config_" + (idNode)).attr('selector', selector);
-                        $('#button_collapse_' + (idNode)).html('<span class="glyphicon glyphicon-chevron-down"></span> ' + type + ' (' + nodes[selector].data.name + ')');
+                        $('#button_collapse_' + (idNode)).html('<span class="fa fa-chevron-down"></span> ' + type + ' (' + nodes[selector].data.name + ')');
 
                         if(indexDataSource == 0){
                             $('#button_collapse_' + (idNode)).click();
@@ -198,7 +198,7 @@ var existIn = function(arr1, arr2) {
 function orderNodesInGraph() {
     var nodesSorted = sortNodes();
     var y = 50;
-    var containerWidth = $('.boardpanel').width();
+    var containerWidth = $('.boardcard').width();
     var maxColumn = 0;
     var columns = [];
 

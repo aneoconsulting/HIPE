@@ -28,7 +28,7 @@ namespace filter
 			{
 
 			}
-			REGISTER_P(char, unused);
+			REGISTER_P(int, unused);
 
 		public:
 			HipeStatus process() override

@@ -1,4 +1,4 @@
-<html lang="en">
+﻿<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
 
     <script src="/js/jquery.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -27,14 +28,14 @@
 
 
 <div id="btnContainer">
-    <a href="/models" class="btn btn-default btn-lg" id="backBtn">
-        <span class="glyphicon glyphicon-arrow-left"></span>
+    <a href="javascript:(0)" onclick="window.history.back();" class="btn btn-default btn-lg" id="backBtn">
+        <span class="fa fa-arrow-circle-left"></span>
     </a>
 </div>
 <div class="row">
     <div class="col-lg-6 col-lg-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <label for="attr_server_url">Url du serveur</label>

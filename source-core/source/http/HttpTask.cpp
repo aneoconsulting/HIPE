@@ -1,17 +1,25 @@
 //@HIPE_LICENSE@
+
+#include <string>
+#include <core/misc.h>
+
+
 #include <HttpTask.h>
 #include <HttpServer.h>
 #include <corefilter/tools/JsonBuilder.h>
 #include <orchestrator/Orchestrator.h>
 #include <orchestrator/Composer.h>
 #include <core/HipeException.h>
-#include <http/CommandManager.h>
+#include <corefilter/tools/CommandManager.h>
 #include <core/version.h>
 #include <corefilter/tools/Localenv.h>
 
 #pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
+#include <functional>
+#include <utility>
 #include <fstream>
+
 #pragma warning(pop)
 
 #ifdef USE_GPERFTOOLS
@@ -19,205 +27,45 @@
 #include <assert.h>
 #endif
 
+
+#include "ProcessController.h"
+
+
 using namespace std;
 
-std::function<bool(std::string, json::JsonTree*)> kill_command()
-{
-	return [](std::string optionName, json::JsonTree* lptree)
-	{
-		if (optionName.compare("Kill") == 0)
-		{
-			orchestrator::OrchestratorFactory::getInstance()->killall();
-			lptree->Add("Status", "Task has been killed");
-			return true;
-		}
-		return false;
-	};
-}
 
-std::function<bool(std::string, json::JsonTree*)> exit_command()
+void http::HttpTask::run_process()
 {
-	return [](std::string optionName, json::JsonTree* lptree)
-	{
-		const std::string exit = "Exit";
-		if (exit.find(optionName) == 0)
-		{
-			orchestrator::OrchestratorFactory::getInstance()->killall();
-			lptree->Add("Status", "Task has been killed");
-			lptree->Add("process", "Server is exiting");
-			return true;
-		}
-		return false;
-	};
-}
+	stringstream dataResponse;
+	std::string request = _request->content.string();
 
-std::function<bool(std::string, json::JsonTree*)> get_filters()
-{
-	return [](std::string optionName, json::JsonTree* lptree)
-	{
-		const std::string filters = "Filters";
-		int i = 0;
-		if (filters.find(optionName) == 0)
-		{
-			RegisterTable& reg = RegisterTable::getInstance();
-			for (auto& name : reg.getTypeNames())
-			{
-				json::JsonTree parameters;
-				json::JsonTree child;
-				json::JsonTree info;
-				for (auto& varName : reg.getVarNames(name))
-				{
-					string value = reg.getDefaultValue(name, varName);
-					child.put(varName, value);
-				}
-				info.put("namespace", reg.getNamespace(name));
-				parameters.push_back("fields", child);
-				parameters.push_back("info", info);
+	process = getProcessController();
 
-				lptree->add_child(name, parameters);
-				++i;
-			}
-			return true;
-		}
-		return false;
-	};
-}
-
-std::vector<std::string> splitfilterNamespaces(const std::string& s, char delimiter)
-{
-	std::vector<std::string> tokens;
-	std::string token;
-	std::istringstream tokenStream(s);
-	while (std::getline(tokenStream, token, delimiter))
+	if (corefilter::getLocalEnv().getValue("debugMode") == "true")
 	{
-		tokens.push_back(token);
+		LOG(INFO) << "Running in debugMode session will wait for hipe_engine" << std::endl;
+
+		dataResponse << process->executeOrUpdateAttachedProcess(request);	
 	}
-	return tokens;
-}
-
-std::map<std::string, std::vector<json::JsonTree>> get_map_filters()
-{
-	std::map<std::string, std::vector<json::JsonTree>> tree;
-
-	int i = 0;
-	RegisterTable& reg = RegisterTable::getInstance();
-	for (auto& name : reg.getTypeNames())
+	else
 	{
-		auto name_spacce_filter = reg.getNamespace(name);
-		json::JsonTree filterNode;
-
-		for (auto& varName : reg.getVarNames(name))
-		{
-			filterNode.put(varName, std::string(""));
-		}
-		json::JsonTree child;
-		child.push_back(name, filterNode);
-
-		tree[name_spacce_filter].push_back(child);
+		LOG(INFO) << "Starting hipe_engine by the server itself" << std::endl;
+		dataResponse << process->executeOrUpdateProcess(request);	
 	}
-	return tree;
+	
+	
+
+	string jsonResponse = dataResponse.str();
+
+	*_response << "HTTP/1.1 200 OK\r\n"
+		<< "Access-Control-Allow-Origin: *\r\n"
+		<< "Content-Type: application/json\r\n"
+		<< "Content-Length: " << jsonResponse.length() << "\r\n\r\n"
+		<< jsonResponse;
+	LOG(INFO) << "HttpTask response has been sent";
+	VLOG(3) << jsonResponse;
+
 }
-
-//! \brief new get filters: each path is splitted on directories
-//! \todo test when all namepaces will be set => change function name to get_filters() (remove new keyword)
-std::function<bool(std::string, json::JsonTree*)> get_groupFilter()
-{
-	return [](std::string optionName, json::JsonTree* lptree)
-	{
-		const std::string filters = "GroupFilters";
-		int i = 0;
-		if (filters.find(optionName) == 0)
-		{
-			auto map_tree = get_map_filters();
-			for (auto& mt : map_tree)
-			{
-				auto keys = splitfilterNamespaces(mt.first, '/');
-				auto length = keys.size();
-				auto lastElement = keys[length - 1];
-				json::JsonTree lastElementJson;
-				auto values = mt.second;
-				for (auto& v : values)
-				{
-					lastElementJson.push_back("", v);
-				}
-				json::JsonTree* elements = new json::JsonTree[length];
-
-				elements[length - 1] = lastElementJson;
-				int i = 0;
-				for (i = length - 2; i >= 0; i--)
-				{
-					json::JsonTree element;
-					element.add_child(keys[i + 1], elements[i + 1]);
-					if (lptree->count(keys[i]) == 1)
-					{
-						lptree->add_child_to_child(keys[i], keys[i + 1], elements[i + 1]);
-					}
-					else
-					{
-						lptree->add_child(keys[i], element);
-					}
-					elements[i] = element;
-				}
-				if (lptree->count(keys[0]) == 0)
-					lptree->add_child(keys[0], elements[0]);
-			}
-
-			return true;
-		}
-		return false;
-	};
-}
-
-std::function<bool(std::string, json::JsonTree*)> get_version()
-{
-	return [](std::string optionName, json::JsonTree* lptree)
-	{
-		const std::string version = "Version";
-		if (version.find(optionName) == 0)
-		{
-			auto v = getVersion();
-			lptree->Add("Version", v);
-
-			return true;
-		}
-		return false;
-	};
-}
-
-std::function<bool(std::string, json::JsonTree*)> get_versionHashed()
-{
-	return [](std::string optionName, json::JsonTree* lptree)
-	{
-		const std::string version = "Hash";
-		if (version.find(optionName) == 0)
-		{
-			auto v = getVersionHashed();
-			lptree->Add("Hash", v);
-			return true;
-		}
-		return false;
-	};
-}
-
-std::function<bool(std::string, json::JsonTree*)> get_commands_help()
-{
-	return [](std::string OptionName, json::JsonTree* lptree)
-	{
-		const std::string help = "Help";
-		if (help.find(OptionName) == 0)
-		{
-			lptree->Add("Version", " returns the running app version number");
-			lptree->Add("Hash", " returns the running app hashed version number ");
-			lptree->Add("Exit", " stop the request");
-			lptree->Add("Kill", " kills the current request");
-			lptree->Add("Filters", " get all existing filters in the current version");
-			lptree->Add("GroupFilters", "get all existing filter in groups");
-			return true;
-		}
-		return false;
-	};
-}
-
 
 void http::HttpTask::readFileContent(const std::string& local_path, std::stringstream& data_response)
 {
@@ -333,6 +181,8 @@ void http::HttpTask::RenderHtml() const
 	}
 }
 
+
+
 void http::HttpTask::runTask() const
 {
 #ifdef USE_GPERFTOOLS
@@ -354,13 +204,13 @@ void http::HttpTask::runTask() const
 			{
 				auto command = treeRequest.get_child("command").get<std::string>("type");
 				json::JsonTree ltreeResponse;// = new JsonTree;
-				auto commandFound = CommandManager::callOption(command, get_version(), &ltreeResponse);
-				commandFound |= CommandManager::callOption(command, kill_command(), &ltreeResponse);
-				commandFound |= CommandManager::callOption(command, get_filters(), & ltreeResponse);
-				commandFound |= CommandManager::callOption(command, exit_command(), &ltreeResponse);
-				commandFound |= CommandManager::callOption(command, get_versionHashed(), &ltreeResponse);
-				commandFound |= CommandManager::callOption(command, get_commands_help(), & ltreeResponse);
-				commandFound |= CommandManager::callOption(command, get_groupFilter(), &ltreeResponse);
+				auto commandFound = corefilter::CommandManager::callOption(command, corefilter::get_version(), &ltreeResponse);
+				commandFound |= corefilter::CommandManager::callOption(command, orchestrator::kill_command(), &ltreeResponse);
+				commandFound |= corefilter::CommandManager::callOption(command, corefilter::get_filters(), & ltreeResponse);
+				commandFound |= corefilter::CommandManager::callOption(command, orchestrator::exit_command(), &ltreeResponse);
+				commandFound |= corefilter::CommandManager::callOption(command, corefilter::get_versionHashed(), &ltreeResponse);
+				commandFound |= corefilter::CommandManager::callOption(command, corefilter::get_commands_help(), & ltreeResponse);
+				commandFound |= corefilter::CommandManager::callOption(command, corefilter::get_groupFilter(), &ltreeResponse);
 
 				if (!commandFound)
 				{

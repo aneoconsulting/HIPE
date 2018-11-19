@@ -302,15 +302,35 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 		//std::shared_ptr<data::Data> inter_output;
 		HipeStatus hipe_status = OK;
 
-		//Create new python ThreadState for filter which need it
+		
+		//Call init method if need by each filter
 		PyExternalUser* userThreadState = nullptr;
+		try
+		{
+			//Create new python ThreadState for filter which need it
+		
 		if (l_interp != nullptr)
 			InitNewPythonThread(l_interp, userThreadState);
 
 		setPythonUserThreadState(cpyFilterRoot, userThreadState);
 
-		//Call init method if need by each filter
-		onStartCall(cpyFilterRoot, nullptr);
+			onStartCall(cpyFilterRoot, nullptr);
+		}
+		catch (HipeException& e)
+		{
+			LOG(ERROR) << "HipeException during the " << cpyFilterRoot->getName() << " execution. Msg : " << e.what() <<
+				". Please contact us" << std::endl;
+			LOG(ERROR) << "Error : from working directory [ " << GetCurrentWorkingDir() << " ]" << std::endl;;
+			cleanDataChild(cpyFilterRoot);
+			disposeChild(cpyFilterRoot);
+			if (freeAlgorithms(cpyFilterRoot) != HipeStatus::OK)
+				throw HipeException("Cannot free properly the Streaming videocapture");
+
+			
+			destroyPythonThread(userThreadState);
+			texptr = std::make_shared<std::exception_ptr>(std::current_exception());
+			return;
+		}
 
 		while ((hipe_status != END_OF_STREAM) && *isActive)
 		{
@@ -467,6 +487,11 @@ void orchestrator::image::DefaultScheduler::processDataSource(filter::Model* roo
 void orchestrator::image::DefaultScheduler::updateFilterParameters(filter::Model* root, std::shared_ptr<filter::Model> model)
 {
 	updateParameters(root, model.get());
+}
+
+std::vector<orchestrator::TaskInfo> orchestrator::image::DefaultScheduler::getRunningTasks()
+{
+	return runningTasks;
 }
 
 void orchestrator::image::DefaultScheduler::process(filter::Model* root, data::Data& inputData, data::Data& outputData, bool debug)

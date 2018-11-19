@@ -382,7 +382,7 @@ function AssignBackGroundImage(name, target) {
      
 };
 
-function addElementInGraph(name, helper, values, graphical) {
+function addElementInGraph(name, helper, values, graphical, isCopy) {
     var box = $(".boardpanel").offset();
     
     if (helper != null) {
@@ -447,6 +447,9 @@ function addElementInGraph(name, helper, values, graphical) {
         Object.keys(values).forEach(function (key) {
             newNode.data[key] = values[key];
         });
+        if (isCopy != undefined && isCopy === true) {
+            newNode.data["name"] = formatedName;
+        }
     }
 
     nodes[name + '_' + countElement] = newNode;
@@ -461,7 +464,6 @@ function addElementInGraph(name, helper, values, graphical) {
     var nodeTarget = cy.filter('node[id = "' + newNode.data.id + '"]');
     if (isDataSource(name)) {
         nodeTarget[0].style({'shape': 'ellipse'});
-        nodeTarget[0].style({'border-color': 'red'});
 
         var split = name.split('DataSource');
         nodeTarget[0].style({ 'content': split[0] });
@@ -493,9 +495,10 @@ function insertText(cm, data) {
         // add a new line and the data
         doc.replaceRange("\n" + data, pos);
     }
+    cm.scrollIntoView({ line: cm.lineCount() - 1, char: 5 }, 200);
 }
 var remoteLog = {
-    port : 9134,
+    port : 9135,
     logAreaId: "logArea",
     socketToReceive: null
 }

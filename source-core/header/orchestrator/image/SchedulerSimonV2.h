@@ -573,6 +573,11 @@ namespace orchestrator
 				}
 				runningTasks.clear();
 			}
+
+			virtual std::vector<TaskInfo> getRunningTasks()
+			{
+				return runningTasks;
+			}
 		};
 	}
 }

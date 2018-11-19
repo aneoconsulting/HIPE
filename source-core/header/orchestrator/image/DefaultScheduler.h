@@ -78,6 +78,8 @@ namespace orchestrator
 			void process(filter::Model* root, data::Data& inputData, data::Data& outputData, bool debug = false);
 
 			virtual void killall();
+
+			virtual std::vector<TaskInfo> getRunningTasks();
 		};
 	}
 }

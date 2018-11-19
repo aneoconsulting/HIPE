@@ -163,11 +163,8 @@ function GetConnectWebRTCServer(videoObject) {
         console.log('socketToSend open');
         videoObject.pcToSend = new RTCPeerConnection({
                 "iceServers": [
-                    { urls: 'stun:stun.l.google.com:19302' },
-                    { urls: 'stun:stun1.l.google.com:19302' },
-                    { urls: 'stun:stun2.l.google.com:19302' },
-                    { urls: 'stun:stun3.l.google.com:19302' },
-                    { urls: 'stun:stun4.l.google.com:19302' }
+                    { urls: 'stun:stun.l.google.com:19302' }
+                
                 ]
             }
         );
@@ -198,12 +195,6 @@ function GetConnectWebRTCServer(videoObject) {
 
         // get a local stream, show it in a self-view and add it to be sent
         navigator.mediaDevices.getUserMedia(constraints,
-                function(stream) {
-
-                    /*
-                     * Rest of your code.....
-                     * */
-                },
                 // errorCallback
                 function(err) {
                     if (err === PERMISSION_DENIED) {
@@ -283,11 +274,8 @@ function GetConnectWebRTCSender(videoObject) {
         console.log('socketToReceive open');
         videoObject.pcToReceive = new RTCPeerConnection({
                 "iceServers": [
-                    { urls: 'stun:stun.l.google.com:19302' },
-                    { urls: 'stun:stun1.l.google.com:19302' },
-                    { urls: 'stun:stun2.l.google.com:19302' },
-                    { urls: 'stun:stun3.l.google.com:19302' },
-                    { urls: 'stun:stun4.l.google.com:19302' }
+                    { urls: 'stun:stun.l.google.com:19302' }
+ 
                 ]
             }
         );
@@ -317,6 +305,7 @@ function GetConnectWebRTCSender(videoObject) {
         videoObject.pcToReceive.ontrack = function(evt) {
             console.log("ontrack.");
             if (evt.track.kind === "video") {
+                console.log("ontrack. is video : Yes");
                 remoteView.srcObject = evt.streams[0];
 
                 // document.getElementById('LoadingCanvasRemote').style.visibility = 'hidden';

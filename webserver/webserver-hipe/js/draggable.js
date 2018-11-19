@@ -2,7 +2,8 @@
 
 
 function draggableAndresizable(elmnt) {
-    $(elmnt).draggable().resizable();
+    $(elmnt).draggable({ handle:'.panel-heading'}).resizable();
+    $(elmnt).find('.panel-heading').addClass('grabber');
 }
 
 

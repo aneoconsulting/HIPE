@@ -27,8 +27,8 @@ ul.main-menu {
     }
 
         ul.main-menu > li.active-menu {
-            background-color: #fff;
-            border-color: #ccc;
+            background-color: #EAF0FF !important;
+            border-color: #9BA7B7;
             -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
             -moz-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
@@ -58,8 +58,8 @@ ul.main-menu {
         display: none;
         border-width: 1px;
         border-style: solid;
-        border-color: #ccc;
-        background-color: #fff;
+        border-color: #9BA7B7;
+        background-color: #EAF0FF;
         -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
         -moz-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
@@ -78,11 +78,13 @@ ul.main-menu {
     }
 
     ul.main-menu li:hover {
+        /*border: 1px solid #E5C365;*/
         background-color: rgba(128, 128, 128, 0.8);
-        border-color: #ccc;
-        -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+        background-color: #FFF29D;
+        /*border-color: #9BA7B7;*/
+        -/*webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
         -moz-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);*/
     }
 
     ul.main-menu li.active-menu:hover {
@@ -90,9 +92,9 @@ ul.main-menu {
     }
 
     ul.main-menu li ul li.disabled, ul.main-menu li ul li.disabled:hover, ul.main-menu li ul li.disabled a {
-        color: #ddd;
+        color: #darkgrey;
         cursor: default;
-        background-color: #fff;
+        background-color: #EAF0FF !important;
     }
 
     ul.main-menu li.separator {

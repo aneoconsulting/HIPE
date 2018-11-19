@@ -189,6 +189,7 @@ int main(int argc, char* argv[]) {
 	LOG(INFO) << "Start Orchestrator " << std::endl;
 	orchestrator::OrchestratorFactory::start_orchestrator();
 
+	getProcessController();
 	std::thread thread;
 	std::thread thread_https;
 	http::start_http_server(config.configuration.port, server, thread);

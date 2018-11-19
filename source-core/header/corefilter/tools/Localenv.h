@@ -16,6 +16,11 @@ namespace corefilter
 
 
 	public:
+		std::map<std::string, std::string> env_values() const
+		{
+			return envValues;
+		}
+
 		void setValue(std::string key, std::string value)
 		{
 			envValues[key] = value;

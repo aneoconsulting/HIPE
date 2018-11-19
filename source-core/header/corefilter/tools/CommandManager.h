@@ -2,8 +2,11 @@
 #pragma once
 #include <functional>
 #include <map>
+#include "json/JsonTree.h"
+#include <vector>
+#include <corefilter/filter_export.h>
 
-namespace http
+namespace corefilter
 {
 	class CommandManager
 	{
@@ -55,4 +58,12 @@ namespace http
 		{
 		}
 	};
+
+	FILTER_EXPORT std::function<bool(std::string, json::JsonTree*)> get_filters();
+	FILTER_EXPORT std::vector<std::string> splitfilterNamespaces(const std::string& s, char delimiter);
+	FILTER_EXPORT std::map<std::string, std::vector<json::JsonTree>> get_map_filters();
+	FILTER_EXPORT std::function<bool(std::string, json::JsonTree*)> get_groupFilter();
+	FILTER_EXPORT std::function<bool(std::string, json::JsonTree*)> get_version();
+	FILTER_EXPORT std::function<bool(std::string, json::JsonTree*)> get_versionHashed();
+	FILTER_EXPORT std::function<bool(std::string, json::JsonTree*)> get_commands_help();
 }

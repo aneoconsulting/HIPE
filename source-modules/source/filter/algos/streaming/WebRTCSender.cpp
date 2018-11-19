@@ -18,23 +18,25 @@ HipeStatus WebRTCSender::process()
 		if (streamer != nullptr)
 		{
 			cv::Mat res;
-			switch (img.getMat().channels())
+			if (!img.getMat().empty())
 			{
-			case 1:
-				cv::cvtColor(img.getMat(), res, CV_GRAY2BGRA);
-				break;
-			case 3:
-				cv::cvtColor(img.getMat(), res, CV_BGR2BGRA);
-			break;
+				switch (img.getMat().channels())
+				{
+				case 1:
+					cv::cvtColor(img.getMat(), res, CV_GRAY2BGRA);
+					break;
+				case 3:
+					cv::cvtColor(img.getMat(), res, CV_BGR2BGRA);
+					break;
 
-			case 4:
-				res = img.getMat();
-			break;
-			default:
-				throw HipeException("UNconvertible number of  channels for WebRTC");
-
-			};
-			sendNewFrame(streamer, res.ptr(), res.cols, res.rows, res.channels());
+				case 4:
+					res = img.getMat();
+					break;
+				default:
+					throw HipeException("UNconvertible number of  channels for WebRTC");
+				};
+				sendNewFrame(streamer, res.ptr(), res.cols, res.rows, res.channels());
+			}
 		}
 			
 	}

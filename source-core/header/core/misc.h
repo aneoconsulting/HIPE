@@ -36,7 +36,7 @@ std::string getExtensionFromImageData(const unsigned char* data, unsigned int le
 void hipe_usleep(long long usec);
 int hipe_gettimeofday(hipetimeval * p, void* tz);
 
-bool isFileExist(std::string filename);
+bool isFileExist(std::string filename, bool needThrow = true);
 
 bool isDirExist(const std::string & dirname);
 

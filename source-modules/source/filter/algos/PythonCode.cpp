@@ -59,50 +59,17 @@ namespace filter
 			return extract<std::string>(formatted);
 		}
 
-		class PythonStdIoRedirect
-		{
-		public:
-			typedef boost::circular_buffer<std::string> ContainerType;
-
-			void Write(std::string const& str)
-			{
-				if (m_outputs.capacity() < 100)
-					m_outputs.resize(100);
-				m_outputs.push_back(str);
-			}
-
-			static std::string GetOutput()
-			{
-				std::string ret;
-				std::stringstream ss;
-				for (boost::circular_buffer<std::string>::const_iterator it = m_outputs.begin();
-				     it != m_outputs.end();
-				     it++)
-				{
-					ss << *it;
-				}
-				m_outputs.clear();
-				ret = ss.str();
-				return ret;
-			}
-
-		private:
-			static ContainerType m_outputs; // must be static, otherwise output is missing
-		};
-
-		PythonStdIoRedirect::ContainerType PythonStdIoRedirect::m_outputs;
-
-
 		void PythonCode::add_python_path(const std::string& python_path)
 		{
 			std::vector<std::string> results;
 
 			boost::split(results, python_path, [](char c) { return c == ';'; });
-			
+
 			for (auto p : results)
 			{
 				std::ostringstream python_path_builder;
-				python_path_builder << "sys.path.insert(0, r'" << p << "'); os.environ['PYTHONPATH'] = r'" << p <<"' + os.pathsep + os.environ['PATH']";
+				python_path_builder << "sys.path.insert(0, r'" << p << "'); os.environ['PYTHONPATH'] = r'" << p <<
+					"' + os.pathsep + os.environ['PATH']";
 
 				boost::python::exec(python_path_builder.str().c_str(), l_pythonContext.This().global,
 				                    l_pythonContext.This().local);
@@ -128,8 +95,6 @@ namespace filter
 			add_python_path(new_workingDir);
 
 			add_python_path(corefilter::getLocalEnv().getValue("pydata_path"));
-
-			
 		}
 
 		void PythonCode::init_python(const std::string& path)
@@ -149,22 +114,16 @@ namespace filter
 					initialize_python_paths();
 
 					//Write file with code
-					 std::ofstream myfile;
-					myfile.open (temp_script_file);
+					std::ofstream myfile;
+					myfile.open(temp_script_file);
 					myfile << code_impl << "\n";
 					myfile.close();
 
 					l_pythonContext.This().script = boost::python::import(moduleName.c_str());
-					l_pythonContext.This().main.attr("__dict__")[moduleName.c_str()] = l_pythonContext
-					                                                                         .This().script;
+					l_pythonContext.This().global[moduleName.c_str()] = l_pythonContext
+					                                                    .This().script;
 					//Redirect Stdio from pyhton
-					l_pythonContext.This().main.attr("__dict__")["PythonStdIoRedirect"] = class_<PythonStdIoRedirect>("PythonStdIoRedirect", init<>())
-					.def("write", &PythonStdIoRedirect::Write);
-					
-					PythonStdIoRedirect python_stdio_redirector;
-					object kwds_proxy = boost::python::import("sys");
-					//kwds_proxy.attr("stderr") = python_stdio_redirector;
-					kwds_proxy.attr("stdout") = python_stdio_redirector;
+
 
 					//Reload module when the python has already loaded the module
 
@@ -179,12 +138,30 @@ namespace filter
 
 					l_pythonContext.This().global = l_pythonContext.This().script.attr("__dict__");
 
+					static const char* const redirect_py =
+						"import sys\n"
+						"import pydata\n"
+						"sys.stdout = pydata.stdout()\n"
+						"sys.stderr = pydata.stderr()";
+
+#if 1
+					/* FixMe: exception thrown, mmh - seems a bug in boost.python, see
+					 * http://www.nabble.com/Problems-with-Boost::Python-Embedding-Tutorials-td18799129.html */
+					boost::python::exec(redirect_py, l_pythonContext.This().global, l_pythonContext.This().global);
+#else
+            PyRun_String(redirect_py,
+                         Py_file_input,
+                         m_main_global.ptr(), m_main_global.ptr());
+#endif
+
+
 					//Is there any function name init_process ??
 					std::stringstream init_func_name;
 					init_func_name << "init_" << function_name;
 					boost::python::object pythonInitCall;
 
-					try {
+					try
+					{
 						pythonInitCall = l_pythonContext.This().global[init_func_name.str()];
 						boost::python::object result;
 
@@ -193,7 +170,6 @@ namespace filter
 					catch (boost::python::error_already_set& e)
 					{
 					}
-					
 				}
 				catch (boost::python::error_already_set& e)
 				{
@@ -217,6 +193,19 @@ namespace filter
 				cv::Mat res = boost::python::extract<cv::Mat>(object);
 
 				data::ImageData res_process(res);
+
+				PUSH_DATA(res_process);
+			}
+			else if (boost::python::extract<int>(object).check())
+			{
+				int res = boost::python::extract<int>(object);
+				std::vector<cv::Point> vec;
+				LOG(WARNING) << "Python Int type is poorly managed. Converted has cv::Point for now..." << std::endl;
+				vec.push_back(cv::Point(res, res));
+
+				data::ShapeData res_process;
+
+				res_process.add(vec);
 
 				PUSH_DATA(res_process);
 			}
@@ -300,9 +289,10 @@ namespace filter
 			}
 			else
 			{
-				std::string type_name = boost::python::extract<std::string>(object.attr("__name__"))();
-				
-				LOG(WARNING) << std::string("The type ") + type_name + "isn't yet managed in HIPE as result of function call";
+				std::string type_name = boost::python::extract<std::string>(object.attr("__class__").attr("__name__"))();
+
+				LOG(WARNING) << std::string("The type ") + type_name +
+					" isn't yet managed in HIPE as result of function call";
 				data::ShapeData shape;
 				PUSH_DATA(shape);
 			}
@@ -342,7 +332,7 @@ namespace filter
 
 				if (!pythonFunctionCall.is_none())
 				{
-					boost::shared_ptr< pyImageData > o(new pyImageData);
+					boost::shared_ptr<pyImageData> o(new pyImageData);
 					cv::Mat inMat;
 					if (!input.empty())
 					{
@@ -353,26 +343,26 @@ namespace filter
 
 					{
 						boost::python::object result;
-						PythonStdIoRedirect python_stdio_redirector;
+
 
 						result = pythonFunctionCall(boost::python::ptr(o.get()));
-						std::string captured_python_output = python_stdio_redirector.GetOutput();
-						LOG(INFO) << "Python call : [" << captured_python_output << "]" << std::endl;
+						//std::string captured_python_output = python_stdio_redirector.GetOutput();
+						/*LOG(INFO) << "Python call : [" << captured_python_output << "]" << std::endl;*/
 
 						push_result(result);
 					}
 				}
 
-			//Transfer python context to PythonFilter group
-			for (auto& pairs : this->getChildrens())
-			{
-				if (pairs.second->isPython())
+				//Transfer python context to PythonFilter group
+				for (auto& pairs : this->getChildrens())
 				{
-					data::DataPort& data_port = static_cast<data::DataPort &>(pairs.second->getConnector().getPort());
-					data_port.push(l_pythonContext);
+					if (pairs.second->isPython())
+					{
+						data::DataPort& data_port = static_cast<data::DataPort &>(pairs.second->getConnector().getPort()
+						);
+						data_port.push(l_pythonContext);
+					}
 				}
-			}
-
 			}
 			catch (boost::python::error_already_set& e)
 			{
@@ -414,12 +404,15 @@ namespace filter
 				_m_interp = static_cast<PyInterpreterState*>(interp);
 			}
 
-			init_python(extractDirectoryName(temp_script_file));
+		
 		}
 
 		void PythonCode::onStart(void* pyThreadState)
 		{
 			mPyUser = static_cast<PyExternalUser*>(pyThreadState);
+			PyExternalUser::Use use(*mPyUser);
+			init_python(extractDirectoryName(temp_script_file));
+			
 		}
 	}
 }

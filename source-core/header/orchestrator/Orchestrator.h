@@ -10,9 +10,11 @@
 #include <corefilter/tools/JsonFilterNode/JsonFilterTree.h>
 #include <coredata/Data.h>
 #include <orchestrator/orchestrator_export.h>
+#include "TaskInfo.h"
 
 namespace orchestrator
 {
+
 	class Conductor
 	{
 
@@ -32,6 +34,12 @@ namespace orchestrator
 		{
 			
 		}
+
+		virtual std::vector<TaskInfo> getRunningTasks()
+		{
+			throw HipeException("Need to implement getRunningTasks into to the new Scheduler");
+		}
+
 	};
 	
 	template<class Conduct>
@@ -65,9 +73,14 @@ namespace orchestrator
 			_conductor->process(root, data, outPutData);
 		}
 
-		void killall()
+		virtual void killall()
 		{
 			_conductor->killall();
+		}
+
+		virtual std::vector<TaskInfo> getRunningTasks()
+		{
+			return _conductor->getRunningTasks();
 		}
 	};
 
@@ -228,5 +241,9 @@ namespace orchestrator
 
 	};
 
+	
+	std::function<bool(std::string, json::JsonTree*)> kill_command();
+
+	std::function<bool(std::string, json::JsonTree*)> exit_command();
 
 }

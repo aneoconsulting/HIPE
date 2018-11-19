@@ -20,9 +20,23 @@ html, body {
     /*text-shadow: 0px 1px 2px rgba(0,0,0,0);*/
 }
 
-.Model-title { color: white; }
+.Model-title { color: white; text-align: center;}
 
+hr {
+    margin: 0;
+    padding: 0;
+}
 
+.row-centered {
+    text-align:center !important;
+}
+
+.col-centered {
+    display: inline-block !important;
+    float: none !important;
+    /* reset the text-align */
+    text-align: left !important;
+}
 
 section {
     min-height: 100%;
@@ -153,18 +167,28 @@ h2.card-title { font-size: 18px; }
     background-color: rgb(54, 78, 111) !important;
     border-color: rgb(54, 78, 111) !important;
     color: rgb(245, 245, 245) !important;
+
+}
+
+.grabber {
+    cursor: grab;
+}
+
+.grabber:active {
+    cursor: grabbing;
 }
 
 .panel-group .panel-heading {
     overflow: auto;
-    background-color: rgb(245, 245, 245) !important;
+    background-color: #D6DBE9 !important;
     border-color: rgb(245, 245, 245) !important;
+   
 }
 
 .panel-title {
     overflow: hidden;
     font-size: 12px;
-    background-color: rgb(245, 245, 245) !important;
+    background-color: #D6DBE9 !important;
     border-color: rgb(245, 245, 245) !important;
 }
 
@@ -176,7 +200,15 @@ h2.card-title { font-size: 18px; }
 #filtersType .list-group-item {
     z-index: 3;
     color: black;
+    box-shadow: -2px -2px 5px #888888;
+    border-radius: 15px;
+    cursor: grab;
 }
+
+#filtersType .list-group-item:active {
+        cursor: grabbing;
+    }
+
 
 h3.panel-title { color: black; }
 
@@ -205,7 +237,8 @@ h4.panel-title { color: black; }
     width: 5%;
     padding: 0px 3px 0px 3px;
     margin: 0;
-    background-color: #A2b48c45;
+    background-color: rgba(162, 180, 140, 0.69);
+
     border: 1px solid grey;
     /*background-color: transparent;*/
     color: white;
@@ -245,27 +278,39 @@ h4.panel-title { color: black; }
 
 #menu-header {
     padding: 0px;
-    padding-top: 1px;
 }
 
 #menuGraph, #menu-toolbar {
-    background-color: #f5f5f5;
+    background-color: #D6DBE9;
     margin: 0px 0;
     padding: 0px;
     border-radius: 0px;
-    border-bottom: 2px ridge grey;
 }
 
 #menu-toolbar {
     border: 0;
-    padding: 5px;
-    border-bottom: 4px ridge white;
+    /*padding: 5px;*/
+    border-bottom: 3px solid #DCE0EC;
+    border-top: 3px solid #DCE0EC;
     padding-left: 15px;
 }
 
 #menu-toolbar a { padding-right: 10px; }
 
-#backBtn { padding-top: 2px; }
+
+img.shortCutImg {
+    width: 24px;
+    height: 24px;
+}
+    img.shortCutImg:hover {
+        background-color: #FFF29D;
+        border: 1px solid #E5C365;
+    }
+
+    #backBtn {
+    padding: 0;
+    padding: 5px 10px;
+}
 
 #imgMenu {
     opacity: 1;
@@ -290,10 +335,21 @@ h4.panel-title { color: black; }
 
 #options { width: 100%; }
 
+#optionspanel {
+    display: none;
+}
+
 .monitorpanel, .Logpanel, Editorpanel {
     margin: 0 !important;
     top: 60px;
     left: 0px;
+}
+#Monitor {
+    margin: 0 !important;
+    top: 60px;
+    left: -100px;
+    z-index: 1000;
+    width: auto;
 }
 
 #Log {
@@ -383,6 +439,8 @@ h4.panel-title { color: black; }
 #Monitor-area {
     text-align: center;
     width: 100%;
+    min-width: 640px;
+    max-width: 1600px;
     padding: 0;
 }
 

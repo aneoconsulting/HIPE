@@ -41,9 +41,10 @@ void RegisterTable::getVariable(json::JsonTree& jsonNode, filter::Model* filter,
 	{
 		throw HipeException("Cannot get Variable by instance with type " + filter->getConstructorName());
 	}
-
-
-	invoke(filter, "get_json_" + fieldName, jsonNode);
+	if (fieldName == "unused")
+		jsonNode.put<int>(std::string ("unused"), 0);
+	else
+		invoke(filter, "get_json_" + fieldName, jsonNode);
 }
 
 filter::Model* RegisterTable::newObjectInstance(std::string className, bool managed)

@@ -8,6 +8,28 @@ include("${CMAKE_SOURCE_DIR}/cmake/hipecore_config.cmake")
 
 add_hipe_library(pydata SHARED)
 
+if (WITH_GLOG)
+	message(STATUS "Get Glog from ${GLOG_ROOT_DIR}")
+	list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+	find_package(Glog 
+				REQUIRED
+				PATHS "${GLOG_ROOT_DIR}/lib/cmake/glog"
+				NO_DEFAULT_PATH)
+	
+	message(STATUS "Gflags include dir : ${GLOG_LIBRARIES}")
+	message(STATUS "Gflags include dir : ${GLOG_LIBRARY}")
+	set_target_properties(glog::glog PROPERTIES
+	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+	  )
+	target_include_directories(pydata PRIVATE ${GLOG_INCLUDE_DIR})
+	target_link_libraries(pydata glog::glog)
+	set(USE_GLOG "-DUSE_GLOG")
+	message(STATUS "GLOG IS INCLUDED")
+
+endif()
+
+
 target_compile_definitions(pydata PRIVATE "-DCV_VERSION_EPOCH=3" "-DUSE_BOOST_REGEX" "-DPYDATA_BUILD")
 
 target_link_libraries(pydata ${hipecore_LIBRARIES})

@@ -12,7 +12,8 @@ namespace http
 
 			http::HttpTask task(response, request);
 
-			task.runTask();
+			//task.runTask();
+			task.run_process();
 		};
 
 		server.resource["^/$"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {

@@ -11,6 +11,7 @@
 
 #include <core/Logger.h>
 #include "corefilter/tools/net/WebsocketServer.h"
+
 #ifdef LINUX
 #include <sys/utsname.h>
 #endif
@@ -22,7 +23,18 @@ namespace net
 		{
 			WebsocketServer* _websocket;
 			std::shared_ptr<void> _clientConnector;
+			std::mutex guard;
 		public:
+			void regiterSink()
+			{
+				std::lock_guard<std::mutex> lock(guard);
+				google::AddLogSink(this);
+			}
+			void unregiterSink()
+			{
+				std::lock_guard<std::mutex> lock(guard);
+				google::RemoveLogSink(this);
+			}
 
 			HipeGlogWebSink(WebsocketServer* websocket, std::shared_ptr<void> clientConnector) :
 				_websocket(websocket),
@@ -77,9 +89,10 @@ namespace net
 			          const char* message, size_t message_len)
 			{
 				static std::atomic<bool> recursive(false);
-
+				std::lock_guard<std::mutex> lock(guard);
 				if (!recursive.exchange(true))
 				{
+					
 					std::stringstream build;
 					std::string hostname;
 					GetHostName(&hostname);
@@ -106,6 +119,7 @@ namespace net
 						message, message_len);
 					std::string message_str = build.str();
 					//websocket.stringStack.push(build.str()); ???
+					
 					try
 					{
 						_websocket->send(_clientConnector, message_str, websocketpp::frame::opcode::TEXT);
@@ -127,25 +141,15 @@ namespace net
 
 			SET_NAMESPACE("Net/Log")
 
-		REGISTER(ForwardLogToWeb, ()), _connexData(data::INOUT)
+			REGISTER(ForwardLogToWeb, ()), _connexData(data::INOUT)
 			{
 				isActive = false;
 				port = 9134;
 			}
 
-			void detach_logger();
+			void registerClient(std::shared_ptr<void> i_clientConnector);
 
-			std::shared_ptr<void> registeredClient()
-			{
-				return clientConnector;
-			}
-
-			void attach_logger();
-
-			void registerClient(std::shared_ptr<void> i_clientConnector)
-			{
-				clientConnector = i_clientConnector;
-			}
+			void unRegisterClient(std::shared_ptr<void> i_clientConnector);
 
 			REGISTER_P(int, port);
 
@@ -154,13 +158,14 @@ namespace net
 			std::atomic<bool> isActive;
 			std::shared_ptr<std::thread> server;
 			WebsocketServer* websocket;
-			std::shared_ptr<void> clientConnector;
-			std::unique_ptr<HipeGlogWebSink> tcpSink;
+			
+			std::map<std::shared_ptr<void>, HipeGlogWebSink* > tcpSink;
 
 			void initServerConnection();
 
 			HipeStatus process();
 
+			void unRegisterAllClient();
 			virtual void dispose();
 
 			virtual void onLoad(void* data);

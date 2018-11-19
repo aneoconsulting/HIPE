@@ -12,7 +12,64 @@
 #include <iostream>
 #include "TupleConverter.h"
 #include "pyShapeData.h"
+#include <boost/circular_buffer.hpp>
+#include <boost/function.hpp>
 
+#include <glog/logging.h>
+
+namespace py = ::boost::python;
+
+namespace embedded_python {
+
+    enum direction_type {
+        py_stdin,
+        py_stdout,
+        py_stderr
+    };
+
+    template<direction_type>
+    class py_redirector
+    {
+    public:
+        py_redirector()
+        { }
+
+        py_redirector(boost::function<void (const std::string&)> f)
+            : m_write_fn(f)
+        { }
+
+        void write(const std::string& text) {
+
+			if (text[0] == '\n') return;
+
+            LOG(INFO) << "Python (stdout) : " << text << std::endl;
+            if (m_write_fn)
+                m_write_fn(text);
+        }
+
+    public:
+        boost::function<void (const std::string&)> m_write_fn;
+    };
+
+    typedef py_redirector<py_stdout>	stdout_redirector;
+    typedef py_redirector<py_stderr>	stderr_redirector;
+
+
+    static std::auto_ptr<stdout_redirector> make_stdout_redirector() {
+
+        std::auto_ptr<stdout_redirector> ptr(new stdout_redirector);
+
+        return ptr;
+    }
+
+    static std::auto_ptr<stderr_redirector> make_stderr_redirector() {
+
+        std::auto_ptr<stderr_redirector> ptr(new stderr_redirector);
+
+        return ptr;
+    }
+
+}
 
 
 namespace pbcvt {
@@ -161,30 +218,48 @@ std::tuple<int, int, int, int> tupRect(std::tuple<int, int, int, int> t){return 
 std::tuple<int, int, int, int, int, int, int, int>	tupQuad(std::tuple<int, int, int, int, int, int, int, int> t){return t;}
 
 
-	BOOST_PYTHON_MODULE(pydata)
-	{
-		pbcvt::init_ar();
-		export_cpptuple_conv();
+BOOST_PYTHON_MODULE(pydata)
+{
+	pbcvt::init_ar();
+	export_cpptuple_conv();
 
-		//initialize converters
-		to_python_converter<cv::Mat,
-			pbcvt::matToNDArrayBoostConverter>();
-		pbcvt::matFromNDArrayBoostConverter();
+	using namespace embedded_python;
+	using namespace py;
 
-		py::def("tupPoint2f", tupPoint2f);
-		py::def("tupPoint", tupPoint);
-		py::def("tupPoint", tupRect);
+	class_<stdout_redirector>("stdout",
+	                          "This class redirects python's standard output "
+	                          "to the console.",
+	                          init<>("initialize the redirector."))
+		.def("__init__", make_constructor(make_stdout_redirector), "initialize the redirector.")
+		.def("write", &stdout_redirector::write, "write sys.stdout redirection.");
 
-		def("dot", pbcvt::dot);
-		def("dot2", pbcvt::dot2);
+	class_<stderr_redirector>("stderr",
+	                          "This class redirects python's error output "
+	                          "to the console.",
+	                          init<>("initialize the redirector."))
 
-		boost::python::class_<pyImageData>("imageData")
-			.def("assign", &pyImageData::assign)
-			.def("set", &pyImageData::set)
-			.def_readwrite("img", &pyImageData::get)
-			.def("get", &pyImageData::get);
+		.def("__init__", make_constructor(make_stderr_redirector), "initialize the redirector.")
+		.def("write", &stderr_redirector::write, "write sys.stderr redirection.");
 
-		boost::python::class_<pyShapeData>("shapeData")
-    		.def("addRect", &pyShapeData::addRect)
-    		.def("addQuad", &pyShapeData::addQuad);
-	}
+	//initialize converters
+	to_python_converter<cv::Mat,
+	                    pbcvt::matToNDArrayBoostConverter>();
+	pbcvt::matFromNDArrayBoostConverter();
+
+	py::def("tupPoint2f", tupPoint2f);
+	py::def("tupPoint", tupPoint);
+	py::def("tupPoint", tupRect);
+
+	def("dot", pbcvt::dot);
+	def("dot2", pbcvt::dot2);
+
+	boost::python::class_<pyImageData>("imageData")
+		.def("assign", &pyImageData::assign)
+		.def("set", &pyImageData::set)
+		.def_readwrite("img", &pyImageData::get)
+		.def("get", &pyImageData::get);
+
+	boost::python::class_<pyShapeData>("shapeData")
+		.def("addRect", &pyShapeData::addRect)
+		.def("addQuad", &pyShapeData::addQuad);
+}

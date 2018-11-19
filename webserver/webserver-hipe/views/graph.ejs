@@ -109,39 +109,39 @@
         </div>
         <div id="menu-toolbar" class="col-lg-12">
             <a class="ltooltip" href="javascript:void(0);" onclick="addModelModal();">
-                <img src="../images/shortcut/new.png" id="imgMenu" width="32px" height="32px" />
+                <img  class="shortCutImg" src="../images/shortcut/new.png" id="imgMenu"/>
                 <span class="tooltiptext">Create new graph</span>
             </a>
             <a class="ltooltip" href="/models">
-                <img src="../images/shortcut/open.png" id="imgMenu" width="32px" height="32px" />
+                <img  class="shortCutImg" src="../images/shortcut/open.png" id="imgMenu"/>
                 <span class="tooltiptext">Open graph</span>
             </a>
             <a class="ltooltip" href="javascript:void(0)" onclick="saveModel(this);">
-                <img src="../images/shortcut/save.png" id="imgMenu" width="32px" height="32px" />
+                <img  class="shortCutImg" src="../images/shortcut/save.png" id="imgMenu"/>
                 <span class="tooltiptext">Save graph</span>
             </a>
             <a class="ltooltip" href="javascript:void(0);" onclick="sendDataToServer();">
-                <img src="../images/shortcut/play.png" id="imgMenu" width="32px" height="32px" />
+                <img class="shortCutImg" src="../images/shortcut/play.png" id="imgMenu"/>
                 <span class="tooltiptext">Execute graph (Ctrl+e)</span>
             </a>
             <a class="ltooltip" href="javascript:void(0)" onclick="sendCommand('Kill');">
-                <img src="../images/shortcut/stop.png" id="imgMenu" width="32px" height="32px" />
+                <img  class="shortCutImg" src="../images/shortcut/stop.png" id="imgMenu"/>
                 <span class="tooltiptext">Stop execution</span>
             </a>
             <a class="ltooltip" href="javascript:void(0)" onclick="sendCommand('Resend');">
-                <img src="../images/shortcut/refresh.png" id="imgMenu" width="32px" height="32px" />
+                <img  class="shortCutImg" src="../images/shortcut/refresh.png" id="imgMenu"/>
                 <span class="tooltiptext">Udapte execution</span>
             </a>
             <a class="ltooltip" onclick="showMonitor();">
-                <img src="../images/shortcut/monitor.png" id="imgMenu" width="32px" height="32px" />
+                <img  class="shortCutImg" src="../images/shortcut/monitor.png" id="imgMenu"/>
                 <span class="tooltiptext">Show webrtc video</span>
             </a>
             <a class="ltooltip" onclick="showLog();">
-                <img src="../images/shortcut/log.png" id="imgMenu" width="32px" height="32px" />
+                <img  class="shortCutImg" src="../images/shortcut/log.png" id="imgMenu"/>
                 <span class="tooltiptext">Show log execution</span>
             </a>
             <a class="ltooltip" onclick="showJson();">
-                <img src="../images/shortcut/json.png" id="imgMenu" width="32px" height="32px" />
+                <img  class="shortCutImg" src="../images/shortcut/json.png" id="imgMenu"/>
                 <span class="tooltiptext">Generate Json graph</span>
             </a>
         </div>
@@ -176,7 +176,7 @@
                         </div>
                         <div class="col-lg-10">
                             <div class="row">
-                                <div class="col-lg-12" style="padding: 0px;">
+                                <div id="bodyBoard" class="col-lg-12" style="padding: 0px;" tabindex="100">
                                     <div class="nodeToolbar">
                                         <a id="trashBtn"><img src="../images/shortcut/trash.png" id="imgMenu" width="32px" height="32px" /></a>
                                     </div>
@@ -184,7 +184,7 @@
                                         <div class="panel-heading">
                                             Board Panel
                                         </div>
-                                        <div class="panel-body" id="board">
+                                        <div class="panel-body" id="board" >
                                         </div>
 
 
@@ -206,7 +206,7 @@
                                             Erreur serveur
 
                                             <div style="float: right">
-                                                <a href="#" onclick="$('#error_server_container').css('display', 'none')">
+                                                <a href="#" onclick="$('#error_server_container').css('display', 'none');$('#bodyBoard').focus();">
                                                     <span class="glyphicon glyphicon-remove"></span>
                                                 </a>
                                             </div>
@@ -231,9 +231,9 @@
 
                                 </div>
 
-                                <div id="Monitor" class="col-lg-6" style="position: absolute; top:0px; right: 0px; z-index:10">
-                                    <button type="button" class="close" aria-label="Close" style="position: absolute; right: 15px;color: white; opacity: 0.9; line-height: 40px;"
-                                            onclick="$('#Monitor').css('display', 'none');">
+                                <div id="Monitor" class="col-lg-6" style="position: absolute; top:0px; z-index:10">
+                                    <button type="button" class="close" aria-label="Close" style="position: absolute; right: 15px; color: white; opacity: 0.9; line-height: 40px;"
+                                            onclick="$('#Monitor').css('display', 'none');$('#bodyBoard').focus();">
                                         <span aria-hidden="true" style="font-size: 32px; opacity: 1; color: white; overflow: hidden;">&times;</span>
                                     </button>
                                     <div class="panel panel-primary monitorpanel">
@@ -242,14 +242,14 @@
                                         </div>
 
                                         <div class="panel-body" id="Monitor-area">
-                                            <div id="sourceVideos" class="col-lg-6 videosDiv"></div>
-                                            <div id="remoteVideos" class="col-lg-6 videosDiv"></div>
+                                            <div id="sourceVideos" class="col-lg-6 videosDiv"><h3>Video sources</h3></div>
+                                            <div id="remoteVideos" class="col-lg-6 videosDiv"><h3>Video received</h3></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div id="Log" class="col-lg-6" style="position: absolute; top:0px; right: 0px; z-index:10">
                                     <button type="button" class="close" aria-label="Close" style="position: absolute; right: 15px;color: white; opacity: 0.9; line-height: 40px;"
-                                            onclick="$('#Log').css('visibility', 'hidden');">
+                                            onclick="$('#Log').css('visibility', 'hidden');$('#bodyBoard').focus();">
                                         <span aria-hidden="true" style="font-size: 32px; opacity: 1; color: white; overflow: hidden;">&times;</span>
                                     </button>
                                     <div class="panel panel-primary Logpanel">
@@ -266,7 +266,7 @@
                                     <div class="panel panel-primary Editorpanel">
                                         <div class="panel-heading" id="Editor-header">
                                             <button type="button" class="close" aria-label="Close" style="position: absolute; right: 15px;color: white; opacity: 0.9; line-height: 20px;"
-                                                    onclick="$('#Editor').css('visibility', 'hidden');">
+                                                    onclick="closeEditor();">
                                                 <span aria-hidden="true" style="font-size: 32px; opacity: 1; color: white; overflow: hidden;">&times;</span>
                                             </button>
                                             Editor Panel
@@ -342,7 +342,7 @@
                 </div>
                 <div id="Json" class="col-lg-8">
                     <button type="button" class="close" aria-label="Close" style="position: absolute; right: 15px;color: white; opacity: 0.9; line-height: 40px;"
-                            onclick="$('#Json').css('visibility', 'hidden');">
+                            onclick="$('#Json').css('visibility', 'hidden');$('#bodyBoard').focus();">
                         <span aria-hidden="true" style="font-size: 32px; opacity: 1; color: white; overflow: hidden;">&times;</span>
                     </button>
                     <div class="panel panel-default boardpanel Jsonpanel">
