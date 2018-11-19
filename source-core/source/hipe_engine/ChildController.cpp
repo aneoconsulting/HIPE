@@ -19,7 +19,7 @@ void ChildProcess::startProcess(std::function<json::JsonTree(json::JsonTree tree
 				//Get request first
 				
 				std::stringstream buffer;
-				buffer << shRequest->c_str();
+				buffer << shRequest;
 			
 				if (buffer.str().empty())
 				{
@@ -29,16 +29,15 @@ void ChildProcess::startProcess(std::function<json::JsonTree(json::JsonTree tree
 
 					continue;
 				}
-				std::string request = shRequest->c_str();
-				shRequest->assign("");
-
+				std::string request = buffer.str();
+				//MyShmString &test = *shRequest;
+				MyShmString test(CharAllocator);
 				//Set string to empty to signal the parent that the request has been catch
 				json::JsonTree treeRequest;
 				treeRequest.read_json(buffer);
 
 				json::JsonTree treeResponse = tasker(treeRequest);
 				int errCode = treeResponse.get<int>("errCode");
-				boost::property_tree::ptree* ptree = treeResponse.getPtree().get();
 				
 
 				buffer.str("");

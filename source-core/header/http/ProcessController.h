@@ -23,6 +23,8 @@ namespace boost {
 #include <boost/interprocess/shared_memory_object.hpp>
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <boost/interprocess/containers/map.hpp>
+#include <boost/interprocess/containers/string.hpp>
+#include <boost/interprocess/containers/pair.hpp>
 #include <boost/interprocess/allocators/allocator.hpp>
 #include <boost/process.hpp>
 #include "core/HipeException.h"
@@ -33,7 +35,7 @@ class ProcessController
 public:
 	typedef boost::interprocess::allocator<char, boost::interprocess::managed_shared_memory::segment_manager>
 	CharAllocator;
-	typedef std::basic_string<char, std::char_traits<char>, CharAllocator> MyShmString;
+	typedef boost::interprocess::basic_string<char, std::char_traits<char>, CharAllocator> MyShmString;
 	typedef boost::interprocess::allocator<MyShmString, boost::interprocess::managed_shared_memory::segment_manager>
 	StringAllocator;
 
@@ -44,7 +46,7 @@ public:
 	typedef boost::interprocess::allocator<ValueType, boost::interprocess::managed_shared_memory::segment_manager>
 	ShmemAllocator;
 
-	typedef std::map<KeyType, MappedType, std::less<MyShmString>, ShmemAllocator> MyMap;
+	typedef boost::interprocess::map<KeyType, MappedType, std::less<MyShmString>, ShmemAllocator> MyMap;
 
 	//Initialize the shared memory STL-compatible allocator
 

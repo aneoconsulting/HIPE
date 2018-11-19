@@ -94,6 +94,7 @@ std::string ProcessController::executeOrUpdateAttachedProcess(std::string reques
 	int retry = 10000;
 	mtx->lock();
 	//Prepare to send request data
+
 	shRequest->assign(request.c_str());
 	shResponse->assign("");
 
@@ -169,7 +170,7 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		retry--;
 	}
-	if (!proc->running() && !shRequest->empty() || retry <= 0)
+	if ((!proc->running() && !shRequest->empty()) || retry <= 0)
 	{
 		kill_process();
 		throw HipeException("Something goes wrong in the child process");
@@ -186,7 +187,9 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 	std::string response = "";
 	try
 	{
-		response = shResponse->c_str();
+		std::stringstream buf;
+		buf << shResponse;
+		response = buf.str();
 
 		json::JsonTree treeResponse;
 		std::stringstream buffer;

@@ -83,6 +83,7 @@ if (WIN32)
   target_link_libraries(hipe_server BoringSSL BoringCrypto)
 else()
   target_link_libraries(hipe_server ssl crypto)
+  target_link_libraries(hipe_server -lrt)
 endif()
 
 if (UNIX)
