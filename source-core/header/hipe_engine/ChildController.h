@@ -68,7 +68,6 @@ public:
 		if (segment != nullptr)
 		{
 			mtx->unlock(); 
-			delete mymap;
 			delete charallocator;
 			delete alloc_inst;
 			delete mtx;

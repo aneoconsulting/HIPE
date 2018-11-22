@@ -92,7 +92,14 @@ net::log::ForwardLogToWeb * startLogService()
 	logForward->setLevel(0);
 	int port = 9134;
 	logForward->set_port(port);
-	logForward->onLoad(nullptr);
+	try
+	{
+		logForward->onLoad(nullptr);
+	}
+	catch (const websocketpp::exception &e)
+	{//by safety, I just go with `const std::exception` so that it grabs any potential exceptions out there.
+		LOG(WARNING) << "hipe_server : Exception in method foo() because: " << e.what() /* log the cause of the exception */ << std::endl;
+	}
 	
 	
 
@@ -189,7 +196,9 @@ int main(int argc, char* argv[]) {
 	LOG(INFO) << "Start Orchestrator " << std::endl;
 	orchestrator::OrchestratorFactory::start_orchestrator();
 
+#ifndef UNIX
 	getProcessController();
+#endif
 	std::thread thread;
 	std::thread thread_https;
 	http::start_http_server(config.configuration.port, server, thread);

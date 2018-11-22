@@ -103,6 +103,7 @@ void net::log::ForwardLogToWeb::onLoad(void* data)
 		// Start the server accept loop
 		websocket->start_accept();
 		websocket->run();
+		LOG(INFO) << "Stop to forward log now" << std::endl;
 		unRegisterAllClient();
 		std::error_code er;
 		websocket->stop_listening(er);

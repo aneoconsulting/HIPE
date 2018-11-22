@@ -110,7 +110,14 @@ net::log::ForwardLogToWeb* startLogService()
 	logForward->setLevel(0);
 	int port = 9135; // it's the children
 	logForward->set_port(port);
-	logForward->onLoad(nullptr);
+	try
+	{
+		logForward->onLoad(nullptr);
+	}
+	catch (const websocketpp::exception &e)
+	{//by safety, I just go with `const std::exception` so that it grabs any potential exceptions out there.
+		LOG(WARNING) << "hipe_engine : Exception in method foo() because: " << e.what() /* log the cause of the exception */ << std::endl;
+	}
 
 
 	return logForward;
@@ -358,10 +365,13 @@ void startWebServerProcess(const hipe_engine::ConfigurationChild& config)
 	args.push_back("-p");
 	args.push_back("9090");
 
+	std::string bin_server = "hipe_server";
+#ifndef WIN32
+	bin_server += ".bin";
+#endif
 
-	boost::process::child proc(boost::process::search_path("hipe_server"), boost::process::args(args));
+	boost::process::spawn(boost::process::search_path(bin_server), boost::process::args(args));
 
-	proc.detach();
 	int retry = 10;
 	while (retry)
 	{

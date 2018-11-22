@@ -24,7 +24,9 @@ target_link_libraries(http json)
 target_link_libraries(http orchestrator)
 if (WIN32)
   target_link_libraries(http BoringSSL BoringCrypto)
+  
 else()
+  target_compile_definitions(http PUBLIC "-DUNIX" "-DLINUX")
   target_link_libraries(http ssl crypto)
 endif()
 

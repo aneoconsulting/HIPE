@@ -19,8 +19,8 @@ void ChildProcess::startProcess(std::function<json::JsonTree(json::JsonTree tree
 				//Get request first
 				
 				std::stringstream buffer;
-				buffer << shRequest;
-			
+				buffer << shRequest->c_str();
+				
 				if (buffer.str().empty())
 				{
 					mtx->unlock();
@@ -29,9 +29,9 @@ void ChildProcess::startProcess(std::function<json::JsonTree(json::JsonTree tree
 
 					continue;
 				}
-				std::string request = buffer.str();
-				//MyShmString &test = *shRequest;
-				MyShmString test(CharAllocator);
+				std::string request = shRequest->c_str();
+				shRequest->assign("");
+				
 				//Set string to empty to signal the parent that the request has been catch
 				json::JsonTree treeRequest;
 				treeRequest.read_json(buffer);

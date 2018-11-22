@@ -255,6 +255,11 @@ if(USE_DLIB)
 endif(USE_DLIB)
 
 if (WITH_WEBRTC)
+  find_package(BoringSSL 
+				REQUIRED
+				PATHS "${HIPE_EXTERNAL_DIR}/lib/cmake"
+				NO_DEFAULT_PATH)
+			  
   set(USE_WEBRTC "-DUSE_WEBRTC")
   if (WIN32)
 	set(WEBRTC_ROOT_DIR "${HIPE_EXTERNAL_DIR}/WebRTCServer" CACHE PATH "WEBRTC_ROOT_DIR" FORCE)
@@ -266,12 +271,12 @@ if (WITH_WEBRTC)
 				REQUIRED
 				PATHS "${WEBRTC_ROOT_DIR}/lib/cmake"
 				NO_DEFAULT_PATH)
-
+			  
 	#set_target_properties(WebRTCServer PROPERTIES
 	#	  MAP_IMPORTED_CONFIG_MINSIZEREL Release
 	#	  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)	
 
-	target_link_libraries(filter WebRTCServer)
+	target_link_libraries(filter -std=c++11 ssl crypto WebRTCServer)
 endif()
 
 # Configure Visual Studio to handle more options.

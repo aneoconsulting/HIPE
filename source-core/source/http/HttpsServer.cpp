@@ -11,9 +11,11 @@ namespace http
 		server.resource["^/json$"]["POST"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {
 
 			http::HttpTask task(response, request);
-
-			//task.runTask();
+#if UNIX // For now running on thread only
+			task.runTask();
+#else
 			task.run_process();
+#endif
 		};
 
 		server.resource["^/$"]["GET"] = [](std::shared_ptr<http::RawResponse> response, std::shared_ptr<http::RawRequest> request) {

@@ -43,8 +43,11 @@ ProcessController::ProcessController()
 	args.push_back("-m");
 	args.push_back(corefilter::getLocalEnv().getValue("modulePath"));
 
-
-	proc = new boost::process::child(boost::process::search_path("hipe_engine"), boost::process::args(args));
+	std::string bin_child = "hipe_engine";
+#ifndef WIN32
+	bin_child += ".bin";
+#endif
+	proc = new boost::process::child(boost::process::search_path(bin_child), boost::process::args(args));
 }
 
 ProcessController::~ProcessController()
@@ -58,6 +61,9 @@ ProcessController::~ProcessController()
 		delete proc;
 		proc = nullptr;
 	}
+	delete charallocator;
+	delete alloc_inst;
+	delete segment;
 }
 
 void ProcessController::tranfertLocalEnv()
@@ -157,8 +163,12 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 		args.push_back("-m");
 		args.push_back(corefilter::getLocalEnv().getValue("modulePath"));
 
-
-		proc = new boost::process::child(boost::process::search_path("hipe_engine"), boost::process::args(args));
+		std::string bin_child = "hipe_engine";
+#ifndef WIN32
+		bin_child += ".bin";
+#endif
+		
+		proc = new boost::process::child(boost::process::search_path(bin_child), boost::process::args(args));
 	}
 
 	mtx->unlock();
@@ -187,9 +197,7 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 	std::string response = "";
 	try
 	{
-		std::stringstream buf;
-		buf << shResponse;
-		response = buf.str();
+		response = shResponse->c_str();
 
 		json::JsonTree treeResponse;
 		std::stringstream buffer;
@@ -223,8 +231,12 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 					args.push_back("-m");
 					args.push_back(corefilter::getLocalEnv().getValue("modulePath"));
 
+					std::string bin_child = "hipe_engine";
+#ifndef WIN32
+					bin_child += ".bin";
+#endif
 
-					proc = new boost::process::child(boost::process::search_path("hipe_engine"),
+					proc = new boost::process::child(boost::process::search_path(bin_child),
 					                                 boost::process::args(args));
 				}
 			});
