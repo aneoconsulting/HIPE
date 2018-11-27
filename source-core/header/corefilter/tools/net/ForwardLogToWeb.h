@@ -144,7 +144,7 @@ namespace net
 			REGISTER(ForwardLogToWeb, ()), _connexData(data::INOUT)
 			{
 				isActive = false;
-				port = 9134;
+				port = 9136;
 			}
 
 			void registerClient(std::shared_ptr<void> i_clientConnector);

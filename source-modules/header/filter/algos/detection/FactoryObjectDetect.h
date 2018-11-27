@@ -33,24 +33,19 @@ namespace filter
 				Darknet(std::string configurationName, std::string weightsModels)
 				{
 					net = cv::dnn::readNetFromDarknet(configurationName, weightsModels);
+					net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+					net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 				}
 			};
 
-			class bboxes_t
-			{
-			public:
-				std::vector<cv::Rect> rectangles;
-				std::vector<std::string> names;
-				cv::Mat refFrame;
-
-			};
+			
 
 			std::shared_ptr<Darknet> detect;
 			std::vector<std::string> names;
 
 
 			int count_frame;
-			bboxes_t saved_boxes;
+			data::ShapeData saved_boxes;
 			boost::thread *thr_server;
 			std::atomic<bool> isStart;		//<! [TODO] Is the thread running?
 			core::queue::ConcurrentQueue<data::ImageData> imagesStack;	//<! [TODO] The queue containing the frames to process.
@@ -139,7 +134,8 @@ namespace filter
 			}
 #endif //OLD_YOLO
 
-			bboxes_t getBoxes(cv::Mat frame, cv::Mat detectionMat);
+			data::ShapeData getBoxes(cv::Mat frame, const std::vector<cv::Mat> & outs);
+
 			data::ShapeData detectBoxes(cv::Mat image);
 			HipeStatus process() override;
 			virtual void dispose()

@@ -117,6 +117,17 @@ data::ImageData filter::algos::OverlayFilter::extractSourceImageData(data::Data&
 	}
 }
 
+
+size_t filter::algos::OverlayFilter::computeSizeOfAllText(std::string text)
+{
+	size_t size = 0;
+	int baseline = 0;
+
+	cv::Size text_size = cv::getTextSize(text, cv::HersheyFonts::FONT_HERSHEY_PLAIN, fontScale, thickness, &baseline);
+	size += text_size.height + 10;
+	return size;
+}
+
 void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeData& shape)
 {
 	const cv::Scalar pointsColor(0, 255, 255);
@@ -135,7 +146,7 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 	{
 		cv::Point2f center(circle[0], circle[1]);
 		const float radius = circle[2];
-		cv::circle(image, center, radius, circlesColor, 2);
+		cv::circle(image, center, radius, circlesColor, thickness);
 	}
 
 	unsigned int nbColor = shape.ColorsArray_const().size();
@@ -148,9 +159,9 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 		if ( nbColor != 0)
 			color = shape.ColorsArray_const()[k % nbColor];
 		else
-			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);;
+			color = cv::Scalar(255, 255, 255);
 
-		cv::rectangle(image, rect, color, 3);
+		cv::rectangle(image, rect, color, thickness);
 		k++;
 	}
 
@@ -159,10 +170,10 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 	{
 		for (size_t i = 0; i < quad.size() - 1; ++i)
 		{
-			cv::line(image, quad[i], quad[i + 1], quadsColor, 2);
+			cv::line(image, quad[i], quad[i + 1], quadsColor, thickness);
 		}
 
-		cv::line(image, quad.front(), quad.back(), quadsColor, 2);
+		cv::line(image, quad.front(), quad.back(), quadsColor, thickness);
 	}
 
 	// Draw freeShapes
@@ -175,25 +186,37 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 		if ( nbColor != 0)
 			color = shape.ColorsArray_const()[i % nbColor];
 		else
-			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);;
+			color = cv::Scalar(0, 147, 245); //ANEO COLOR
 
-		cv::polylines(image, freeShape, false, color, 2, 16);
+		cv::polylines(image, freeShape, false, color, thickness, 16);
 	}
 
 	unsigned int nbRect = shape.RectsArray_const().size();
+	
 	for (int i = 0; i < shape.IdsArray_const().size(); i++)
 	{
 		std::string text = shape.IdsArray_const()[i];
-		cv::Rect rect = shape.RectsArray_const()[i % nbRect];
+
+		cv::Rect rect;
+		if (shape.RectsArray_const().size() != 0)
+			rect = shape.RectsArray_const()[i % nbRect];
+		else
+			rect = cv::Rect(0,0, 1, 1);
 
 		cv::Scalar color;
 
 		if ( nbColor != 0)
 			color = shape.ColorsArray_const()[i % nbColor];
 		else
-			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);
+			color = cv::Scalar(255, 255, 255);
 
-		cv::putText(image, text, cv::Point(rect.x, rect.y >= 3 ? rect.y - 3 : rect.y),
-		            cv::HersheyFonts::FONT_HERSHEY_PLAIN, 2, color, 2);
+		unsigned int height_text = static_cast<unsigned int>(computeSizeOfAllText(text));
+
+		if (rect.y < height_text)
+			cv::putText(image, text, cv::Point(rect.x, height_text + 10),
+		            cv::HersheyFonts::FONT_HERSHEY_PLAIN, fontScale, color, thickness);
+		else
+			cv::putText(image, text, cv::Point(rect.x, rect.y >= 3 ? rect.y - 3 : rect.y),
+		            cv::HersheyFonts::FONT_HERSHEY_PLAIN, fontScale, color, thickness);
 	}
 }

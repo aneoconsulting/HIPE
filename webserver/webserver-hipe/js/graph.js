@@ -706,7 +706,7 @@ $(function () {
                                 }
 
                                 $(ui.helper).css(style);
-                            },
+                            }
                         });
                     });
                 });
@@ -768,15 +768,12 @@ $(function () {
     var firstFullRendering = true;
     cy.on('render', function (e) {
         clearTimeout(wto);
-        if (firstFullRendering) {
-            cy.center();
-        }
-        console.log('rendering');
+        
         // Notice the layoutstop event with the layout name.
         wto = setTimeout(function () {
             if (firstFullRendering) {
                 console.log('First full rendering');
-                //cy.fit();
+                cy.fit();
                 cy.center();
                 firstFullRendering = false;
             }
@@ -1199,7 +1196,7 @@ function displayOptions(selector) {
 function saveEdit(selector) {
     Object.keys(nodes[selector].data).forEach(function (key) {
         var isExtra = Object.keys(filtersTypes[nodes[selector].data.filter]).indexOf(key);
-        if (isExtra == -1 && key != 'filter' && key != 'name' && key != 'id' && key != 'need') {
+        if (isExtra == -1 && key != 'filter' && key != 'name' && key != 'id' && key != 'need' && key != 'code_impl') {
             delete nodes[selector].data[key];
         }
     });
@@ -1207,16 +1204,18 @@ function saveEdit(selector) {
     $("#options :input").each(function () {
         var input = $(this)[0];
         var key = input.id;
-
+       
         var extraRegexIndex = /^index_/;
         var extraRegexValue = /^value_/;
+        var extraRegexCodeImpl = /code_impl/;
         var isIndexExtra = extraRegexIndex.test(key);
         var isValueExtra = extraRegexValue.test(key);
+        var isCodeImpl = extraRegexCodeImpl.test(key);
 
-        if (key != "parent" && !isIndexExtra && !isValueExtra) {
+        if (key !== "parent" && !isIndexExtra && !isValueExtra && !isCodeImpl) {
             key = key.substring(key.indexOf("attr_") + 5);
 
-            if (key == "name") {
+            if (key === "name") {
                 var node = cy.nodes("[id='" + nodes[selector].data.id + "']");
                 node.data().name = input.value;
             }

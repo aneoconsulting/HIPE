@@ -52,9 +52,13 @@ int orchestrator::image::DefaultScheduler::setMatrixLayer(filter::Model* filter,
 	if (std::find(matrixLayerNode[filter->getLevel()].begin(), matrixLayerNode[filter->getLevel()].end(), filter)
 		!= matrixLayerNode[filter->getLevel()].end())
 		return 0;
-
-	matrixLayerNode[filter->getLevel()].push_back(filter);
-
+	if (filter->getConstructorName() == "PerfTime")
+	{
+		matrixLayerNode[filter->getLevel()].insert(matrixLayerNode[filter->getLevel()].begin(), filter);
+	}
+	else {
+		matrixLayerNode[filter->getLevel()].push_back(filter);
+	}
 	for (auto& children : filter->getChildrens())
 	{
 		//matrixLayerNode[children.second->getLevel()].push_back(filter);

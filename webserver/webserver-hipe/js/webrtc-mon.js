@@ -157,8 +157,10 @@ function gotDevices(deviceInfos) {
 
 function GetConnectWebRTCServer(videoObject) {
     var selfView = document.getElementById(videoObject.videoId);
+    var regex = /\bhttps?:\/\/(\S+):[0-9]+/gi;
 
-    videoObject.socketToSend = new WebSocket('wss://' + window.location.hostname + ":" + videoObject.port);
+    var matches = regex.exec(sessionStorage.getItem('srvUrl'));
+    videoObject.socketToSend = new WebSocket('wss://' + matches[1] + ":" + videoObject.port);
     videoObject.socketToSend.onopen = function() {
         console.log('socketToSend open');
         videoObject.pcToSend = new RTCPeerConnection({
@@ -267,9 +269,10 @@ function swapDiv(event, elem) {
 
 function GetConnectWebRTCSender(videoObject) {
     var remoteView = document.getElementById(videoObject.videoId);
+    var regex = /\bhttps?:\/\/(\S+):[0-9]+/gi;
 
-
-    videoObject.socketToReceive = new WebSocket('wss://' + window.location.hostname + ":" + videoObject.port);
+    var matches = regex.exec(sessionStorage.getItem('srvUrl'));
+    videoObject.socketToReceive = new WebSocket('wss://' + matches[1] + ":" + videoObject.port);
     videoObject.socketToReceive.onopen = function() {
         console.log('socketToReceive open');
         videoObject.pcToReceive = new RTCPeerConnection({

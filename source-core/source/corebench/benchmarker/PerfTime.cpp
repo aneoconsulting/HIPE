@@ -8,17 +8,17 @@
 
 HipeStatus corefilter::tools::PerfTime::process()
 {
-	core::HipeTimer ti;
+	core::HipeTimer ti_start;
 	core::HipeTimer ti_internal;
-	ti.start();
+	ti_start.start();
 	ti_internal.start();
 
-	core::HipeTimer ti_end;
+	
 	const std::string name = getName();
 
 	if (name.find("__end_timer___") != std::string::npos)
 	{
-		data::PerfTimeData data_timer(ti);
+		data::PerfTimeData data_timer(ti_start);
 		bool found = false;
 		//Ignore performance when Data is empty because there is no processing
 		if (_connexData.empty())
@@ -37,29 +37,30 @@ HipeStatus corefilter::tools::PerfTime::process()
 			}
 		}
 		if (!found) throw HipeException("PerfTime EndTimer Object has no PerfData in input. Can't stop the timer without a chrono");
-		ti = data_timer.getHipeTimer();
+		core::HipeTimer & ti_end = data_timer.getHipeTimer();
 		interval_sampling_ms = data_timer.getSampling();
 
 		if (interval_sampling_ms > 0.0 && count == 0)
 		{
 			
-			ti.stop();
+			data_timer.getHipeTimer().stop();
 			sampler.start();
 			count++;
 		
 			ti_internal.stop();
-			ti.timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
-			ti.timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
-			avg_elapse += ti.getElapseTimeInMili();
+			data_timer.getHipeTimer().timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
+			data_timer.getHipeTimer().timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
+			avg_elapse = 0;
+			avg_elapse += data_timer.getHipeTimer().getElapseTimeInMili();
 		}
 		else if (interval_sampling_ms > 0.0 && interval_sampling_ms < sampler.stop().getElapseTimeInMili())
 		{
 			ti_internal.stop();
-			ti.stop();
+			data_timer.getHipeTimer().stop();
 
-			ti.timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
-			ti.timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
-			avg_elapse += ti.getElapseTimeInMili();
+			data_timer.getHipeTimer().timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
+			data_timer.getHipeTimer().timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
+			avg_elapse += data_timer.getHipeTimer().getElapseTimeInMili();
 			size_t pos = name.find("__end_timer___");
 			std::string nodeToAnalysis = name;
 			nodeToAnalysis.resize(pos);
@@ -77,25 +78,25 @@ HipeStatus corefilter::tools::PerfTime::process()
 		else if (interval_sampling_ms < 0.0) // Real time timer sampling
 		{
 			ti_internal.stop();
-			ti.stop();
+			data_timer.getHipeTimer().stop();
 
-			ti.timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
-			ti.timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
+			data_timer.getHipeTimer().timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
+			data_timer.getHipeTimer().timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
 			size_t pos = name.find("__end_timer___");
 			std::string nodeToAnalysis = name;
 			nodeToAnalysis.resize(pos);
 			std::stringstream log;
-			log << nodeToAnalysis << " took : " << ti.getElapseTimeInMicro() << " us";
+			log << nodeToAnalysis << " took : " << data_timer.getHipeTimer().getElapseTimeInMicro() << " us";
 			LOG(INFO) << log.str();
 		}
 		else
 		{
 			ti_internal.stop();
-			ti.stop();
+			ti_start.stop();
 
-			ti.timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
-			ti.timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
-			avg_elapse += ti.getElapseTimeInMili();
+			ti_start.timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
+			ti_start.timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
+			avg_elapse += ti_start.getElapseTimeInMili();
 			count++;
 		}
 	}
@@ -109,10 +110,10 @@ HipeStatus corefilter::tools::PerfTime::process()
 			_connexData.pop();
 
 		ti_internal.stop();
-		ti.timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
-		ti.timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
+		ti_start.timeval_stop.tv_sec -= ti_internal.getElapse().tv_sec;
+		ti_start.timeval_stop.tv_usec -= ti_internal.getElapse().tv_usec;
 
-		data::PerfTimeData data(ti);
+		data::PerfTimeData data(ti_start);
 		data.setSampling(interval_sampling_ms);
 
 		PUSH_DATA(data);

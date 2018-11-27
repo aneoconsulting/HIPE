@@ -103,6 +103,10 @@ if(WIN32)
   
   set(BoringSSL_DIR "${HIPE_EXTERNAL_DIR}/boringssl" CACHE PATH "BOringSSL Directory" FORCE)
   list(APPEND CMAKE_PREFIX_PATH "${BoringSSL_DIR}")
+
+  set(ZLIB_ROOT "${HIPE_EXTERNAL_DIR}" CACHE PATH "Zlib Directory" FORCE)
+  list(APPEND CMAKE_PREFIX_PATH "${ZLIB_ROOT}")
+
   
 else(WIN32)
 #   set(Python27_DIR "${HIPE_EXTERNAL_DIR}/python27/usr"  CACHE PATH "PYTHON_LIBRARYDIR")

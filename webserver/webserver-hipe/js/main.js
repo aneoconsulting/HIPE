@@ -498,7 +498,7 @@ function insertText(cm, data) {
     cm.scrollIntoView({ line: cm.lineCount() - 1, char: 5 }, 200);
 }
 var remoteLog = {
-    port : 9135,
+    port : 9136,
     logAreaId: "logArea",
     socketToReceive: null
 }
@@ -530,8 +530,12 @@ function initBaseLogService() {
     var logArea = $('#logArea');
     var textBuffer = [];
 
+    var regex = /\bhttps?:\/\/(\S+):[0-9]+/gi;
+
+    var matches = regex.exec(sessionStorage.getItem('srvUrl'));
+
    
-    remoteLog.socketToReceive = new WebSocket('wss://' + window.location.hostname + ":" + remoteLog.port);
+    remoteLog.socketToReceive = new WebSocket('wss://' + matches[1] + ":" + remoteLog.port);
     remoteLog.socketToReceive.onopen = function() {
         console.log('remoteLog open');
                 
@@ -652,6 +656,18 @@ function initMonitor() {
     var videoObject = null;
     sourceVideos.html('');
     var htmlCode = "";
+    if (videoMap["sources"].length === 0) {
+        $('#sourceVideos').css("display", "none");
+    } else {
+        $('#sourceVideos').css("display", "block");
+    }
+    if (videoMap["remotes"].length === 0) {
+        $('#remoteVideos').css("display", "none");
+    } else {
+        $('#remoteVideos').css("display", "block");
+    }
+
+
     for (k = 0; k < videoMap["sources"].length; k++) {
         videoObject = videoMap["sources"][k];
         htmlCode += "<video id='" + videoObject.videoId + "' class='videoBox' autoplay controls></video>";

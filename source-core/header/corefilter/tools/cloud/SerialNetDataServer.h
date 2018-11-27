@@ -2,7 +2,11 @@
 #pragma once
 #pragma warning(push, 0) 
 #include <opencv2/core/mat.hpp>
+
 #include <atomic>
+#ifdef WIN32
+#define BOOST_ZLIB_BINARY zlib
+#endif
 #include <boost/asio.hpp>
 
 #include <boost/bind.hpp>
@@ -13,6 +17,8 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/iostreams/device/back_inserter.hpp>
 #include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/filtering_streambuf.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #pragma warning(pop) 
@@ -104,12 +110,17 @@ public:
 		std::string serial_str;
 		boost::iostreams::back_insert_device<std::string> inserter(serial_str);
 		boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
-		boost::archive::binary_oarchive oa(s);
 
+		{ // use scope to ensure archive and filtering stream buffer go out of scope before stream
+			boost::iostreams::filtering_streambuf<boost::iostreams::output> out;
+			out.push(boost::iostreams::zlib_compressor(boost::iostreams::zlib::best_speed));
+			out.push(s);
 
-		oa << mat;
+			boost::archive::binary_oarchive oa(out);
+			oa << mat;
 
-		s.flush();
+			s.flush();
+		}
 		outbound_data_ = serial_str;
 
 		// Format the header.
@@ -192,8 +203,23 @@ public:
 			// wrap buffer inside a stream and deserialize serial_str into obj
 			boost::iostreams::basic_array_source<char> device(inbound_data_.data(), inbound_data_.size());
 			boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s(device);
-			boost::archive::binary_iarchive ia(s);
-			ia >> mat;
+
+			 boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
+			 in.push(boost::iostreams::zlib_decompressor());
+			 in.push(s);
+			boost::archive::binary_iarchive ia(in);
+
+			try 
+			{
+				ia >> mat;
+			} 
+			catch (const boost::archive::archive_exception &e) 
+			{
+					if (e.code != boost::archive::archive_exception::input_stream_error) {
+						throw HipeException("Fail to decompress Matrix");
+					}
+			}
+			
 
 		}
 		catch (boost::system::system_error & ex)

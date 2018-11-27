@@ -38,7 +38,7 @@ HipeStatus algos::tools::FPSResolution::process()
 		if (data.getType() == data::IMGF)
 		{
 			data::ImageData & img = static_cast<data::ImageData &>(data);
-			buildFPSString << " (" << img.getMat().rows << "x" << img.getMat().cols << ")";
+			buildFPSString << " (" << img.getMat().cols << "x" << img.getMat().rows << ")";
 		}
 	}
 	int baseline = 0;

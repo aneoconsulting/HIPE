@@ -20,7 +20,6 @@ void ChildProcess::startProcess(std::function<json::JsonTree(json::JsonTree tree
 				
 				std::stringstream buffer;
 				buffer << shRequest->c_str();
-				
 				if (buffer.str().empty())
 				{
 					mtx->unlock();

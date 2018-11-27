@@ -2,18 +2,96 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 #include <filter/algos/detection/FactoryObjectDetect.h>
+#include <glog/logging.h>
 
 
 namespace filter
 {
 	namespace algos
 	{
-		static void showImage(const cv::Mat & image, std::string name, bool shouldDestroy, int waitTime)
+		static void showImage(const cv::Mat& image, std::string name, bool shouldDestroy, int waitTime)
 		{
 			cv::namedWindow(name);
 			cv::imshow(name, image);
-			if (waitTime >= 0)	cv::waitKey(waitTime);
-			if (shouldDestroy)	cv::destroyWindow(name);
+			if (waitTime >= 0) cv::waitKey(waitTime);
+			if (shouldDestroy) cv::destroyWindow(name);
+		}
+
+		//
+		//		// Draw the predicted bounding box
+		//void drawPred(int classId, float conf, int left, int top, int right, int bottom, cv::Mat& frame)
+		//{
+		//    //Draw a rectangle displaying the bounding box
+		//    cv::rectangle(frame, cv::Point(left, top), cv::Point(right, bottom), cv::Scalar(0, 0, 255));
+		//     
+		//    //Get the label for the class name and its confidence
+		//    std::string label = cv::format("%.2f", conf);
+		//    if (!classes.empty())
+		//    {
+		//        CV_Assert(classId < (int)classes.size());
+		//        label = classes[classId] + ":" + label;
+		//    }
+		//     
+		//    //Display the label at the top of the bounding box
+		//    int baseLine;
+		//	cv::Size labelSize = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
+		//    top = max(top, labelSize.height);
+		//    putText(frame, label, cv::Point(left, top), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255,255,255));
+		//}
+		// Remove the bounding boxes with low confidence using non-maxima suppression
+		data::ShapeData postprocess(cv::Mat& frame, const std::vector<cv::Mat>& outs, std::vector<std::string> classes,
+		                            float confThreshold, float nmsThreshold)
+		{
+			std::vector<int> classIds;
+			std::vector<float> confidences;
+			std::vector<cv::Rect> boxes;
+
+			for (size_t i = 0; i < outs.size(); ++i)
+			{
+				// Scan through all the bounding boxes output from the network and keep only the
+				// ones with high confidence scores. Assign the box's class label as the class
+				// with the highest score for the box.
+				float* data = (float*)outs[i].data;
+				for (int j = 0; j < outs[i].rows; ++j, data += outs[i].cols)
+				{
+					cv::Mat scores = outs[i].row(j).colRange(5, outs[i].cols);
+					cv::Point classIdPoint;
+					double confidence;
+					// Get the value and location of the maximum score
+					minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
+					if (confidence > confThreshold)
+					{
+						int centerX = (int)(data[0] * frame.cols);
+						int centerY = (int)(data[1] * frame.rows);
+						int width = (int)(data[2] * frame.cols);
+						int height = (int)(data[3] * frame.rows);
+						int left = centerX - width / 2;
+						int top = centerY - height / 2;
+
+						classIds.push_back(classIdPoint.x);
+						confidences.push_back((float)confidence);
+						boxes.push_back(cv::Rect(left, top, width, height));
+					}
+				}
+			}
+
+			// Perform non maximum suppression to eliminate redundant overlapping boxes with
+			// lower confidences
+			std::vector<int> indices;
+			data::ShapeData shape;
+			cv::dnn::NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
+			for (size_t i = 0; i < indices.size(); ++i)
+			{
+				int idx = indices[i];
+				cv::Rect box = boxes[idx];
+				//drawPred(classIds[idx], confidences[idx], box.x, box.y,
+				//         box.x + box.width, box.y + box.height, frame);
+
+				shape.RectsArray().push_back(box);
+				shape.IdsArray().push_back(classes[classIds[idx]]);
+			}
+
+			return shape;
 		}
 
 		void FactoryObjectDetect::startRecognition()
@@ -32,7 +110,7 @@ namespace filter
 					if (This->skip_frame == 0 || (This->count_frame % This->skip_frame) == 0)
 					{
 						cv::Mat imgMat = image.getMat();
-						
+
 
 						data::ShapeData bx = This->detectBoxes(imgMat);
 
@@ -41,46 +119,17 @@ namespace filter
 
 						This->shapes.push(bx);
 						This->count_frame = 0;
-						
 					}
 					This->imagesStack.clear();
-					
 				}
 			});
 		}
 
-		FactoryObjectDetect::bboxes_t FactoryObjectDetect::getBoxes(cv::Mat frame, cv::Mat detectionMat)
+		data::ShapeData FactoryObjectDetect::getBoxes(cv::Mat frame, const std::vector<cv::Mat> & outs)
 		{
-			bboxes_t result;
-			result.refFrame = frame;
-			for (int i = 0; i < detectionMat.rows; i++)
-			{
-				const int probability_index = 5;
-				const int probability_size = detectionMat.cols - probability_index;
-				float* prob_array_ptr = &detectionMat.at<float>(i, probability_index);
-
-				size_t objectClass = std::max_element(prob_array_ptr, prob_array_ptr + probability_size) - prob_array_ptr;
-				float confidence = detectionMat.at<float>(i, (int)objectClass + probability_index);
-
-				if (confidence > confidenceThreshold)
-				{
-					float x_center = detectionMat.at<float>(i, 0) * frame.cols;
-					float y_center = detectionMat.at<float>(i, 1) * frame.rows;
-					float width = detectionMat.at<float>(i, 2) * frame.cols;
-					float height = detectionMat.at<float>(i, 3) * frame.rows;
-					cv::Point p1(cvRound(x_center - width / 2), cvRound(y_center - height / 2));
-					cv::Point p2(cvRound(x_center + width / 2), cvRound(y_center + height / 2));
-					cv::Rect object(p1, p2);
-					cv::String className = (objectClass < names.size()) ? cv::String(names[objectClass]) : cv::String(cv::format("unknown(%d)", objectClass));
-					cv::String label = cv::format("%s: %.2f", className.c_str(), confidence);
-
-					result.rectangles.push_back(object);
-					result.names.push_back(label);
-				
-
-				}
-			}
-			return result;
+			data::ShapeData shapes = postprocess(frame, outs, names, confidenceThreshold, 0.4);
+			
+			return shapes;
 		}
 
 		static std::vector<std::string> get_labels(std::string filename)
@@ -101,9 +150,28 @@ namespace filter
 			return lines;
 		}
 
+		// Get the names of the output layers
+		std::vector<cv::String> getOutputsNames(const cv::dnn::Net& net)
+		{
+			static std::vector<cv::String> names;
+			if (names.empty())
+			{
+				//Get the indices of the output layers, i.e. the layers with unconnected outputs
+				std::vector<int> outLayers = net.getUnconnectedOutLayers();
+
+				//get the names of all the layers in the network
+				std::vector<cv::String> layersNames = net.getLayerNames();
+
+				// Get the names of the output layers in names
+				names.resize(outLayers.size());
+				for (size_t i = 0; i < outLayers.size(); ++i)
+					names[i] = layersNames[outLayers[i] - 1];
+			}
+			return names;
+		}
+
 		data::ShapeData FactoryObjectDetect::detectBoxes(cv::Mat image)
 		{
-			bboxes_t boxes;
 			if (!detect)
 			{
 				using namespace boost::filesystem;
@@ -112,9 +180,21 @@ namespace filter
 				{
 					throw HipeException("[Error] FactoryObjectDetect::process - No input data found.");
 				}
+				try
+				{
+					isFileExist(cfg_filename);
+					isFileExist(weight_filename);
+				}
+				catch (std::exception& e)
+				{
+					std::stringstream err;
+					err << "Cannot find file " << cfg_filename << " or " << weight_filename << std::endl;
+					err << "WorkingDirectory : " << GetCurrentWorkingDir();
 
-				isFileExist(cfg_filename);
-				isFileExist(weight_filename);
+					LOG(ERROR) << err.str();
+					throw HipeException(err.str());
+				}
+
 				//FIXME
 				Darknet* d = new Darknet(cfg_filename, weight_filename);
 				detect.reset(d);
@@ -135,26 +215,20 @@ namespace filter
 				cv::Mat inputBlob;
 				inputBlob = cv::dnn::blobFromImage(image, 1 / 255.F, cv::Size(416, 416), cv::Scalar(), true, false);
 				//Convert Mat to batch of images
-				detect->net.setInput(inputBlob, "data"); //set the network input
-														 //if (inputBlob.rows > 0 && inputBlob.cols > 0)
+				detect->net.setInput(inputBlob); //set the network input
+				//if (inputBlob.rows > 0 && inputBlob.cols > 0)
 				{
-					cv::Mat detectionMat = detect->net.forward("detection_out"); //compute output
-					boxes = getBoxes(image, detectionMat);
+					std::vector<cv::Mat> outs;
+
+					detect->net.forward(outs, getOutputsNames(detect->net)); //compute output
+					data::ShapeData boxes = getBoxes(image, outs);
 					saved_boxes = boxes;
 				}
-
-
-
 			}
 
 			data::ShapeData sd;
-			for (int i = 0; i < boxes.rectangles.size(); i++)
-			{
-				cv::Scalar color(24, 101, 243);
-				sd.add(boxes.rectangles[i], color, boxes.names[i]);
-				sd.add(image);
-			}
-			
+			saved_boxes.copyTo(sd);
+
 
 			return sd;
 		}
@@ -173,7 +247,7 @@ namespace filter
 				startRecognition();
 			}
 
-			bboxes_t boxes;
+			data::ShapeData boxes;
 
 			while (!_connexData.empty())
 			{
@@ -194,7 +268,8 @@ namespace filter
 			{
 				PUSH_DATA(data::ShapeData());
 			}
-			else {
+			else
+			{
 				count++;
 				if (skip_frame == 0 || count < 4 * skip_frame)
 				{
@@ -206,7 +281,6 @@ namespace filter
 					tosend = shape_data;
 					count = 0;
 				}
-					
 			}
 
 			return OK;

@@ -116,7 +116,7 @@ net::log::ForwardLogToWeb* startLogService()
 	}
 	catch (const websocketpp::exception &e)
 	{//by safety, I just go with `const std::exception` so that it grabs any potential exceptions out there.
-		LOG(WARNING) << "hipe_engine : Exception in method foo() because: " << e.what() /* log the cause of the exception */ << std::endl;
+		LOG(WARNING) << "hipe_engine : Exception in method onload() because: " << e.what() /* log the cause of the exception */ << std::endl;
 	}
 
 
@@ -175,6 +175,7 @@ json::JsonTree executeJson(json::JsonTree& treeRequest)
 			if (killCommandFound)
 			{
 				LOG(INFO) << "Exit is required. Restart a new process now!";
+				orchestrator::OrchestratorFactory::getInstance()->killall();
 				throw HipeException("Exit is required. Restart a new process now");
 			}
 			ltreeResponse.Add("errCode", "200");
@@ -345,7 +346,6 @@ void executeFromJsonFile(const string& json_request_file, int wait_ms)
 void executeFromSharedMemory(const string& shm_name)
 {
 	ChildProcess child;
-
 
 	child.startProcess([&](json::JsonTree treeRequest) -> json::JsonTree
 	{

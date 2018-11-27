@@ -252,9 +252,20 @@ namespace filter
 					res_process.RectsArray().push_back(rect);
 				}
 
+				//std::copy (b.begin(), b.end(), std::back_inserter(a));
 				for (std::vector<cv::Point2f> quad : data.quadrilatere())
 				{
 					res_process.QuadrilatereArray().push_back(quad);
+				}
+
+				for (cv::Scalar color : data.colors())
+				{
+					res_process.ColorsArray().push_back(color);
+				}
+
+				for (std::string id : data.ids())
+				{
+					res_process.IdsArray().push_back(id);
 				}
 
 				PUSH_DATA(res_process);

@@ -262,6 +262,16 @@ namespace filter
 					res_process.QuadrilatereArray().push_back(quad);
 				}
 
+				for (cv::Scalar color : data.colors())
+				{
+					res_process.ColorsArray().push_back(color);
+				}
+
+				for (std::string id : data.ids())
+				{
+					res_process.IdsArray().push_back(id);
+				}
+
 				PUSH_DATA(res_process);
 			}
 			else if (boost::python::extract<std::string>(object).check())

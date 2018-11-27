@@ -32,7 +32,9 @@ HipeStatus filter::algos::MergeDataShape::process()
 	}
 	else if (shapes.size() > 1)
 	{
-		data::ShapeData merger = shapes[0];
+		data::ShapeData merger;
+		shapes[0].copyTo(merger);
+
 		for (size_t i = 1; i < shapes.size(); i++)
 		{
 			//v1.insert(v1.end(), v2.begin(), v2.end());

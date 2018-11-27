@@ -208,12 +208,14 @@ namespace boost {
 void export_cpptuple_conv() {
     create_tuple_converter<float, float>();
     create_tuple_converter<int, int>();
+    create_tuple_converter<int, int, int>();
     create_tuple_converter<int, int, int, int>();
     create_tuple_converter<int, int, int, int, int, int, int, int>();
 }
 
 std::tuple<float, float> tupPoint2f(std::tuple<float, float> t){return t;}
-std::tuple<int, int> tupPoint(std::tuple<float, float> t){return t;}
+std::tuple<int, int> tupPoint(std::tuple<int, int> t){return t;}
+std::tuple<int, int, int> tupPoint3i(std::tuple<int, int, int> t){return t;}
 std::tuple<int, int, int, int> tupRect(std::tuple<int, int, int, int> t){return t;}
 std::tuple<int, int, int, int, int, int, int, int>	tupQuad(std::tuple<int, int, int, int, int, int, int, int> t){return t;}
 
@@ -248,6 +250,7 @@ BOOST_PYTHON_MODULE(pydata)
 
 	py::def("tupPoint2f", tupPoint2f);
 	py::def("tupPoint", tupPoint);
+	py::def("tupPoint3i", tupPoint3i);
 	py::def("tupPoint", tupRect);
 
 	def("dot", pbcvt::dot);
@@ -261,5 +264,7 @@ BOOST_PYTHON_MODULE(pydata)
 
 	boost::python::class_<pyShapeData>("shapeData")
 		.def("addRect", &pyShapeData::addRect)
+		.def("addId", &pyShapeData::addId)
+		.def("addColor", &pyShapeData::addColor)
 		.def("addQuad", &pyShapeData::addQuad);
 }

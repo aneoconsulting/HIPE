@@ -23,14 +23,19 @@ namespace filter
 		class OverlayFilter : public filter::IFilter
 		{
 			//data::ConnexData<data::ImageArrayData, data::ImageArrayData> _connexData;
+			SET_NAMESPACE("vision/Merge")
 			CONNECTOR(data::Data, data::ImageData);
 
 			REGISTER(OverlayFilter, ()), _connexData(data::INDATA)
 			{
 				asReference = true;
+				fontScale = 0.6;
+				thickness = 1.0;
 			}
 
 			REGISTER_P(bool, asReference);
+			REGISTER_P(double, fontScale);
+			REGISTER_P(double, thickness);
 
 			virtual std::string resultAsString() { return std::string("TODO"); };
 
@@ -41,11 +46,12 @@ namespace filter
 			bool isOverlayData(const data::Data& data);
 
 			data::ImageData extractSourceImageData(data::Data& data);
+			size_t computeSizeOfAllText(std::string text);
 
 			void drawShape(cv::Mat& image, const data::ShapeData& shape);
 
 		};
 
-		ADD_CLASS(OverlayFilter, asReference);
+		ADD_CLASS(OverlayFilter, asReference, fontScale, thickness);
 	}
 }

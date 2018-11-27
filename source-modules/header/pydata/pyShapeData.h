@@ -111,19 +111,30 @@ public:
 	
 	void addPointList(std::tuple<int, int> pydata)
 	{
-		std::cout << "Pydata : x " << std::get<0>(pydata) << " y " << std::get<1>(pydata) << std::endl;
+		//std::cout << "Pydata : x " << std::get<0>(pydata) << " y " << std::get<1>(pydata) << std::endl;
 		//_pointsArray.push_back(cv::Point(std::get<0>(pydata), std::get<1>(pydata)));
 	}
 
 	void addPoint2fList(std::tuple<float, float> pydata)
 	{
-		std::cout << "PyFloatData : x " << std::get<0>(pydata) << " y " << std::get<1>(pydata) << std::endl;
+		//std::cout << "PyFloatData : x " << std::get<0>(pydata) << " y " << std::get<1>(pydata) << std::endl;
 	}
 
 	void addRect(std::tuple<int, int, int, int> pydata)
 	{
-		std::cout << "PyFloatData : x " << std::get<0>(pydata) << " y " << std::get<1>(pydata) << std::endl;
+		//std::cout << "PyFloatData : x " << std::get<0>(pydata) << " y " << std::get<1>(pydata) << std::endl;
 		_rectsArray.push_back(cv::Rect(std::get<0>(pydata), std::get<1>(pydata), std::get<2>(pydata), std::get<3>(pydata)));
+	}
+
+	void addId(std::string text)
+	{
+		//std::cout << "PyFloatData : x " << std::get<0>(pydata) << " y " << std::get<1>(pydata) << std::endl;
+		_ids.push_back(text);
+	}
+	void addColor(std::tuple<int, int, int> color)
+	{
+		//std::cout << "PyFloatData : x " << std::get<0>(pydata) << " y " << std::get<1>(pydata) << std::endl;
+		_colors.push_back(cv::Scalar(std::get<0>(color), std::get<1>(color), std::get<2>(color)));
 	}
 
 	void addQuad(std::tuple<int, int, int, int, int, int, int, int> pydata)

@@ -23,9 +23,9 @@ namespace data
 			This().sampling = sampling;
 		}
 
-		core::HipeTimer getHipeTimer() const
+		core::HipeTimer & getHipeTimer() 
 		{
-			return This_const().hipeTimer;
+			return This().hipeTimer;
 		}
 
 	

@@ -1,6 +1,7 @@
 #include <http/ProcessController.h>
 #include "json/JsonTree.h"
 #include <boost/property_tree/ptree.hpp>
+#include <boost/interprocess/containers/string.hpp>
 
 ProcessController::shm_remove::shm_remove()
 {
@@ -124,7 +125,23 @@ std::string ProcessController::executeOrUpdateAttachedProcess(std::string reques
 	}
 
 	std::string response = shResponse->c_str();
+
+
+	json::JsonTree treeResponse;
+	std::stringstream buffer;
+	buffer.str(response);
+	treeResponse.read_json(buffer);
+	
+	boost::property_tree::ptree* ptree = treeResponse.getPtree().get();
+
+	ptree->erase("errCode");
+	buffer.str("");
+	treeResponse.write_json(buffer);
+	response = buffer.str();
+
+	shRequest->assign("");
 	shResponse->assign("");
+
 	mtx->unlock(); //Wait for client response
 
 	return response;
@@ -185,39 +202,40 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 		kill_process();
 		throw HipeException("Something goes wrong in the child process");
 	}
-	if (proc->running() && shRequest->empty())
-	{
-		mtx->lock(); //Wait for client response
-		/*LOG(INFO) << "Parent : mutex lock" << std::endl;*/
-	}
-	else
-	{
-		LOG(INFO) << "Fail to lock sharedMemory" << std::endl;
-	}
+	
+
 	std::string response = "";
 	try
 	{
-		response = shResponse->c_str();
+		if (proc->running() && shRequest->empty())
+		{
+			mtx->lock(); //Wait for client response
+			/*LOG(INFO) << "Parent : mutex lock" << std::endl;*/
+			response = shResponse->c_str();
 
-		json::JsonTree treeResponse;
-		std::stringstream buffer;
-		buffer.str(response);
-		treeResponse.read_json(buffer);
-		std::string errCode = treeResponse.get<std::string>("errCode");
-		boost::property_tree::ptree* ptree = treeResponse.getPtree().get();
-		shRequest->assign("");
+			json::JsonTree treeResponse;
+			std::stringstream buffer;
+			buffer.str(response);
+			treeResponse.read_json(buffer);
+			std::string errCode = treeResponse.get<std::string>("errCode");
+			boost::property_tree::ptree* ptree = treeResponse.getPtree().get();
+			shRequest->assign("");
 
-		mtx->unlock(); //Wait for client response
-		/*LOG(INFO) << "Parent : mutex unlock" << std::endl;*/
+			mtx->unlock(); //Wait for client response
+			/*LOG(INFO) << "Parent : mutex unlock" << std::endl;*/
 
-		if (errCode != "200")
-			kill_process();
+			if (errCode != "200")
+				kill_process();
 
-		ptree->erase("errCode");
-		buffer.str("");
-		treeResponse.write_json(buffer);
-		response = buffer.str();
-
+			ptree->erase("errCode");
+			buffer.str("");
+			treeResponse.write_json(buffer);
+			response = buffer.str();
+		}
+		else
+		{
+			LOG(INFO) << "Fail to lock sharedMemory" << std::endl;
+		}
 
 		if (! checkIfProcessExistOrStillAlive())
 		{

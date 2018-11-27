@@ -350,6 +350,7 @@ img.shortCutImg {
     left: -100px;
     z-index: 1000;
     width: auto;
+    overflow-x: auto; 
 }
 
 #Log {
@@ -425,7 +426,7 @@ img.shortCutImg {
     border: 1px solid #d3d3d3;
     text-align: left;
     padding: 0;
-    height: 480px;
+    max-height: 720px;
     padding-bottom: 0 !important;
 }
 
