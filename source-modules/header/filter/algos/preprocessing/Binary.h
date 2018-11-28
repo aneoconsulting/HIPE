@@ -61,7 +61,7 @@ namespace filter
 				int convertedType = convertType(type);
 				if (otsu) convertedType = convertedType | cv::THRESH_OTSU;
 
-				double computedThreshold = cv::threshold(image, output, threshold, value, convertedType);
+				cv::threshold(image, output, threshold, value, convertedType);
 
 				PUSH_DATA(data::ImageData(output));
 				return OK;

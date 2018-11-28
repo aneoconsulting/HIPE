@@ -49,7 +49,7 @@ namespace filter
 				std::transform(morphType.begin(), morphType.end(), morphType.begin(), ::toupper);
 				std::transform(morphShape.begin(), morphShape.end(), morphShape.begin(), ::toupper);
 
-				int type = convertMorphType(morphType);
+				convertMorphType(morphType);
 				int shape = convertMorphShape(morphShape);
 
 				cv::Point anchor(anchorX, anchorY);

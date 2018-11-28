@@ -34,5 +34,12 @@ if (UNIX)
 	list(APPEND PATH_SHAREDLIB "${CMAKE_INSTALL_PREFIX}/lib/${BUILD_CONFIG}")
 	list(APPEND PATH_SHAREDLIB "${CUDA_TOOLKIT_ROOT_DIR}/lib64")
 	list(APPEND PATH_SHAREDLIB "${CUDA_TOOLKIT_ROOT_DIR}/lib64/stubs")
-	
 endif(UNIX)
+
+message(STATUS "Add powerPC path for caffe")
+if(IS_POWERPC)
+	message(STATUS "Add powerPC path for caffe")
+	list(APPEND PATH_SHAREDLIB "/opt/DL/caffe-ibm/lib")
+	list(APPEND PATH_SHAREDLIB "/usr/lib/powerpc64le-linux-gnu")
+	list(APPEND PATH_SHAREDLIB "/opt/DL/nccl/lib/")	
+endif()

@@ -132,7 +132,7 @@ Param :
 1. _img : [in] input image
 2. _prob_vec : [out] probabilities of male and female
 */
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__ALTIVEC__)
 #define TPL_DTYPE <Dtype>
 #else
 #define TPL_DTYPE

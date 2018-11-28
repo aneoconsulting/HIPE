@@ -46,8 +46,16 @@ else(WIN32)
 #   link_libraries("-L '${HIPE_EXTERNAL_DIR}/lib'")
 endif(WIN32)
 
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+set(CUDA_MAJOR "9" CACHE STRING "CUDA MAJOR VERSION" FORCE)
+set(CUDA_MINOR "2" CACHE STRING "CUDA MINOR VERSION" FORCE)
+
+else()
 set(CUDA_MAJOR "10" CACHE STRING "CUDA MAJOR VERSION" FORCE)
 set(CUDA_MINOR "0" CACHE STRING "CUDA MINOR VERSION" FORCE)
+
+endif()
+
 set(CUDA_VERSION "${CUDA_MAJOR}.${CUDA_MINOR}" CACHE PATH "CUDA_VERSION" FORCE)
 if (WIN32)
   file(TO_CMAKE_PATH "$ENV{CUDA_PATH_V${CUDA_MAJOR}_${CUDA_MINOR}}" _CUDA_TOOLKIT_ROOT_DIR)
@@ -115,6 +123,11 @@ else(WIN32)
 	  set(Python36_DIR "${HIPE_EXTERNAL_DIR}/python36/usr"  CACHE PATH "PYTHON36_LIBRARYDIR")
 	  list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/python36/usr")
   endif(HIPE_EXTERNAL_PYTHON36)
+  
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+	  set(Python36_DIR "/home/hipe-group/python-3.6.7"  CACHE PATH "PYTHON36_LIBRARYDIR")
+	  list(APPEND CMAKE_PREFIX_PATH "${Python36_DIR}")
+endif()
 
   if(HIPE_EXTERNAL_OPENCV)
     list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/cuda8")
@@ -126,7 +139,11 @@ else(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/boost")
   endif(HIPE_EXTERNAL_BOOST)
 
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+  set(Caffe_DIR "/opt/DL/caffe-ibm/"  CACHE PATH "The directory containing a CMake configuration file for Caffe." FORCE)
+else()
   set(Caffe_DIR "${HIPE_EXTERNAL_DIR}/caffe/"  CACHE PATH "The directory containing a CMake configuration file for Caffe." FORCE)
+endif()
 
   set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}"  CACHE PATH "Folder contains Gflags" FORCE)
   

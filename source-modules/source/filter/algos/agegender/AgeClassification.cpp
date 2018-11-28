@@ -136,7 +136,7 @@ Param :
 2. _prob_vec : [out] probabilities of each age
 */
 
-#ifndef WIN32
+#if defined(WIN32)
 #define TPL_DTYPE <Dtype>
 #else
 #define TPL_DTYPE
@@ -155,7 +155,9 @@ int AgeNet::classify(Mat _img, vector<Dtype>& prob_vec)
 	{
 		this->age_net->input_blobs()[0]->CopyFrom(*(cropped_blob));
 		this->age_net->Forward();
-		Dtype * result = this->age_net->output_blobs()[0]->mutable_cpu_data TPL_DTYPE();
+		const std::vector<Blob<Dtype> *> & vec_net = this->age_net->output_blobs();
+		const Blob<Dtype> * t = vec_net[0];
+		Dtype * result = vec_net[0]->mutable_cpu_data TPL_DTYPE ();
 
 		for (int i = 0; i < AGE_GROUP_NUM; i++)
 		{

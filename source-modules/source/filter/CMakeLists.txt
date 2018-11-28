@@ -217,17 +217,22 @@ if (WITH_CAFFE)
 	# set(ZLIB_LIBRARY_DEBUG "${HIPE_EXTERNAL_DIR}/libraries/lib/snappyd.lib" CACHE PATH "ZLIB_LIBRARY_DEBUG" FORCE)
 	# set(ZLIB_LIBRARY_RELEASE "${HIPE_EXTERNAL_DIR}/libraries/lib/snappy.lib"  CACHE PATH "ZLIB_LIBRARY_RELEASE" FORCE)
 	# set(ZLIB_INCLUDE_DIR "${HIPE_EXTERNAL_DIR}/libraries/include"  CACHE PATH "ZLIB_INCLUDE_DIR" FORCE)
-	find_package(Caffe 
-			REQUIRED
-			PATHS "${Caffe_DIR}/share/Caffe"
-			NO_DEFAULT_PATH)
-	set_target_properties(caffe PROPERTIES
-		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
-		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
-	if (WIN32)
-	  target_link_libraries(filter caffeproto)
+
+	if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+		LIST(APPEND Caffe_INCLUDE_DIRS "${Caffe_DIR}/include")
+		LIST(APPEND Caffe_LIBRARIES "${Caffe_DIR}/lib/libcaffe.so.1.0.0")
+	else()
+		find_package(Caffe 
+						   REQUIRED
+						   PATHS "${Caffe_DIR}/share/Caffe"
+						   NO_DEFAULT_PATH)
+		set_target_properties(caffe PROPERTIES
+			MAP_IMPORTED_CONFIG_MINSIZEREL Release
+			MP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
+	   if (WIN32)
+		target_link_libraries(filter caffeproto)
+	   endif()
 	endif()
-	
 	target_link_libraries(filter ${Caffe_LIBRARIES})
 	target_include_directories(filter PRIVATE ${Caffe_INCLUDE_DIRS})
 	target_include_directories(filter PRIVATE ${CUDA_TOOLKIT_ROOT_DIR}/include)

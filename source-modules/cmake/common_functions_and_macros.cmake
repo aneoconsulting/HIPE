@@ -232,6 +232,11 @@ endmacro()
 
 macro(install_dependencies_int target_name EXT_BIN)
 
+
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+	install(CODE "set(IS_POWERPC ON)" COMPONENT runtime)
+endif()
+
 	install(CODE "set(target_name \"${target_name}\")" COMPONENT runtime)
 	install(CODE "set(EXT_BIN \"${EXT_BIN}\")" COMPONENT runtime)
 	install(CODE "set(HIPE_EXTERNAL_DIR \"${HIPE_EXTERNAL_DIR}\")" COMPONENT runtime)

@@ -170,7 +170,7 @@ namespace data
 		* \brief
 		* \return Returns true if the object doesn't contain any data
 		*/
-		inline bool empty() const override;
+		inline bool empty() const;
 
 		/**
 		* \todo
