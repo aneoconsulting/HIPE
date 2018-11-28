@@ -378,8 +378,8 @@ RUN sudo apt install libnccl2=2.3.7-1+cuda9.2 libnccl-dev=2.3.7-1+cuda9.2
 
 
 ENV PATH="/home/hipe-group/downloads/bin:${PATH}"
-RUN pip3.6 install -U  keras_applications==1.0.5 --no-deps
-RUN pip3.6 install -U  keras_preprocessing==1.0.3 --no-deps
+RUN pip3.6 install keras_applications==1.0.5 --no-deps
+RUN pip3.6 install keras_preprocessing==1.0.3 --no-deps
 
 ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/cuda/lib64:/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}"
 ENV	PATH="/usr/local/cuda/bin:${PATH}"
