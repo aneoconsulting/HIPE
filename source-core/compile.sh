@@ -24,7 +24,9 @@ cmake \
 	-DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-core" \
 	..
 
-make VERBOSE=2 -j8
+NPROC=$(grep -c ^processor /proc/cpuinfo)
+
+make VERBOSE=1 -j${NPROC}
 make VERBOSE=2 install
 
 #make VERBOSE=1 package
