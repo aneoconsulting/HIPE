@@ -157,6 +157,18 @@ RUN python3   -m pip install numpy
 #DDU
 ##########
 
+
+#Now everything is built then add user hipe-group and change all rights for him
+RUN useradd -d /home/hipe-group -ms /bin/bash -g root -G sudo -p hipe-group hipe-group
+RUN groupadd hipe-group
+RUN echo "hipe-group:hipe-group" | chpasswd && adduser hipe-group sudo
+RUN echo "hipe-group ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+WORKDIR /home/hipe-group
+RUN chown -hR hipe-group:hipe-group /home/hipe-group
+
+USER hipe-group
+
 #####
 # Create download area
 ####
@@ -238,72 +250,59 @@ RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads"
 
 #need fix for consuming_buffer.hpp
 WORKDIR /home/hipe-group/3rdParty/hipe_external/linux64/dlib
-COPY utils/dlib_19_6.patch /home/hipe-group/3rdParty/hipe_external/linux64/dlib
-RUN patch -p0 < dlib_19_6.patch
+RUN echo "Copy dlib patch2"
+COPY utils/pixel.h /home/hipe-group/3rdParty/hipe_external/linux64/dlib/include/dlib/
 WORKDIR /home/hipe-group/utils
 
 
-RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
-	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
-	-i "/home/hipe-group/3rdParty/hipe_external/linux64" \
-	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 48
+ RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
+ 	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
+ 	-i "/home/hipe-group/3rdParty/hipe_external/linux64" \
+ 	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 48
 
 
 
-##Now everything is built then add user hipe-group and change all rights for him
-RUN useradd -d /home/hipe-group -ms /bin/bash -g root -G sudo -p hipe-group hipe-group
-RUN groupadd hipe-group
-RUN echo "hipe-group:hipe-group" | chpasswd && adduser hipe-group sudo
-RUN echo "hipe-group ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# #COPY mysql/install-webserver.sh  /home/hipe-group/install-webserver.sh
+# #RUN mkdir /home/hipe-group/mysql_db
+# #COPY mysql/hipe.sql /home/hipe-group/mysql_db
+# WORKDIR /home/hipe-group/
 
-WORKDIR /home/hipe-group
-RUN chown -hR hipe-group:hipe-group *
-RUN chown -hR hipe-group:hipe-group /home/hipe-group
+# #RUN chmod +x /home/hipe-group/install-webserver.sh
+# #RUN bash /home/hipe-group/install-webserver.sh
+# #RUN ln -s /usr/bin/nodejs /usr/local/bin/node
+# #RUN ln -s /usr/bin/npm /usr/local/bin/npm
 
-#COPY mysql/install-webserver.sh  /home/hipe-group/install-webserver.sh
-#RUN mkdir /home/hipe-group/mysql_db
-#COPY mysql/hipe.sql /home/hipe-group/mysql_db
-WORKDIR /home/hipe-group/
+# #EXPOSE 3306/tcp
 
-#RUN chmod +x /home/hipe-group/install-webserver.sh
-#RUN bash /home/hipe-group/install-webserver.sh
-#RUN ln -s /usr/bin/nodejs /usr/local/bin/node
-#RUN ln -s /usr/bin/npm /usr/local/bin/npm
+# #COPY mysql/webserver-hipe.tar.gz /home/hipe-group/webserver-hipe.tar.gz
+# #RUN tar xvzf webserver-hipe.tar.gz
+# #WORKDIR /home/hipe-group/webserver-hipe
 
-#EXPOSE 3306/tcp
+# #RUN npm install
 
-USER hipe-group
+# #ENV PATH="/home/hipe-group/webserver-hipe/node_modules/.bin:${PATH}"
+# #RUN gulp js
+# #RUN gulp css
+# #RUN gulp sass
+# #RUN gulp fonts
 
-#COPY mysql/webserver-hipe.tar.gz /home/hipe-group/webserver-hipe.tar.gz
-#RUN tar xvzf webserver-hipe.tar.gz
-#WORKDIR /home/hipe-group/webserver-hipe
+# #run node app.js
 
-#RUN npm install
+# #RUN echo "echo 'start database for webserver'; sudo sudo service mysql restart; sleep 2; cd /home/hipe-group/webserver-hipe/; node app.js &" >> /home/hipe-group/.bashrc
+# #RUN echo "sleep 2; echo 'Webserver is started'" >> /home/hipe-group/.bashrc
+# #RUN echo "echo ''" >> /home/hipe-group/.bashrc
+# #RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
+# #RUN echo "echo ''" >> /home/hipe-group/.bashrc
+# RUN echo "echo 'HELLO : To Start HIPE run this script : '" >> /home/hipe-group/.bashrc
+# RUN echo "echo 'bash /home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh'" >> /home/hipe-group/.bashrc
+# RUN echo "echo ''" >> /home/hipe-group/.bashrc
+# RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
+# RUN echo "echo ''" >> /home/hipe-group/.bashrc
 
-#ENV PATH="/home/hipe-group/webserver-hipe/node_modules/.bin:${PATH}"
-#RUN gulp js
-#RUN gulp css
-#RUN gulp sass
-#RUN gulp fonts
-
-#run node app.js
-
-#RUN echo "echo 'start database for webserver'; sudo sudo service mysql restart; sleep 2; cd /home/hipe-group/webserver-hipe/; node app.js &" >> /home/hipe-group/.bashrc
-#RUN echo "sleep 2; echo 'Webserver is started'" >> /home/hipe-group/.bashrc
-#RUN echo "echo ''" >> /home/hipe-group/.bashrc
-#RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
-#RUN echo "echo ''" >> /home/hipe-group/.bashrc
-RUN echo "echo 'HELLO : To Start HIPE run this script : '" >> /home/hipe-group/.bashrc
-RUN echo "echo 'bash /home/hipe-group/hipe/install/hipe-core/bin/Release/startHipe.sh'" >> /home/hipe-group/.bashrc
-RUN echo "echo ''" >> /home/hipe-group/.bashrc
-RUN echo "echo '#################################################################'" >> /home/hipe-group/.bashrc
-RUN echo "echo ''" >> /home/hipe-group/.bashrc
-
-# Build Hipe.
+# # Build Hipe.
 WORKDIR /home/hipe-group
 ENV HIPE_EXTERNAL /home/hipe-group/3rdParty/hipe_external
-#RUN git clone https://github.com/aneoconsulting/HIPE.git hipe
-WORKDIR /home/hipe-group/hipe
+
 
 
 
@@ -392,16 +391,15 @@ RUN git checkout r1.12
 RUN cp /home/hipe-group/downloads/tensorflow/tools/bazel.rc /home/hipe-group/downloads/tensorflow/.bazelrc
 RUN sh -c '/bin/echo -e "/home/hipe-group/python-3.6.7/bin/python3.6\n/home/hipe-group/python-3.6.7/lib/python3.6/site-packages\nN\nY\nN\nN\nY\n9.2\n/usr/local/cuda-9.2\n7.2.1\n/usr\nN\n2.3.7\n5.0,5.2,7.0\nN\n/usr/bin/gcc-4.8\nN\n-mcpu=power8\nN\n"'|  ./configure
 COPY utils/tf_boringssl.patch /home/hipe-group/downloads/tensorflow/
-#RUN patch -p1 < tf_boringssl.patch
 RUN bazel build --jobs 64 --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package tensorflow_pkg
 WORKDIR /home/hipe-group/downloads/tensorflow/tensorflow_pkg
 RUN sudo apt-get install -y libhdf5-dev
 RUN pip3.6 install  pyYAML scipy
-#RUN pip3.6 install tensorflow*.whl
+RUN pip3.6 install tensorflow*.whl
 
 
-#RUN echo 'export PATH="$PATH:$HOME/bin"' >> ~/.bashrc
+RUN echo 'export PATH="$PATH:$HOME/bin"' >> ~/.bashrc
 
 ##GO Compile Hipe now
 RUN find -iname "*.cmake" -exec sed -e 's/CUDA_MAJOR "10"/CUDA_MAJOR "9"/g' -i {} \;
@@ -411,12 +409,21 @@ RUN cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/hipe-group/3rd
 RUN make -j64 install
 
 WORKDIR /home/hipe-group/downloads
-RUN wget -c https://public.dhe.ibm.com/software/server/POWER/Linux/mldl/ubuntu/mldl-repo-local_4.0.0_ppc64el.deb
-RUN sudo dpkg -i mldl-repo-*.deb
-RUN sudo apt-get update
-RUN sudo apt-get install caffe-ibm
+# RUN wget -c https://public.dhe.ibm.com/software/server/POWER/Linux/mldl/ubuntu/mldl-repo-local_4.0.0_ppc64el.deb
+# RUN sudo dpkg -i mldl-repo-*.deb
+# RUN sudo apt-get update
+# RUN sudo apt-get -y install caffe-ibm
 RUN wget -c -O /home/hipe-group/downloads/websocketpp.zip https://github.com/zaphoyd/websocketpp/archive/master.zip
 RUN unzip /home/hipe-group/downloads/websocketpp.zip -d /home/hipe-group/downloads/
 RUN cp -rv /home/hipe-group/downloads/websocketpp-master/websocketpp /home/hipe-group/3rdParty/hipe_external/linux64/
 
-#RUN bash compile-ALL.sh
+# #RUN bash compile-ALL.sh
+#CMD exec /bin/sh -c "trap : TERM INT; (while true; do sleep 1000; done) & wait"
+RUN sudo apt-get install cuda-samples-9.2
+RUN cuda-install-samples-9.2.sh ./
+WORKDIR /home/hipe-group/downloads/NVIDIA_CUDA-9.2_Samples/1_Utilities/deviceQuery
+RUN make
+RUN sudo rm /usr/local/cuda-9.2/lib64/stubs/libcuda.so.1
+RUN echo 'export LD_LIBRARY_PATH="/usr/local/nvidia/lib64/:$LD_LIBRARY_PATH"' >> ~/.bashrc
+
+COPY utils/pixel.h /home/hipe-group/3rdParty/hipe_external/linux64/dlib/include/dlib/

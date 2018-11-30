@@ -1,5 +1,5 @@
---- include/dlib/pixel.h        2018-11-28 10:27:53.015508312 +0000
-+++ include/dlib/pixel_new.h    2018-11-28 10:25:33.690459909 +0000
+--- include/dlib/pixel.h        2018-11-28 14:08:08.614933999 +0000
++++ include/dlib/pixel_new.h    2018-11-28 14:07:41.935879327 +0000
 @@ -942,9 +942,9 @@
              }
 
@@ -7,7 +7,7 @@
 -            c2.l = max(0.0, (116.0 * var_Y) - 16);
 -            c2.a = max(-128.0, min(127.0, 500.0 * (var_X - var_Y)));
 -            c2.b = max(-128.0, min(127.0, 200.0 * (var_Y - var_Z)));
-+            c2.l = std::max(0.0, (double)((116.0 * var_Y) - 16.0));
++            c2.l = std::max(0.0, (116.0 * var_Y) - 16);
 +            c2.a = std::max(-128.0, std::min(127.0, 500.0 * (var_X - var_Y)));
 +            c2.b = std::max(-128.0, std::min(127.0, 200.0 * (var_Y - var_Z)));
 
