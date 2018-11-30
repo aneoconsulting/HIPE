@@ -57,16 +57,16 @@ namespace core
 
 	double HipeTimer::getElapseTimeInMili()
 	{
-		double elapse = ((timeval_stop.tv_sec - timeval_start.tv_sec) * 1000000L
-			+ timeval_stop.tv_usec) - timeval_start.tv_usec;
+		double elapse = (timeval_stop.tv_sec * 1000000L + timeval_stop.tv_usec) - (timeval_start.tv_sec * 1000000L
+			+ timeval_start.tv_usec);
 
 		return elapse / 1000.0;
 	}
 
 	double HipeTimer::getElapseTimeInMicro()
 	{
-		double elapse = ((timeval_stop.tv_sec - timeval_start.tv_sec) * 1000000L
-			+ timeval_stop.tv_usec) - timeval_start.tv_usec;
+		double elapse = (timeval_stop.tv_sec * 1000000L + timeval_stop.tv_usec) - (timeval_start.tv_sec * 1000000L
+			+ timeval_start.tv_usec);
 
 		return elapse;
 	}
