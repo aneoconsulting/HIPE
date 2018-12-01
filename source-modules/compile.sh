@@ -10,9 +10,16 @@ cd -- "$DIR_SCRIPT"
 
 mkdir -p build
 cd build
+
+NEED_CAFFE=ON
+
+if [ "$(uname -m)" == "ppc64le" ]; then
+	NEED_CAFFE=OFF
+fi
+
 cmake \
 	-DCMAKE_BUILD_TYPE=Debug \
-	-DWITH_CAFFE=ON \
+	-DWITH_CAFFE=${NEED_CAFFE} \
 	-DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-modules" \
 	..
 

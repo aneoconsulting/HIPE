@@ -541,23 +541,26 @@ function build_opencv()
 #   rm -rf -- "$build_dir"
   mkdir -p -- "$build_dir"
   pushd -- "$build_dir"
-    cmake_with_gcc_x 5 \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_INSTALL_PREFIX="$install_dir" \
-      -DOPENCV_EXTRA_MODULES_PATH="$BUILD_DIRECTORY/opencv_contrib-3.4.3/modules" \
-      -DCMAKE_DISABLE_FIND_PACKAGE_Caffe=TRUE \
-      -DWITH_CUDA="$OPENCV_CUDA" \
-      -DWITH_GSTREAMER=ON \
-      -DENABLE_FAST_MATH=ON \
-      -DCUDA_FAST_MATH=ON \
-      -DWITH_CUBLAS=ON \
-      -DBUILD_opencv_python=ON \
-      -DBUILD_opencv_python2=ON \
-      -DBUILD_opencv_python3=ON \
-      -DENABLE_PRECOMPILED_HEADERS=OFF \
-      ..
-#       -DBUILD_PROTOBUF=OFF \
-    make -j "$N_THREADS" install
+  cmake_with_gcc_x 5 \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_INSTALL_PREFIX="$install_dir" \
+	  -DOPENCV_EXTRA_MODULES_PATH="$BUILD_DIRECTORY/opencv_contrib-3.4.3/modules" \
+	  -DCMAKE_DISABLE_FIND_PACKAGE_Caffe=TRUE \
+	  -DWITH_CUDA="$OPENCV_CUDA" \
+	  -DWITH_GSTREAMER=ON \
+	  -DENABLE_FAST_MATH=ON \
+	  -DCUDA_FAST_MATH=ON \
+	  -DWITH_CUBLAS=ON \
+	  -DBUILD_opencv_python=ON \
+	  -DBUILD_opencv_python2=ON \
+	  -DBUILD_opencv_python3=ON \
+	  -DENABLE_PRECOMPILED_HEADERS=OFF \
+	  -DBUILD_PERF_TESTS=OFF \
+	  -DBUILD_TESTS=OFF \
+	  ..
+  #       -DBUILD_PROTOBUF=OFF \
+
+  make -j "$N_THREADS" install
   popd
   maybe_remove_build_files "opencv-3.4.3"
   maybe_remove_build_files "opencv_contrib-3.4.3"
@@ -615,7 +618,7 @@ function build_boost()
   # STDOUT while Python 2 writes to stderr.
   if command -v python
   then
-    pypath=$(command -v python3.5)
+    pypath=$(command -v python3.6)
     pyver="$("$pypath" -V 2>&1 | sed 's@Python \([0-9]\+\.[0-9]\+\).*@\1@')"
     message  "Python path: $pypath\nPython version: $pyver"
   else
