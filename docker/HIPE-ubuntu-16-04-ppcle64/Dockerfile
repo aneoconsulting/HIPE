@@ -155,7 +155,7 @@ USER hipe-group
 RUN mkdir -p /home/hipe-group/downloads
 WORKDIR /home/hipe-group/downloads
 
-RUN wget -c -O cmake-3.12.4.tar.gz https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4.tar.gz
+RUN wget --waitretry=3 -c -O cmake-3.12.4.tar.gz https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4.tar.gz
 RUN tar xvzf cmake-3.12.4.tar.gz
 WORKDIR cmake-3.12.4
 RUN bash ./configure --prefix=/home/hipe-group/utils/
@@ -182,7 +182,7 @@ RUN mkdir -p /home/hipe-group/3rdParty/hipe_external/linux64/build
 ######
 
 #build python 3.6.7
-RUN wget -c -O /home/hipe-group/downloads/Python-3.6.7.tar.xz https://www.python.org/ftp/python/3.6.7/Python-3.6.7.tar.xz
+RUN wget --waitretry=3 -c -O /home/hipe-group/downloads/Python-3.6.7.tar.xz https://www.python.org/ftp/python/3.6.7/Python-3.6.7.tar.xz
 RUN tar xf /home/hipe-group/downloads/Python-3.6.7.tar.xz -C /home/hipe-group/downloads/
 WORKDIR /home/hipe-group/downloads/Python-3.6.7
 
@@ -199,7 +199,7 @@ ENV PATH="/usr/local/cuda-9.2/bin${PATH:+:${PATH}}"
 RUN pip3.6 install  six numpy wheel mock pillow
 
 RUN pip3.6 install  keras --no-deps
-RUN wget -c -O /home/hipe-group/downloads/bazel-0.19.2.zip https://github.com/bazelbuild/bazel/releases/download/0.19.2/bazel-0.19.2-dist.zip
+RUN wget --waitretry=3 -c -O /home/hipe-group/downloads/bazel-0.19.2.zip https://github.com/bazelbuild/bazel/releases/download/0.19.2/bazel-0.19.2-dist.zip
 RUN unzip /home/hipe-group/downloads/bazel-0.19.2.zip -d /home/hipe-group/downloads/bazel-0.19.2
 WORKDIR /home/hipe-group/downloads/bazel-0.19.2/
 RUN bash compile.sh
