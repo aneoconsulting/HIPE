@@ -7,6 +7,7 @@
 #include <core/HipeStatus.h>
 #include "core/HipeTimer.h"
 #include "data/ShapeData.h"
+#include "data/ImageData.h"
 
 
 namespace algos
@@ -17,7 +18,7 @@ namespace algos
 		{
 			SET_NAMESPACE("tools/benchmark")
 
-			CONNECTOR(data::Data, data::ShapeData);
+			CONNECTOR(data::ImageData, data::ImageData);
 
 			REGISTER(FPSResolution, ()), _connexData(data::INDATA)
 			{

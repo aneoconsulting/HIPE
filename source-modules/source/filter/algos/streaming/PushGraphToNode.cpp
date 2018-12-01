@@ -233,6 +233,8 @@ HipeStatus filter::algos::PushGraphToNode::sendGraphToService(const std::string&
 	http::Client<http::HTTP> client(build_adress.str());
 	std::string killComand = "{\"name\": 'Kill',\"command\" :	{\"type\": 'Kill'} };";
 	auto r2 = client.request("POST", "/json", killComand);
+	r2 = client.request("POST", "/json", killComand); // Need twice in case there is residual exception from previous execution
+
 	std::cout << r2->content.rdbuf() << std::endl;
 	std::cout << "==== Kill previous task request ==== " << std::endl;
 

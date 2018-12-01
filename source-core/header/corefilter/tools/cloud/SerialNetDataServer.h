@@ -89,10 +89,13 @@ public:
 		inbound_data_.resize(1);
 		iservice = ioservice;
 		socket_ = std::make_shared<boost::asio::ip::tcp::socket>(*ioservice);
+		mem = nullptr;
+		size_mem = 0;
 	}
 
 	~Connection()
 	{
+		if (mem != nullptr) free(mem);
 	}
 
 	/// Get the underlying socket. Used for making a connection or for accepting
@@ -102,31 +105,45 @@ public:
 		return socket_;
 	}
 
+	char *mem;
+	size_t size_mem;
+
 	/// Asynchronously write a data structure to the socket.
 	template <typename Handler>
 	void async_write(const cv::Mat & mat, Handler handler)
 	{
 		// Serialize the data first so we know how large it is.
 		std::string serial_str;
-		boost::iostreams::back_insert_device<std::string> inserter(serial_str);
-		boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+		std::stringstream os(std::ios_base::binary| std::ios_base::out| std::ios_base::in);
 
 		{ // use scope to ensure archive and filtering stream buffer go out of scope before stream
 			boost::iostreams::filtering_streambuf<boost::iostreams::output> out;
 			out.push(boost::iostreams::zlib_compressor(boost::iostreams::zlib::best_speed));
-			out.push(s);
+			out.push(os);
 
-			boost::archive::binary_oarchive oa(out);
+			boost::archive::binary_oarchive oa(out, boost::archive::no_header);
 			oa << mat;
 
-			s.flush();
+			//os.flush();
 		}
-		outbound_data_ = serial_str;
+		if (mem==nullptr) {
+			mem = (char *)malloc(os.str().length());
+			size_mem = os.str().length();
+		}
+
+		if (size_mem < os.str().length())
+		{
+			if (mem != nullptr) { free(mem); mem = nullptr; }
+			mem = (char *)malloc(os.str().length());
+			size_mem = os.str().length();
+		}
+
+		memcpy(mem, os.str().data(), os.str().length());
 
 		// Format the header.
 		std::ostringstream header_stream;
 		header_stream << std::setw(header_length)
-			<< std::hex << outbound_data_.size();
+			<< std::hex << os.str().length();
 		if (!header_stream || header_stream.str().size() != header_length)
 		{
 			// Something went wrong, inform the caller.
@@ -139,7 +156,7 @@ public:
 		// both the header and the data in a single write operation.
 		std::vector<boost::asio::const_buffer> buffers;
 		buffers.push_back(boost::asio::buffer(outbound_header_));
-		buffers.push_back(boost::asio::buffer(outbound_data_));
+		buffers.push_back(boost::asio::buffer(mem, os.str().length()));
 		boost::asio::write(*socket_, buffers);
 	}
 
@@ -151,7 +168,7 @@ public:
 		std::string serial_str;
 		boost::iostreams::back_insert_device<std::string> inserter(serial_str);
 		boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
-		boost::archive::binary_oarchive oa(s);
+		boost::archive::binary_oarchive oa(s, boost::archive::no_header);
 
 		oa << text;
 	
@@ -199,15 +216,13 @@ public:
 			// Start an asynchronous call to receive the data.
 			inbound_data_.resize(inbound_data_size);
 			boost::asio::read(*socket_, boost::asio::buffer(inbound_data_));
+			std::stringstream isData(std::string(inbound_data_.data(), inbound_data_.data()+inbound_data_.size()), std::ios_base::binary| std::ios_base::out | std::ios_base::in);
 			std::string serial_str;
-			// wrap buffer inside a stream and deserialize serial_str into obj
-			boost::iostreams::basic_array_source<char> device(inbound_data_.data(), inbound_data_.size());
-			boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s(device);
-
+			
 			 boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
 			 in.push(boost::iostreams::zlib_decompressor());
-			 in.push(s);
-			boost::archive::binary_iarchive ia(in);
+			 in.push(isData);
+			boost::archive::binary_iarchive ia(in, boost::archive::no_header);
 
 			try 
 			{
@@ -265,7 +280,7 @@ public:
 			// wrap buffer inside a stream and deserialize serial_str into obj
 			boost::iostreams::basic_array_source<char> device(inbound_data_.data(), inbound_data_.size());
 			boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s(device);
-			boost::archive::binary_iarchive ia(s);
+			boost::archive::binary_iarchive ia(s, boost::archive::no_header);
 			ia >> text;
 
 		}

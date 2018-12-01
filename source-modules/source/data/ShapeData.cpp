@@ -236,7 +236,12 @@ namespace data
 		left.This()._quadrilatere.clear();
 		left.This()._freeshape.clear();
 		left.This()._ids.clear();
+		left.This()._colors.clear();
 
+		for (auto circle : ColorsArray_const())
+		{
+			left.This()._colors.push_back(circle);
+		}
 		for (auto circle : CirclesArray_const())
 		{
 			left.This()._circlesArray.push_back(circle);

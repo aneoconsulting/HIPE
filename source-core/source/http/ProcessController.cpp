@@ -160,6 +160,23 @@ void ProcessController::kill_process()
 	}
 }
 
+void ProcessController::start_process()
+{
+	tranfertLocalEnv();
+		std::vector<std::string> args;
+		args.push_back("-s");
+		args.push_back("MySharedMemory");
+		args.push_back("-m");
+		args.push_back(corefilter::getLocalEnv().getValue("modulePath"));
+
+		std::string bin_child = "hipe_engine";
+#ifndef WIN32
+		bin_child += ".bin";
+#endif
+		
+		proc = new boost::process::child(boost::process::search_path(bin_child), boost::process::args(args));
+}
+
 std::string ProcessController::executeOrUpdateProcess(std::string request)
 {
 	std::lock_guard<std::mutex> lock(locker);
@@ -173,19 +190,8 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 
 	if (! checkIfProcessExistOrStillAlive())
 	{
-		tranfertLocalEnv();
-		std::vector<std::string> args;
-		args.push_back("-s");
-		args.push_back("MySharedMemory");
-		args.push_back("-m");
-		args.push_back(corefilter::getLocalEnv().getValue("modulePath"));
-
-		std::string bin_child = "hipe_engine";
-#ifndef WIN32
-		bin_child += ".bin";
-#endif
+		start_process();
 		
-		proc = new boost::process::child(boost::process::search_path(bin_child), boost::process::args(args));
 	}
 
 	mtx->unlock();
@@ -209,7 +215,18 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 	{
 		if (proc->running() && shRequest->empty())
 		{
-			mtx->lock(); //Wait for client response
+			int retry_mtx = 5;
+			while (!mtx->try_lock() && retry_mtx > 0)
+			{
+				retry_mtx--;
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+			}
+
+			if (retry <= 0 && mtx->try_lock() == false)
+			{
+				kill_process();
+				start_process();
+			}
 			/*LOG(INFO) << "Parent : mutex lock" << std::endl;*/
 			response = shResponse->c_str();
 
@@ -224,8 +241,10 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 			mtx->unlock(); //Wait for client response
 			/*LOG(INFO) << "Parent : mutex unlock" << std::endl;*/
 
-			if (errCode != "200")
+			if (errCode != "200") {
 				kill_process();
+				start_process();
+			}
 
 			ptree->erase("errCode");
 			buffer.str("");
@@ -241,22 +260,7 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 		{
 			std::thread restartIfNeeded = std::thread([&]()
 			{
-				{
-					tranfertLocalEnv();
-					std::vector<std::string> args;
-					args.push_back("-s");
-					args.push_back("MySharedMemory");
-					args.push_back("-m");
-					args.push_back(corefilter::getLocalEnv().getValue("modulePath"));
-
-					std::string bin_child = "hipe_engine";
-#ifndef WIN32
-					bin_child += ".bin";
-#endif
-
-					proc = new boost::process::child(boost::process::search_path(bin_child),
-					                                 boost::process::args(args));
-				}
+					start_process();
 			});
 			restartIfNeeded.detach();
 		}

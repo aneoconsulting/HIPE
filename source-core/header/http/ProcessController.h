@@ -69,6 +69,7 @@ public:
 	std::string executeOrUpdateAttachedProcess(std::string request);
 
 	void kill_process();
+	void start_process();
 	std::string executeOrUpdateProcess(std::string request);
 
 

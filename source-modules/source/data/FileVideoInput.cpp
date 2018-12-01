@@ -1,5 +1,6 @@
 //@HIPE_LICENSE@
 #include <data/FileVideoInput.h>
+#include <core/HipeTimer.h>
 
 namespace data
 {
@@ -13,6 +14,7 @@ namespace data
 		if (This()._capture.isOpened() && !This()._capture.grab())
 		{
 			This()._capture.release();
+			
 			This()._capture.open(This()._filePath.string());
 
 			if (std::isdigit(This()._filePath.string().c_str()[0]))
@@ -20,6 +22,7 @@ namespace data
 				This()._capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
 				This()._capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
 			}
+			
 		}
 
 		if (!This()._capture.isOpened())
@@ -31,7 +34,10 @@ namespace data
 				This()._capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
 			}
 			else
+			{
 				This()._capture.open(This()._filePath.string());
+				
+			}
 
 			if (!This()._capture.isOpened())
 			{
@@ -52,12 +58,17 @@ namespace data
 
 	Data FileVideoInput::newFrame()
 	{
-		
+		static core::HipeTimer perFs;
+
+		std::cout << "FPS : " << 1.0 / ( perFs.stop().getElapseTimeInMili() / 1000.0) << " ms" << std::endl;
+
 		if (This()._capture.isOpened() && !This()._capture.grab())
 			return static_cast<Data>(ImageData(cv::Mat::zeros(0, 0, 0)));
 		
 		openFile();
-
+		 double fps = This()._capture.get(cv::CAP_PROP_FPS);
+		//std::cout << "Frames per second using video.get(CV_CAP_PROP_FPS) : " << fps << std::endl;
+		
 		bool OK = This()._capture.grab();
 		if (!OK)
 		{
@@ -93,7 +104,7 @@ namespace data
 			if (This()._loop)
 				retry--;
 		}
-
+		perFs.start();
 		return static_cast<Data>(ImageData(frame));;
 	}
 

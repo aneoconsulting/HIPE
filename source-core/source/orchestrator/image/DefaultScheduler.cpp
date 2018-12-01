@@ -507,17 +507,6 @@ void orchestrator::image::DefaultScheduler::process(filter::Model* root, data::D
 		for (auto& taskInfo : runningTasks)
 		{
 			if (! taskInfo.isActive) continue; // the task exist but it failed before taskInfo creation
-
-			if (*(taskInfo.isActive) && (taskInfo.task->joinable()))
-			{
-				//It's an update of actual execution 
-				if (taskInfo.filter->getName() == root->getName())
-				{
-					updateFilterParameters(root, taskInfo.filter);
-					return;
-				}
-				updateTasks.push_back(taskInfo);
-			}
 			if (taskInfo.texptr)
 			{
 				try
@@ -530,11 +519,21 @@ void orchestrator::image::DefaultScheduler::process(filter::Model* root, data::D
 					build << std::endl << std::endl;
 				}
 			}
+			else if (*(taskInfo.isActive) && (taskInfo.task->joinable()))
+			{
+				//It's an update of actual execution 
+				if (taskInfo.filter->getName() == root->getName())
+				{
+					updateFilterParameters(root, taskInfo.filter);
+					return;
+				}
+				updateTasks.push_back(taskInfo);
+			}
 		}
 		runningTasks.clear();
 		runningTasks = updateTasks;
 
-		if (build.str() != "")
+		if (!build.str().empty())
 		{
 			throw HipeException(build.str());
 		}
