@@ -27,7 +27,7 @@ if(UNIX)
     message(STATUS "Google perftools : ON")
   endif(USE_GPERFTOOLS)
 
-  add_compile_options(-Wno-unknown-pragmas)
+  add_compile_options(-Wno-unknown-pragmas -DLINUX -DUNIX)
   
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
 	add_compile_options(-mabi=altivec -maltivec)

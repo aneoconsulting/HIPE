@@ -1,0 +1,86 @@
+{
+	"name": "DDU-AgeEstimation",
+	"filters": [
+		{
+			"Resize": {
+				"name": "Resize",
+				"height": "0",
+				"inoutData": "true",
+				"ratio": "1",
+				"width": "0",
+				"need": [
+					"WebRTCVideoDataSource"
+				]
+			}
+		},
+		{
+			"FaceDetection": {
+				"name": "FaceDetection",
+				"file_predictor_dat": "Data-light/FaceDetection/shape_predictor_68_face_landmarks.dat",
+				"skip_frame": "2",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"ExtractShape": {
+				"name": "ExtractShape",
+				"unused": "0",
+				"need": [
+					"Resize",
+					"FaceDetection"
+				]
+			}
+		},
+		{
+			"AgeGender": {
+				"name": "AgeGender",
+				"age_activation": "true",
+				"age_model_file": "Data-light/AgeGender/model/deploy_age2.prototxt",
+				"age_weight_file": "Data-light/AgeGender/model/age_net.caffemodel",
+				"confidence_age": "0.6",
+				"confidence_gender": "0.6",
+				"gender_activation": "false",
+				"gender_model_file": "Data-light/AgeGender/model/deploy_gender2.prototxt",
+				"gender_weight_file": "Data-light/AgeGender/model/gender_net.caffemodel",
+				"mean_file": "Data-light/AgeGender/model/mean.binaryproto",
+				"need": [
+					"ExtractShape"
+				],
+				"confidenceThreshold": "0.3"
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter",
+				"asReference": "true",
+				"need": [
+					"AgeGender",
+					"Resize"
+				]
+			}
+		},
+		{
+			"WebRTCSender": {
+				"name": "WebRTCSender",
+				"need": [
+					"OverlayFilter"
+				],
+				"port": "9002"
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"datasource": [
+			{
+				"WebRTCVideoDataSource": {
+					"loop": false,
+					"port": "9001",
+					"name": "WebRTCVideoDataSource"
+				}
+			}
+		]
+	}
+}

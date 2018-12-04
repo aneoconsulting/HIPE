@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.7.1)
-
+#install_dependencies
 
 
 project (Hipe)
@@ -15,8 +15,14 @@ option(USE_DLIB "Enable dlib library." ON)
 # option(HIPE_STATIC_LIBS "Compile static libraries." ON)
 option(HIPE_STATIC_EXES "Compile static executables." OFF)
 
-option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." ON)
-message(STATUS "HIPE_EXTERNAL_PYTHON27: ${HIPE_EXTERNAL_PYTHON27}")
+if (WIN32)
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+  option(HIPE_EXTERNAL_PYTHON36 "Use Python 3.6 libraries in Hipe External." ON)
+else()
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+  option(HIPE_EXTERNAL_PYTHON36 "Use Python 3.6 libraries in Hipe External." OFF)
+endif()
+message(STATUS "HIPE_EXTERNAL_PYTHON36: ${HIPE_EXTERNAL_PYTHON36}")
 
 option(HIPE_EXTERNAL_BOOST "Use Boost libraries in Hipe External." ON)
 message(STATUS "HIPE_EXTERNAL_BOOST: ${HIPE_EXTERNAL_BOOST}")
@@ -25,9 +31,11 @@ option(HIPE_EXTERNAL_OPENCV "Use OpenCV libraries in Hipe External." ON)
 message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 
 
+option(HIPE_EXTERNAL_GLOG "Use GLOB libraries in Hipe External." ON)
+message(STATUS "HIPE_EXTERNAL_GLOG: ${HIPE_EXTERNAL_GLOG}")
+
 option(INSTALL_SOURCE "Install source for future developpement" ON)
 message(STATUS "INSTALL_SOURCE: ${INSTALL_SOURCE}")
-
 
 # Configure common settings.
 include("${CMAKE_SOURCE_DIR}/cmake/common_config.cmake")
@@ -44,6 +52,8 @@ include(InstallRequiredSystemLibraries)
 
 endif(WIN32)
 
+set(WITH_GFLAGS ON CACHE BOOL "Use GFlags libraries." FORCE)
+set(WITH_GLOG ON CACHE BOOL "Use GLOG libraries." FORCE)
 
 #controls where to build the executables after "make"
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
@@ -61,17 +71,20 @@ if(WIN32)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
+file(TO_CMAKE_PATH "$ENV{CUDA_PATH_V${CUDA_MAJOR}_${CUDA_MINOR}}" CUDA_TOOLKIT_ROOT_DIR)
+message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
+
 add_subdirectory(source)
 
 
 
 
-install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
-install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
+
 install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT sources)
 
 if (${INSTALL_SOURCE})
-
+	install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
+	install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
 	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./project"
 			COMPONENT sources
 			PATTERN "cmake"
@@ -91,6 +104,8 @@ if (${INSTALL_SOURCE})
 	install (SCRIPT "${CMAKE_SOURCE_DIR}/cmake/postInstall.cmake" COMPONENT sources)
 endif()
 
+##Install working directory
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/../workingdir" DESTINATION "./" COMPONENT userspace)
 
 set(CPACK_PACKAGE_NAME "Hipe-core-installer")
 set(CPACK_PACKAGE_VENDOR "Damien DUBUC (ANEO)")
@@ -106,7 +121,10 @@ set(CPACK_COMPONENTS_ALL applications library headers)
 
 if (${INSTALL_SOURCE})
 	set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} sources)
+	set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} sources)
 endif()
+
+set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} userspace)
 
 set(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
 set(CPACK_COMPONENT_APPLICATIONS_GROUP "")
@@ -130,3 +148,5 @@ if (WIN32)
 endif(WIN32)
 			  
 include(CPack)
+						  
+						  

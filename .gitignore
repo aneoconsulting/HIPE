@@ -32,6 +32,13 @@ Hipe/modules/header/filter/References.h
 Hipe/tests/data/scriptPython/testhipe.pyc
 **/*.pyc
 3rdParty/**
-source-core/build/**
-install/*
+install/**
+source-core/build/*
 source-modules/build/*
+source-modules/header/filter/References.h
+source-modules/header/filter/References.h.cmp
+webserver/webserver-hipe/obj/*
+workingdir/root/Data-light/*
+/webserver/node_modules/*
+/webserver/obj/*
+/webserver/obj/Debug/webApp.njsproj.CoreCompileInputs.cache

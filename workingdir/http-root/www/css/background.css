@@ -1,0 +1,120 @@
+/* Header */
+.large-header {
+	position: relative;
+	margin: -10;
+	padding: -10;
+	width: 100%;
+	background: #333;
+	overflow: hidden;
+	background-size: cover;
+	background-position: center center;
+	z-index: 1;
+}
+
+#large-header {
+	background-image: url('../images/demo-1-bg.jpg');
+}
+
+.main-title {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	color: #f9f1e9;
+	text-align: center;
+	top: 10%;
+	left: 50%;
+	-webkit-transform: translate3d(-50%,-50%,0);
+	transform: translate3d(-50%,-50%,0);
+}
+
+.main-menu {
+	position: absolute;
+	margin: 0;
+	padding: 0%;
+	color: #f9f1e9;
+	text-align: left;
+	top: 0%;
+	left: 600px;
+	-webkit-transform: translate3d(-50%,-50%,0);
+	transform: translate3d(-50%,-50%,0);
+	z-index: 1;
+}
+
+.main-table {
+	position: absolute;
+	margin: 0 auto;
+	width: auto;
+	height: auto;
+	padding: 0;
+	color: #f9f1e9;
+	text-align: left;
+	top: 25%;
+	left: 30%;
+	z-index: 3;
+}
+
+ #selfView, #remoteView {
+                    background-position: top;
+					/* margin-top: 10px; */
+                    -moz-border-radius:10px;
+                    -webkit-border-radius:10px;
+                    border:10px solid #ccc;
+                    line-height:18px;
+                    margin:0 auto;
+					width: 640px;
+					height: 480px;
+					z-index: 3;
+					top: 0%;
+					visibility: hidden;
+					 display: block;
+                }
+				
+#selfView
+{
+	position: absolute;
+	left: 5px;
+	top: 384px;
+	width: 128px;
+	height: 96px;
+	z-index: 3;
+	visibility: hidden;
+}
+
+#LoadingCanvasSrc
+{
+	position: absolute;
+	left: 5px;
+	top: 369px;
+	width: 128px;
+	height: 96px;
+	z-index: 3;
+	visibility: hidden;
+}
+
+#LoadingCanvasRemote
+{
+position: absolute;
+	left: 253px;
+	top: 173px;
+	width: 128px;
+	height: 96px;
+	z-index: 3;
+	visibility: hidden;
+}
+
+
+.demo-1 .main-title {
+	text-transform: uppercase;
+	font-size: 4.2em;
+	letter-spacing: 0.1em;
+}
+
+.main-title .thin {
+	font-weight: 200;
+}
+
+@media only screen and (max-width : 768px) {
+	.demo-1 .main-title {
+		font-size: 3em;
+	}
+}

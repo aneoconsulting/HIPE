@@ -232,11 +232,17 @@ endmacro()
 
 macro(install_dependencies_int target_name EXT_BIN)
 
+
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+	install(CODE "set(IS_POWERPC ON)" COMPONENT runtime)
+endif()
+
 	install(CODE "set(target_name \"${target_name}\")" COMPONENT runtime)
 	install(CODE "set(EXT_BIN \"${EXT_BIN}\")" COMPONENT runtime)
 	install(CODE "set(HIPE_EXTERNAL_DIR \"${HIPE_EXTERNAL_DIR}\")" COMPONENT runtime)
 	install(CODE "set(PROJECT_SOURCE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT runtime)
 	install(CODE "set(Hipecore_DIR \"${Hipecore_DIR}\")" COMPONENT runtime)
+	install(CODE "set(CUDA_TOOLKIT_ROOT_DIR \"${CUDA_TOOLKIT_ROOT_DIR}\")" COMPONENT runtime)
 	install(SCRIPT "${PROJECT_SOURCE_DIR}/cmake/installConfig.cmake" COMPONENT runtime)
 	file(TO_NATIVE_PATH "${HIPE_EXTERNAL_DIR}" HIPE_EXTERNAL_DIR)
 	if (WIN32)

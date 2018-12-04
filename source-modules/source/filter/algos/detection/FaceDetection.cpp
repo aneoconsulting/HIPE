@@ -1,38 +1,10 @@
-//READ LICENSE BEFORE ANY USAGE
-/* Copyright (C) 2018  Damien DUBUC ddubuc@aneo.fr (ANEO S.A.S)
- *  Team Contact : hipe@aneo.fr
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *  
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *  
- *  In addition, we kindly ask you to acknowledge ANEO and its authors in any program 
- *  or publication in which you use HIPE. You are not required to do so; it is up to your 
- *  common sense to decide whether you want to comply with this request or not.
- *  
- *  Non-free versions of HIPE are available under terms different from those of the General 
- *  Public License. e.g. they do not require you to accompany any object code using HIPE 
- *  with the corresponding source code. Following the new licensing any change request from 
- *  contributors to ANEO must accept terms of re-license by a general announcement. 
- *  For these alternative terms you must request a license from ANEO S.A.S Company 
- *  Licensing Office. Users and or developers interested in such a license should 
- *  contact us (hipe@aneo.fr) for more information.
- */
-
+//@HIPE_LICENSE@
 #include <filter/algos/detection/FaceDetection.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 
 #pragma warning(push, 0)
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 #pragma warning(pop)
 
 
@@ -56,32 +28,30 @@ namespace filter
 					This->detectFaces(image);
 					std::vector<cv::Rect> rects;
 
-					for (dlib::rectangle & rect : This->dets)
-					{
-						cv::Rect cvRect;
-						cvRect.x = std::max<int>(rect.left() / 2 - 20, 0);
-						cvRect.y = std::max<int>(rect.top() / 2 - 20, 0);
-						cvRect.height = std::min<int>((rect.bottom() - rect.top()) / 2 + 40, image.getMat().size().width);
-						cvRect.width = std::min<int>((rect.right() - rect.left()) / 2 + 40, image.getMat().size().width);
-						rects.push_back(cvRect);
-					}
-					data::ShapeData crop;
-					crop << rects;
-
-					if (This->crops.size() != 0)
-						This->crops.clear();
-
-					This->crops.push(crop);
+					
 				}
 			});
 		}
 
-		void FaceDetection::detectFaces(const data::ImageData & image)
+		std::vector<cv::Rect> FaceDetection::detectFaces(const data::ImageData& image)
 		{
+			std::vector<cv::Rect> rects;
 			try
 			{
+				
 				dlib::array2d<unsigned char> img;
-				dlib::cv_image<dlib::bgr_pixel> cimg(image.getMat());
+				cv::Mat res;
+				if (image.getMat().channels() == 4)
+				{
+					cv::cvtColor(image.getMat(), res, CV_BGRA2BGR);
+				}
+				else
+					res = image.getMat();
+
+				double ratio = 2.0;
+				cv::Mat small;
+				cv::resize(res, small, cv::Size(), 1.0/ratio, 1.0/ratio);
+				dlib::cv_image<dlib::bgr_pixel> cimg(small);
 				dlib::assign_image(img, cimg);
 
 
@@ -101,26 +71,38 @@ namespace filter
 				// around all the faces it can find in the image.
 				dets = detector(img);
 
-				//std::cout << "Number of faces detected: " << dets.size() << std::endl;
-				//// Now we show the image on the screen and the face detections as
-				//// red overlay boxes.
-				//win.clear_overlay();
-				//win.set_image(img);
-				//win.add_overlay(dets, dlib::rgb_pixel(255,0,0));
+				for (dlib::rectangle& rect : dets)
+				{
+					cv::Rect cvRect;
+					cvRect.x = std::max<int>(rect.left() / 2 * ratio - 20, 0);
+					cvRect.y = std::max<int>(rect.top() / 2 * ratio - 20, 0);
+					cvRect.height = std::min<int>((rect.bottom() - rect.top()) / 2 * ratio + 40, image.getMat().size().width);
+					cvRect.width = std::min<int>((rect.right() - rect.left()) / 2 * ratio + 40, image.getMat().size().width);
+					rects.push_back(cvRect);
+				}
+				data::ShapeData crop;
+				crop << rects;
 
+				if (crops.size() != 0)
+					crops.clear();
 
-				//std::cout << "Hit enter to process the next image..." << std::endl;
-				//std::cin.get();
+				crops.push(crop);
+
 			}
 			catch (exception& e)
 			{
 				cout << "\nexception thrown!" << endl;
 				cout << e.what() << endl;
 			}
+
+			return rects;
 		}
 
 		HipeStatus FaceDetection::process()
 		{
+			if (_connexData.empty())
+				return OK;
+
 			cv::Mat im;
 			cv::Mat im_small, im_display;
 			std::vector<dlib::rectangle> faces;

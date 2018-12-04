@@ -10,11 +10,21 @@ cd -- "$DIR_SCRIPT"
 
 mkdir -p build
 cd build
-cmake \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-modules" \
-  ..
 
-make VERBOSE=1 -j8
+NEED_CAFFE=ON
+
+if [ "$(uname -m)" == "ppc64le" ]; then
+	NEED_CAFFE=OFF
+fi
+
+cmake \
+	-DCMAKE_BUILD_TYPE=Debug \
+	-DWITH_CAFFE=${NEED_CAFFE} \
+	-DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-modules" \
+	..
+
+NPROC=$(grep -c ^processor /proc/cpuinfo)
+
+make VERBOSE=1 -j${NPROC}
 make VERBOSE=1 install
 #make VERBOSE=1 package

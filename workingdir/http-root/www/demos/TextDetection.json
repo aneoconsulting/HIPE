@@ -1,0 +1,58 @@
+{
+	"name": "DDU: Facial Expression recognition",
+	"filters": [
+		{
+			"Resize": {
+				"name": "Resize",
+				"height": "0",
+				"inoutData": "true",
+				"ratio": "1",
+				"width": "0",
+				"need": [
+					"WebRTCVideoDataSource"
+				]
+			}
+		},
+		{
+			"PythonFilter": {
+				"name": "PythonFilter",
+				"function_name": "process",
+				"script_path": "Data-light/textDetection/EAST-master/process.py",
+				"need": [
+					"Resize"
+				]
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter",
+				"asReference": "true",
+				"need": [
+					"Resize",
+					"PythonFilter"
+				]
+			}
+		},
+		{
+			"WebRTCSender": {
+				"name": "WebRTCSender",
+				"port": "9002",
+				"need": [
+					"OverlayFilter"
+				]
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"datasource": [
+			{
+				"WebRTCVideoDataSource": {
+					"loop": false,
+					"port": "9001",
+					"name": "WebRTCVideoDataSource"
+				}
+			}
+		]
+	}
+}

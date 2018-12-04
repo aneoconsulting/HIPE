@@ -28,10 +28,11 @@ bash X11-proxy.sh ${DISPLAY_NUMBER} ${CONTAINER_DISPLAY} &
 docker run -it --rm \
   -e DISPLAY=:${CONTAINER_DISPLAY} \
   -v ${PWD}/display/socket:/tmp/.X11-unix \
+  -v /opt/DL:/opt/DL \
   -v ${PWD}/display/Xauthority:/home/hipe-group/.Xauthority \
   --hostname ${CONTAINER_HOSTNAME} \
   -p 9090:9090 -p 9999:9999/udp \
   -p 3000:3000 \
-  ${CONTAINER_NAME} /bin/bash 
+  ${CONTAINER_NAME}
 
 kill -9 %1

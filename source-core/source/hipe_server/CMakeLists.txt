@@ -1,3 +1,4 @@
+include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
@@ -9,12 +10,62 @@ add_hipe_executable(hipe_server)
 
 target_compile_definitions(hipe_server PRIVATE "-DUSE_BOOST_REGEX")
 
+if (WITH_GFLAGS)
+		message(STATUS "Get Gflags from ${GFLAGS_ROOT_DIR}")
+		find_package(Gflags 
+					REQUIRED
+					PATHS "${GFLAGS_ROOT_DIR}/lib/cmake/gflags"
+					NO_DEFAULT_PATH)
+	  message(STATUS "Gflags include dir : ${GFLAGS_INCLUDE_DIR}")
+	  if (WIN32)
+		set_target_properties(gflags_static PROPERTIES
+		  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+		  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+		  )
+		
+		target_link_libraries(hipe_server gflags_static)
+	  else()
+		  target_link_libraries(hipe_server gflags_shared)
+		endif()
+		target_include_directories(hipe_server PRIVATE ${GFLAGS_INCLUDE_DIRS})
+		set(USE_GFLAGS "-DUSE_GFLAGS")
+		message(STATUS "GFLAGS IS INCLUDED")
+endif()
+
+
+if (WITH_GLOG)
+	message(STATUS "Get Glog from ${GLOG_ROOT_DIR}")
+	list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+	find_package(Glog 
+				REQUIRED
+				PATHS "${GLOG_ROOT_DIR}/lib/cmake/glog"
+				NO_DEFAULT_PATH)
+	#set_target_properties(glog::glog PROPERTIES
+	#  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+	#  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+	#  )
+	message(STATUS "Gflags include dir : ${GLOG_LIBRARIES}")
+	message(STATUS "Gflags include dir : ${GLOG_LIBRARY}")
+
+	target_include_directories(hipe_server PRIVATE ${GLOG_INCLUDE_DIR})
+	target_link_libraries(hipe_server glog::glog)
+	set(USE_GLOG "-DUSE_GLOG")
+	message(STATUS "GLOG IS INCLUDED")
+
+endif()
 
 # TODO
 # Is this not already included in the output of CMake? Remove?
 display_pathlist("OpenCV_LIBS" "${OpenCV_LIBS}")
 display_pathlist("Boost_LIBRARIES" "${Boost_LIBRARIES}")
+message(STATUS "OpenSSL cmake dir ${OpenSSL_DIR}/lib/cmake")
+find_package(BoringSSL 
+				REQUIRED
+				PATHS "${BoringSSL_DIR}/lib/cmake"
+				NO_DEFAULT_PATH)
 
+target_include_directories(hipe_server PRIVATE ${HIPE_EXTERNAL_DIR})
+target_include_directories(hipe_server PRIVATE ${HIPE_EXTERNAL_DIR}/include)
 
 target_link_libraries(hipe_server http)
 target_link_libraries(hipe_server orchestrator)
@@ -27,6 +78,13 @@ target_link_libraries(hipe_server core)
 target_link_libraries(hipe_server ${OpenCV_LIBS})
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
+
+if (WIN32)
+  target_link_libraries(hipe_server BoringSSL BoringCrypto)
+else()
+  target_link_libraries(hipe_server ssl crypto)
+  target_link_libraries(hipe_server -lrt)
+endif()
 
 if (UNIX)
   target_link_libraries(hipe_server ${CMAKE_DL_LIBS})

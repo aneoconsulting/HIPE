@@ -1,41 +1,75 @@
-//READ LICENSE BEFORE ANY USAGE
-/* Copyright (C) 2018  Damien DUBUC ddubuc@aneo.fr (ANEO S.A.S)
- *  Team Contact : hipe@aneo.fr
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *  
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *  
- *  In addition, we kindly ask you to acknowledge ANEO and its authors in any program 
- *  or publication in which you use HIPE. You are not required to do so; it is up to your 
- *  common sense to decide whether you want to comply with this request or not.
- *  
- *  Non-free versions of HIPE are available under terms different from those of the General 
- *  Public License. e.g. they do not require you to accompany any object code using HIPE 
- *  with the corresponding source code. Following the new licensing any change request from 
- *  contributors to ANEO must accept terms of re-license by a general announcement. 
- *  For these alternative terms you must request a license from ANEO S.A.S Company 
- *  Licensing Office. Users and or developers interested in such a license should 
- *  contact us (hipe@aneo.fr) for more information.
- */
-
+//@HIPE_LICENSE@
+//#define NO_IMPORT_ARRAY
 #define PY_ARRAY_UNIQUE_SYMBOL pbcvt_ARRAY_API
 #include <pydata/pyImageData.h>
 
 #pragma warning(push, 0)
 #include <boost/python.hpp>
+#include <boost/python/numpy.hpp>
 #pragma warning(pop)
 
 #include <pydata/pyboostcvconverter.hpp>
+#include <iostream>
+#include "TupleConverter.h"
+#include "pyShapeData.h"
+#include <boost/circular_buffer.hpp>
+#include <boost/function.hpp>
+
+#include <glog/logging.h>
+
+namespace py = ::boost::python;
+
+namespace embedded_python {
+
+    enum direction_type {
+        py_stdin,
+        py_stdout,
+        py_stderr
+    };
+
+    template<direction_type>
+    class py_redirector
+    {
+    public:
+        py_redirector()
+        { }
+
+        py_redirector(boost::function<void (const std::string&)> f)
+            : m_write_fn(f)
+        { }
+
+        void write(const std::string& text) {
+
+			if (text[0] == '\n') return;
+
+            LOG(INFO) << "Python (stdout) : " << text << std::endl;
+            if (m_write_fn)
+                m_write_fn(text);
+        }
+
+    public:
+        boost::function<void (const std::string&)> m_write_fn;
+    };
+
+    typedef py_redirector<py_stdout>	stdout_redirector;
+    typedef py_redirector<py_stderr>	stderr_redirector;
+
+
+    static std::auto_ptr<stdout_redirector> make_stdout_redirector() {
+
+        std::auto_ptr<stdout_redirector> ptr(new stdout_redirector);
+
+        return ptr;
+    }
+
+    static std::auto_ptr<stderr_redirector> make_stderr_redirector() {
+
+        std::auto_ptr<stderr_redirector> ptr(new stderr_redirector);
+
+        return ptr;
+    }
+
+}
 
 
 namespace pbcvt {
@@ -84,6 +118,11 @@ namespace pbcvt {
         return result;
     }
 
+	//This function will force windows compiler to link with boost numpy
+	static void force_numpy_kink()
+	{
+		   boost::python::numpy::initialize();
+	}
 
 #if (PY_VERSION_HEX >= 0x03000000)
 
@@ -92,9 +131,11 @@ namespace pbcvt {
         static void init_ar(){
 #endif
         Py_Initialize();
-
-        	import_array();
-        return NUMPY_IMPORT_ARRAY_RETVAL;
+		
+        import_array();
+#if (PY_VERSION_HEX >= 0x03000000)
+        return NULL;
+#endif
     }
 
     //BOOST_PYTHON_MODULE (pbcvt) {
@@ -159,19 +200,58 @@ namespace boost {
 	}
 }
 
-BOOST_PYTHON_MODULE(hipetools)
-{
-  def("print_arity", boost::python::make_function (&print_arity, release_gil_policy()));
+#ifdef BOOST_PYTHON_STATIC_LIB
+#undef BOOST_PYTHON_STATIC_LIB
+#endif
+
+
+void export_cpptuple_conv() {
+    create_tuple_converter<float, float>();
+    create_tuple_converter<int, int>();
+    create_tuple_converter<int, int, int>();
+    create_tuple_converter<int, int, int, int>();
+    create_tuple_converter<int, int, int, int, int, int, int, int>();
 }
+
+std::tuple<float, float> tupPoint2f(std::tuple<float, float> t){return t;}
+std::tuple<int, int> tupPoint(std::tuple<int, int> t){return t;}
+std::tuple<int, int, int> tupPoint3i(std::tuple<int, int, int> t){return t;}
+std::tuple<int, int, int, int> tupRect(std::tuple<int, int, int, int> t){return t;}
+std::tuple<int, int, int, int, int, int, int, int>	tupQuad(std::tuple<int, int, int, int, int, int, int, int> t){return t;}
+
 
 BOOST_PYTHON_MODULE(pydata)
 {
 	pbcvt::init_ar();
+	export_cpptuple_conv();
+
+	using namespace embedded_python;
+	using namespace py;
+
+	class_<stdout_redirector>("stdout",
+	                          "This class redirects python's standard output "
+	                          "to the console.",
+	                          init<>("initialize the redirector."))
+		.def("__init__", make_constructor(make_stdout_redirector), "initialize the redirector.")
+		.def("write", &stdout_redirector::write, "write sys.stdout redirection.");
+
+	class_<stderr_redirector>("stderr",
+	                          "This class redirects python's error output "
+	                          "to the console.",
+	                          init<>("initialize the redirector."))
+
+		.def("__init__", make_constructor(make_stderr_redirector), "initialize the redirector.")
+		.def("write", &stderr_redirector::write, "write sys.stderr redirection.");
 
 	//initialize converters
 	to_python_converter<cv::Mat,
-		pbcvt::matToNDArrayBoostConverter>();
+	                    pbcvt::matToNDArrayBoostConverter>();
 	pbcvt::matFromNDArrayBoostConverter();
+
+	py::def("tupPoint2f", tupPoint2f);
+	py::def("tupPoint", tupPoint);
+	py::def("tupPoint3i", tupPoint3i);
+	py::def("tupPoint", tupRect);
 
 	def("dot", pbcvt::dot);
 	def("dot2", pbcvt::dot2);
@@ -181,25 +261,10 @@ BOOST_PYTHON_MODULE(pydata)
 		.def("set", &pyImageData::set)
 		.def_readwrite("img", &pyImageData::get)
 		.def("get", &pyImageData::get);
-		
-}
 
-//BOOST_PYTHON_MODULE(pydata)
-//{
-//	pbcvt::init_ar();
-//
-//	//initialize converters
-//	to_python_converter<cv::Mat,
-//		pbcvt::matToNDArrayBoostConverter>();
-//	pbcvt::matFromNDArrayBoostConverter();
-//
-//	def("dot", make_function(pbcvt::dot, release_gil_policy()));
-//	def("dot2", make_function(pbcvt::dot2, release_gil_policy()));
-//
-//	boost::python::class_<pyImageData>("imageData")
-//		.def("assign", make_function(&pyImageData::assign, release_gil_policy()))
-//		.def("set", make_function(&pyImageData::set, release_gil_policy()))
-//		.def_readwrite("img", &pyImageData::get)
-//		.def("get", make_function(&pyImageData::get, release_gil_policy()));
-//
-//}
+	boost::python::class_<pyShapeData>("shapeData")
+		.def("addRect", &pyShapeData::addRect)
+		.def("addId", &pyShapeData::addId)
+		.def("addColor", &pyShapeData::addColor)
+		.def("addQuad", &pyShapeData::addQuad);
+}

@@ -15,7 +15,7 @@ if(UNIX)
     message(STATUS "Google perftools : ON")
   endif(USE_GPERFTOOLS)
   
-  add_compile_options("-Wno-unknown-pragmas")
+  add_compile_options(-Wno-unknown-pragmas -DLINUX -DUNIX)
 
   if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
 	add_compile_options(-mabi=altivec -maltivec)
@@ -36,6 +36,7 @@ add_subdirectory(json)
 add_subdirectory(orchestrator)
 add_subdirectory(http)
 add_subdirectory(hipe_server)
+add_subdirectory(hipe_engine)
 
 
 add_dependencies(corefilter coredata)
@@ -45,3 +46,4 @@ add_dependencies(http coredata corefilter json orchestrator)
 
 add_dependencies(orchestrator core corefilter json)
 add_dependencies(hipe_server core http orchestrator json)
+add_dependencies(hipe_engine core orchestrator json)

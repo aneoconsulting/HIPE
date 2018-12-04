@@ -1,32 +1,5 @@
-//READ LICENSE BEFORE ANY USAGE
-/* Copyright (C) 2018  Damien DUBUC ddubuc@aneo.fr (ANEO S.A.S)
- *  Team Contact : hipe@aneo.fr
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *  
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *  
- *  In addition, we kindly ask you to acknowledge ANEO and its authors in any program 
- *  or publication in which you use HIPE. You are not required to do so; it is up to your 
- *  common sense to decide whether you want to comply with this request or not.
- *  
- *  Non-free versions of HIPE are available under terms different from those of the General 
- *  Public License. e.g. they do not require you to accompany any object code using HIPE 
- *  with the corresponding source code. Following the new licensing any change request from 
- *  contributors to ANEO must accept terms of re-license by a general announcement. 
- *  For these alternative terms you must request a license from ANEO S.A.S Company 
- *  Licensing Office. Users and or developers interested in such a license should 
- *  contact us (hipe@aneo.fr) for more information.
- */
+//@HIPE_LICENSE@
+
 #if defined(USE_DLIB) &&  defined(__ALTIVEC__)
 	//issue order of header for vector keyword call it before 
 	#include <dlib/simd.h>
@@ -40,6 +13,7 @@
 #include <dlib/gui_widgets.h>
 #include <dlib/image_io.h>
 #include <data/SquareCrop.h>
+#include <glog/logging.h>
 
 
 namespace filter
@@ -107,7 +81,17 @@ namespace filter
 			try
 			{
 				dlib::array2d<unsigned char> img;
-				dlib::cv_image<dlib::bgr_pixel> cimg(image.getMat());
+				cv::Mat res;
+				if (image.getMat().channels() == 4)
+				{
+					cv::cvtColor(image.getMat(), res, CV_BGRA2BGR);
+				}
+				else
+					res = image.getMat();
+				double ratio = 4.0;
+				cv::Mat small;
+				cv::resize(res, small, cv::Size(), 1.0/ratio, 1.0/ratio);
+				dlib::cv_image<dlib::bgr_pixel> cimg(small);
 				dlib::assign_image(img, cimg);
 
 				std::vector<dlib::full_object_detection> local_shapes;
@@ -131,12 +115,12 @@ namespace filter
 					// put them on the screen.
 					// Resize obtained rectangle for full resolution image. 
 					dlib::rectangle r(
-						(long)(dets[j].left() / 2),
-						(long)(dets[j].top() / 2),
-						(long)(dets[j].right() / 2),
-						(long)(dets[j].bottom() / 2)
+						(long)(dets[j].left() * ratio / 2),
+						(long)(dets[j].top() * ratio / 2),
+						(long)(dets[j].right() * ratio / 2),
+						(long)(dets[j].bottom() * ratio / 2)
 					);
-					dlib::cv_image<dlib::bgr_pixel> cimg2(image.getMat());
+					dlib::cv_image<dlib::bgr_pixel> cimg2(res);
 					dlib::full_object_detection shape = pose_model(cimg2, r);
 					local_shapes.push_back(shape);
 					render_face(faces, shape);
@@ -146,8 +130,11 @@ namespace filter
 			}
 			catch (exception& e)
 			{
-				cout << "\nexception thrown!" << endl;
-				cout << e.what() << endl;
+
+				std::stringstream build;
+				build << "Fail to process with Dlib : " << e.what();
+				LOG(ERROR) << build.str() << endl;
+				throw HipeException(build.str());
 			}
 
 			return data::ShapeData();
@@ -176,7 +163,7 @@ namespace filter
 				//FaceLandmark all images coming from the same parent
 				for (auto &myImage : images.Array())
 				{
-					if (count_frame % skip_frame == 0)
+					if (skip_frame == 0 || count_frame % skip_frame == 0)
 					{
 						if (imagesStack.size() != 0)
 							imagesStack.clear();

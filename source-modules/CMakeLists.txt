@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 3.7.1)
 
 project (Hipe_module)
 
-option(INSTALL_SOURCE "Install source for future developpement" ON)
+option(INSTALL_SOURCE "Install source for future developpement" OFF)
 message(STATUS "INSTALL_SOURCE: ${INSTALL_SOURCE}")
 
 # Options
@@ -13,17 +13,25 @@ option(USE_DLIB "Enable dlib library." ON)
 # option(HIPE_STATIC_LIBS "Compile static libraries." ON)
 option(HIPE_STATIC_EXES "Compile static executables." OFF)
 
-option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." ON)
+if (WIN32)
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+  option(HIPE_EXTERNAL_PYTHON36 "Use Python 3.6 libraries in Hipe External." ON)
+else()
+  option(HIPE_EXTERNAL_PYTHON27 "Use Python 2.7 libraries in Hipe External." OFF)
+  option(HIPE_EXTERNAL_PYTHON36 "Use Python 2.7 libraries in Hipe External." OFF)
+ endif()
 
 option(HIPE_EXTERNAL_BOOST "Use Boost libraries in Hipe External." ON)
 
 option(HIPE_EXTERNAL_OPENCV "Use OpenCV libraries in Hipe External." ON)
 
+option(HIPE_EXTERNAL_GLOG "Use GLOB libraries in Hipe External." ON)
+
 option(WITH_CUDA "Use CUDA GPU." ON)
 
 option(WITH_CUBLAS "Use CUBLAS libraries." OFF)
 
-option(WITH_CAFFE "Use Caffe libraries." OFF)
+option(WITH_CAFFE "Use Caffe libraries." ON)
 
 option(WITH_OPENBLAS "Use OpenBLAS libraries." OFF)
 
@@ -34,14 +42,30 @@ option(WITH_LMDB "Use LMDB libraries." OFF)
 
 option(WITH_HDF5 "Use HDF5 libraries." OFF)
 
-option(WITH_GFLAGS "Use GFlags libraries." OFF)
+option(WITH_GFLAGS "Use GFlags libraries." ON)
 
-option(WITH_GLOG "Use GLOG libraries." OFF)
+option(WITH_GLOG "Use GLOG libraries." ON)
 
 option(WITH_SNAPPY "Use SNAPPY libraries." OFF)
 
 
 option(WITH_PROTOBUF "Use PROTOBUF libraries." OFF)
+
+
+option(WITH_WEBRTC "Use WebRTC libraries." ON)
+
+if (UNIX)
+	#Working in progress Several unstable issue to deliver it now
+	set(WITH_WEBRTC OFF CACHE BOOL "Use WebRTC libraries." FORCE)
+endif(UNIX)
+
+option(BUILD_SAMPLE "Play with very light sample" ON)
+
+option(DOWNLOAD_SAMPLE "Force to download Demos package to test it" OFF)
+
+if (BUILD_SAMPLE)
+include ("${CMAKE_SOURCE_DIR}/cmake/DownloadSampleDependencies.cmake")
+endif()
 
 # option(HIPE_EXTERNAL_DLIB "Use Dlib libraries in Hipe External." ON)
 # message(STATUS "HIPE_EXTERNAL_DLIB: ${HIPE_EXTERNAL_DLIB}")
@@ -51,9 +75,21 @@ option(CMAKE_USE_WIN32_THREADS_INIT "using WIN32 threads" ON)
 endif(WIN32)
 
 if (WITH_CAFFE AND UNIX)
-#Disable Caffe TODO ATM IT'S NOT IMPLEMENTED
-set(WITH_CAFFE OFF CACHE BOOL "Use Caffe libraries." FORCE)
-message(ERROR "Cannot yet activate the Caffe on Linux. Implementation soon")
+  #Disable Caffe TODO ATM IT'S NOT IMPLEMENTED
+  #set(WITH_LMDB OFF CACHE BOOL "Use Caffe libraries." FORCE)
+  #set(WITH_OPENBLAS OFF CACHE BOOL "Use OpenBLAS libraries." FORCE)
+  #set(WITH_LEVELDB OFF CACHE BOOL "Use Caffe libraries." FORCE)
+  #set(WITH_LMDB OFF CACHE BOOL "Use LMDB libraries." FORCE)
+  #set(WITH_HDF5 OFF CACHE BOOL "Use HDF5 libraries." FORCE)
+  set(WITH_GFLAGS ON CACHE BOOL "Use GFlags libraries." FORCE)
+  set(WITH_GLOG ON CACHE BOOL "Use GLOG libraries." FORCE)
+  #set(WITH_SNAPPY OFF CACHE BOOL "Use SNAPPY libraries." FORCE)
+  #set(WITH_CUDA OFF CACHE BOOL "Use CUDA GPU."  FORCE)
+  #set(WITH_CUBLAS OFF CACHE BOOL "Use CUBLAS libraries." FORCE)
+  #set(WITH_PROTOBUF OFF CACHE BOOL "Use PROTOBUF libraries." FORCE)
+
+#set(WITH_CAFFE OFF CACHE BOOL "Use Caffe libraries." FORCE)
+#message(ERROR "Cannot yet activate the Caffe on Linux. Implementation soon")
 
 elseif(WITH_CAFFE AND WIN32)
 
@@ -72,7 +108,10 @@ set(WITH_PROTOBUF ON CACHE BOOL "Use PROTOBUF libraries." FORCE)
 
 endif()
 
+
+
 message(STATUS "HIPE_EXTERNAL_PYTHON27: ${HIPE_EXTERNAL_PYTHON27}")
+message(STATUS "HIPE_EXTERNAL_PYTHON36: ${HIPE_EXTERNAL_PYTHON36}")
 message(STATUS "HIPE_EXTERNAL_BOOST: ${HIPE_EXTERNAL_BOOST}")
 message(STATUS "HIPE_EXTERNAL_OPENCV: ${HIPE_EXTERNAL_OPENCV}")
 message(STATUS "WITH_CUDA: ${WITH_CUDA}")
@@ -113,12 +152,14 @@ set_property (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT 
 # add_subdirectory(tests)
 
 
-install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
-install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
+
 install(CODE "set(HIPE_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")" COMPONENT sources)
 
 if (${INSTALL_SOURCE})
-	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/project"
+	install(CODE "set(PROJECT_SOURCE_DIR \"\${CMAKE_INSTALL_PREFIX}/project\")" COMPONENT sources)
+	install(CODE "set(LICENSE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT sources)
+	
+	install(DIRECTORY "${CMAKE_SOURCE_DIR}/" DESTINATION "./project"
 			COMPONENT sources
 			PATTERN "cmake" 
 			PATTERN "source"

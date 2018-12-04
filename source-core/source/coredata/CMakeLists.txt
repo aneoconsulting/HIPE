@@ -1,7 +1,10 @@
+include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/python36_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
+
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/python27_config.cmake")
+
 
 #coredata LIBRARY
 
@@ -20,7 +23,7 @@ target_compile_definitions(coredata PRIVATE "-DUSE_BOOST_REGEX" "-DDATA_BUILD")
 target_link_libraries(coredata ${OpenCV_LIBS})
 target_link_libraries(coredata ${Boost_LIBRARIES})
 target_link_libraries(coredata ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(coredata ${PYTHON27_LIBRARIES})
+target_link_libraries(coredata ${PYTHON36_LIBRARIES})
 # if (UNIX)
 #   target_link_libraries(coredata '-Wl,--whole-archive core streaming -Wl,--no-whole-archive')
 # endif(UNIX)

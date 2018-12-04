@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.7.1)
 
 find_package(Threads REQUIRED)
 
-set(BOOST_COMPONENTS system thread filesystem date_time regex log program_options python)
+set(BOOST_COMPONENTS system thread filesystem date_time regex program_options python3 iostreams serialization)
 
 # Late 2017 TODO: remove the following checks and always use std::regex
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -24,9 +24,9 @@ set(Boost_USE_STATIC_LIBS OFF)# only find static libs
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost 1.62.0 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+find_package(Boost 1.66.0 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
 if(NOT ${Boost_FOUND})
-  message(FATAL_ERROR "failed to find Boost library (compatible with version 1.62.0)")
+  message(FATAL_ERROR "failed to find Boost library (compatible with version 1.66.0)")
 endif(NOT ${Boost_FOUND})
 
 display_pathlist("Boost_INCLUDE_DIR" "${Boost_INCLUDE_DIR}")

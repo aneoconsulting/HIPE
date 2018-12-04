@@ -1,33 +1,4 @@
-//READ LICENSE BEFORE ANY USAGE
-/* Copyright (C) 2018  Damien DUBUC ddubuc@aneo.fr (ANEO S.A.S)
- *  Team Contact : hipe@aneo.fr
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *  
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *  
- *  In addition, we kindly ask you to acknowledge ANEO and its authors in any program 
- *  or publication in which you use HIPE. You are not required to do so; it is up to your 
- *  common sense to decide whether you want to comply with this request or not.
- *  
- *  Non-free versions of HIPE are available under terms different from those of the General 
- *  Public License. e.g. they do not require you to accompany any object code using HIPE 
- *  with the corresponding source code. Following the new licensing any change request from 
- *  contributors to ANEO must accept terms of re-license by a general announcement. 
- *  For these alternative terms you must request a license from ANEO S.A.S Company 
- *  Licensing Office. Users and or developers interested in such a license should 
- *  contact us (hipe@aneo.fr) for more information.
- */
-
+//@HIPE_LICENSE@
 #include <filter/algos/preprocessing/OverlayFilter.h>
 
 HipeStatus filter::algos::OverlayFilter::process()
@@ -35,7 +6,7 @@ HipeStatus filter::algos::OverlayFilter::process()
 	// Assert data is present in connector
 	if (_connexData.empty())
 	{
-		throw HipeException("Error in OverlayFilter: No data in input.");
+		return OK;
 	}
 
 	// Separate shapes from source image
@@ -70,7 +41,8 @@ HipeStatus filter::algos::OverlayFilter::process()
 	}
 
 	if (image.empty() || !image.getMat().data)
-		throw HipeException("Error in OverlayFilter: No input image to draw on found.");
+		return OK;
+
 	cv::Mat outputImage;
 
 	if (! asReference)
@@ -145,6 +117,17 @@ data::ImageData filter::algos::OverlayFilter::extractSourceImageData(data::Data&
 	}
 }
 
+
+size_t filter::algos::OverlayFilter::computeSizeOfAllText(std::string text)
+{
+	size_t size = 0;
+	int baseline = 0;
+
+	cv::Size text_size = cv::getTextSize(text, cv::HersheyFonts::FONT_HERSHEY_PLAIN, fontScale, thickness, &baseline);
+	size += text_size.height + 10;
+	return size;
+}
+
 void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeData& shape)
 {
 	const cv::Scalar pointsColor(0, 255, 255);
@@ -163,7 +146,7 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 	{
 		cv::Point2f center(circle[0], circle[1]);
 		const float radius = circle[2];
-		cv::circle(image, center, radius, circlesColor, 2);
+		cv::circle(image, center, radius, circlesColor, thickness);
 	}
 
 	unsigned int nbColor = shape.ColorsArray_const().size();
@@ -176,9 +159,9 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 		if ( nbColor != 0)
 			color = shape.ColorsArray_const()[k % nbColor];
 		else
-			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);;
+			color = cv::Scalar(255, 255, 255);
 
-		cv::rectangle(image, rect, color, 3);
+		cv::rectangle(image, rect, color, thickness);
 		k++;
 	}
 
@@ -187,10 +170,10 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 	{
 		for (size_t i = 0; i < quad.size() - 1; ++i)
 		{
-			cv::line(image, quad[i], quad[i + 1], quadsColor, 2);
+			cv::line(image, quad[i], quad[i + 1], quadsColor, thickness);
 		}
 
-		cv::line(image, quad.front(), quad.back(), quadsColor, 2);
+		cv::line(image, quad.front(), quad.back(), quadsColor, thickness);
 	}
 
 	// Draw freeShapes
@@ -203,25 +186,37 @@ void filter::algos::OverlayFilter::drawShape(cv::Mat& image, const data::ShapeDa
 		if ( nbColor != 0)
 			color = shape.ColorsArray_const()[i % nbColor];
 		else
-			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);;
+			color = cv::Scalar(0, 147, 245); //ANEO COLOR
 
-		cv::polylines(image, freeShape, false, color, 2, 16);
+		cv::polylines(image, freeShape, false, color, thickness, 16);
 	}
 
 	unsigned int nbRect = shape.RectsArray_const().size();
+	
 	for (int i = 0; i < shape.IdsArray_const().size(); i++)
 	{
 		std::string text = shape.IdsArray_const()[i];
-		cv::Rect rect = shape.RectsArray_const()[i % nbRect];
+
+		cv::Rect rect;
+		if (shape.RectsArray_const().size() != 0)
+			rect = shape.RectsArray_const()[i % nbRect];
+		else
+			rect = cv::Rect(0,0, 1, 1);
 
 		cv::Scalar color;
 
 		if ( nbColor != 0)
 			color = shape.ColorsArray_const()[i % nbColor];
 		else
-			color = cv::Scalar(std::rand() % 255, std::rand() % 255, std::rand() % 255);
+			color = cv::Scalar(255, 255, 255);
 
-		cv::putText(image, text, cv::Point(rect.x, rect.y >= 3 ? rect.y - 3 : rect.y),
-		            cv::HersheyFonts::FONT_HERSHEY_PLAIN, 2, color, 2);
+		unsigned int height_text = static_cast<unsigned int>(computeSizeOfAllText(text));
+
+		if (rect.y < height_text)
+			cv::putText(image, text, cv::Point(rect.x, height_text + 10),
+		            cv::HersheyFonts::FONT_HERSHEY_PLAIN, fontScale, color, thickness);
+		else
+			cv::putText(image, text, cv::Point(rect.x, rect.y >= 3 ? rect.y - 3 : rect.y),
+		            cv::HersheyFonts::FONT_HERSHEY_PLAIN, fontScale, color, thickness);
 	}
 }

@@ -185,19 +185,30 @@ WORKDIR /home/hipe-group/3rdParty/hipe_external/linux64/downloads
 # Intel_TBB: intel-tbb-2018_U2.tar.gz
 RUN wget -c -O intel-tbb-2018_U2.tar.gz https://github.com/01org/tbb/archive/2018_U2.tar.gz
 # OpenCV: opencv-3.4.0.zip
-RUN wget -c -O opencv-3.4.0.zip https://github.com/opencv/opencv/archive/3.4.0.zip
+RUN wget -c -O opencv-3.4.2.zip https://github.com/opencv/opencv/archive/3.4.0.zip
 # OpenCV: opencv_contrib-3.4.0.zip
-RUN wget -c -O opencv_contrib-3.4.0.zip https://github.com/opencv/opencv_contrib/archive/3.4.0.zip
+RUN wget -c -O opencv_contrib-3.4.2.zip https://github.com/opencv/opencv_contrib/archive/3.4.0.zip
 # Dlib: dlib-19.13.zip
-RUN wget -c -O dlib-19.13.zip http://dlib.net/files/dlib-19.13.zip
+RUN wget -c -O dlib-19.16.zip http://dlib.net/files/dlib-19.13.zip
 # Boost: boost_1_62_0.tar.gz
-RUN wget -c -O boost_1_62_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.gz
+RUN wget -c -O boost_1_66_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_66_0.tar.gz
+
+
+
+
 
 ######
 #Build dependencies
 ######
 
 WORKDIR /home/hipe-group/utils
+
+RUN bash google-deps.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
+	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
+	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c -n 8
+	
+
 RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
 	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
 	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
@@ -212,6 +223,23 @@ RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads"
 	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
 	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
 	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c opencv -n 8
+
+RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
+	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
+	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c glog -n 8
+
+RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
+	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
+	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c gflags -n 8
+
+RUN bash build.sh -a "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" \
+	-b "/home/hipe-group/3rdParty/hipe_external/linux64/build" \
+	-i "/home/hipe-group/3rdParty/hipe_external/linux64/install" \
+	-g "/home/hipe-group/3rdParty/hipe_external/linux64/downloads" -d -c borringssl -n 8
+
+
 
 ##Now everything is built then add user hipe-group and change all rights for him
 RUN useradd -d /home/hipe-group -ms /bin/bash -g root -G sudo -p hipe-group hipe-group

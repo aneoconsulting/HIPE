@@ -1,6 +1,18 @@
+include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/common_functions_and_macros.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/boost_config.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_config.cmake")
+
+set(Websocketpp_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "Websocketpp Directory" FORCE)
+	list(APPEND CMAKE_PREFIX_PATH "${Websocketpp_DIR}")
+
+	
+message(STATUS "OpenSSL cmake dir ${OpenSSL_DIR}/lib/cmake")
+find_package(BoringSSL 
+				REQUIRED
+				PATHS "${BoringSSL_DIR}/lib/cmake"
+				NO_DEFAULT_PATH)
+
 
 add_hipe_library(corefilter SHARED)
 
@@ -8,11 +20,18 @@ target_compile_definitions(corefilter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUIL
 
 include_directories(corefilter ${OpenCV_INCLUDE_DIRS} )
 target_link_libraries(corefilter ${Boost_LIBRARIES})
+include_directories(corefilter ${Websocketpp_DIR} )
 target_link_libraries(corefilter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(corefilter core)
 target_link_libraries(corefilter coredata)
 target_link_libraries(corefilter json)
 
+if (WIN32)
+  find_package(zlib)
+  target_link_libraries(corefilter BoringSSL BoringCrypto ZLIB::ZLIB)
+else()
+  target_link_libraries(corefilter ssl crypto)
+endif()
 
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?

@@ -1,3 +1,5 @@
+
+
 function(display_pathlist _header _paths)
   set(_list_separator "\n--   ")
   string(REPLACE ";" "${_list_separator}" _path_list "${_paths}")
@@ -262,10 +264,15 @@ macro(install_dependencies_int target_name EXT_BIN)
 	install(SCRIPT "${PROJECT_SOURCE_DIR}/cmake/installConfig.cmake" COMPONENT applications)
 	file(TO_NATIVE_PATH "${HIPE_EXTERNAL_DIR}" HIPE_EXTERNAL_DIR)
 	if (WIN32)
-		set(SCRIPT_EXT ".bat")
+	  set(SCRIPT_EXT ".bat")
 	else()
-		set(SCRIPT_EXT ".sh")
+	  set(SCRIPT_EXT ".sh")
 	endif()
+	if (UNIX)
+	  SET(CMAKE_INSTALL_CONFIG_NAME "${CMAKE_BUILD_TYPE}")
+	endif(UNIX)
+	
+	message(STATUS "Install startHipe script for build type \"${CMAKE_INSTALL_CONFIG_NAME}\"")
 	if("${CMAKE_INSTALL_CONFIG_NAME}" STREQUAL "Debug") 
 		set(BUILD_CONFIG "Debug")
 	else()

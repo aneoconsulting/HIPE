@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>jQuery AJAX POST Form</title>
+    <meta charset="utf-8">
+    <script src="/js/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="response">
+    <pre></pre>
+</div>
+
+<form id="my-form">
+
+    <input type="text" id="server" name="server" placeholder="Hipe_server:port" />
+    <!-- <input type="text" id="request" name="request" placeholder="Json request" /> -->
+    <textarea id="request" name="request" cols="100" rows="50"></textarea>
+
+    <button type="submit">Submit</button>
+</form>
+
+
+<script>
+    (function($){
+    
+        function processForm( e ){
+        console.log( $('#request').val() )
+        var sername = $('#server').val() + '/json';
+        console.log( sername );
+            $.ajax({
+                crossOrigin: true,
+				url: '/json',
+				dataType: 'JSON',
+				type: 'POST',
+				contentType: 'application/json',
+				<!-- data: JSON.stringify( $('#request').val()), -->
+                data: $('#request').val(),
+				processData: false,
+				success: function( data, textStatus, jQxhr ){
+					$('#response pre').html( JSON.stringify( data ) );
+				},
+				error: function( jqXhr, textStatus, errorThrown ){
+					console.log( errorThrown );
+				}
+			});
+
+            e.preventDefault();
+        }
+
+        $('#my-form').submit( processForm );
+    })(jQuery);
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{
+	"name": "Demo - Facial Landmarks",
+	"filters": [
+		{
+			"Resize": {
+				"name": "Resize",
+				"need": [
+					"WebRTCVideoDataSource"
+				],
+				"height": "0",
+				"inoutData": "true",
+				"ratio": "1",
+				"width": "0"
+			}
+		},
+		{
+			"FaceLandmark": {
+				"name": "FaceLandmark",
+				"need": [
+					"Resize"
+				],
+				"file_predictor_dat": "Data-light/FaceDetection/shape_predictor_68_face_landmarks.dat",
+				"skip_frame": "2"
+
+			}
+		},
+		{
+			"OverlayFilter": {
+				"name": "OverlayFilter",
+				"asReference": "true",
+				"need": [
+					"FaceLandmark",
+					"Resize"
+				]
+			}
+		},
+		{
+			"WebRTCSender": {
+				"name": "WebRTCSender",
+				"need": [
+					"OverlayFilter"
+				],
+				"port": "9002"
+			}
+		}
+	],
+	"orchestrator": "DefaultScheduler",
+	"data": {
+		"datasource": [
+			{
+				"WebRTCVideoDataSource": {
+					"loop": false,
+					"port": "9001",
+					"name": "WebRTCVideoDataSource"
+				}
+			}
+		]
+	}
+}

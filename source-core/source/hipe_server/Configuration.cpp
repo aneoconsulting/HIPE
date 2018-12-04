@@ -1,33 +1,4 @@
-//READ LICENSE BEFORE ANY USAGE
-/* Copyright (C) 2018  Damien DUBUC ddubuc@aneo.fr (ANEO S.A.S)
- *  Team Contact : hipe@aneo.fr
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *  
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *  
- *  In addition, we kindly ask you to acknowledge ANEO and its authors in any program 
- *  or publication in which you use HIPE. You are not required to do so; it is up to your 
- *  common sense to decide whether you want to comply with this request or not.
- *  
- *  Non-free versions of HIPE are available under terms different from those of the General 
- *  Public License. e.g. they do not require you to accompany any object code using HIPE 
- *  with the corresponding source code. Following the new licensing any change request from 
- *  contributors to ANEO must accept terms of re-license by a general announcement. 
- *  For these alternative terms you must request a license from ANEO S.A.S Company 
- *  Licensing Office. Users and or developers interested in such a license should 
- *  contact us (hipe@aneo.fr) for more information.
- */
-
+//@HIPE_LICENSE@
 #include <hipe_server/Configuration.h>
 
 #pragma warning(push, 0)
@@ -42,8 +13,6 @@ namespace bpo = boost::program_options;
 
 namespace hipe_server
 {
-	core::Logger Configuration::configLogger = core::setClassNameAttribute("Configuration");
-
 	ConfigurationParameters::ConfigurationParameters()
 	{
 		setDefaultValues();
@@ -53,6 +22,8 @@ namespace hipe_server
 	{
 		this->port = 8080;
 		this->modulePath = "";
+		this->base_cert = "NOT-DEFINED";
+		this->debugMode = false;
 	}
 
 	Configuration::Configuration()
@@ -78,6 +49,12 @@ namespace hipe_server
 			;
 		configCat.add_options()
 			("module,m", bpo::value<std::string>(&this->configuration.modulePath)->default_value(this->configuration.modulePath), "Sets the path to the module to get all filters implemented")
+			;
+		configCat.add_options()
+			("certificat_path, -c", bpo::value<std::string>(&this->configuration.base_cert)->default_value(this->configuration.base_cert), "Sets the path to the https certificats")
+			;
+		configCat.add_options()
+			("debug,d", bpo::value<bool>()->implicit_value(true), "Let user attached it's own hipe_engine binary")
 			;
 
 
@@ -118,6 +95,15 @@ namespace hipe_server
 
 			return 1;
 		}
+
+		if (vm.count("module") != 0)
+		{
+			corefilter::getLocalEnv().setValue("modulePath", configuration.modulePath);
+		}
+		if (vm.count("debug") != 0)
+		{
+			corefilter::getLocalEnv().setValue("debugMode", "true");
+		}
 		return 0;
 	}
 
@@ -128,14 +114,15 @@ namespace hipe_server
 		{
 			if (! isFileExist(this->configFilePath))
 			{
-				this->configLogger << "Couldn't find configuration file.";
+				LOG(INFO) << "Couldn't find configuration file.";
 				return 1;
 			}
 			boost::property_tree::read_json(this->configFilePath, configPtree);
 		}
 		catch (const std::exception& e)
 		{
-			this->configLogger << "Couldn't find configuration file.";
+			LOG(ERROR) << "Couldn't find a valid configuration file.";
+			LOG(ERROR) << e.what();
 			return 1;
 		}
 
@@ -145,6 +132,54 @@ namespace hipe_server
 			auto httpNode = configPtree.get_child("http");
 			configuration.port = getValue<unsigned short>(httpNode, "port");
 		}
+
+		if (configPtree.count("base_cert") != 0)
+		{
+			configuration.base_cert = configPtree.get<std::string>(std::string("base_cert"));
+			
+		}
+		if (configPtree.count("module") != 0)
+		{
+			corefilter::getLocalEnv().setValue("modulePath", configPtree.get<std::string>(std::string("module")));
+		}
+
+		//Set localenv from config here
+		if (configPtree.count("config_path"))
+		{
+			auto pathsNode = configPtree.get_child("config_path");
+			for (auto data = pathsNode.begin(); data != pathsNode.end(); ++data)
+			{
+				
+				if(data->second.empty() && !data->second.data().empty()) {
+					corefilter::getLocalEnv().setValue(data->first, getValue<std::string>(pathsNode, data->first));
+					LOG(INFO) <<  "Set Path Variable environement : [ " << data->first << "] --> [ "
+						<< corefilter::getLocalEnv().getValue(data->first)
+						<< " ]" << std::endl;
+				}
+				else if(!data->second.empty() && data->second.data().empty())
+				{
+					std::stringstream array_path;
+					int first = 0;
+					for (auto fields = data->second.begin(); fields != data->second.end(); ++fields)
+					{
+						if (first == 0)
+							array_path << fields->second.data(); //getValue<std::string>(pathsNode, data->first);
+						else
+							array_path << ";" << fields->second.data(); //getValue<std::string>(pathsNode, data->first);
+						first++;
+					}
+					corefilter::getLocalEnv().setValue(data->first, array_path.str());
+					LOG(INFO) <<  "Set Path Variable environement : [ " << data->first << "] --> [ "
+						<< corefilter::getLocalEnv().getValue(data->first)
+						<< " ]" << std::endl;
+				}
+				    
+				
+				
+			}
+		}
+
+		
 
 		return 0;
 	}
@@ -157,7 +192,7 @@ namespace hipe_server
 
 	void Configuration::displayConfig() const
 	{
-		configLogger << "port set to " + std::to_string(this->configuration.port);
+		LOG(INFO) << "port set to " + std::to_string(this->configuration.port);
 	}
 
 

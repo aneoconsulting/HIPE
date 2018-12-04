@@ -29,11 +29,20 @@ message(STATUS "PYTHON_LIBRARY: ${PYTHON_LIBRARY}")
 # set(Python_ADDITIONAL_VERSIONS 2.7 2)
 
 # Add site-packages to include directories to find Numpy headers.
+if (WIN32)
 execute_process(
   COMMAND "${PYTHON_EXECUTABLE}" -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
   OUTPUT_VARIABLE PYTHON27_SITE_PACKAGES_DIR
   OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+  )
+else()
+execute_process(
+  COMMAND "${PYTHON_EXECUTABLE}" -c "import site; print(site.getsitepackages()[0])"
+  OUTPUT_VARIABLE PYTHON27_SITE_PACKAGES_DIR
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+ 
+endif()
 # TODO
 # Maybe generalize this with file globbing or find_path. Determine how the
 # system normally find these files first and use that approach if possible.

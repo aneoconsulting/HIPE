@@ -49,7 +49,7 @@ get_filename_component(HIPE_EXTERNAL "${HIPE_EXTERNAL}" ABSOLUTE)
 if(WIN32)
   set(HIPE_EXTERNAL_DIR "${HIPE_EXTERNAL}/win64")
 else(WIN32)
-  set(HIPE_EXTERNAL_DIR "${HIPE_EXTERNAL}/linux64/install")
+  set(HIPE_EXTERNAL_DIR "${HIPE_EXTERNAL}/linux64")
   # Without this, the linker fails to find e.g. libboost_wave when building
   # multiple libraries ("cannot find -lboost_wave"), despite correctly locating
   # the libraries in HIPE_EXTERNAL with the find_package command. For example,
@@ -58,19 +58,38 @@ else(WIN32)
 #   link_libraries("-L '${HIPE_EXTERNAL_DIR}/lib'")
 endif(WIN32)
 
+
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+set(CUDA_MAJOR "9" CACHE STRING "CUDA MAJOR VERSION" FORCE)
+set(CUDA_MINOR "2" CACHE STRING "CUDA MINOR VERSION" FORCE)
+else()
+set(CUDA_MAJOR "10" CACHE STRING "CUDA MAJOR VERSION" FORCE)
+set(CUDA_MINOR "0" CACHE STRING "CUDA MINOR VERSION" FORCE)
+endif()
+
+set(CUDA_VERSION "${CUDA_MAJOR}.${CUDA_MINOR}" CACHE PATH "CUDA_VERSION" FORCE)
+if (WIN32)
+  file(TO_CMAKE_PATH "$ENV{CUDA_PATH_V${CUDA_MAJOR}_${CUDA_MINOR}}" _CUDA_TOOLKIT_ROOT_DIR)
+else()
+  file(TO_CMAKE_PATH "/usr/local/cuda-${CUDA_MAJOR}.${CUDA_MINOR}" _CUDA_TOOLKIT_ROOT_DIR)
+  
+endif(WIN32)
+SET(CUDA_TOOLKIT_ROOT_DIR ${_CUDA_TOOLKIT_ROOT_DIR} CACHE PATH "Cuda Tookit PATH" FORCE)
+message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
+
 if(WIN32)
   # TODO
   # Update this section to enable optional use of installed system libraries.
-  set(Boost_DIR "${HIPE_EXTERNAL_DIR}/boost_1_62_0/" CACHE PATH "Boost_DIR" FORCE)
+  set(Boost_DIR "${HIPE_EXTERNAL_DIR}/boost_1_66_0/" CACHE PATH "Boost_DIR" FORCE)
   set(Boost_INCLUDE_DIR "${Boost_DIR}" CACHE PATH "Boost_INCLUDE_DIR" FORCE)
-  set(BOOST_LIBRARYDIR "${Boost_DIR}/lib64-msvc-14.0" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
+  set(BOOST_LIBRARYDIR "${Boost_DIR}/lib" CACHE PATH "BOOST_LIBRARYDIR" FORCE)
   set(BOOST_ROOT "${Boost_DIR}/"  CACHE PATH "BOOST_ROOT" FORCE)
   
   if(HIPE_EXTERNAL_BOOST)
     list(APPEND CMAKE_PREFIX_PATH "${Boost_DIR}")
   endif(HIPE_EXTERNAL_BOOST)
 
-  set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv-3.4" CACHE PATH "OpenCV Directory" FORCE)
+  set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "OpenCV Directory" FORCE)
   if(HIPE_EXTERNAL_OPENCV)
     list(APPEND CMAKE_PREFIX_PATH "${OpenCV_DIR}")
   endif(HIPE_EXTERNAL_OPENCV)
@@ -80,6 +99,22 @@ if(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "${Python27_DIR}")
   endif(HIPE_EXTERNAL_PYTHON27)
 
+   set(Python36_DIR "${HIPE_EXTERNAL_DIR}/Python36"  CACHE PATH "PYTHON3_LIBRARYDIR" FORCE )
+  if(HIPE_EXTERNAL_PYTHON36)
+    list(APPEND CMAKE_PREFIX_PATH "${Python36_DIR}")
+  endif(HIPE_EXTERNAL_PYTHON36)
+  
+  set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/"  CACHE PATH "Folder contains Gflags" FORCE)
+  
+  set(GLOG_ROOT_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "Folder contains Google glog" FORCE)
+  
+  set(BoringSSL_DIR "${HIPE_EXTERNAL_DIR}/boringssl" CACHE PATH "BOringSSL Directory" FORCE)
+  list(APPEND CMAKE_PREFIX_PATH "${BoringSSL_DIR}")
+
+  set(ZLIB_ROOT "${HIPE_EXTERNAL_DIR}" CACHE PATH "Zlib Directory" FORCE)
+  list(APPEND CMAKE_PREFIX_PATH "${ZLIB_ROOT}")
+
+  
 else(WIN32)
 #   set(Python27_DIR "${HIPE_EXTERNAL_DIR}/python27/usr"  CACHE PATH "PYTHON_LIBRARYDIR")
 #   set(PYTHON_LIBRARY "${Python27_DIR}/lib" CACHE PATH "PYTHON_LIBRARY")
@@ -90,9 +125,21 @@ else(WIN32)
 	  list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/python27/usr")
 	endif(HIPE_EXTERNAL_PYTHON27)
 
+ 
+    if(HIPE_EXTERNAL_PYTHON36)
+	  set(Python36_DIR "${HIPE_EXTERNAL_DIR}/python36/usr"  CACHE PATH "PYTHON36_LIBRARYDIR")
+	  list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/python36/usr")
+	endif(HIPE_EXTERNAL_PYTHON36)
+  
+	if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+	  set(Python36_DIR "/home/hipe-group/python-3.6.7"  CACHE PATH "PYTHON36_LIBRARYDIR")
+	  list(APPEND CMAKE_PREFIX_PATH "${Python36_DIR}")
+	endif()
+	
 #   set(OpenCV_DIR "${HIPE_EXTERNAL_DIR}/opencv/share/OpenCV" CACHE PATH "OpenCV")
 	if(HIPE_EXTERNAL_OPENCV)
 		list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/cuda8")
+		
 		set(ENV{PATH} "${HIPE_EXTERNAL_DIR}/cuda8/bin:$ENV{PATH}")
 		list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/opencv")
 	endif(HIPE_EXTERNAL_OPENCV)
@@ -105,6 +152,16 @@ else(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "${HIPE_EXTERNAL_DIR}/boost")
   endif(HIPE_EXTERNAL_BOOST)
   
-
+  if(HIPE_EXTERNAL_GLOG)
+	  set(GFLAGS_ROOT_DIR "${HIPE_EXTERNAL_DIR}/"  CACHE PATH "Folder contains Gflags" FORCE)
+	  set(GLOG_ROOT_DIR "${HIPE_EXTERNAL_DIR}/" CACHE PATH "Folder contains Google glog" FORCE)
+  else()
+	  set(GFLAGS_ROOT_DIR "/usr/share/gflags/"  CACHE PATH "Folder contains Gflags" FORCE)
+	  set(GLOG_ROOT_DIR "/usr/share/glog/" CACHE PATH "Folder contains Google glog" FORCE)
+  endif()
+  
+  set(BoringSSL_DIR "${HIPE_EXTERNAL_DIR}" CACHE PATH "BOringSSL Directory" FORCE)
+  list(APPEND CMAKE_PREFIX_PATH "${BoringSSL_DIR}")
+  
   message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 endif(WIN32)

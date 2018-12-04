@@ -1,0 +1,9 @@
+{
+	"http" : {
+		"port" : "9090"
+	},
+	"base_cert" : "/home/hipe-group/hipe/install/hipe-core/workingdir/http-root/certificats/power9",
+	"config_path" : {
+		"python_dll_path" : [ "/home/hipe-group/python-3.6.7/bin", "/home/hipe-group/python-3.6.7/lib", "/home/hipe-group/python3.6.7/lib/python3.6/site-packages", "/home/hipe-group/python3.6.7/lib/python3.6" ]
+	}
+}

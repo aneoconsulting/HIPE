@@ -13,13 +13,20 @@ cd -- "$DIR_SCRIPT"
 mkdir -p build
 cd build
 mkdir -p ../install
+rm -rf "${DIR_SCRIPT}/../install/hipe-core/bin" || true
+rm -rf "${DIR_SCRIPT}/../install/hipe-core/lib" || true
+rm -rf "${DIR_SCRIPT}/../install/hipe-modules/bin" || true
+rm -rf "${DIR_SCRIPT}/../install/hipe-modules/lib" || true
+
 
 cmake \
-	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_BUILD_TYPE=Debug \
 	-DCMAKE_INSTALL_PREFIX="${DIR_SCRIPT}/../install/hipe-core" \
 	..
 
-make VERBOSE=2 -j8
+NPROC=$(grep -c ^processor /proc/cpuinfo)
+
+make VERBOSE=1 -j${NPROC}
 make VERBOSE=2 install
 
 #make VERBOSE=1 package

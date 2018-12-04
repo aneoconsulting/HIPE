@@ -1,0 +1,55 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c614a65..0f4ba48 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -502,3 +502,9 @@ add_custom_target(
+     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+     DEPENDS all_tests bssl_shim handshaker
+     ${MAYBE_USES_TERMINAL})
++
++  install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/" DESTINATION include
++			COMPONENT headers
++			PATTERN "*.h")
++
++install(EXPORT  BoringSSL DESTINATION lib/cmake COMPONENT library FILE BoringSSLConfig.cmake)
+diff --git a/crypto/CMakeLists.txt b/crypto/CMakeLists.txt
+index 78b835c..cab1a61 100644
+--- a/crypto/CMakeLists.txt
++++ b/crypto/CMakeLists.txt
+@@ -486,3 +486,11 @@ if(WIN32)
+   target_link_libraries(crypto_test ws2_32)
+ endif()
+ add_dependencies(all_tests crypto_test)
++
++install (TARGETS crypto
++		EXPORT BoringSSL
++		RUNTIME DESTINATION bin
++		LIBRARY DESTINATION lib
++		COMPONENT library
++		ARCHIVE DESTINATION lib
++	)
+diff --git a/ssl/CMakeLists.txt b/ssl/CMakeLists.txt
+index d6c1294..bc602ee 100644
+--- a/ssl/CMakeLists.txt
++++ b/ssl/CMakeLists.txt
+@@ -62,3 +62,20 @@ if(WIN32)
+   target_link_libraries(ssl_test ws2_32)
+ endif()
+ add_dependencies(all_tests ssl_test)
++
++TARGET_INCLUDE_DIRECTORIES( ssl PUBLIC
++  $<INSTALL_INTERFACE:include>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
++
++target_include_directories(ssl INTERFACE
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
++  $<INSTALL_INTERFACE:include>  
++)
++
++install (TARGETS ssl
++		EXPORT BoringSSL
++		RUNTIME DESTINATION bin
++		LIBRARY DESTINATION lib
++		COMPONENT library
++		ARCHIVE DESTINATION lib
++	)
