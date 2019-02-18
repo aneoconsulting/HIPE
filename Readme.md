@@ -29,24 +29,27 @@ We are convinced that all work can be reusable in a large variety of project and
 
 
 ### 2. Download prebuilt Software :
-### 	2.1 Requierements
-Please follow the guideline to install all prerequisites dependencies in the [requierements](wiki/Requirements.md) page
-### 	2.2 for Windows x86-64bits
+### 	2.1 for Windows x86-64bits
 Coming soon
-### 	2.3 for Linux x86-64bits
+### 	2.2 for Linux x86-64bits
 Coming soon
 
 
 
 ## 3. Build HIPE
 
+### Requirements
+
+Please follow the guideline to install all prerequisites dependencies in the [requierements](wiki/Requirements.md) page
+
 ### 	3.1 Build HIPE CORE
+
 Please follow this step to build the HIPE Core [how-to-build](wiki/Howto-Build/HowTo-build-core.md) **before to build any modules**
 
 
 
 ### 	3.2 Build HIPE MODULES
-Please follow this step to build the HIPE Modules [how-to-build](wiki/Howto-Build/HowTo-build.md)
+Please follow this step to build the HIPE Modules [how-to-build](wiki/Howto-Build/HowTo-build-core.md)
 
 ## 4. HOWTO :
 ## 	4.1 How to run
