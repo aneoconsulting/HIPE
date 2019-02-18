@@ -44,7 +44,7 @@ Please follow the guideline to install all prerequisites dependencies in the [re
 
 ### 	3.1 Build HIPE CORE
 
-Please follow this step to build the HIPE Core [how-to-build](wiki/Howto-Build/HowTo-build-core.md) **before to build any modules**
+Please follow this step to build the HIPE Core [how-to-build](wiki/Howto-Build/Howto-build-core.md) **before to build any modules**
 
 
 
