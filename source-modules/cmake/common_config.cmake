@@ -9,5 +9,5 @@ else(WIN32)
 	include_directories("${CMAKE_SOURCE_DIR}/header")
 endif()
 
-
-include("${CMAKE_SOURCE_DIR}/cmake/hipe_external_config.cmake")
+message(status "Configure HIPE_EXTERNAL : ${CMAKE_CURRENT_LIST_DIR}/hipe_external_config.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/hipe_external_config.cmake")

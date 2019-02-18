@@ -1,4 +1,33 @@
-//@HIPE_LICENSE@
+//READ LICENSE BEFORE ANY USAGE
+/* Copyright (C) 2018  Damien DUBUC ddubuc@aneo.fr (ANEO S.A.S)
+ *  Team Contact : hipe@aneo.fr
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *  
+ *  In addition, we kindly ask you to acknowledge ANEO and its authors in any program 
+ *  or publication in which you use HIPE. You are not required to do so; it is up to your 
+ *  common sense to decide whether you want to comply with this request or not.
+ *  
+ *  Non-free versions of HIPE are available under terms different from those of the General 
+ *  Public License. e.g. they do not require you to accompany any object code using HIPE 
+ *  with the corresponding source code. Following the new licensing any change request from 
+ *  contributors to ANEO must accept terms of re-license by a general announcement. 
+ *  For these alternative terms you must request a license from ANEO S.A.S Company 
+ *  Licensing Office. Users and or developers interested in such a license should 
+ *  contact us (hipe@aneo.fr) for more information.
+ */
+
 //Added for the json-example
 #define BOOST_SPIRIT_THREADSAFE
 //Added for the default_resource example
@@ -14,7 +43,6 @@
 #include <glog/logging.h>
 
 
-#include <hipe_engine/Configuration.h>
 #include <corefilter/tools/Localenv.h>
 #include "corefilter/tools/net/ForwardLogToWeb.h"
 #include "corefilter/tools/JsonBuilder.h"
@@ -28,6 +56,7 @@
 #include <functional>
 #include <utility>
 #include <fstream>
+#include "core/Configuration.h"
 
 #pragma warning(pop)
 
@@ -254,6 +283,9 @@ json::JsonTree executeJson(json::JsonTree& treeRequest)
 
 		LOG(ERROR) << "HipeException : " << e.what();
 		PRINTSTACK(INFO);
+		google::FlushLogFiles(google::GLOG_INFO);
+		google::FlushLogFiles(google::GLOG_ERROR);
+		google::FlushLogFiles(google::GLOG_WARNING);
 		return treeResponse;
 	}
 	catch (std::exception& e)
@@ -265,6 +297,9 @@ json::JsonTree executeJson(json::JsonTree& treeRequest)
 
 		LOG(ERROR) << "std::exception : " << e.what();
 		PRINTSTACK(INFO);
+		google::FlushLogFiles(google::GLOG_INFO);
+		google::FlushLogFiles(google::GLOG_ERROR);
+		google::FlushLogFiles(google::GLOG_WARNING);
 		return treeResponse;
 	}
 	catch (...)
@@ -277,6 +312,9 @@ json::JsonTree executeJson(json::JsonTree& treeRequest)
 
 		LOG(ERROR) << "Unkown exception in hipe_engine...";
 		PRINTSTACK(INFO);
+		google::FlushLogFiles(google::GLOG_INFO);
+		google::FlushLogFiles(google::GLOG_ERROR);
+		google::FlushLogFiles(google::GLOG_WARNING);
 		return treeResponse;
 	}
 
@@ -356,7 +394,7 @@ void executeFromSharedMemory(const string& shm_name)
 	LOG(INFO) << "Exit from Child now...";
 }
 
-void startWebServerProcess(const hipe_engine::ConfigurationChild& config)
+void startWebServerProcess(const hipe_server::Configuration& config)
 {
 	std::vector<std::string> args;
 	args.push_back("-m");
@@ -434,7 +472,7 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 	// Default values configuration file and command line configuration
-	hipe_engine::ConfigurationChild config;
+	hipe_server::Configuration config;
 	std::string home_path = getEnv("HOME");
 	std::string config_path = home_path + "/config.json";
 
@@ -507,17 +545,24 @@ int main(int argc, char* argv[])
 	LOG(INFO) << "Start Orchestrator " << std::endl;
 	orchestrator::OrchestratorFactory::start_orchestrator();
 
-	std::shared_ptr<core::ModuleLoader> module = std::make_shared<core::ModuleLoader>(config.configuration.modulePath);
-	if (!config.configuration.modulePath.empty())
+	std::shared_ptr<core::ModuleLoader> module = std::make_shared<core::ModuleLoader>();
+	if (!config.configuration.modulePaths.empty())
 	{
 		try
 		{
-			module->loadLibrary();
-			function<void()> call_function = module->callFunction<void()>("load");
+			for (string & dllName : config.configuration.modulePaths)
+			{
+				module->loadLibrary(dllName);
+				//function<void()> call_function = module->callFunction<void()>("load");
+			}
+			
 		}
 		catch (HipeException& except_loader)
 		{
 			LOG(ERROR) << "FAIL TO LOAD MODULE AT START TIME. Continue with no preloaded module" << std::endl;
+			google::FlushLogFiles(google::GLOG_INFO);
+			google::FlushLogFiles(google::GLOG_ERROR);
+			google::FlushLogFiles(google::GLOG_WARNING);
 		}
 	}
 	else

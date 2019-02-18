@@ -17,7 +17,10 @@ find_package(BoringSSL
 add_hipe_library(corefilter SHARED)
 
 target_compile_definitions(corefilter PRIVATE "-DUSE_BOOST_REGEX" "-DFILTER_BUILD")
-
+target_compile_definitions(corefilter PUBLIC "$<$<CONFIG:Debug>:ZLIB_DEBUG>")
+target_compile_definitions(corefilter PUBLIC "$<$<CONFIG:Debug>:_DEBUG>")
+target_compile_definitions(corefilter PUBLIC "$<$<CONFIG:Release>:ZLIB_RELEASE>")
+target_compile_definitions(corefilter PUBLIC "$<$<CONFIG:RelWithDebInfo>:ZLIB_RELEASE>")
 include_directories(corefilter ${OpenCV_INCLUDE_DIRS} )
 target_link_libraries(corefilter ${Boost_LIBRARIES})
 include_directories(corefilter ${Websocketpp_DIR} )
@@ -25,7 +28,9 @@ target_link_libraries(corefilter ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(corefilter core)
 target_link_libraries(corefilter coredata)
 target_link_libraries(corefilter json)
-
+foreach(__component ${OpenCV_LIB_COMPONENTS})
+target_link_libraries(corefilter ${__component})
+endforeach()
 if (WIN32)
   find_package(zlib)
   target_link_libraries(corefilter BoringSSL BoringCrypto ZLIB::ZLIB)

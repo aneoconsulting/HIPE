@@ -6,7 +6,7 @@ else()
 	set(BUILD_CONFIG "Release")
 endif()
 
-include("${PROJECT_SOURCE_DIR}/cmake/getDependencies.cmake")
+include("${PROJECT_SOURCE_DIR}/../../cmake/getDependencies.cmake")
 
 
 message(STATUS "Find shared library dependencies...")

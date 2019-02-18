@@ -2,6 +2,7 @@
 setlocal
 SETLOCAL ENABLEDELAYEDEXPANSION
 set PATH=C:\Program Files\CMake\bin;%PATH%
+REM set HIPE_EXTERNAL=D:\HIPE_EXTERNAL
 
 pushd %~dp0
 set script_dir=%CD%

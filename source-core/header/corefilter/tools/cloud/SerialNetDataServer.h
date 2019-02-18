@@ -4,8 +4,10 @@
 #include <opencv2/core/mat.hpp>
 
 #include <atomic>
-#ifdef WIN32
+#if defined(WIN32) && defined(ZLIB_RELEASE)
 #define BOOST_ZLIB_BINARY zlib
+#elif defined(WIN32) && defined(ZLIB_DEBUG)
+#define BOOST_ZLIB_BINARY zlibd
 #endif
 #include <boost/asio.hpp>
 

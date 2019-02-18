@@ -41,8 +41,11 @@ ProcessController::ProcessController()
 	std::vector<std::string> args;
 	args.push_back("-s");
 	args.push_back("MySharedMemory");
-	args.push_back("-m");
-	args.push_back(corefilter::getLocalEnv().getValue("modulePath"));
+	for (std::string dllPath : corefilter::getLocalEnv().configuration().configuration.modulePaths)
+	{
+		args.push_back("-m");
+		args.push_back(dllPath);
+	}
 
 	std::string bin_child = "hipe_engine";
 #ifndef WIN32
@@ -131,7 +134,7 @@ std::string ProcessController::executeOrUpdateAttachedProcess(std::string reques
 	std::stringstream buffer;
 	buffer.str(response);
 	treeResponse.read_json(buffer);
-	
+
 	boost::property_tree::ptree* ptree = treeResponse.getPtree().get();
 
 	ptree->erase("errCode");
@@ -163,18 +166,21 @@ void ProcessController::kill_process()
 void ProcessController::start_process()
 {
 	tranfertLocalEnv();
-		std::vector<std::string> args;
-		args.push_back("-s");
-		args.push_back("MySharedMemory");
+	std::vector<std::string> args;
+	args.push_back("-s");
+	args.push_back("MySharedMemory");
+	for (std::string dllPath : corefilter::getLocalEnv().configuration().configuration.modulePaths)
+	{
 		args.push_back("-m");
-		args.push_back(corefilter::getLocalEnv().getValue("modulePath"));
+		args.push_back(dllPath);
+	}
 
-		std::string bin_child = "hipe_engine";
+	std::string bin_child = "hipe_engine";
 #ifndef WIN32
 		bin_child += ".bin";
 #endif
-		
-		proc = new boost::process::child(boost::process::search_path(bin_child), boost::process::args(args));
+
+	proc = new boost::process::child(boost::process::search_path(bin_child), boost::process::args(args));
 }
 
 std::string ProcessController::executeOrUpdateProcess(std::string request)
@@ -191,7 +197,6 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 	if (! checkIfProcessExistOrStillAlive())
 	{
 		start_process();
-		
 	}
 
 	mtx->unlock();
@@ -208,7 +213,7 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 		kill_process();
 		throw HipeException("Something goes wrong in the child process");
 	}
-	
+
 
 	std::string response = "";
 	try
@@ -241,7 +246,8 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 			mtx->unlock(); //Wait for client response
 			/*LOG(INFO) << "Parent : mutex unlock" << std::endl;*/
 
-			if (errCode != "200") {
+			if (errCode != "200")
+			{
 				kill_process();
 				start_process();
 			}
@@ -260,7 +266,7 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 		{
 			std::thread restartIfNeeded = std::thread([&]()
 			{
-					start_process();
+				start_process();
 			});
 			restartIfNeeded.detach();
 		}
@@ -270,8 +276,10 @@ std::string ProcessController::executeOrUpdateProcess(std::string request)
 		mtx->unlock();
 		/*LOG(INFO) << "Parent : mutex unlock" << std::endl;*/
 		LOG(INFO) << "Parent : fail to receive message : " << e.what() << std::endl;
+		google::FlushLogFiles(google::GLOG_INFO);
+		google::FlushLogFiles(google::GLOG_ERROR);
+		google::FlushLogFiles(google::GLOG_WARNING);
 		kill_process();
-
 	}
 
 	return response;

@@ -9,7 +9,7 @@ popd
 
 
 echo "Path to binary " %script_dir%
-cd %script_dir%
+cd "%script_dir%/aneo/vision"
 
 
 

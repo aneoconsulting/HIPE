@@ -66,7 +66,7 @@ find_package(BoringSSL
 
 target_include_directories(hipe_server PRIVATE ${HIPE_EXTERNAL_DIR})
 target_include_directories(hipe_server PRIVATE ${HIPE_EXTERNAL_DIR}/include)
-
+target_compile_definitions(hipe_server PUBLIC "$<$<CONFIG:Debug>:_DEBUG>")
 target_link_libraries(hipe_server http)
 target_link_libraries(hipe_server orchestrator)
 target_link_libraries(hipe_server json)
@@ -75,7 +75,9 @@ target_link_libraries(hipe_server corefilter)
 target_link_libraries(hipe_server corebench)
 
 target_link_libraries(hipe_server core)
-target_link_libraries(hipe_server ${OpenCV_LIBS})
+foreach(__component ${OpenCV_LIB_COMPONENTS})
+target_link_libraries(hipe_server ${__component})
+endforeach()
 target_link_libraries(hipe_server ${Boost_LIBRARIES})
 target_link_libraries(hipe_server ${CMAKE_THREAD_LIBS_INIT})
 

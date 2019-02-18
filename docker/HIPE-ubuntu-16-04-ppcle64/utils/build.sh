@@ -559,6 +559,7 @@ function build_opencv()
 	  -DBUILD_TESTS=OFF \
 	  ..
   #       -DBUILD_PROTOBUF=OFF \
+  # -DWITH_FFMPEG=ON \
 
   make -j "$N_THREADS" install
   popd

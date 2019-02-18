@@ -51,13 +51,16 @@ endfunction(prepend_include_directories_if_necessary _include_dirs)
 
 
 
-
-# function(prepend_path_if_necessary _list _path)
-#   if(NOT "${_path}" IN_LIST _list)
-#     list(INSERT _list 0 "${_path}")
-#   endif(NOT "${_path}" IN_LIST _list)
-# endfunction(prepend_path_if_necessary _list _path)
-
+MACRO(SUBDIRLIST result curdir)
+  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  SET(dirlist "")
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${curdir}/${child})
+      LIST(APPEND dirlist ${child})
+    ENDIF()
+  ENDFOREACH()
+  SET(${result} ${dirlist})
+ENDMACRO()
 
 
 # Create source groups for visual studio.
@@ -86,6 +89,16 @@ function(message_header header_text)
 endfunction(message_header)
 
 
+function(CUDA_CONVERT_FLAGS EXISTING_TARGET)
+    get_property(old_flags TARGET ${EXISTING_TARGET} PROPERTY INTERFACE_COMPILE_OPTIONS)
+	message(status "All_Flags : ${old_flags}")
+    if(NOT "${old_flags}" STREQUAL "")
+        string(REPLACE ";" "," CUDA_flags "${old_flags}")
+        set_property(TARGET ${EXISTING_TARGET} PROPERTY INTERFACE_COMPILE_OPTIONS
+            "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${old_flags}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${CUDA_flags}>"
+            )
+    endif()
+endfunction()
 
 # Regroup all common commands in a macro for building HIPE libraries to avoid
 # redundancy.
@@ -94,11 +107,11 @@ endfunction(message_header)
 # Refactor. The current version is directly inhereted and was only slightly
 # modified to create the macro.
 
-macro(add_hipe_library _hipe_lib_name _lib_type)
+macro(add_hipe_library _hipe_lib_name module_path _lib_type)
   message_header("HIPE LIBRARY: ${_hipe_lib_name}")
 
   set(_src_lib_path ${CMAKE_CURRENT_SOURCE_DIR})
-  set(_src_lib_inc_path ${CMAKE_SOURCE_DIR}/header/${_hipe_lib_name})
+  set(_src_lib_inc_path ${CMAKE_SOURCE_DIR}/${module_path}/header/${_hipe_lib_name})
 
   message(STATUS "${_hipe_lib_name} source path: ${_src_lib_path}" )
 
@@ -112,6 +125,7 @@ macro(add_hipe_library _hipe_lib_name _lib_type)
     GLOB_RECURSE _header_list
     LIST_DIRECTORIES false
     "${_src_lib_inc_path}/*.h*"
+    "${_src_lib_inc_path}/*.cuh*"
   )
 
   # LIBRARY
@@ -123,6 +137,7 @@ macro(add_hipe_library _hipe_lib_name _lib_type)
 
   add_library(${_hipe_lib_name} ${_lib_type} ${_source_list} ${_header_list})
   target_include_directories(${_hipe_lib_name} BEFORE PRIVATE ${_src_lib_inc_path})
+  target_include_directories(${_hipe_lib_name} BEFORE PRIVATE ${_src_lib_inc_path}/../)
 
   if (UNIX)
     set_property(TARGET ${_hipe_lib_name} PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -139,11 +154,11 @@ endmacro(add_hipe_library)
 
 
 # Variant of add_hipe_library for executables. See notes for add_hipe_library.
-macro(add_hipe_executable _hipe_exe_name)
+macro(add_hipe_executable _hipe_exe_name module_path)
   message_header("HIPE LIBRARY: ${_hipe_exe_name}")
 
   set(_src_exe_path ${CMAKE_CURRENT_SOURCE_DIR})
-  set(_src_exe_inc_path ${CMAKE_SOURCE_DIR}/header/${_hipe_exe_name})
+  set(_src_exe_inc_path ${CMAKE_SOURCE_DIR}/${module_path}/header/${_hipe_exe_name})
 
   message(STATUS "${_hipe_exe_name} source path: ${_src_exe_path}" )
 
@@ -157,6 +172,7 @@ macro(add_hipe_executable _hipe_exe_name)
     GLOB_RECURSE _header_list
     LIST_DIRECTORIES false
     "${_src_exe_inc_path}/*.h*"
+    "${_src_exe_inc_path}/*.cuh*"
   )
 
   add_executable(${_hipe_exe_name} ${_source_list} ${_header_list})
@@ -243,7 +259,7 @@ endif()
 	install(CODE "set(PROJECT_SOURCE_DIR \"${PROJECT_SOURCE_DIR}\")" COMPONENT runtime)
 	install(CODE "set(Hipecore_DIR \"${Hipecore_DIR}\")" COMPONENT runtime)
 	install(CODE "set(CUDA_TOOLKIT_ROOT_DIR \"${CUDA_TOOLKIT_ROOT_DIR}\")" COMPONENT runtime)
-	install(SCRIPT "${PROJECT_SOURCE_DIR}/cmake/installConfig.cmake" COMPONENT runtime)
+	install(SCRIPT "${PROJECT_SOURCE_DIR}/../../cmake/installConfig.cmake" COMPONENT runtime)
 	file(TO_NATIVE_PATH "${HIPE_EXTERNAL_DIR}" HIPE_EXTERNAL_DIR)
 	if (WIN32)
 		set(SCRIPT_EXT ".bat")

@@ -79,10 +79,10 @@ HIPE can be built and used on a Windows or Linux platform.
 Here is a summary list of all the primary third party programs and libraries needed. It is not required to build all the dependencies separately as they were all packed in the HipeExternal archive.
 
 -	Third party
-	-	CMake 3.7.2
+	-	CMake 3.11
 -	Dependencies
-	-	Nvidia CUDA 8.0
-	-	Nvidia CuDNN for CUDA 8.0
+	-	Nvidia CUDA 10.0
+	-	Nvidia CuDNN for CUDA 10.0
 	-	HDF5
 	-	caffe
 	-	dlib
@@ -95,7 +95,7 @@ Here is a summary list of all the primary third party programs and libraries nee
 	-	GCC 5+
 	-	Makefile
 
-### [[..][11]] CMake 3.7.2
+### [[..][11]] CMake 3.11
 To build HIPE, the required version of CMake is 3.7.2 (this version only).
 
 CMake can be [downloaded here]( https://cmake.org/download/)    
@@ -185,7 +185,7 @@ where:
 
 * _chosen_build_directory_ is the build directoy you chose in CMake
 * _chosen_build_target_ is the debug or release chosen build target
- 
+
 If you want to use Visual Studio’s debug path, you can add them by completing the field _Environment_ of the _hipe_server_ Debugging properties tab (right click on hipe_server->Properties->Debugging Tab). The variable can contain multiple properties all separated by new lines.
 
 Assuming you start with an empty PATH variable you will end up with a value similar to the following one:
@@ -412,7 +412,7 @@ Where:
 * ``params`` are the constructor parameters (mind that you must manually write the brackets around the parameters)
 
 The macro will only handle the constructor’s signature. Its body, like any constructor or method must be defined within the two curly brackets following it.
- 
+
 As an example, for a fictive filter named "FilterExample", we’ll have the following syntax:
 ```c++
 REGISTER(FilterExample, ())
@@ -489,7 +489,7 @@ An exposed field can be used like any class field, so it is possible to set it t
 
 **Note:** It is mandatory to have at least one exposed field, even if never used.
 
-    
+
 As an example, to expose an integer, we’ll use the following macro:
 
 ```c++
@@ -523,6 +523,7 @@ Where:
 * ``...`` is the list of all the exposed fields separated by commas
 
     
+
 **Note:** The macro is to be used _outside_ the class’ body.    
 **Note:** If a parameter is defined using the ``REGISTER_P`` macro but is not added to the ``ADD_CLASS`` parameters list, it will not be exposed.    
 
@@ -581,7 +582,7 @@ public:
 
 // Reference the class as a valid filter
 ADD_CLASS(Resize, ratio);
-```    
+```
 
 # [[~][0]] Things to not forget
 You will find in this part the things you should always keep in mind when you will use HIPE

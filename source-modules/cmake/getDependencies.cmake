@@ -1,5 +1,5 @@
 include(GetPrerequisites)
-include("${PROJECT_SOURCE_DIR}/cmake/list_dependencies.cmake")
+include("${PROJECT_SOURCE_DIR}/../../cmake/list_dependencies.cmake")
 #getDependencies
 macro(hipe_find_dependencies list_deps target_name BUILD_CONFIG)
   if (WIN32)

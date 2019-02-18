@@ -42,3 +42,5 @@ workingdir/root/Data-light/*
 /webserver/node_modules/*
 /webserver/obj/*
 /webserver/obj/Debug/webApp.njsproj.CoreCompileInputs.cache
+/source-modules/aneo/vision/build/.vs/Hipe-module-aneo-vision/v15/*
+/source-modules/aneo/vision/build/*

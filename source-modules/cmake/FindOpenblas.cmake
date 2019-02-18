@@ -26,11 +26,11 @@ if(MSVC)
     # find_library(OPENBLAS_LIBRARY_RELEASE NAMES libopenblas.a
         # PATHS "${OPENBLAS_ROOT_DIR}/lib"
         # )
-	set(OPENBLAS_LIBRARY_RELEASE "${OPENBLAS_ROOT_DIR}/lib/libopenblas.dll.a" CACHE PATH "OPENBLAS LIB Release" FORCE)
+	set(OPENBLAS_LIBRARY_RELEASE "${OPENBLAS_ROOT_DIR}/lib/openblas.lib" CACHE PATH "OPENBLAS LIB Release" FORCE)
     # find_library(OPENBLAS_LIBRARY_DEBUG NAMES libopenblas.a
         # PATHS "${OPENBLAS_ROOT_DIR}/lib"
         # )
-	set(OPENBLAS_LIBRARY_DEBUG "${OPENBLAS_ROOT_DIR}/lib/libopenblas.dll.a" CACHE PATH "OPENBLAS LIB Debug" FORCE)
+	set(OPENBLAS_LIBRARY_DEBUG "${OPENBLAS_ROOT_DIR}/lib/openblas.lib" CACHE PATH "OPENBLAS LIB Debug" FORCE)
 	
     set(OPENBLAS_LIBRARY optimized ${OPENBLAS_LIBRARY_RELEASE} debug ${OPENBLAS_LIBRARY_DEBUG})
 else()

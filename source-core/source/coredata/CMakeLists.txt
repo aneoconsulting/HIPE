@@ -20,7 +20,9 @@ endif(USE_DLIB)
 
 target_compile_definitions(coredata PRIVATE "-DUSE_BOOST_REGEX" "-DDATA_BUILD")
 
-target_link_libraries(coredata ${OpenCV_LIBS})
+foreach(__component ${OpenCV_LIB_COMPONENTS})
+target_link_libraries(coredata ${__component})
+endforeach()
 target_link_libraries(coredata ${Boost_LIBRARIES})
 target_link_libraries(coredata ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(coredata ${PYTHON36_LIBRARIES})

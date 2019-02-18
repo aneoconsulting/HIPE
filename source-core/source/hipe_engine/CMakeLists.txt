@@ -9,6 +9,7 @@ include(GetPrerequisites)
 add_hipe_executable(hipe_engine)
 
 target_compile_definitions(hipe_engine PRIVATE "-DUSE_BOOST_REGEX")
+target_compile_definitions(hipe_engine PUBLIC "$<$<CONFIG:Debug>:_DEBUG>")
 
 if (WITH_GFLAGS)
 		message(STATUS "Get Gflags from ${GFLAGS_ROOT_DIR}")
@@ -75,7 +76,9 @@ target_link_libraries(hipe_engine corefilter)
 target_link_libraries(hipe_engine corebench)
 
 target_link_libraries(hipe_engine core)
-target_link_libraries(hipe_engine ${OpenCV_LIBS})
+foreach(__component ${OpenCV_LIB_COMPONENTS})
+target_link_libraries(hipe_engine ${__component})
+endforeach()
 target_link_libraries(hipe_engine ${Boost_LIBRARIES})
 target_link_libraries(hipe_engine ${CMAKE_THREAD_LIBS_INIT})
 

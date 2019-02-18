@@ -14,7 +14,7 @@ if(NOT DEFINED HIPE_EXTERNAL)
     set(HIPE_EXTERNAL "$ENV{HIPE_EXTERNAL}")
   # Unset via environment variable.
   else(DEFINED ENV{HIPE_EXTERNAL})
-	set(HIPE_EXTERNAL "${CMAKE_SOURCE_DIR}/../3rdParty/HipeExternal")
+	set(HIPE_EXTERNAL "${CMAKE_SOURCE_DIR}/../../../3rdParty/HipeExternal")
     #message(FATAL_ERROR "Could not find \"HIPE_EXTERNAL\". Please set it locally or by environment variable.")
   endif(DEFINED ENV{HIPE_EXTERNAL})
 endif(NOT DEFINED HIPE_EXTERNAL)
@@ -67,7 +67,7 @@ message(STATUS "Set CUDA_TOOLKIT_ROOT_DIR : ${CUDA_TOOLKIT_ROOT_DIR}")
 
 if(WIN32)
 
-  set(Hipecore_DIR "${CMAKE_SOURCE_DIR}/../install/hipe-core" CACHE PATH "hipecore")
+  set(Hipecore_DIR "${CMAKE_SOURCE_DIR}/../../../install/hipe-core" CACHE PATH "hipecore" FORCE)
   list(APPEND CMAKE_PREFIX_PATH "${Hipecore_DIR}")
     
   # TODO
@@ -111,7 +111,7 @@ if(WIN32)
 
 else(WIN32)
 
-  set(Hipecore_DIR "${CMAKE_SOURCE_DIR}/../install/hipe-core" CACHE PATH "hipecore")
+  set(Hipecore_DIR "${CMAKE_SOURCE_DIR}/../../../install/hipe-core" CACHE PATH "hipecore" FORCE)
   list(APPEND CMAKE_PREFIX_PATH "${Hipecore_DIR}")
 
   if(HIPE_EXTERNAL_PYTHON27)
@@ -152,5 +152,8 @@ endif()
 
   set(Dlib_DIR "${HIPE_EXTERNAL_DIR}/dlib" CACHE PATH "DLIB_LIBRARYDIR" FORCE)
 
+  set(WebRTC_DIR "${HIPE_EXTERNAL_DIR}/WebRTCServer" CACHE PATH "Path to the root webrtc directory" )
+  list(APPEND CMAKE_PREFIX_PATH "${WebRTC_DIR}")
+  
   message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 endif(WIN32)

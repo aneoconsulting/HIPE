@@ -2,8 +2,8 @@
 	"http" : {
 		"port" : "9090"
 	},
-	"base_cert" : "C:\\xampp\\cert\\https_aneo",
+	"base_cert" : "http-root\\certificats\\mylaptop",
 	"config_path" : {
-		"python_dll_path" : [ "D:\\HIPE_EXTERNAL\\win64\\Python36", "D:\\HIPE_EXTERNAL\\win64\\Python36\\DLLs", "D:\\HIPE_EXTERNAL\\win64\\Python36\\lib", "D:\\HIPE_EXTERNAL\\win64\\Python36\\lib\\site-packages" ]
+		"python_dll_path" : [ "${PYTHON_DIR}\\Python36", "${PYTHON_DIR}\\Python36\\DLLs", "${PYTHON_DIR}\\Python36\\lib", "${PYTHON_DIR}\\Python36\\lib\\site-packages" ]
 	}
 }

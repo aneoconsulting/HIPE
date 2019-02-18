@@ -1,0 +1,36 @@
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <cuda_runtime_api.h>
+#include <device_launch_parameters.h>
+#include <core/HipeException.h>
+
+
+__global__ void gkernelAdd(int* a, int* b, int* c, size_t size)
+{
+	for (size_t i = threadIdx.x + blockIdx.x * blockDim.x; i < size; i += blockDim.x * gridDim.x)
+	{
+		c[i] = a[i] + b[i];
+	}
+}
+
+
+void kernelAdd(int* a, int* b, int* c, size_t size)
+{
+	cudaSetDevice(0);
+
+	int *_a; cudaMalloc(&_a, 150);
+	int *_b; cudaMalloc(&_b, 150);
+	int *_c; cudaMalloc(&_c, 150);
+
+	cudaMemcpy(_a, a, 150, cudaMemcpyHostToDevice);
+	cudaMemcpy(_b, b, 150, cudaMemcpyHostToDevice);
+	cudaMemcpy(_c, c, 150, cudaMemcpyHostToDevice);
+
+
+	gkernelAdd<<< 64,256, 1>>>(_a, _b, _c, size);
+	cudaError_t cuda_error = cudaDeviceSynchronize();
+	if (cuda_error != cudaSuccess)
+	{
+		throw HipeException("Fail to execute gKernelAdd");
+	}
+}

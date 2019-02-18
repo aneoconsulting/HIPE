@@ -51,6 +51,9 @@ void ChildProcess::startProcess(std::function<json::JsonTree(json::JsonTree tree
 					throw HipeException("Need a new process to avoid bad context and previous error");
 			}
 			LOG(INFO) << "Exit from hipe engine task";
+			google::FlushLogFiles(google::GLOG_INFO);
+			google::FlushLogFiles(google::GLOG_ERROR);
+			google::FlushLogFiles(google::GLOG_WARNING);
 		}
 		catch (HipeException& e)
 		{
@@ -62,6 +65,9 @@ void ChildProcess::startProcess(std::function<json::JsonTree(json::JsonTree tree
 				exit(-1);
 			else
 				LOG(WARNING) << "No Restart since hipe_engine is in debug mode" << std::endl;
+			google::FlushLogFiles(google::GLOG_INFO);
+			google::FlushLogFiles(google::GLOG_ERROR);
+			google::FlushLogFiles(google::GLOG_WARNING);
 		}
 		catch (std::exception& e)
 		{
@@ -69,11 +75,15 @@ void ChildProcess::startProcess(std::function<json::JsonTree(json::JsonTree tree
 			/*LOG(INFO) << "Child : mutex unlock" << std::endl;*/
 			LOG(ERROR) << "Something went wrong during hipe_engine execution. std::exception error : " << e.what() <<
 				std::endl;
+
 			isActive = false;
 			if (corefilter::getLocalEnv().getValue("debugMode") != "true")
 				exit(-1);
 			else
 				LOG(WARNING) << "No Restart since hipe_engine is in debug mode" << std::endl;
+			google::FlushLogFiles(google::GLOG_INFO);
+			google::FlushLogFiles(google::GLOG_ERROR);
+			google::FlushLogFiles(google::GLOG_WARNING);
 		}
 	});
 

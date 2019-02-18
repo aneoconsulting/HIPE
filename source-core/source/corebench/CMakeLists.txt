@@ -14,7 +14,9 @@ target_link_libraries(corebench core)
 target_link_libraries(corebench coredata)
 target_link_libraries(corebench corefilter)
 target_link_libraries(corebench json)
-
+foreach(__component ${OpenCV_LIB_COMPONENTS})
+target_link_libraries(corebench ${__component})
+endforeach()
 
 if(MSYS) #TODO: Is MSYS true when MSVC is true?
   message(STATUS "Test if it works with windows")

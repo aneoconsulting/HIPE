@@ -1,5 +1,13 @@
 # message(STATUS "OpenCV_DIR: ${OpenCV_DIR}")
 find_package(OpenCV REQUIRED) # PATHS "${OpenCV_DIR}")
+
+# foreach(__component ${OpenCV_LIB_COMPONENTS})
+
+# set_target_properties(${__component} PROPERTIES
+	 # MAP_IMPORTED_CONFIG_RELWITHDEBINFO Debug
+	 # )
+# endforeach()
 message(STATUS "OpenCV_INSTALL_PATH: ${OpenCV_INSTALL_PATH}")
 message(STATUS "OpenCV_INCLUDE_DIRS: ${OpenCV_INCLUDE_DIRS}")
+message(STATUS "OpenCV_LIBRARIES: ${OpenCV_LIBS}")
 prepend_include_directories_if_necessary("${OpenCV_INCLUDE_DIRS}")

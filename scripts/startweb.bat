@@ -1,5 +1,9 @@
 REM @echo off
 
+pushd %~dp0
+set script_dir=%CD%
+popd
+
 rem Ensure this Node.js and npm are first in the PATH
 CD /D "C:\soft\nodejs"
 call "C:\soft\nodejs\nodevars.bat"
@@ -30,7 +34,7 @@ if NOT ["%errorlevel%"]==["0"] (
 net start "mysql_hipe"
 
 
-cd /D "D:\workspace\hipe-vc2017\webserver\webserver-hipe"
+cd /D "%script_dir%\webserver\webserver-hipe"
 if NOT ["%errorlevel%"]==["0"] (
     pause
     exit /b %errorlevel%

@@ -1,11 +1,41 @@
-//@HIPE_LICENSE@
-#include <hipe_server/Configuration.h>
+//READ LICENSE BEFORE ANY USAGE
+/* Copyright (C) 2018  Damien DUBUC ddubuc@aneo.fr (ANEO S.A.S)
+ *  Team Contact : hipe@aneo.fr
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *  
+ *  In addition, we kindly ask you to acknowledge ANEO and its authors in any program 
+ *  or publication in which you use HIPE. You are not required to do so; it is up to your 
+ *  common sense to decide whether you want to comply with this request or not.
+ *  
+ *  Non-free versions of HIPE are available under terms different from those of the General 
+ *  Public License. e.g. they do not require you to accompany any object code using HIPE 
+ *  with the corresponding source code. Following the new licensing any change request from 
+ *  contributors to ANEO must accept terms of re-license by a general announcement. 
+ *  For these alternative terms you must request a license from ANEO S.A.S Company 
+ *  Licensing Office. Users and or developers interested in such a license should 
+ *  contact us (hipe@aneo.fr) for more information.
+ */
+
+#include <core/Configuration.h>
 
 #pragma warning(push, 0)
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/program_options.hpp>
 #include "core/ModuleLoader.h"
+#include <regex>
 #pragma warning(pop)
 
 
@@ -13,6 +43,25 @@ namespace bpo = boost::program_options;
 
 namespace hipe_server
 {
+	static std::string expand_environment_variables(const std::string& s)
+	{
+		if (s.find("${") == std::string::npos) return s;
+
+		std::string pre = s.substr(0, s.find("${"));
+		std::string post = s.substr(s.find("${") + 2);
+
+		if (post.find('}') == std::string::npos) return s;
+
+		std::string variable = post.substr(0, post.find('}'));
+
+
+		post = post.substr(post.find('}') + 1);
+
+		std::string v = getEnv(variable);
+		
+		return expand_environment_variables(pre + v + post);
+	}
+
 	ConfigurationParameters::ConfigurationParameters()
 	{
 		setDefaultValues();
@@ -20,8 +69,8 @@ namespace hipe_server
 
 	void ConfigurationParameters::setDefaultValues()
 	{
-		this->port = 8080;
-		this->modulePath = "";
+		this->port = 9090;
+
 		this->base_cert = "NOT-DEFINED";
 		this->debugMode = false;
 	}
@@ -48,16 +97,15 @@ namespace hipe_server
 			("port,p", bpo::value<unsigned short>(&this->configuration.port)->default_value(this->configuration.port), "Sets the port the server should be listening on")
 			;
 		configCat.add_options()
-			("module,m", bpo::value<std::string>(&this->configuration.modulePath)->default_value(this->configuration.modulePath), "Sets the path to the module to get all filters implemented")
+			("module,m", bpo::value<std::vector<std::string> >(&this->configuration.modulePaths)->multitoken(), "Sets the path to the module to get all filters implemented")
 			;
 		configCat.add_options()
-			("certificat_path, -c", bpo::value<std::string>(&this->configuration.base_cert)->default_value(this->configuration.base_cert), "Sets the path to the https certificats")
+			("certificat_path,c", bpo::value<std::string>(&this->configuration.base_cert)->default_value(this->configuration.base_cert), "Sets the path to the https certificats")
 			;
 		configCat.add_options()
 			("debug,d", bpo::value<bool>()->implicit_value(true), "Let user attached it's own hipe_engine binary")
 			;
-
-
+	
 		// Regroup all sub catagories
 		bpo::options_description allCat("Available options");
 		allCat.add(generalCat).add(configCat);
@@ -95,16 +143,27 @@ namespace hipe_server
 
 			return 1;
 		}
-
-		if (vm.count("module") != 0)
-		{
-			corefilter::getLocalEnv().setValue("modulePath", configuration.modulePath);
-		}
-		if (vm.count("debug") != 0)
-		{
-			corefilter::getLocalEnv().setValue("debugMode", "true");
-		}
+		corefilter::getLocalEnv().set_configuration(*this);
 		return 0;
+	}
+
+	std::string Configuration::resolve_path(std::string& path)
+	{
+		std::string new_path = path;
+		new_path = expand_environment_variables(path);
+		return new_path;
+	}
+
+
+	using boost::property_tree::ptree;
+
+	template <typename T>
+	std::vector<T> as_vector(ptree const& pt, ptree::key_type const& key)
+	{
+	    std::vector<T> r;
+	    for (auto& item : pt.get_child(key))
+	        r.push_back(item.second.get_value<T>());
+	    return r;
 	}
 
 	int Configuration::setConfigFromFile()
@@ -138,9 +197,9 @@ namespace hipe_server
 			configuration.base_cert = configPtree.get<std::string>(std::string("base_cert"));
 			
 		}
-		if (configPtree.count("module") != 0)
+		if (configPtree.count("modules") != 0)
 		{
-			corefilter::getLocalEnv().setValue("modulePath", configPtree.get<std::string>(std::string("module")));
+			configuration.modulePaths = as_vector<std::string>(configPtree, std::string("modules"));
 		}
 
 		//Set localenv from config here
@@ -162,6 +221,8 @@ namespace hipe_server
 					int first = 0;
 					for (auto fields = data->second.begin(); fields != data->second.end(); ++fields)
 					{
+						//Find variable environment insides path and convert into real path
+						std::string resolved_path = resolve_path(fields->second.data());
 						if (first == 0)
 							array_path << fields->second.data(); //getValue<std::string>(pathsNode, data->first);
 						else
@@ -179,6 +240,7 @@ namespace hipe_server
 			}
 		}
 
+		corefilter::getLocalEnv().set_configuration(*this);
 		
 
 		return 0;
