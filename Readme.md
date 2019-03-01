@@ -44,12 +44,12 @@ Please follow the guideline to install all prerequisites dependencies in the [re
 
 ### 	3.1 Build HIPE CORE
 
-Please follow this step to build the HIPE Core [how-to-build](wiki/Howto-Build/HowTo-build-core.md) **before to build any modules**
+Please follow this step to build the HIPE Core [how-to-build](wiki/Howto-Build/Howto-build-core.md) **before to build any modules**
 
 
 
 ### 	3.2 Build HIPE MODULES
-Please follow this step to build the HIPE Modules [how-to-build](wiki/Howto-Build/HowTo-build-core.md)
+Please follow this step to build the HIPE Modules [how-to-build](wiki/Howto-Build/Howto-build-core.md)
 
 ## 4. HOWTO :
 ## 	4.1 How to run
