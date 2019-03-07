@@ -31,6 +31,7 @@
 //#define NO_IMPORT_ARRAY
 #define PY_ARRAY_UNIQUE_SYMBOL pbcvt_ARRAY_API
 #include <pydata/pyImageData.h>
+#include <pydata/pyImageArrayData.h>
 
 #pragma warning(push, 0)
 #include <boost/python.hpp>
@@ -290,6 +291,12 @@ BOOST_PYTHON_MODULE(pydata)
 		.def("set", &pyImageData::set)
 		.def_readwrite("img", &pyImageData::get)
 		.def("get", &pyImageData::get);
+
+	boost::python::class_<pyImageArrayData>("imageArrayData")
+		.def("insert", &pyImageArrayData::insert)
+		.def("add", &pyImageArrayData::add)
+		.def("get", &pyImageArrayData::get);
+
 
 	boost::python::class_<pyShapeData>("shapeData")
 		.def("addRect", &pyShapeData::addRect)

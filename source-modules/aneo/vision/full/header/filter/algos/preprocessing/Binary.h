@@ -66,7 +66,7 @@ namespace filter
 		 */
 		class Binary : public filter::IFilter
 		{
-			CONNECTOR(data::ImageData, data::ImageData);
+			CONNECTOR(data::ImageArrayData, data::ImageArrayData);
 			REGISTER(Binary, ()), _connexData(data::INDATA)
 			{
 				type = "BINARY";
@@ -79,20 +79,30 @@ namespace filter
 
 			HipeStatus process() override
 			{
-				data::ImageData data = _connexData.pop();
-				cv::Mat image = data.getMat();
-				if (!image.data)
+				while (_connexData.size() > 0)
 				{
-					throw HipeException("[Error] BilateralFilter::process - No input data found.");
+					data::ImageArrayData dataArray = _connexData.pop();
+
+					for (data::ImageData data : dataArray.Array())
+					{
+						cv::Mat image = data.getMat();
+						if (!image.data)
+						{
+							throw HipeException("[Error] BilateralFilter::process - No input data found.");
+						}
+
+						cv::Mat output;
+						int convertedType = convertType(type);
+						if (otsu) convertedType = convertedType | cv::THRESH_OTSU;
+
+						if (image.channels() == 3 || image.channels() == 4)
+							std::cout << "the number of channel has ;ore than one channel" << std::endl;
+
+						cv::threshold(image, output, threshold, value, convertedType);
+
+						PUSH_DATA(data::ImageData(output));
+					}
 				}
-
-				cv::Mat output;
-				int convertedType = convertType(type);
-				if (otsu) convertedType = convertedType | cv::THRESH_OTSU;
-
-				cv::threshold(image, output, threshold, value, convertedType);
-
-				PUSH_DATA(data::ImageData(output));
 				return OK;
 			}
 

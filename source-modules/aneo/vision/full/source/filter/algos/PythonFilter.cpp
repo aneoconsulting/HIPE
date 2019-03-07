@@ -38,6 +38,7 @@
 #include "data/FileVideoInput.h"
 #include <coredata/Data.h>
 #include "pydata/pyShapeData.h"
+#include "pydata/pyImageArrayData.h"
 #include "data/ShapeData.h"
 #include <glog/logging.h>
 
@@ -298,6 +299,21 @@ namespace filter
 				}
 
 				PUSH_DATA(res_process);
+			}
+			else if (boost::python::extract<pyImageArrayData>(object).check())
+			{
+				data::ImageArrayData arrays;
+				pyImageArrayData pyOutput = boost::python::extract<pyImageArrayData>(object);
+
+				for (int i = 0; i < pyOutput.getArrays().size(); i++)
+				{
+					data::ImageData img(pyOutput.getArrays()[i]);
+					img.setLabel(pyOutput.getLabels()[i]);
+					_connexData.push(img);
+				}
+
+				
+
 			}
 			else if (boost::python::extract<std::string>(object).check())
 			{

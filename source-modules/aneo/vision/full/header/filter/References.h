@@ -99,6 +99,7 @@
 #include <filter/algos/tracker\Tracker.h>
 #include <filter/algos/utils\CVUtils.h>
 #include <filter/algos/utils\FpsResolution.h>
+#include <filter/algos/utils\SelectImageByLabel.h>
 #include <filter/algos/utils\Vid2ImgConverter.h>
 #include <filter/datasource/DirectoryImgDataSource.h>
 #include <filter/datasource/DirPatternDataSource.h>

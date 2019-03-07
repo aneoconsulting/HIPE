@@ -39,6 +39,8 @@
 #include <pydata/pyboostcvconverter.hpp>
 using namespace boost::python;
 
+
+
 class pyImageData
 {
 	cv::Mat img;
@@ -47,10 +49,10 @@ class pyImageData
 public:
 	pyImageData()
 	{
-		
+
 	}
-	
-	pyImageData(data::ImageData & data) 
+
+	pyImageData(data::ImageData & data)
 	{
 		img = data.getMat();
 	}
@@ -64,11 +66,11 @@ public:
 	{
 		img = input;
 	}
-	
+
 	void set(int i, int y)
 	{
-		
+
 	}
 
-	
+
 };
