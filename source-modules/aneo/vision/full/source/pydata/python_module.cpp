@@ -33,6 +33,7 @@
 #include <pydata/pyImageData.h>
 #include <pydata/pyImageArrayData.h>
 
+
 #pragma warning(push, 0)
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
@@ -296,7 +297,6 @@ BOOST_PYTHON_MODULE(pydata)
 		.def("insert", &pyImageArrayData::insert)
 		.def("add", &pyImageArrayData::add)
 		.def("get", &pyImageArrayData::get);
-
 
 	boost::python::class_<pyShapeData>("shapeData")
 		.def("addRect", &pyShapeData::addRect)

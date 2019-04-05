@@ -81,6 +81,7 @@ namespace filter
 
 			void push_result(const boost::python::object& object);
 
+			void callPythonFunction(boost::python::object& python_function_call, std::vector<data::Data>& inputs);
 			HipeStatus process() override;	
 
 			void dispose()  override;

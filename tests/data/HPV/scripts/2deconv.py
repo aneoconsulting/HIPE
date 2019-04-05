@@ -19,34 +19,32 @@ from PIL import Image, ImageFont, ImageDraw
 import os
 # from keras.utils import multi_gpu_model
 
-#ANEO PACKAGE
-
+# ANEO PACKAGE
 from pydata import shapeData
 from pydata import imageData
 from pydata import imageArrayData
 import pydata
 
-
-
-
 import sys
+
 sys.stdout = pydata.stdout()
 sys.stderr = pydata.stderr()
 
-def init_deconv():
-	None
 
-    
+def init_deconv():
+    None
+
+
 def deconv(frame):
-    #image = Image.fromarray(frame.get())
-    #shape = yolo.detect_image(image)
-    #frame = plt.imread('RNA1.tif')
+    # image = Image.fromarray(frame.get())
+    # shape = yolo.detect_image(image)
+    # frame = plt.imread('RNA1.tif')
     frame = np.double(frame.get())
-    row_frame,col_frame,di = frame.shape
+    row_frame, col_frame, di = frame.shape
 
     colorMap = np.array([[0.650, 0.704, 0.286], [0.268, 0.570, 0.776], [0, 0, 0]])
 
-    row,col = colorMap.shape
+    row, col = colorMap.shape
 
     # judge if the image is RGB image
     dim = frame.ndim
@@ -56,13 +54,15 @@ def deconv(frame):
     colorMapNor = np.zeros((row, col))
 
     for i in range(row - 1):
-        div = np.sqrt(np.power(colorMap[i, 0], 2) + np.power(colorMap[i, 1], 2) + np.power(colorMap[i, 2], 2))  # equation(5) row1
+        div = np.sqrt(
+            np.power(colorMap[i, 0], 2) + np.power(colorMap[i, 1], 2) + np.power(colorMap[i, 2], 2))  # equation(5) row1
         colorMapNor[i, :] = colorMap[i, :] / div  # array([0.26814752, 0.57031376, 0.77642715]) (3*1)
 
     if np.power(colorMapNor[0, 0], 2) + np.power(colorMapNor[1, 0], 2) > 1:
         colorMapNor[2, 0] = 0
     else:
-        colorMapNor[2, 0] = np.sqrt(1 - np.power(colorMapNor[0, 0], 2) - np.power(colorMapNor[1, 0], 2))  # equation(5) row3
+        colorMapNor[2, 0] = np.sqrt(
+            1 - np.power(colorMapNor[0, 0], 2) - np.power(colorMapNor[1, 0], 2))  # equation(5) row3
 
     if np.power(colorMapNor[0, 1], 2) + np.power(colorMapNor[1, 1], 2) > 1:
         colorMapNor[2, 1] = 0
@@ -127,24 +127,29 @@ def deconv(frame):
 
     red_channel_image = Image.fromarray(imgVR)
 
+    # fig3 = plt.figure(1)
+    # plt.imshow(red_channel_image)
+    # plt.title('Red Channel Image')
+    # red_channel_image.show()
     arrayImage = imageArrayData()
     arrayImage.add("imgVR", imgVR.astype("uint8"))
     arrayImage.add("imgVG", imgVG.astype("uint8"))
     arrayImage.add("imgVB", imgVB.astype("uint8"))
     return arrayImage
 
-# def test(img):
-#     #img = np.double(img.get())
-#     red_channel_image = Image.fromarray(img.get())
-#
-#     # print(red_channel_image.getpixel((0, 0)))
-#     #help(red_channel_image)
-#     # print("size : " + str(img.get().shape[0]) + " x " + str(img.get().shape[1]))
-#     # fig3 = plt.figure(3)
-#     # red_channel_image.show()
-#
-#     # plt.imshow(red_channel_image)
-#     # plt.title('Red Channel Image')
-#     # plt.show()
-#
-#     return img.get()
+
+def test(img):
+    # img = np.double(img.get())
+    red_channel_image = Image.fromarray(img.get())
+
+    # print(red_channel_image.getpixel((0, 0)))
+    # help(red_channel_image)
+    # print("size : " + str(img.get().shape[0]) + " x " + str(img.get().shape[1]))
+    # fig3 = plt.figure(3)
+    # red_channel_image.show()
+
+    # plt.imshow(red_channel_image)
+    # plt.title('Red Channel Image')
+    # plt.show()
+
+    return img.get()

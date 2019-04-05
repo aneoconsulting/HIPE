@@ -41,6 +41,7 @@
 #include "pydata/pyImageArrayData.h"
 #include "data/ShapeData.h"
 #include <glog/logging.h>
+#include "data/pyObjectData.h"
 
 
 extern "C" {
@@ -340,9 +341,51 @@ namespace filter
 			}
 			else
 			{
-				std::string type_name = boost::python::extract<std::string>(object.attr("__name__"))();
-				
-				throw HipeException(std::string("The type ") + type_name + "isn't yet managed in HIPE as result of function call");
+				data::PyObjectData pyObj;
+				pyObj.set(object);
+				PUSH_DATA(pyObj);
+
+			}
+		}
+
+		void PythonFilter::callPythonFunction(boost::python::object& python_function_call,
+			std::vector<data::Data>& inputs)
+		{
+			data::Data in = inputs[0];
+			if (in.getType() == data::PYOBJ)
+			{
+				data::PyObjectData pyObjectInput = static_cast<data::PyObjectData &>(in);
+
+				boost::python::object result; 
+			
+
+				result = python_function_call(pyObjectInput.get());
+
+
+				push_result(result);
+			}
+			else
+			{
+				boost::shared_ptr< pyImageData > o(new pyImageData);
+				data::ImageData img = inputs[0];
+				cv::Mat inMat = img.getMat();
+
+				if (inMat.empty())
+				{
+					data::ShapeData noneShape;
+					PUSH_DATA(noneShape);
+				}
+				else
+				{
+					o->assign(inMat);
+
+					boost::python::object result;
+					boost::python::ptr(o.get());
+					result = python_function_call(boost::python::ptr(o.get()));
+
+
+					push_result(result);
+				}
 			}
 		}
 
@@ -380,26 +423,9 @@ namespace filter
 
 				if (!pythonFunctionCall.is_none())
 				{
-					boost::shared_ptr< pyImageData > o(new pyImageData);
-					data::ImageData img = input[0];
-					cv::Mat inMat = img.getMat();
+					callPythonFunction(pythonFunctionCall, input);
 
-					if (inMat.empty())
-					{
-						data::ShapeData noneShape;
-						PUSH_DATA(noneShape);
-					}
-					else
-					{
-						o->assign(inMat);
-
-						boost::python::object result;
-
-						result = pythonFunctionCall(boost::python::ptr(o.get()));
-
-
-						push_result(result);
-					}
+					
 				}
 			}
 			catch (boost::python::error_already_set& e)
